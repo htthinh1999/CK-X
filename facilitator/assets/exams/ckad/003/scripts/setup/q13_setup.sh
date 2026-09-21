@@ -10,7 +10,7 @@ cat > /tmp/exam/course/13/values.yaml <<'EOF'
 replicaCount: 3
 
 image:
-  tag: "1.22"
+  tag: "latest"
 
 service:
   type: ClusterIP

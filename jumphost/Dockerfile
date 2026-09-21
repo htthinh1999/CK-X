@@ -41,7 +41,11 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
     && rm get_helm.sh
 
 #override docker daemon to use cfg2group
-RUN echo '{ "exec-opts": ["native.cgroupdriver=cgroupfs"] }' > /etc/docker/daemon.json
+#use cgroupfs driver, and force the classic image store with the vfs storage
+#driver so `docker build`/pull work inside this nested (docker-in-docker)
+#jumphost — the containerd overlayfs snapshotter cannot mount overlay-on-overlay
+#here ("failed to mount ... overlay ... invalid argument").
+RUN echo '{ "exec-opts": ["native.cgroupdriver=cgroupfs"], "storage-driver": "vfs", "features": { "containerd-snapshotter": false } }' > /etc/docker/daemon.json
 
 # Set up SSH server
 RUN mkdir -p /var/run/sshd
