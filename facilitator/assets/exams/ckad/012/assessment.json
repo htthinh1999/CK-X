@@ -1,0 +1,887 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "fortress",
+      "machineHostname": "ckad9999",
+      "question": "A Pod named `webapp` is running in namespace `fortress` with hardcoded database credentials as environment variables.\n\n1. Inspect the Pod to find the current environment variables `DB_USER` and `DB_PASS`.\n2. Create a Secret named `db-credentials` in namespace `fortress` containing those same key-value pairs.\n3. Delete the existing Pod and recreate it with the same name, image, and port, but replace the hardcoded environment variables with references to the Secret using `secretKeyRef`.\n\nThe Pod must be running with the environment variables sourced from the Secret.",
+      "concepts": [
+        "secrets",
+        "pods",
+        "environment-variables"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Secret `db-credentials` exists in namespace `fortress`",
+          "verificationScriptFile": "q1_s1_validate_secret_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Secret `db-credentials` has key `DB_USER`",
+          "verificationScriptFile": "q1_s2_validate_db_user_key.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Secret `db-credentials` has key `DB_PASS`",
+          "verificationScriptFile": "q1_s3_validate_db_pass_key.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Pod `webapp` sources env from Secret `db-credentials` via `secretKeyRef`",
+          "verificationScriptFile": "q1_s4_validate_pod_secretkeyref.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "bastion",
+      "machineHostname": "ckad9999",
+      "question": "An Ingress named `frontend-ingress` exists in namespace `bastion` but traffic is not reaching the application.\n\nInspect the existing Service and Ingress, identify the problems, and fix the Ingress so that:\n- Host `frontend.example.com` routes to the correct Service\n- The path `/` routes traffic correctly\n- The `pathType` is set to `Prefix`\n- The backend Service name and port match the actual Service\n\nHint: inspect the Service first with `kubectl get svc -n bastion`, then match the Ingress backend to the Service name and port. There are multiple errors to fix.",
+      "concepts": [
+        "ingress",
+        "services",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Ingress `frontend-ingress` exists in namespace `bastion`",
+          "verificationScriptFile": "q2_s1_validate_ingress_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Ingress host is `frontend.example.com`",
+          "verificationScriptFile": "q2_s2_validate_host.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Backend Service name is `frontend-svc`",
+          "verificationScriptFile": "q2_s3_validate_svc_name.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Backend Service port is `80`",
+          "verificationScriptFile": "q2_s4_validate_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "`pathType` is `Prefix`",
+          "verificationScriptFile": "q2_s5_validate_pathtype.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Path is `/`",
+          "verificationScriptFile": "q2_s6_validate_path.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "citadel",
+      "machineHostname": "ckad9999",
+      "question": "A Deployment `api-server` and Service `api-svc` already exist in namespace `citadel`.\n\nCreate an Ingress named `api-ingress` in namespace `citadel` that:\n1. Routes traffic for host `api.example.com`\n2. Routes path `/app` with `pathType: Prefix`\n3. Sends traffic to Service `api-svc` on port `80`",
+      "concepts": [
+        "ingress",
+        "services",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Ingress `api-ingress` exists in namespace `citadel`",
+          "verificationScriptFile": "q3_s1_validate_ingress_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Ingress host is `api.example.com`",
+          "verificationScriptFile": "q3_s2_validate_host.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Path is `/app`",
+          "verificationScriptFile": "q3_s3_validate_path.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "`pathType` is `Prefix`",
+          "verificationScriptFile": "q3_s4_validate_pathtype.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Backend routes to Service `api-svc` on port `80`",
+          "verificationScriptFile": "q3_s5_validate_backend.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "rampart",
+      "machineHostname": "ckad9999",
+      "question": "Three Pods (`frontend`, `backend`, `database`) exist in namespace `rampart` but cannot communicate with each other.\n\nThree NetworkPolicies are already configured. Do NOT modify the NetworkPolicies.\n\nInstead:\n1. Inspect the NetworkPolicies to understand which label selectors they use.\n2. Label the Pods correctly so that:\n   - `frontend` can send traffic to `backend` on port 80\n   - `backend` can send traffic to `database` on port 5432\n\nHint: use `kubectl describe networkpolicy -n rampart` to read the pod selectors. The labels you need to apply are written in the policies themselves (the `tier` label).",
+      "concepts": [
+        "networkpolicy",
+        "labels",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod `frontend` has label `tier=frontend`",
+          "verificationScriptFile": "q4_s1_validate_frontend_tier.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pod `backend` has label `tier=backend`",
+          "verificationScriptFile": "q4_s2_validate_backend_tier.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Pod `database` has label `tier=database`",
+          "verificationScriptFile": "q4_s3_validate_database_tier.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "tower",
+      "machineHostname": "ckad9999",
+      "question": "A Deployment named `compute-app` exists in namespace `tower` without resource settings.\n\nUpdate the Deployment so that its container has:\n- Requests: `cpu: 100m`, `memory: 128Mi`\n- Limits: exactly double the requests, `cpu: 200m`, `memory: 256Mi`\n\nThe Deployment must have running Pods after the update.",
+      "concepts": [
+        "deployments",
+        "resources",
+        "requests-limits"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Requests CPU is `100m`",
+          "verificationScriptFile": "q5_s1_validate_req_cpu.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Requests memory is `128Mi`",
+          "verificationScriptFile": "q5_s2_validate_req_mem.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Limits CPU is `200m`",
+          "verificationScriptFile": "q5_s3_validate_lim_cpu.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Limits memory is `256Mi`",
+          "verificationScriptFile": "q5_s4_validate_lim_mem.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Deployment `compute-app` has running Pods",
+          "verificationScriptFile": "q5_s5_validate_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "garrison",
+      "machineHostname": "ckad9999",
+      "question": "A Deployment named `quota-app` in namespace `garrison` has Pods stuck in `Pending` state because its resource requests exceed the namespace's ResourceQuota.\n\n1. Inspect the ResourceQuota `compute-quota` to understand the limits.\n2. Reduce the Deployment's resource requests so the Pods can be scheduled within the quota.\n3. Keep resource limits at double the requests.\n\nThe ResourceQuota allows: `requests.cpu: 500m`, `requests.memory: 512Mi`. It also enforces `limits.cpu: 1` and `limits.memory: 1Gi`. Both requests and limits must fit within the quota for Pods to be scheduled.",
+      "concepts": [
+        "resourcequota",
+        "resources",
+        "scheduling"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment `quota-app` exists in namespace `garrison`",
+          "verificationScriptFile": "q6_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Deployment `quota-app` has running Pods",
+          "verificationScriptFile": "q6_s2_validate_running.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "CPU requests are within quota (<= `500m`)",
+          "verificationScriptFile": "q6_s3_validate_cpu_within_quota.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Memory requests are within quota",
+          "verificationScriptFile": "q6_s4_validate_mem_within_quota.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Local task (no Kubernetes namespace).\n\n1. Build a Docker image using `/tmp/exam/course/7/image/` as the build context.\n2. Tag the image as `localhost:5000/oni-app:1.0`.\n3. Save the image as a tar archive to `/tmp/exam/course/7/oni-app.tar`.\n4. Push the image to the local registry at `localhost:5000`.\n\nNote: a local registry is running at `localhost:5000` on this host, so `docker push localhost:5000/oni-app:1.0` works directly.",
+      "concepts": [
+        "docker",
+        "images",
+        "registry"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Image `localhost:5000/oni-app:1.0` built locally",
+          "verificationScriptFile": "q7_s1_validate_image_built.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Tar archive exists at `/tmp/exam/course/7/oni-app.tar`",
+          "verificationScriptFile": "q7_s2_validate_tar_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Image pushed to registry `localhost:5000`",
+          "verificationScriptFile": "q7_s3_validate_pushed.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "bulwark",
+      "machineHostname": "ckad9999",
+      "question": "A stable Deployment `stable-app` with 3 replicas is running in namespace `bulwark` with labels `version=v1` and `app=webapp`.\n\nA Service `app-svc` selects Pods with label `app=webapp` (both versions).\n\nCreate a canary Deployment named `canary-app` in namespace `bulwark` with:\n- 1 replica\n- Image `nginx:1.25`\n- Labels: `app=webapp` and `version=v2`\n- The Service should automatically route traffic to both stable and canary Pods\n\nHint: the Service selects on `app=webapp` only. Your canary Deployment must use the same `app=webapp` label so the Service routes to both versions.",
+      "concepts": [
+        "deployments",
+        "canary",
+        "labels"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment `canary-app` exists in namespace `bulwark`",
+          "verificationScriptFile": "q8_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Deployment `canary-app` has `1` replica",
+          "verificationScriptFile": "q8_s2_validate_replicas.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Container image is `nginx:1.25`",
+          "verificationScriptFile": "q8_s3_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Pod template label `version=v2`",
+          "verificationScriptFile": "q8_s4_validate_version_label.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Pod template label `app=webapp`",
+          "verificationScriptFile": "q8_s5_validate_app_label.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Service `app-svc` routes to both stable and canary Pods",
+          "verificationScriptFile": "q8_s6_validate_routes_both.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "parapet",
+      "machineHostname": "ckad9999",
+      "question": "A Service `backend-svc` exists in namespace `parapet` but has no endpoints, so traffic is not reaching the Pods.\n\n1. Identify the selector mismatch between the Service and the Deployment's Pod labels.\n2. Fix the Service selector so it matches the actual Pod labels (`app=backend-api`).\n3. Verify with `kubectl get endpoints backend-svc -n parapet`.",
+      "concepts": [
+        "services",
+        "selectors",
+        "endpoints"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Service `backend-svc` exists in namespace `parapet`",
+          "verificationScriptFile": "q9_s1_validate_svc_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Service selector is `app=backend-api`",
+          "verificationScriptFile": "q9_s2_validate_selector.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Service `backend-svc` has endpoints",
+          "verificationScriptFile": "q9_s3_validate_endpoints.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "namespace": "stronghold",
+      "machineHostname": "ckad9999",
+      "question": "Create a CronJob named `cleanup-job` in namespace `stronghold`:\n- Schedule: every 5 minutes (`*/5 * * * *`)\n- Image: `busybox:1.36`\n- Command: `echo \"Cleanup completed at $(date)\"`\n- The Job must exit after completion: set `activeDeadlineSeconds: 30`\n- Restart policy: `Never`\n\nHint: `activeDeadlineSeconds` goes in the Job template spec (`spec.jobTemplate.spec.activeDeadlineSeconds`), not at the CronJob level.",
+      "concepts": [
+        "cronjobs",
+        "jobs",
+        "scheduling"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "CronJob `cleanup-job` exists in namespace `stronghold`",
+          "verificationScriptFile": "q10_s1_validate_cronjob_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Schedule is `*/5 * * * *`",
+          "verificationScriptFile": "q10_s2_validate_schedule.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Image is `busybox:1.36`",
+          "verificationScriptFile": "q10_s3_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Command is set",
+          "verificationScriptFile": "q10_s4_validate_command.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "`activeDeadlineSeconds` is `30` in the Job template spec",
+          "verificationScriptFile": "q10_s5_validate_deadline.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "namespace": "fortress",
+      "machineHostname": "ckad9999",
+      "question": "A Deployment named `secure-app` in namespace `fortress` already has these security settings on its container:\n- `readOnlyRootFilesystem: true`\n- `allowPrivilegeEscalation: false`\n\nAdd `runAsUser: 10000` to the security context without removing or modifying the existing settings.\n\nThe Deployment must have running Pods after the update. The scoring verifies all three security settings are present.",
+      "concepts": [
+        "securitycontext",
+        "deployments",
+        "security"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment `secure-app` exists in namespace `fortress`",
+          "verificationScriptFile": "q11_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "`runAsUser` is `10000`",
+          "verificationScriptFile": "q11_s2_validate_runasuser.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "`readOnlyRootFilesystem: true` preserved",
+          "verificationScriptFile": "q11_s3_validate_readonlyfs.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "`allowPrivilegeEscalation: false` preserved",
+          "verificationScriptFile": "q11_s4_validate_noescalation.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Deployment `secure-app` has running Pods",
+          "verificationScriptFile": "q11_s5_validate_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "namespace": "bastion",
+      "machineHostname": "ckad9999",
+      "question": "The Deployment `pod-reader` in namespace `bastion` uses ServiceAccount `pod-reader-sa`. The application logs show:\n\n`forbidden: User \"system:serviceaccount:bastion:pod-reader-sa\" cannot list resource \"pods\" in API group \"\" in the namespace \"bastion\"`\n\nFix this by:\n1. Creating a Role named `pod-reader-role` that allows `get`, `list`, and `watch` on `pods` in namespace `bastion`.\n2. Creating a RoleBinding named `pod-reader-binding` that binds the Role to ServiceAccount `pod-reader-sa`.\n3. Verify the Deployment can now list pods.",
+      "concepts": [
+        "rbac",
+        "roles",
+        "serviceaccounts"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ServiceAccount `pod-reader-sa` exists in namespace `bastion`",
+          "verificationScriptFile": "q12_s1_validate_sa_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Role `pod-reader-role` exists in namespace `bastion`",
+          "verificationScriptFile": "q12_s2_validate_role_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Role verbs include `get` and `list`",
+          "verificationScriptFile": "q12_s3_validate_role_verbs.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Role resources include `pods`",
+          "verificationScriptFile": "q12_s4_validate_role_resources.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "RoleBinding `pod-reader-binding` exists in namespace `bastion`",
+          "verificationScriptFile": "q12_s5_validate_rolebinding_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "RoleBinding references Role `pod-reader-role`",
+          "verificationScriptFile": "q12_s6_validate_roleref.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "7",
+          "description": "RoleBinding references ServiceAccount `pod-reader-sa`",
+          "verificationScriptFile": "q12_s7_validate_subject_sa.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "namespace": "citadel",
+      "machineHostname": "ckad9999",
+      "question": "The Deployment `web-server` in namespace `citadel` was recently updated with a broken image and Pods are failing.\n\n1. Check the rollout history to find the previous working revision.\n2. Roll back the Deployment to the last working revision (the one with `nginx:1.25`).\n3. Verify the rollback was successful and Pods are running.\n\nSave the rollout history output to `/tmp/exam/course/13/rollout-history.txt`.",
+      "concepts": [
+        "deployments",
+        "rollback",
+        "rollout"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment `web-server` exists in namespace `citadel`",
+          "verificationScriptFile": "q13_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Image is rolled back to `nginx:1.25`",
+          "verificationScriptFile": "q13_s2_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Deployment `web-server` has running Pods",
+          "verificationScriptFile": "q13_s3_validate_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Rollout history saved to `/tmp/exam/course/13/rollout-history.txt`",
+          "verificationScriptFile": "q13_s4_validate_history_file.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "namespace": "rampart",
+      "machineHostname": "ckad9999",
+      "question": "The manifest file `/tmp/exam/course/14/broken-deploy.yaml` contains:\n- A deprecated API version (`extensions/v1beta1` instead of `apps/v1`)\n- A deprecated field (`spec.rollbackTo`)\n\nFix the manifest:\n1. Update the `apiVersion` to `apps/v1`.\n2. Remove the deprecated `spec.rollbackTo` field.\n3. Add the required `spec.selector.matchLabels` field (must match the Pod template labels).\n4. Apply the fixed manifest to namespace `rampart`.\n\nNote: migrating to `apps/v1` also requires a `spec.selector` field.",
+      "concepts": [
+        "deployments",
+        "api-versions",
+        "maintenance"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "`apiVersion` in the manifest updated to `apps/v1`",
+          "verificationScriptFile": "q14_s1_validate_apiversion.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Deprecated `rollbackTo` field removed from the manifest",
+          "verificationScriptFile": "q14_s2_validate_rollbackto_removed.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Deployment `legacy-app` applied and running in namespace `rampart`",
+          "verificationScriptFile": "q14_s3_validate_deploy_running.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "namespace": "tower",
+      "machineHostname": "ckad9999",
+      "question": "A Deployment named `health-app` in namespace `tower` has Pods in `CrashLoopBackOff` state (the liveness probe targets the wrong port).\n\n1. Investigate why the Pods are failing.\n2. Fix the issue (the liveness probe should target port `80`).\n3. Ensure the Deployment has running Pods.\n\nSave the root cause description to `/tmp/exam/course/15/root-cause.txt`.",
+      "concepts": [
+        "troubleshooting",
+        "probes",
+        "maintenance"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment `health-app` has running Pods",
+          "verificationScriptFile": "q15_s1_validate_running.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Liveness probe port is `80`",
+          "verificationScriptFile": "q15_s2_validate_probe_port.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Root cause saved to `/tmp/exam/course/15/root-cause.txt`",
+          "verificationScriptFile": "q15_s3_validate_rootcause_file.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "namespace": "gate",
+      "machineHostname": "ckad9999",
+      "question": "1. Create a ConfigMap named `app-config` in namespace `gate` with:\n   - `APP_ENV=production`\n   - `APP_DEBUG=false`\n\n2. Create a Pod named `config-app` in namespace `gate`:\n   - Image: `nginx:1.25`\n   - Use `envFrom` to load all keys from the ConfigMap `app-config` as environment variables.",
+      "concepts": [
+        "configmaps",
+        "pods",
+        "environment-variables"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ConfigMap `app-config` exists in namespace `gate`",
+          "verificationScriptFile": "q16_s1_validate_configmap_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "ConfigMap keys `APP_ENV=production` and `APP_DEBUG=false`",
+          "verificationScriptFile": "q16_s2_validate_cm_keys.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Pod `config-app` exists in namespace `gate`",
+          "verificationScriptFile": "q16_s3_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Pod `config-app` loads env from ConfigMap `app-config`",
+          "verificationScriptFile": "q16_s4_validate_envfrom.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Pod `config-app` is Running",
+          "verificationScriptFile": "q16_s5_validate_pod_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "namespace": "gate",
+      "machineHostname": "ckad9999",
+      "question": "A Deployment named `backend-app` is running in namespace `gate` with container port `80`.\n\nCreate a ClusterIP Service named `backend-svc` in namespace `gate` that:\n- Exposes port `80`\n- Targets port `80`\n- Routes traffic to the `backend-app` Pods\n\nVerify the Service has endpoints.",
+      "concepts": [
+        "services",
+        "clusterip",
+        "endpoints"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Service `backend-svc` exists in namespace `gate`",
+          "verificationScriptFile": "q17_s1_validate_svc_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Service type is `ClusterIP`",
+          "verificationScriptFile": "q17_s2_validate_type.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Service port is `80`",
+          "verificationScriptFile": "q17_s3_validate_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Service `backend-svc` has endpoints",
+          "verificationScriptFile": "q17_s4_validate_endpoints.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "namespace": "bulwark",
+      "machineHostname": "ckad9999",
+      "question": "Create a Job named `batch-processor` in namespace `bulwark`:\n- Image: `busybox:1.36`\n- Command: `echo \"Processing batch item\"`\n- Completions: `6` (6 total items to process)\n- Parallelism: `2` (2 items processed at a time)\n- Restart policy: `Never`",
+      "concepts": [
+        "jobs",
+        "parallelism",
+        "batch"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Job `batch-processor` exists in namespace `bulwark`",
+          "verificationScriptFile": "q18_s1_validate_job_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Completions is `6`",
+          "verificationScriptFile": "q18_s2_validate_completions.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Parallelism is `2`",
+          "verificationScriptFile": "q18_s3_validate_parallelism.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Image is `busybox:1.36`",
+          "verificationScriptFile": "q18_s4_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Command is set",
+          "verificationScriptFile": "q18_s5_validate_command.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "namespace": "parapet",
+      "machineHostname": "ckad9999",
+      "question": "A Deployment named `rolling-app` exists in namespace `parapet`.\n\nConfigure the Deployment's update strategy to use RollingUpdate with:\n- `maxSurge: 1`\n- `maxUnavailable: 0`\n\nThis ensures zero-downtime deployments. The Deployment must have running Pods after the update.",
+      "concepts": [
+        "deployments",
+        "rollingupdate",
+        "strategy"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Strategy type is `RollingUpdate`",
+          "verificationScriptFile": "q19_s1_validate_strategy.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "`maxSurge` is `1`",
+          "verificationScriptFile": "q19_s2_validate_maxsurge.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "`maxUnavailable` is `0`",
+          "verificationScriptFile": "q19_s3_validate_maxunavailable.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Deployment `rolling-app` has running Pods",
+          "verificationScriptFile": "q19_s4_validate_running.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "namespace": "stronghold",
+      "machineHostname": "ckad9999",
+      "question": "Using the template at `/tmp/exam/course/20/sidecar-pod.yaml`, create a multi-container Pod named `logger-app` in namespace `stronghold`:\n\n1. The main container `app` uses image `busybox:1.36` and writes logs:\n   - Command: `sh -c \"while true; do echo \\\"$(date) - App running\\\" >> /var/log/app.log; sleep 5; done\"`\n   - Mounts volume `shared-logs` at `/var/log`\n\n2. Add a sidecar container named `log-reader` using image `busybox:1.36`:\n   - Command: `sh -c \"tail -f /var/log/app.log\"`\n   - Mounts the same volume `shared-logs` at `/var/log`\n\n3. The volume `shared-logs` is of type `emptyDir`.",
+      "concepts": [
+        "pods",
+        "multi-container",
+        "volumes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod `logger-app` has 2 or more containers",
+          "verificationScriptFile": "q20_s1_validate_two_containers.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod has a shared `emptyDir` volume",
+          "verificationScriptFile": "q20_s2_validate_emptydir_vol.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Main container mounts the volume at `/var/log`",
+          "verificationScriptFile": "q20_s3_validate_main_mount.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Sidecar container mounts the volume at `/var/log`",
+          "verificationScriptFile": "q20_s4_validate_sidecar_mount.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Pod `logger-app` is Running",
+          "verificationScriptFile": "q20_s5_validate_pod_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    }
+  ]
+}

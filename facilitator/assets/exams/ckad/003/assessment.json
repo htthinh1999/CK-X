@@ -1,0 +1,1045 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "The DevOps team needs a complete list of all API resources available in the cluster, including the resource name, shortnames, API group, and whether the resource is namespaced.\n\nSave the complete output to `/tmp/exam/course/1/api-resources`.",
+      "concepts": [
+        "api-resources",
+        "kubectl"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "File api-resources exists and contains API resources list",
+          "verificationScriptFile": "q1_s1_validate_api_resources_file.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "blaze",
+      "machineHostname": "ckad9999",
+      "question": "Create a Deployment named `fire-app` in namespace `blaze` with the following specifications:\n\n- Image: `nginx:1.21`\n- Replicas: `3`\n- Strategy type: `Recreate` (not RollingUpdate)\n- Container name: `fire-container`\n\nSave the Deployment YAML to `/tmp/exam/course/2/fire-app.yaml` and apply it to the cluster.",
+      "concepts": [
+        "deployments",
+        "update-strategy"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment fire-app exists in blaze",
+          "verificationScriptFile": "q2_s1_validate_deployment_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Image is nginx:1.21",
+          "verificationScriptFile": "q2_s2_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Deployment has 3 replicas",
+          "verificationScriptFile": "q2_s3_validate_replicas.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Strategy type is Recreate",
+          "verificationScriptFile": "q2_s4_validate_strategy.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Container name is fire-container",
+          "verificationScriptFile": "q2_s5_validate_container_name.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "YAML saved to /tmp/exam/course/2/fire-app.yaml",
+          "verificationScriptFile": "q2_s6_validate_yaml_file.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "spark",
+      "machineHostname": "ckad9999",
+      "question": "A template Job manifest exists at `/tmp/exam/course/3/job.yaml`. Modify it to add a timeout of `60` seconds using `activeDeadlineSeconds`.\n\nThe Job should:\n\n- Be named `data-processor`\n- Run in namespace `spark`\n- Automatically terminate if running longer than `60` seconds\n- Have `backoffLimit: 2`\n- Use a `busybox` image with container name `processor`\n\nApply the Job to the cluster (keep the manifest at `/tmp/exam/course/3/job.yaml`).",
+      "concepts": [
+        "jobs",
+        "activeDeadlineSeconds"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Job data-processor exists in spark",
+          "verificationScriptFile": "q3_s1_validate_job_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "activeDeadlineSeconds is 60",
+          "verificationScriptFile": "q3_s2_validate_deadline.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "backoffLimit is 2",
+          "verificationScriptFile": "q3_s3_validate_backoff.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Uses busybox image",
+          "verificationScriptFile": "q3_s4_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Container name is processor",
+          "verificationScriptFile": "q3_s5_validate_container_name.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "YAML saved to /tmp/exam/course/3/job.yaml",
+          "verificationScriptFile": "q3_s6_validate_yaml_file.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "flare",
+      "machineHostname": "ckad9999",
+      "question": "A Helm release `phoenix-web` is installed in namespace `flare`. Render the manifests for this release and save the complete output to `/tmp/exam/course/4/rendered.yaml`.\n\nNote: Use the correct flags/commands (e.g. `helm get manifest` or `helm template` with the installed release's values) so the rendered output reflects the installed release.",
+      "concepts": [
+        "helm",
+        "templating"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "File rendered.yaml exists",
+          "verificationScriptFile": "q4_s1_validate_file_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "File contains apiVersion",
+          "verificationScriptFile": "q4_s2_validate_apiversion.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "File contains kind",
+          "verificationScriptFile": "q4_s3_validate_kind.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "File contains metadata",
+          "verificationScriptFile": "q4_s4_validate_metadata.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "File has substantial content (>50 lines)",
+          "verificationScriptFile": "q4_s5_validate_line_count.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "ember",
+      "machineHostname": "ckad9999",
+      "question": "A Pod named `crash-app` in namespace `ember` is in `CrashLoopBackOff` state. The Pod has a command error that prevents it from starting.\n\n1. Investigate the Pod to find the issue.\n2. Fix the Pod so it runs successfully.\n3. The Pod should be in `Running` state after your fix.\n\nHint: Check the container command configuration (the command should be `sleep`, not `sleepx`).",
+      "concepts": [
+        "troubleshooting",
+        "pods"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod crash-app exists in ember",
+          "verificationScriptFile": "q5_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod status is Running",
+          "verificationScriptFile": "q5_s2_validate_pod_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Container is ready",
+          "verificationScriptFile": "q5_s3_validate_container_ready.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Command is 'sleep' (not 'sleepx')",
+          "verificationScriptFile": "q5_s4_validate_command.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Restart count is reasonable (<5)",
+          "verificationScriptFile": "q5_s5_validate_restart_count.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Pod is currently running",
+          "verificationScriptFile": "q5_s6_validate_pod_running_state.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "flame",
+      "machineHostname": "ckad9999",
+      "question": "A ConfigMap named `app-settings` exists in namespace `flame` with multiple keys. Create a Pod named `config-reader` that:\n\n- Uses image `busybox:1.36`\n- Container name: `reader`\n- Runs command `[\"sleep\", \"3600\"]`\n- Mounts only the `database.host` and `database.port` keys from the ConfigMap (selective mount using `items`)\n- Mounts them to the `/config/` directory as files\n\nThe Pod should only have those two specific keys mounted, not all keys from the ConfigMap.",
+      "concepts": [
+        "configmaps",
+        "volumes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod config-reader exists in flame",
+          "verificationScriptFile": "q6_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod status is Running",
+          "verificationScriptFile": "q6_s2_validate_pod_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Uses busybox image",
+          "verificationScriptFile": "q6_s3_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Volume mounted at /config",
+          "verificationScriptFile": "q6_s4_validate_mount_path.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Uses ConfigMap app-settings",
+          "verificationScriptFile": "q6_s5_validate_configmap_ref.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Items specified for selective mount",
+          "verificationScriptFile": "q6_s6_validate_items.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "magma",
+      "machineHostname": "ckad9999",
+      "question": "Create a file at `/tmp/exam/course/7/password.txt` containing the text `FirePhoenix2024!` (no newline at end).\n\nThen create a Secret named `db-credentials` in namespace `magma` from this file. The key in the Secret should be `password.txt` and the Secret type should be `Opaque`.",
+      "concepts": [
+        "secrets",
+        "configuration"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "File password.txt exists",
+          "verificationScriptFile": "q7_s1_validate_file_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "File contains correct password",
+          "verificationScriptFile": "q7_s2_validate_file_content.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Secret db-credentials exists in magma",
+          "verificationScriptFile": "q7_s3_validate_secret_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Secret type is Opaque",
+          "verificationScriptFile": "q7_s4_validate_secret_type.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Secret has key password.txt",
+          "verificationScriptFile": "q7_s5_validate_secret_key.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "corona",
+      "machineHostname": "ckad9999",
+      "question": "Create a Headless Service named `backend-headless` in namespace `corona` that:\n\n- Has `clusterIP: None`\n- Selects pods with label `app=backend`\n- Exposes port `80`\n- Targets port `80`\n- Uses protocol `TCP`",
+      "concepts": [
+        "services",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Service backend-headless exists in corona",
+          "verificationScriptFile": "q8_s1_validate_svc_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "clusterIP is None (headless)",
+          "verificationScriptFile": "q8_s2_validate_clusterip_none.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Selector is app=backend",
+          "verificationScriptFile": "q8_s3_validate_selector.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Port is 80",
+          "verificationScriptFile": "q8_s4_validate_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "TargetPort is 80",
+          "verificationScriptFile": "q8_s5_validate_target_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Protocol is TCP",
+          "verificationScriptFile": "q8_s6_validate_protocol.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "blaze",
+      "machineHostname": "ckad9999",
+      "question": "A Deployment named `stable-v1` already exists in namespace `blaze` with 3 replicas running `nginx:1.21`.\n\nImplement a canary deployment pattern:\n\n1. Create a new Deployment named `canary-v2`:\n   - Image: `nginx:1.22`\n   - Replicas: `1`\n   - Labels: `app=web-frontend`, `version=v2`\n2. Create a Service named `frontend-svc`:\n   - Type: `ClusterIP`\n   - Port: `80`\n   - Selector: `app=web-frontend` (must route to BOTH stable and canary pods, so do not include `version` in the selector)\n\nThe traffic split should be approximately 75% stable / 25% canary (3:1 replica ratio). A starter template is available at `/tmp/exam/course/9/canary.yaml`.",
+      "concepts": [
+        "deployments",
+        "canary",
+        "services"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment stable-v1 exists",
+          "verificationScriptFile": "q9_s1_validate_stable_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Deployment canary-v2 exists",
+          "verificationScriptFile": "q9_s2_validate_canary_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Canary has 1 replica",
+          "verificationScriptFile": "q9_s3_validate_canary_replicas.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Canary uses nginx:1.22",
+          "verificationScriptFile": "q9_s4_validate_canary_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Canary has version=v2 label",
+          "verificationScriptFile": "q9_s5_validate_canary_version_label.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Service frontend-svc exists",
+          "verificationScriptFile": "q9_s6_validate_svc_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "7",
+          "description": "Service routes to both stable and canary",
+          "verificationScriptFile": "q9_s7_validate_svc_selector.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "namespace": "phoenix",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `data-transform` in namespace `phoenix` with a sidecar pattern:\n\nMain container (`producer`):\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do echo $(date) >> /data/input.log; sleep 5; done\"]`\n- Mounts volume `shared-data` at `/data`\n\nSidecar container (`transformer`):\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"tail -f /data/input.log | while read line; do echo \\\"PROCESSED: $line\\\" >> /data/output.log; done\"]`\n- Mounts the same volume `shared-data` at `/data`\n\nUse an `emptyDir` volume named `shared-data`.",
+      "concepts": [
+        "pods",
+        "sidecar",
+        "volumes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod data-transform exists in phoenix",
+          "verificationScriptFile": "q10_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod status is Running",
+          "verificationScriptFile": "q10_s2_validate_pod_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Pod has 2 containers",
+          "verificationScriptFile": "q10_s3_validate_two_containers.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Container 'producer' exists",
+          "verificationScriptFile": "q10_s4_validate_producer.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Container 'transformer' exists",
+          "verificationScriptFile": "q10_s5_validate_transformer.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Uses emptyDir volume",
+          "verificationScriptFile": "q10_s6_validate_emptydir.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "namespace": "corona",
+      "machineHostname": "ckad9999",
+      "question": "Create a NetworkPolicy named `allow-from-flame` in namespace `corona` that:\n\n- Applies to pods with label `app=backend`\n- Allows ingress traffic only from pods in namespace `flame`\n- Allows traffic on port `80` (TCP)\n- Denies all other ingress traffic\n\nHint: Use a `namespaceSelector` to specify the source namespace `flame` (the namespace is labelled `name=flame`).",
+      "concepts": [
+        "networkpolicy",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "NetworkPolicy allow-from-flame exists in corona",
+          "verificationScriptFile": "q11_s1_validate_np_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Applies to pods with app=backend",
+          "verificationScriptFile": "q11_s2_validate_pod_selector.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Policy type includes Ingress",
+          "verificationScriptFile": "q11_s3_validate_policy_type_ingress.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Has ingress rules defined",
+          "verificationScriptFile": "q11_s4_validate_ingress_rules.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Uses namespaceSelector",
+          "verificationScriptFile": "q11_s5_validate_namespace_selector.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Allows port 80",
+          "verificationScriptFile": "q11_s6_validate_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "namespace": "inferno",
+      "machineHostname": "ckad9999",
+      "question": "A Dockerfile template exists at `/tmp/exam/course/12/image/Dockerfile`. Modify it to:\n\n1. Add an `ARG` named `APP_VERSION` with default value `1.0.0`\n2. Add a `LABEL` `version=${APP_VERSION}`\n\nThen build the image with build-arg `APP_VERSION=2.0.0` and tag `localhost:5000/phoenix-app:2.0.0`, and push it to the local registry at `localhost:5000`.",
+      "concepts": [
+        "docker",
+        "image-build"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Dockerfile exists",
+          "verificationScriptFile": "q12_s1_validate_dockerfile_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Dockerfile has ARG APP_VERSION",
+          "verificationScriptFile": "q12_s2_validate_arg.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Dockerfile has LABEL version",
+          "verificationScriptFile": "q12_s3_validate_label.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Image localhost:5000/phoenix-app:2.0.0 built",
+          "verificationScriptFile": "q12_s4_validate_image_built.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Image has version=2.0.0 label",
+          "verificationScriptFile": "q12_s5_validate_image_label.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Image pushed to localhost:5000",
+          "verificationScriptFile": "q12_s6_validate_pushed.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "namespace": "flare",
+      "machineHostname": "ckad9999",
+      "question": "A values file exists at `/tmp/exam/course/13/values.yaml`. Use it to install a new Helm release:\n\n- Release name: `phoenix-api`\n- Namespace: `flare`\n- Chart: `bitnami/nginx`\n- Values file: `/tmp/exam/course/13/values.yaml`\n\nThe values file specifies 3 replicas and service port `8080`.",
+      "concepts": [
+        "helm",
+        "values"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Values file exists",
+          "verificationScriptFile": "q13_s1_validate_values_file.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Helm release phoenix-api exists in flare",
+          "verificationScriptFile": "q13_s2_validate_release_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Release status is deployed",
+          "verificationScriptFile": "q13_s3_validate_release_deployed.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Deployment has 3 replicas",
+          "verificationScriptFile": "q13_s4_validate_replicas.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Service port is 8080",
+          "verificationScriptFile": "q13_s5_validate_svc_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "namespace": "phoenix",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `lifecycle-pod` in namespace `phoenix` that:\n\n- Uses image `nginx:1.21`\n- Container name: `main`\n- Has a `postStart` lifecycle hook that executes:\n\n  `/bin/sh -c \"echo 'Started at $(date)' > /usr/share/nginx/html/started.txt\"`\n\nThe hook should create a file indicating when the container started. A starter template is available at `/tmp/exam/course/14/lifecycle.yaml`.",
+      "concepts": [
+        "pods",
+        "lifecycle-hooks"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod lifecycle-pod exists in phoenix",
+          "verificationScriptFile": "q14_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod status is Running",
+          "verificationScriptFile": "q14_s2_validate_pod_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Image is nginx:1.21",
+          "verificationScriptFile": "q14_s3_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Container name is main",
+          "verificationScriptFile": "q14_s4_validate_container_name.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "postStart lifecycle hook exists",
+          "verificationScriptFile": "q14_s5_validate_poststart.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "started.txt file created by hook",
+          "verificationScriptFile": "q14_s6_validate_started_file.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "namespace": "spark",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `qos-guaranteed` in namespace `spark` that achieves the `Guaranteed` QoS class:\n\n- Image: `nginx:1.21`\n- Container name: `web`\n- Must have QoS class of exactly `Guaranteed`\n\nHint: For Guaranteed QoS, both memory and CPU requests and limits must be set, and requests must equal limits.",
+      "concepts": [
+        "pods",
+        "resources",
+        "qos"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod qos-guaranteed exists in spark",
+          "verificationScriptFile": "q15_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod status is Running",
+          "verificationScriptFile": "q15_s2_validate_pod_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "QoS class is Guaranteed",
+          "verificationScriptFile": "q15_s3_validate_qos_class.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Memory requests = limits",
+          "verificationScriptFile": "q15_s4_validate_memory.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "CPU requests = limits",
+          "verificationScriptFile": "q15_s5_validate_cpu.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "namespace": "magma",
+      "machineHostname": "ckad9999",
+      "question": "A ServiceAccount named `fire-sa` exists in namespace `magma`. Create a Pod named `token-pod` that:\n\n- Uses image `busybox:1.36`\n- Command: `[\"sleep\", \"3600\"]`\n- Container name: `app`\n- Uses ServiceAccount `fire-sa`\n- Mounts the ServiceAccount token via a `projected` volume at `/var/run/secrets/fire-token/`\n- Token should have an expiration of `3600` seconds",
+      "concepts": [
+        "serviceaccount",
+        "projected-volume",
+        "security"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod token-pod exists in magma",
+          "verificationScriptFile": "q16_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod uses ServiceAccount fire-sa",
+          "verificationScriptFile": "q16_s2_validate_serviceaccount.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Has projected volume",
+          "verificationScriptFile": "q16_s3_validate_projected.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Token mounted at /var/run/secrets/fire-token/",
+          "verificationScriptFile": "q16_s4_validate_mount_path.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "namespace": "ember",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `tcp-health` in namespace `ember` that:\n\n- Uses image `nginx:1.21`\n- Container name: `web`\n- Has a `tcpSocket` liveness probe on port `80`\n- Initial delay: `10` seconds\n- Period: `5` seconds",
+      "concepts": [
+        "probes",
+        "liveness"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod tcp-health exists in ember",
+          "verificationScriptFile": "q17_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod status is Running",
+          "verificationScriptFile": "q17_s2_validate_pod_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Has tcpSocket liveness probe",
+          "verificationScriptFile": "q17_s3_validate_tcp_probe.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Probe targets port 80",
+          "verificationScriptFile": "q17_s4_validate_probe_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Initial delay is 10 seconds",
+          "verificationScriptFile": "q17_s5_validate_initial_delay.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Period is 5 seconds",
+          "verificationScriptFile": "q17_s6_validate_period.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "namespace": "flame",
+      "machineHostname": "ckad9999",
+      "question": "A Deployment named `web-deploy` exists in namespace `flame` with pods exposing named ports `http-web` (80) and `https-web` (443).\n\nCreate a Service named `web-svc` that:\n\n- Type: `ClusterIP`\n- Exposes port `80` targeting the named port `http-web`\n- Exposes port `443` targeting the named port `https-web`\n- Selector: `app=web-app`",
+      "concepts": [
+        "services",
+        "named-ports"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Service web-svc exists in flame",
+          "verificationScriptFile": "q18_s1_validate_svc_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Service type is ClusterIP",
+          "verificationScriptFile": "q18_s2_validate_svc_type.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Service exposes port 80",
+          "verificationScriptFile": "q18_s3_validate_port80.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Port 80 targets named port http-web",
+          "verificationScriptFile": "q18_s4_validate_target80.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Service exposes port 443",
+          "verificationScriptFile": "q18_s5_validate_port443.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Port 443 targets named port https-web",
+          "verificationScriptFile": "q18_s6_validate_target443.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "namespace": "blaze",
+      "machineHostname": "ckad9999",
+      "question": "Create a Deployment named `spread-deploy` in namespace `blaze` that:\n\n- Image: `nginx:1.21`\n- Replicas: `4`\n- Container name: `web`\n- Label selector: `app=spread-app`\n- Uses `topologySpreadConstraints` to spread pods evenly across nodes with:\n  - `topologyKey`: `kubernetes.io/hostname`\n  - `maxSkew`: `1`\n  - `whenUnsatisfiable`: `ScheduleAnyway`",
+      "concepts": [
+        "deployments",
+        "scheduling",
+        "topology-spread"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment spread-deploy exists in blaze",
+          "verificationScriptFile": "q19_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Deployment has 4 replicas",
+          "verificationScriptFile": "q19_s2_validate_replicas.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Has topologySpreadConstraints",
+          "verificationScriptFile": "q19_s3_validate_tsc_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "topologyKey is kubernetes.io/hostname",
+          "verificationScriptFile": "q19_s4_validate_topology_key.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "maxSkew is 1",
+          "verificationScriptFile": "q19_s5_validate_max_skew.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "whenUnsatisfiable is ScheduleAnyway",
+          "verificationScriptFile": "q19_s6_validate_when_unsatisfiable.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Use field selectors (not label selectors) to list all Pods in the cluster that have `status.phase=Running`.\n\nSave the Pod names (one per line) to `/tmp/exam/course/20/running-pods.txt`.\n\nHint: Use `--field-selector` with kubectl.",
+      "concepts": [
+        "field-selectors",
+        "kubectl"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "File running-pods.txt exists",
+          "verificationScriptFile": "q20_s1_validate_file_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "File contains pod names",
+          "verificationScriptFile": "q20_s2_validate_has_pods.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Format is one pod name per line",
+          "verificationScriptFile": "q20_s3_validate_one_per_line.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Content matches running pods",
+          "verificationScriptFile": "q20_s4_validate_content_matches.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "21",
+      "namespace": "solar",
+      "machineHostname": "ckad9999",
+      "question": "Write a command to `/tmp/exam/course/21/drain-command.sh` that would drain a node named `worker-node-1`:\n\n- Ignore DaemonSets\n- Delete emptyDir data\n- Force deletion of pods\n- Use a timeout of `60` seconds\n\nNote: Do not actually execute the drain command. Just write it to the file.",
+      "concepts": [
+        "node-maintenance",
+        "drain"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "File drain-command.sh exists",
+          "verificationScriptFile": "q21_s1_validate_file_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Command contains 'kubectl drain'",
+          "verificationScriptFile": "q21_s2_validate_has_drain.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Command has required flags",
+          "verificationScriptFile": "q21_s3_validate_has_flags.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Command has timeout flag",
+          "verificationScriptFile": "q21_s4_validate_has_timeout.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    }
+  ]
+}

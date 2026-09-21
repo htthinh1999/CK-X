@@ -1,0 +1,10 @@
+{
+    "lab": "ckad-007",
+    "workerNodes": 1,
+    "answers": "assets/exams/ckad/007/answers.md",
+    "questions": "assessment.json",
+    "totalMarks": 105,
+    "lowScore": 42,
+    "mediumScore": 63,
+    "highScore": 94
+}

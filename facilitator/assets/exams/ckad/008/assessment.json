@@ -1,0 +1,752 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "mynamespace",
+      "machineHostname": "ckad9999",
+      "question": "Create a namespace called `mynamespace` and a Pod named `nginx` in this namespace.\n\nThe Pod should:\n- Use the `nginx:1.25` image\n- Have `restartPolicy: Never`\n\nHint: use `kubectl create namespace` and `kubectl run`.",
+      "concepts": [
+        "namespaces",
+        "pods"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Namespace mynamespace exists",
+          "verificationScriptFile": "q1_s1_validate_namespace.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pod nginx exists in mynamespace",
+          "verificationScriptFile": "q1_s2_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Pod nginx uses an nginx image",
+          "verificationScriptFile": "q1_s3_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "summit",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `envpod` in namespace `summit` with the following specifications:\n\n- Image: `busybox:1.36`\n- Command: `env`\n- Environment variable: `VAR1=value1`\n- `restartPolicy: Never`\n\nHint: use the `--env` flag with `kubectl run`.",
+      "concepts": [
+        "pods",
+        "configuration",
+        "environment-variables"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod envpod exists in summit",
+          "verificationScriptFile": "q2_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pod envpod uses a busybox image",
+          "verificationScriptFile": "q2_s2_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Environment variable VAR1=value1 is set",
+          "verificationScriptFile": "q2_s3_validate_env_var.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "cliff",
+      "machineHostname": "ckad9999",
+      "question": "Create a ResourceQuota named `cliff-quota` in namespace `cliff` with the following hard limits:\n\n- CPU: `1`\n- Memory: `1G`\n- Pods: `2`\n\nHint: use `kubectl create quota`.",
+      "concepts": [
+        "resourcequota",
+        "configuration"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ResourceQuota cliff-quota exists in cliff",
+          "verificationScriptFile": "q3_s1_validate_quota_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "ResourceQuota CPU hard limit is 1",
+          "verificationScriptFile": "q3_s2_validate_cpu.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "ResourceQuota memory hard limit is 1G",
+          "verificationScriptFile": "q3_s3_validate_memory.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "4",
+          "description": "ResourceQuota pods hard limit is 2",
+          "verificationScriptFile": "q3_s4_validate_pods.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "ridge",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `ridge`:\n\n1. Create 3 Pods named `nginx1`, `nginx2`, `nginx3` using image `nginx:1.25`. All of them should have the label `app=v1`.\n2. Change the label of Pod `nginx2` to `app=v2`.\n3. Add a new label `tier=web` to all Pods having label `app=v1`.\n\nHint: use `kubectl run --labels` and `kubectl label`.",
+      "concepts": [
+        "pods",
+        "labels",
+        "selectors"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "All 3 pods (nginx1, nginx2, nginx3) exist in ridge",
+          "verificationScriptFile": "q4_s1_validate_pods_exist.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod nginx2 has label app=v2",
+          "verificationScriptFile": "q4_s2_validate_nginx2_label.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Pods nginx1 and nginx3 have label tier=web",
+          "verificationScriptFile": "q4_s3_validate_tier_web.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "valley",
+      "machineHostname": "ckad9999",
+      "question": "Create a Deployment named `nginx-deploy` in namespace `valley` with:\n\n- Image: `nginx:1.18.0`\n- Replicas: `2`\n- Container port: `80`\n\nDo NOT create a Service for this Deployment.\n\nHint: use `kubectl create deployment`.",
+      "concepts": [
+        "deployments"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment nginx-deploy exists in valley",
+          "verificationScriptFile": "q5_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Deployment nginx-deploy image is nginx:1.18.0",
+          "verificationScriptFile": "q5_s2_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Deployment nginx-deploy has 2 replicas",
+          "verificationScriptFile": "q5_s3_validate_replicas.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Deployment nginx-deploy container port is 80",
+          "verificationScriptFile": "q5_s4_validate_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "valley",
+      "machineHostname": "ckad9999",
+      "question": "The Deployment `nginx-deploy` from Question 5 exists in namespace `valley`.\n\n1. Update the image to `nginx:1.19.8`.\n2. Verify the rollout completed successfully.\n3. Check the rollout history.\n\nHint: use `kubectl set image` and `kubectl rollout`.",
+      "concepts": [
+        "deployments",
+        "rollout"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment nginx-deploy exists in valley",
+          "verificationScriptFile": "q6_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Deployment nginx-deploy image updated to nginx:1.19.8",
+          "verificationScriptFile": "q6_s2_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "3",
+          "description": "Deployment nginx-deploy rollout completed (>=1 available replica)",
+          "verificationScriptFile": "q6_s3_validate_rollout.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "cave",
+      "machineHostname": "ckad9999",
+      "question": "A Deployment `rollback-deploy` exists in namespace `cave` with a wrong image `nginx:1.91` causing pods to fail.\n\n1. Identify that the rollout has failed.\n2. Rollback to the previous working revision.\n3. Verify the rollback was successful and pods are running.\n\nHint: use `kubectl rollout undo`.",
+      "concepts": [
+        "deployments",
+        "rollback",
+        "troubleshooting"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment rollback-deploy exists in cave",
+          "verificationScriptFile": "q7_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Deployment image rolled back from nginx:1.91",
+          "verificationScriptFile": "q7_s2_validate_image_rolled_back.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "At least one rollback-deploy pod is Running",
+          "verificationScriptFile": "q7_s3_validate_pods_running.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "stone",
+      "machineHostname": "ckad9999",
+      "question": "Create a Job named `echo-job` in namespace `stone` that:\n\n- Uses image `busybox:1.36`\n- Runs the command: `echo hello; sleep 5; echo world`\n- Should complete `5` times sequentially (one after the other)\n\nHint: use the `spec.completions` field.",
+      "concepts": [
+        "jobs",
+        "batch"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Job echo-job exists in stone",
+          "verificationScriptFile": "q8_s1_validate_job_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Job echo-job has completions=5",
+          "verificationScriptFile": "q8_s2_validate_completions.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Job echo-job uses a busybox image",
+          "verificationScriptFile": "q8_s3_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "mist",
+      "machineHostname": "ckad9999",
+      "question": "Create a CronJob named `date-job` in namespace `mist` that:\n\n- Uses image `busybox:1.36`\n- Runs every minute (`*/1 * * * *`)\n- Executes the command: `date; echo Hello from Kubernetes`\n\nHint: use `kubectl create cronjob`.",
+      "concepts": [
+        "cronjobs",
+        "batch"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "CronJob date-job exists in mist",
+          "verificationScriptFile": "q9_s1_validate_cronjob_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "CronJob date-job runs every minute",
+          "verificationScriptFile": "q9_s2_validate_schedule.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "CronJob date-job uses a busybox image",
+          "verificationScriptFile": "q9_s3_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "namespace": "alpine",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `multi-container` in namespace `alpine` with two containers:\n\nContainer 1:\n- Name: `container1`\n- Image: `busybox:1.36`\n- Command: `echo hello; sleep 3600`\n\nContainer 2:\n- Name: `container2`\n- Image: `busybox:1.36`\n- Command: `echo hello; sleep 3600`\n\nHint: generate YAML with `--dry-run=client -o yaml` and add the second container.",
+      "concepts": [
+        "pods",
+        "multi-container"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod multi-container exists in alpine",
+          "verificationScriptFile": "q10_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pod multi-container has 2 containers",
+          "verificationScriptFile": "q10_s2_validate_container_count.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Both containers use busybox images",
+          "verificationScriptFile": "q10_s3_validate_images.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "namespace": "crest",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `init-pod` in namespace `crest` with:\n\nMain container:\n- Name: `nginx`\n- Image: `nginx:1.25`\n- Port: `80`\n- Volume mount: `/usr/share/nginx/html`\n\nInit container:\n- Name: `init`\n- Image: `busybox:1.36`\n- Command: `echo \"Initialized\" > /work-dir/index.html`\n- Volume mount: `/work-dir`\n\nBoth containers should share an `emptyDir` volume.\n\nHint: use the `initContainers` field in the Pod spec.",
+      "concepts": [
+        "pods",
+        "init-containers",
+        "volumes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod init-pod exists in crest",
+          "verificationScriptFile": "q11_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pod init-pod has an init container",
+          "verificationScriptFile": "q11_s2_validate_init_container.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Main container uses an nginx image",
+          "verificationScriptFile": "q11_s3_validate_main_nginx.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Pod init-pod has an emptyDir volume",
+          "verificationScriptFile": "q11_s4_validate_emptydir.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "namespace": "peak",
+      "machineHostname": "ckad9999",
+      "question": "Create a ConfigMap named `app-config` in namespace `peak` with the following key-value pairs:\n\n- `foo=lala`\n- `foo2=lolo`\n\nHint: use `kubectl create configmap --from-literal`.",
+      "concepts": [
+        "configmaps",
+        "configuration"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ConfigMap app-config exists in peak",
+          "verificationScriptFile": "q12_s1_validate_cm_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "ConfigMap key foo=lala",
+          "verificationScriptFile": "q12_s2_validate_foo.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "ConfigMap key foo2=lolo",
+          "verificationScriptFile": "q12_s3_validate_foo2.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "namespace": "summit",
+      "machineHostname": "ckad9999",
+      "question": "1. Create a ConfigMap named `options` in namespace `summit` with value `var5=val5`.\n2. Create a Pod named `config-pod` with image `nginx:1.25` that loads the value from key `var5` into an environment variable called `OPTION`.\n\nHint: use `valueFrom.configMapKeyRef` in the Pod spec.",
+      "concepts": [
+        "configmaps",
+        "pods",
+        "environment-variables"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ConfigMap options exists in summit",
+          "verificationScriptFile": "q13_s1_validate_cm_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "ConfigMap options has var5=val5",
+          "verificationScriptFile": "q13_s2_validate_var5.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Pod config-pod exists in summit",
+          "verificationScriptFile": "q13_s3_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "OPTION env var references ConfigMap options",
+          "verificationScriptFile": "q13_s4_validate_env_ref.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "namespace": "cliff",
+      "machineHostname": "ckad9999",
+      "question": "1. Create a ConfigMap named `cmvolume` in namespace `cliff` with values `var8=val8` and `var9=val9`.\n2. Create a Pod named `vol-pod` with image `nginx:1.25` that mounts this ConfigMap as a volume at `/etc/lala`.\n\nHint: use `volumes` and `volumeMounts` in the Pod spec.",
+      "concepts": [
+        "configmaps",
+        "volumes",
+        "pods"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ConfigMap cmvolume exists in cliff",
+          "verificationScriptFile": "q14_s1_validate_cm_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod vol-pod exists in cliff",
+          "verificationScriptFile": "q14_s2_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "vol-pod mounts a volume at /etc/lala",
+          "verificationScriptFile": "q14_s3_validate_mount_path.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "namespace": "ridge",
+      "machineHostname": "ckad9999",
+      "question": "1. Create a Secret named `mysecret` in namespace `ridge` with value `password=mypass`.\n2. Create a Pod named `secret-pod` with image `nginx:1.25` that mounts the Secret as a volume at `/etc/foo`.\n\nHint: use `kubectl create secret generic` and mount it as a volume.",
+      "concepts": [
+        "secrets",
+        "volumes",
+        "pods"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Secret mysecret exists in ridge",
+          "verificationScriptFile": "q15_s1_validate_secret_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pod secret-pod exists in ridge",
+          "verificationScriptFile": "q15_s2_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "secret-pod mounts a volume at /etc/foo",
+          "verificationScriptFile": "q15_s3_validate_mount_path.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "namespace": "valley",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `secure-pod` in namespace `valley` with:\n\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Run as user ID: `101`\n- `restartPolicy: Never`\n\nHint: use `spec.securityContext.runAsUser`.",
+      "concepts": [
+        "securitycontext",
+        "pods",
+        "security"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod secure-pod exists in valley",
+          "verificationScriptFile": "q16_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pod secure-pod runs as user 101",
+          "verificationScriptFile": "q16_s2_validate_run_as_user.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "namespace": "cave",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `resource-pod` in namespace `cave` with:\n\n- Image: `nginx:1.25`\n- Resource requests: `cpu=100m`, `memory=256Mi`\n- Resource limits: `cpu=200m`, `memory=512Mi`\n\nHint: use `spec.containers[].resources`.",
+      "concepts": [
+        "resources",
+        "pods",
+        "configuration"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod resource-pod exists in cave",
+          "verificationScriptFile": "q17_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "CPU request is 100m",
+          "verificationScriptFile": "q17_s2_validate_cpu_req.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Memory request is 256Mi",
+          "verificationScriptFile": "q17_s3_validate_mem_req.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "CPU limit is 200m",
+          "verificationScriptFile": "q17_s4_validate_cpu_lim.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Memory limit is 512Mi",
+          "verificationScriptFile": "q17_s5_validate_mem_lim.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "namespace": "stone",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `liveness-pod` in namespace `stone` with:\n\n- Image: `nginx:1.25`\n- Liveness probe that executes the command `ls`\n- Initial delay: `5` seconds\n- Period: `5` seconds\n\nHint: use `spec.containers[].livenessProbe.exec`.",
+      "concepts": [
+        "probes",
+        "observability",
+        "pods"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod liveness-pod exists in stone",
+          "verificationScriptFile": "q18_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "liveness-pod has an exec liveness probe",
+          "verificationScriptFile": "q18_s2_validate_liveness_exec.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "livenessProbe initialDelaySeconds is 5",
+          "verificationScriptFile": "q18_s3_validate_initial_delay.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "livenessProbe periodSeconds is 5",
+          "verificationScriptFile": "q18_s4_validate_period.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "namespace": "mist",
+      "machineHostname": "ckad9999",
+      "question": "1. Create a Deployment named `web` in namespace `mist` with image `nginx:1.25` and 2 replicas.\n2. Expose it via a ClusterIP Service named `web` on port `80`.\n3. Create a NetworkPolicy named `web-policy` that only allows ingress traffic to this Deployment from Pods with label `access=granted`.\n\nHint: use `kubectl create deployment`, `kubectl expose`, and create a NetworkPolicy YAML.",
+      "concepts": [
+        "services",
+        "networkpolicy",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment web exists in mist",
+          "verificationScriptFile": "q19_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Deployment web has 2 replicas",
+          "verificationScriptFile": "q19_s2_validate_replicas.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Service web exists in mist",
+          "verificationScriptFile": "q19_s3_validate_svc_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "NetworkPolicy web-policy exists in mist",
+          "verificationScriptFile": "q19_s4_validate_netpol_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "5",
+          "description": "NetworkPolicy ingress allows access=granted",
+          "verificationScriptFile": "q19_s5_validate_ingress_selector.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "namespace": "alpine",
+      "machineHostname": "ckad9999",
+      "question": "1. Create a PersistentVolume named `myvolume` with:\n   - Capacity: `10Gi`\n   - Access modes: `ReadWriteOnce`, `ReadWriteMany`\n   - Storage class: `normal`\n   - Host path: `/etc/foo`\n\n2. Create a PersistentVolumeClaim named `mypvc` in namespace `alpine` with:\n   - Request: `4Gi`\n   - Access mode: `ReadWriteOnce`\n   - Storage class: `normal`\n\n3. Create a Pod named `pv-pod` in namespace `alpine` with image `busybox:1.36` that uses the PVC and mounts it at `/etc/foo`.\n\nHint: PersistentVolumes are cluster-scoped (no namespace).",
+      "concepts": [
+        "persistentvolumes",
+        "storage",
+        "pods"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "PersistentVolume myvolume exists",
+          "verificationScriptFile": "q20_s1_validate_pv_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "PV myvolume capacity is 10Gi",
+          "verificationScriptFile": "q20_s2_validate_capacity.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "PersistentVolumeClaim mypvc exists in alpine",
+          "verificationScriptFile": "q20_s3_validate_pvc_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "4",
+          "description": "PVC mypvc requests 4Gi",
+          "verificationScriptFile": "q20_s4_validate_pvc_request.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Pod pv-pod exists in alpine",
+          "verificationScriptFile": "q20_s5_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "pv-pod mounts the PVC at /etc/foo",
+          "verificationScriptFile": "q20_s6_validate_mount_path.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    }
+  ]
+}

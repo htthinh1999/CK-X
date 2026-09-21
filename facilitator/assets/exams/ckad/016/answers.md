@@ -1,0 +1,487 @@
+# CKAD Simulation 14 — Answers
+
+> Dojo Raijin ⚡ — *「雷神は天を裂く」- Raijin splits the heavens*
+>
+> Path mapping for this lab: `/opt/course/N/` and `./exam/course/N/` from the original are all under `/tmp/exam/course/N/`. Everything runs on the single `ckad9999` jumphost / one cluster (no SSH between instances).
+
+---
+
+## Question 1 | Container Image with Healthcheck
+
+```bash
+mkdir -p /tmp/exam/course/1
+cat <<EOF > /tmp/exam/course/1/Dockerfile
+FROM nginx:1.23-alpine
+HEALTHCHECK --interval=10s --timeout=3s --retries=3 \
+  CMD curl -f http://localhost/ || exit 1
+EOF
+```
+
+---
+
+## Question 2 | Sidecar Logging and Filtering
+
+```bash
+mkdir -p /tmp/exam/course/2
+cat <<EOF > /tmp/exam/course/2/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: thunder-logger
+  namespace: thunder
+spec:
+  containers:
+  - name: app-container
+    image: busybox
+    command: ['sh', '-c', 'while true; do echo "INFO: Processing request"; sleep 2; echo "ERROR: Connection timeout"; sleep 3; done > /var/log/app.log']
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/log
+  - name: error-tailer
+    image: busybox
+    command: ['sh', '-c', 'tail -f /var/log/app.log | grep ERROR']
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/log
+  volumes:
+  - name: log-volume
+    emptyDir: {}
+EOF
+kubectl apply -f /tmp/exam/course/2/pod.yaml
+```
+
+---
+
+## Question 3 | Advanced CronJob
+
+```bash
+mkdir -p /tmp/exam/course/3
+cat <<EOF > /tmp/exam/course/3/cronjob.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: lightning-strike
+  namespace: bolt
+spec:
+  startingDeadlineSeconds: 15
+  successfulJobsHistoryLimit: 2
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: lightning-strike
+            image: busybox
+            command:
+            - echo
+            - "Strike!"
+          restartPolicy: OnFailure
+EOF
+kubectl apply -f /tmp/exam/course/3/cronjob.yaml
+```
+
+---
+
+## Question 4 | Init Container Dependency
+
+```bash
+mkdir -p /tmp/exam/course/4
+cat <<EOF > /tmp/exam/course/4/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-with-wait
+  namespace: storm
+spec:
+  initContainers:
+  - name: wait-for-db
+    image: busybox
+    command: ['sh', '-c', 'until nslookup database-svc; do echo waiting for database; sleep 2; done;']
+  containers:
+  - name: main-app
+    image: nginx:alpine
+EOF
+kubectl apply -f /tmp/exam/course/4/pod.yaml
+```
+
+---
+
+## Question 5 | Helm Template Overrides
+
+```bash
+mkdir -p /tmp/exam/course/5
+helm template thunder-web /tmp/exam/course/5/chart --namespace surge \
+  --set replicaCount=3 --set image.tag=latest > /tmp/exam/course/5/output.yaml
+```
+
+---
+
+## Question 6 | Deployment Rollback
+
+```bash
+kubectl rollout history deployment api-gateway -n voltage
+kubectl rollout undo deployment api-gateway -n voltage --to-revision=1
+kubectl rollout status deployment api-gateway -n voltage
+```
+
+Revision 1 uses image `nginx:1.23`.
+
+---
+
+## Question 7 | Canary Deployment
+
+```bash
+mkdir -p /tmp/exam/course/7
+cat <<EOF > /tmp/exam/course/7/backend-v2.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-v2
+  namespace: spark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+EOF
+kubectl apply -f /tmp/exam/course/7/backend-v2.yaml
+```
+
+Keep the pod template label `app: backend` identical to `backend-v1` so `backend-svc` selects both.
+
+---
+
+## Question 8 | Kustomize Strategic Merge Patch
+
+```bash
+cat <<EOF > /tmp/exam/course/8/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- deployment.yaml
+patchesStrategicMerge:
+- patch.yaml
+EOF
+
+cat <<EOF > /tmp/exam/course/8/patch.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-worker
+spec:
+  template:
+    spec:
+      containers:
+      - name: worker
+        env:
+        - name: APP_ENV
+          value: production
+EOF
+
+kubectl apply -k /tmp/exam/course/8/ -n charge
+```
+
+---
+
+## Question 9 | Troubleshoot CrashLoopBackOff
+
+Inspect the failing pod:
+
+```bash
+kubectl get pod data-processor -n flash
+kubectl describe pod data-processor -n flash
+kubectl logs data-processor -n flash
+```
+
+The container exits with `exit 1`. Recreate the pod with a command that keeps it running:
+
+```bash
+kubectl delete pod data-processor -n flash
+mkdir -p /tmp/exam/course/9
+cat <<EOF > /tmp/exam/course/9/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: data-processor
+  namespace: flash
+spec:
+  containers:
+  - name: processor
+    image: busybox
+    command: ["sh", "-c", "echo Starting...; sleep 3600"]
+EOF
+kubectl apply -f /tmp/exam/course/9/pod.yaml
+```
+
+The pod should now be `Running`.
+
+---
+
+## Question 10 | Kubectl Events
+
+```bash
+mkdir -p /tmp/exam/course/10
+kubectl get events -n strike --sort-by='.metadata.creationTimestamp' > /tmp/exam/course/10/events.txt
+```
+
+---
+
+## Question 11 | All Three Probes
+
+```bash
+mkdir -p /tmp/exam/course/11
+cat <<EOF > /tmp/exam/course/11/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: complex-app
+  namespace: plasma
+spec:
+  containers:
+  - name: complex-app
+    image: nginx:alpine
+    ports:
+    - containerPort: 80
+    startupProbe:
+      httpGet:
+        path: /
+        port: 80
+      failureThreshold: 30
+      periodSeconds: 1
+    livenessProbe:
+      tcpSocket:
+        port: 80
+      periodSeconds: 10
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 80
+      periodSeconds: 5
+      initialDelaySeconds: 5
+EOF
+kubectl apply -f /tmp/exam/course/11/pod.yaml
+```
+
+---
+
+## Question 12 | Downward API
+
+```bash
+mkdir -p /tmp/exam/course/12
+cat <<EOF > /tmp/exam/course/12/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: env-info
+  namespace: thunder
+spec:
+  containers:
+  - name: env-info
+    image: busybox
+    command: ['sleep', '3600']
+    env:
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+EOF
+kubectl apply -f /tmp/exam/course/12/pod.yaml
+```
+
+---
+
+## Question 13 | SecurityContext Capabilities
+
+```bash
+mkdir -p /tmp/exam/course/13
+cat <<EOF > /tmp/exam/course/13/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-net
+  namespace: bolt
+spec:
+  containers:
+  - name: secure-net
+    image: alpine
+    command: ["sleep", "1d"]
+    securityContext:
+      capabilities:
+        add: ["NET_ADMIN"]
+        drop: ["ALL"]
+EOF
+kubectl apply -f /tmp/exam/course/13/pod.yaml
+```
+
+---
+
+## Question 14 | Secret with stringData
+
+```bash
+mkdir -p /tmp/exam/course/14
+cat <<EOF > /tmp/exam/course/14/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+  namespace: storm
+type: Opaque
+stringData:
+  username: admin
+  password: supersecret123
+EOF
+kubectl apply -f /tmp/exam/course/14/secret.yaml
+```
+
+---
+
+## Question 15 | ConfigMap as Command Args
+
+```bash
+mkdir -p /tmp/exam/course/15
+kubectl create configmap app-args --from-literal=mode=verbose -n voltage
+cat <<EOF > /tmp/exam/course/15/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: arg-reader
+  namespace: voltage
+spec:
+  containers:
+  - name: arg-reader
+    image: busybox
+    command: ["echo"]
+    args: ["\$(MODE)"]
+    env:
+    - name: MODE
+      valueFrom:
+        configMapKeyRef:
+          name: app-args
+          key: mode
+  restartPolicy: Never
+EOF
+kubectl apply -f /tmp/exam/course/15/pod.yaml
+```
+
+---
+
+## Question 16 | ClusterRole and Binding
+
+```bash
+kubectl create serviceaccount app-sa -n spark
+kubectl create clusterrole secret-reader --verb=get,watch,list --resource=secrets
+kubectl create clusterrolebinding secret-reader-binding \
+  --clusterrole=secret-reader --serviceaccount=spark:app-sa
+```
+
+---
+
+## Question 17 | NetworkPolicy AND Logic
+
+```bash
+mkdir -p /tmp/exam/course/17
+cat <<EOF > /tmp/exam/course/17/netpol.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: strict-ingress
+  namespace: charge
+spec:
+  podSelector:
+    matchLabels:
+      role: db
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          env: prod
+      podSelector:
+        matchLabels:
+          role: api
+    ports:
+    - protocol: TCP
+      port: 3306
+EOF
+kubectl apply -f /tmp/exam/course/17/netpol.yaml
+```
+
+The single `from` element containing both `namespaceSelector` and `podSelector` is the AND logic.
+
+---
+
+## Question 18 | Ingress Default Backend
+
+```bash
+mkdir -p /tmp/exam/course/18
+cat <<EOF > /tmp/exam/course/18/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: default-ing
+  namespace: surge
+spec:
+  defaultBackend:
+    service:
+      name: fallback-svc
+      port:
+        number: 8080
+EOF
+kubectl apply -f /tmp/exam/course/18/ingress.yaml
+```
+
+---
+
+## Question 19 | Service Session Affinity
+
+```bash
+mkdir -p /tmp/exam/course/19
+cat <<EOF > /tmp/exam/course/19/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sticky-svc
+  namespace: flash
+spec:
+  selector:
+    app: sticky
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+EOF
+kubectl apply -f /tmp/exam/course/19/svc.yaml
+```
+
+---
+
+## Question 20 | Port Forwarding
+
+```bash
+mkdir -p /tmp/exam/course/20
+kubectl port-forward pod/hidden-api 9090:8080 -n strike &
+PF_PID=$!
+sleep 3
+curl -s http://localhost:9090/status > /tmp/exam/course/20/response.txt
+kill $PF_PID
+```
+
+The `hidden-api` pod runs `mendhak/http-https-echo`, so the response body echoes the request (`method`, `path`, `headers`), which is saved to `/tmp/exam/course/20/response.txt`.

@@ -1,0 +1,729 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "stream",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `stream`, Deployment `api-server` exists with hard-coded environment variables:\n\n- `DB_USER=admin`\n- `DB_PASS=Secret123!`\n\nYour tasks:\n\n1. Create a Secret named `db-credentials` in namespace `stream` containing these credentials\n2. Update Deployment `api-server` to use the Secret via `valueFrom.secretKeyRef`\n3. Do not change the Deployment name or namespace",
+      "concepts": [
+        "secrets",
+        "deployments",
+        "configuration"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Secret db-credentials exists in stream namespace",
+          "verificationScriptFile": "q1_s1_validate_secret_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Secret has DB_USER key",
+          "verificationScriptFile": "q1_s2_validate_db_user_key.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Secret has DB_PASS key",
+          "verificationScriptFile": "q1_s3_validate_db_pass_key.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Deployment api-server uses secretKeyRef",
+          "verificationScriptFile": "q1_s4_validate_secretkeyref.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "pond",
+      "machineHostname": "ckad9999",
+      "question": "Create a CronJob named `backup-job` in namespace `pond` with the following specifications:\n\n- Schedule: Run every 30 minutes (`*/30 * * * *`)\n- Image: `busybox:latest`\n- Container name: `backup`\n- Container command: `echo \"Backup completed\"`\n- Set `successfulJobsHistoryLimit: 3`\n- Set `failedJobsHistoryLimit: 2`\n- Set `activeDeadlineSeconds: 300`\n- Use `restartPolicy: Never`\n\nTip: Use `kubectl explain cronjob.spec` to find the correct field names.",
+      "concepts": [
+        "cronjobs",
+        "jobs",
+        "scheduling"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "CronJob backup-job exists in pond namespace",
+          "verificationScriptFile": "q2_s1_validate_cronjob_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Schedule is */30 * * * *",
+          "verificationScriptFile": "q2_s2_validate_schedule.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Image is busybox:latest",
+          "verificationScriptFile": "q2_s3_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Container name is backup",
+          "verificationScriptFile": "q2_s4_validate_container_name.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "successfulJobsHistoryLimit is 3",
+          "verificationScriptFile": "q2_s5_validate_success_limit.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "failedJobsHistoryLimit is 2",
+          "verificationScriptFile": "q2_s6_validate_failed_limit.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "7",
+          "description": "activeDeadlineSeconds is 300",
+          "verificationScriptFile": "q2_s7_validate_deadline.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "8",
+          "description": "restartPolicy is Never",
+          "verificationScriptFile": "q2_s8_validate_restart_policy.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "marsh",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `marsh`, Pod `log-collector` exists but is failing with authorization errors.\n\nCheck the Pod logs to identify what permissions are needed. The logs show:\n\n`User \"system:serviceaccount:marsh:default\" cannot list pods in the namespace \"marsh\"`\n\nYour tasks:\n\n1. Create a ServiceAccount named `log-sa` in namespace `marsh`\n2. Create a Role `log-role` that grants `get`, `list`, and `watch` on resource `pods`\n3. Create a RoleBinding `log-rb` binding `log-role` to `log-sa`\n4. Update Pod `log-collector` to use ServiceAccount `log-sa` (delete and recreate if needed)",
+      "concepts": [
+        "rbac",
+        "serviceaccounts",
+        "roles"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ServiceAccount log-sa exists in marsh",
+          "verificationScriptFile": "q3_s1_validate_sa_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Role log-role exists in marsh",
+          "verificationScriptFile": "q3_s2_validate_role_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Role has get, list, watch verbs",
+          "verificationScriptFile": "q3_s3_validate_role_verbs.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Role targets pods resource",
+          "verificationScriptFile": "q3_s4_validate_role_resources.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "RoleBinding log-rb exists in marsh",
+          "verificationScriptFile": "q3_s5_validate_rb_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "RoleBinding references log-role",
+          "verificationScriptFile": "q3_s6_validate_rb_role.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "7",
+          "description": "RoleBinding references log-sa",
+          "verificationScriptFile": "q3_s7_validate_rb_sa.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "8",
+          "description": "Pod log-collector uses log-sa ServiceAccount",
+          "verificationScriptFile": "q3_s8_validate_pod_sa.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "delta",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `delta`, Pod `metrics-pod` is using ServiceAccount `wrong-sa` and receiving authorization errors.\n\nMultiple ServiceAccounts, Roles, and RoleBindings already exist in the namespace:\n\n- ServiceAccounts: `monitor-sa`, `wrong-sa`, `admin-sa`\n- Roles: `metrics-reader`, `full-access`, `view-only`\n- RoleBindings: `monitor-binding`, `admin-binding`\n\nYour tasks:\n\n1. Identify which ServiceAccount/Role/RoleBinding combination has the correct permissions\n2. Update Pod `metrics-pod` to use the correct ServiceAccount (`monitor-sa`)\n3. Verify the Pod stops showing authorization errors\n\nHint: Check existing RoleBindings to see which ServiceAccount is bound to which Role.",
+      "concepts": [
+        "rbac",
+        "serviceaccounts",
+        "troubleshooting"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod metrics-pod exists in delta",
+          "verificationScriptFile": "q4_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod uses monitor-sa ServiceAccount",
+          "verificationScriptFile": "q4_s2_validate_pod_sa.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Pod is Running",
+          "verificationScriptFile": "q4_s3_validate_pod_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Directory `/tmp/exam/course/5/image/` contains a valid `Dockerfile`.\n\nYour tasks:\n\n1. Build a container image using Docker with name `my-app:1.0` using `/tmp/exam/course/5/image/` as build context\n2. Save the image as a tarball to `/tmp/exam/course/5/my-app.tar`",
+      "concepts": [
+        "docker",
+        "images",
+        "build"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Image my-app:1.0 exists",
+          "verificationScriptFile": "q5_s1_validate_image_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 4
+        },
+        {
+          "id": "2",
+          "description": "Tarball exists at /tmp/exam/course/5/my-app.tar",
+          "verificationScriptFile": "q5_s2_validate_tarball.sh",
+          "expectedOutput": "0",
+          "weightage": 4
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `default`, the following resources exist:\n\n- Deployment `web-app` with 5 replicas, labels `app=webapp, version=v1`\n- Service `web-service` with selector `app=webapp`\n\nYour tasks:\n\n1. Scale Deployment `web-app` to 8 replicas (80% of 10 total)\n2. Create a new Deployment `web-app-canary` with 2 replicas, labels `app=webapp, version=v2`\n3. Both Deployments should be selected by `web-service`\n\nNote: This is a manual canary pattern where traffic is split based on replica counts.",
+      "concepts": [
+        "deployments",
+        "canary",
+        "services"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment web-app has 8 replicas",
+          "verificationScriptFile": "q6_s1_validate_webapp_replicas.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Deployment web-app-canary exists",
+          "verificationScriptFile": "q6_s2_validate_canary_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Canary deployment has 2 replicas",
+          "verificationScriptFile": "q6_s3_validate_canary_replicas.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "4",
+          "description": "Canary has app=webapp label",
+          "verificationScriptFile": "q6_s4_validate_canary_app_label.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "Canary has version=v2 label",
+          "verificationScriptFile": "q6_s5_validate_canary_version_label.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "6",
+          "description": "Service web-service has endpoints from both deployments",
+          "verificationScriptFile": "q6_s6_validate_endpoints.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "spring",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `spring`, three Pods exist:\n\n- `frontend` with label `role=wrong-frontend`\n- `backend` with label `role=wrong-backend`\n- `database` with label `role=wrong-db`\n\nThree NetworkPolicies exist:\n\n- `deny-all` (default deny)\n- `allow-frontend-to-backend` (allows traffic from `role=frontend` to `role=backend`)\n- `allow-backend-to-db` (allows traffic from `role=backend` to `role=db`)\n\nYour task:\n\nUpdate the Pod labels (do NOT modify NetworkPolicies) to enable the communication chain:\n\n`frontend` -> `backend` -> `database`\n\nTip: Use `kubectl label` instead of editing YAML.",
+      "concepts": [
+        "networkpolicy",
+        "labels",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod frontend has role=frontend label",
+          "verificationScriptFile": "q7_s1_validate_frontend_label.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pod backend has role=backend label",
+          "verificationScriptFile": "q7_s2_validate_backend_label.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "3",
+          "description": "Pod database has role=db label",
+          "verificationScriptFile": "q7_s3_validate_database_label.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "File `/tmp/exam/course/8/broken-deploy.yaml` contains a Deployment manifest that fails to apply.\n\nThe file has the following issues:\n\n1. Uses deprecated API version\n2. Missing required `selector` field\n3. Selector doesn't match template labels\n\nYour tasks:\n\n1. Fix the YAML file to use `apiVersion: apps/v1`\n2. Add a proper `selector` field that matches the template labels\n3. Apply the fixed manifest and ensure the Deployment `broken-app` is running",
+      "concepts": [
+        "deployments",
+        "troubleshooting",
+        "yaml"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment broken-app exists",
+          "verificationScriptFile": "q8_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Deployment has available replicas",
+          "verificationScriptFile": "q8_s2_validate_available.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Deployment uses apps/v1 API",
+          "verificationScriptFile": "q8_s3_validate_apiversion.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Selector matches template labels",
+          "verificationScriptFile": "q8_s4_validate_selector_match.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "brook",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `brook`, Deployment `app-v1` exists with image `nginx:1.20`.\n\nYour tasks:\n\n1. Update the Deployment to use image `nginx:1.25`\n2. Verify the rolling update completes successfully\n3. Rollback to the previous revision\n4. Verify the rollback completed\n5. Save the current revision number to `/tmp/exam/course/9/rollback-revision.txt`",
+      "concepts": [
+        "deployments",
+        "rollout",
+        "rollback"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment app-v1 exists in brook",
+          "verificationScriptFile": "q9_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Image is nginx:1.20 (after rollback)",
+          "verificationScriptFile": "q9_s2_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "3",
+          "description": "Deployment has multiple revisions",
+          "verificationScriptFile": "q9_s3_validate_revisions.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "4",
+          "description": "File rollback-revision.txt exists",
+          "verificationScriptFile": "q9_s4_validate_file_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "5",
+          "description": "File contains revision number",
+          "verificationScriptFile": "q9_s5_validate_revision_number.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "namespace": "rapids",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `rapids`, Deployment `api-deploy` exists with a container listening on port `8080`.\n\nYour task:\n\nAdd a readiness probe to the Deployment with:\n\n- HTTP GET on path `/ready`\n- Port `8080`\n- `initialDelaySeconds: 5`\n- `periodSeconds: 10`\n\nEnsure the Deployment rolls out successfully.",
+      "concepts": [
+        "probes",
+        "deployments",
+        "observability"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment api-deploy exists in rapids",
+          "verificationScriptFile": "q10_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Readiness probe path is /ready",
+          "verificationScriptFile": "q10_s2_validate_probe_path.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Readiness probe port is 8080",
+          "verificationScriptFile": "q10_s3_validate_probe_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Probe has correct timing (delay=5, period=10)",
+          "verificationScriptFile": "q10_s4_validate_probe_timing.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "namespace": "cascade",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `cascade`, Deployment `secure-app` exists without any security context.\n\nYour tasks:\n\n1. Set Pod-level `runAsUser: 1000`\n2. Add container-level capability `NET_ADMIN` to the container named `app`\n\nNote: Capabilities are set at the container level, not the Pod level.",
+      "concepts": [
+        "securitycontext",
+        "capabilities",
+        "deployments"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment secure-app exists in cascade",
+          "verificationScriptFile": "q11_s1_validate_deploy_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod-level runAsUser is 1000",
+          "verificationScriptFile": "q11_s2_validate_runasuser.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Container has NET_ADMIN capability",
+          "verificationScriptFile": "q11_s3_validate_capability.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "4",
+          "description": "Deployment has available replicas",
+          "verificationScriptFile": "q11_s4_validate_available.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "namespace": "shoal",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `shoal`, Deployment `web-app` exists with Pods labeled `app=webapp, tier=frontend`.\n\nService `web-svc` exists but has incorrect selector `app=wrongapp`.\n\nYour task:\n\nUpdate Service `web-svc` to correctly select Pods from Deployment `web-app`.",
+      "concepts": [
+        "services",
+        "selectors",
+        "troubleshooting"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Service selector is app=webapp",
+          "verificationScriptFile": "q12_s1_validate_selector.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Service has endpoints",
+          "verificationScriptFile": "q12_s2_validate_endpoints.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `default`, Deployment `api-server` exists with Pods labeled `app=api` and container port `9090`.\n\nYour task:\n\nCreate a Service named `api-nodeport` that:\n\n- Type: `NodePort`\n- Selects Pods with label `app=api`\n- Exposes Service port `80` mapping to target port `9090`",
+      "concepts": [
+        "services",
+        "nodeport",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Service api-nodeport exists",
+          "verificationScriptFile": "q13_s1_validate_svc_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Service type is NodePort",
+          "verificationScriptFile": "q13_s2_validate_type.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Service port is 80",
+          "verificationScriptFile": "q13_s3_validate_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Target port is 9090",
+          "verificationScriptFile": "q13_s4_validate_targetport.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "namespace": "eddy",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `eddy`, the following resources exist:\n\n- Deployment `web-deploy` with Pods labeled `app=web`\n- Service `web-svc` with selector `app=web` on port `8080`\n\nYour task:\n\nCreate an Ingress named `web-ingress` that:\n\n- Routes host `web.example.com`\n- Path `/` with `pathType: Prefix`\n- Backend Service `web-svc` on port `8080`\n- Uses API version `networking.k8s.io/v1`",
+      "concepts": [
+        "ingress",
+        "services",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Ingress web-ingress exists in eddy",
+          "verificationScriptFile": "q14_s1_validate_ingress_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Host is web.example.com",
+          "verificationScriptFile": "q14_s2_validate_host.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "PathType is Prefix",
+          "verificationScriptFile": "q14_s3_validate_pathtype.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Backend is web-svc:8080",
+          "verificationScriptFile": "q14_s4_validate_backend.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "File `/tmp/exam/course/15/fix-ingress.yaml` contains an Ingress manifest that fails to apply due to an invalid `pathType` value.\n\nYour tasks:\n\n1. Apply the file and note the error\n2. Fix the `pathType` to a valid value (`Prefix`, `Exact`, or `ImplementationSpecific`)\n3. Ensure the Ingress `api-ingress` routes path `/api` to Service `api-svc` on port `8080`\n4. Apply the fixed manifest successfully",
+      "concepts": [
+        "ingress",
+        "troubleshooting",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Ingress api-ingress exists",
+          "verificationScriptFile": "q15_s1_validate_ingress_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "PathType is valid (Prefix/Exact/ImplementationSpecific)",
+          "verificationScriptFile": "q15_s2_validate_pathtype.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Path is /api",
+          "verificationScriptFile": "q15_s3_validate_path.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Backend is api-svc",
+          "verificationScriptFile": "q15_s4_validate_backend.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "namespace": "pond",
+      "machineHostname": "ckad9999",
+      "question": "In namespace `pond`, a ResourceQuota exists that sets resource limits for the namespace.\n\nYour tasks:\n\n1. Check the ResourceQuota for namespace `pond` to see the limits set\n2. Create a Pod named `resource-pod` with:\n   - Image: `nginx:latest`\n   - Container name: `web`\n   - Set the CPU and memory limits to half of the limits set in the ResourceQuota\n   - Set appropriate requests (at least `100m` CPU and `128Mi` memory)",
+      "concepts": [
+        "resourcequota",
+        "resources",
+        "pods"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod resource-pod exists in pond",
+          "verificationScriptFile": "q16_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod has resource requests",
+          "verificationScriptFile": "q16_s2_validate_requests.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Pod has resource limits",
+          "verificationScriptFile": "q16_s3_validate_limits.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "4",
+          "description": "Pod is Running",
+          "verificationScriptFile": "q16_s4_validate_pod_running.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "namespace": "eddy",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod named `spread-pod` in namespace `eddy` with:\n\n- Image: `nginx`\n- Topology spread constraint that spreads across nodes with `maxSkew: 1`\n- Use `topologyKey: kubernetes.io/hostname`\n- `whenUnsatisfiable: DoNotSchedule`\n\nNote: This is a preview question for advanced topics.",
+      "concepts": [
+        "scheduling",
+        "topologyspread",
+        "pods"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod spread-pod exists in eddy",
+          "verificationScriptFile": "q17_s1_validate_pod_exists.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "maxSkew is 1",
+          "verificationScriptFile": "q17_s2_validate_maxskew.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "topologyKey is kubernetes.io/hostname",
+          "verificationScriptFile": "q17_s3_validate_topologykey.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    }
+  ]
+}

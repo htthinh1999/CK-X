@@ -1,74 +1,274 @@
 {
-    "labs": [
-      {
-        "id": "ckad-001",
-        "assetPath": "assets/exams/ckad/001",
-        "name": "CKAD Comprehensive Lab - 1",
-        "category": "CKAD",
-        "description": "Hands-on exercises covering core Kubernetes concepts, pod configuration, deployments, and services with practical tasks for application deployment in a cluster.",
-        "warmUpTimeInSeconds": 260,
-         "difficulty": "Medium",
-         "examDurationInMinutes": 120
-      },
-      {
-        "id": "ckad-002",
-        "assetPath": "assets/exams/ckad/002",
-        "name": "CKAD Comprehensive Lab - 2",
-        "category": "CKAD",
-        "description": "Series of practical tasks on multi-container pods, pod design patterns, configuration, services, and networking in Kubernetes environments.",
-        "warmUpTimeInSeconds": 260,
-        "difficulty": "Hard",
-        "examDurationInMinutes": 120
-      },
-      {
-        "id": "cks-001",
-        "assetPath": "assets/exams/cks/001",
-        "name": "CKS Practice Lab - Kubernetes Security Essentials",
-        "category": "CKS",
-        "description": "Practice essential Kubernetes security concepts including network policies, RBAC, supply chain security, and runtime protection",
-        "warmUpTimeInSeconds": 260,
-        "difficulty": "Hard",
-        "examDurationInMinutes": 120
-      },
-      {
-        "id": "cka-002",
-        "assetPath": "assets/exams/cka/002",
-        "name": "CKA Practice Lab - Advanced Administration",
-        "category": "CKA",
-        "description": "Comprehensive lab covering advanced Kubernetes administration topics including storage, networking, security, and troubleshooting with focus on real-world scenarios, updated with the latest CKA exam curriculum changes.",
-        "warmUpTimeInSeconds": 360,
-        "difficulty": "Hard",
-        "examDurationInMinutes": 120
-      },
-      {
-        "id": "cka-001",
-        "assetPath": "assets/exams/cka/001",
-        "name": "CKA Practice Lab - Core Concepts",
-        "category": "CKA",
-        "description": "Practice essential Kubernetes administrator tasks covering cluster management, networking, storage, and security",
-        "warmUpTimeInSeconds": 260,
-        "difficulty": "Easy",
-        "examDurationInMinutes": 60
-      },
-      {
-        "id": "docker-001",
-        "assetPath": "assets/exams/other/001",
-        "name": "Docker Speed Run - Core Concepts",
-        "category": "Other",
-        "description": "Fast-paced practice lab covering Docker fundamentals including images, containers, volumes, networking, OCI, logging, and security best practices.",
-        "warmUpTimeInSeconds": 120,
-        "difficulty": "Medium",
-        "examDurationInMinutes": 90
-      },
-      {
-        "id": "helm-001",
-        "assetPath": "assets/exams/other/002",
-        "name": "Helm Fundamentals Lab",
-        "category": "Other",
-        "description": "Comprehensive lab covering Helm basics including chart installation, repositories, customization, packaging, debugging, and advanced Helm operations for Kubernetes applications.",
-        "warmUpTimeInSeconds": 260,
-        "difficulty": "Medium",
-        "examDurationInMinutes": 90
-      }
-    ]
-  } 
+  "labs": [
+    {
+      "id": "ckad-001",
+      "assetPath": "assets/exams/ckad/001",
+      "name": "CKAD Comprehensive Lab - 1",
+      "category": "CKAD",
+      "description": "Hands-on exercises covering core Kubernetes concepts, pod configuration, deployments, and services with practical tasks for application deployment in a cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-002",
+      "assetPath": "assets/exams/ckad/002",
+      "name": "CKAD Comprehensive Lab - 2",
+      "category": "CKAD",
+      "description": "Series of practical tasks on multi-container pods, pod design patterns, configuration, services, and networking in Kubernetes environments.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "cks-001",
+      "assetPath": "assets/exams/cks/001",
+      "name": "CKS Practice Lab - Kubernetes Security Essentials",
+      "category": "CKS",
+      "description": "Practice essential Kubernetes security concepts including network policies, RBAC, supply chain security, and runtime protection",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "cka-002",
+      "assetPath": "assets/exams/cka/002",
+      "name": "CKA Practice Lab - Advanced Administration",
+      "category": "CKA",
+      "description": "Comprehensive lab covering advanced Kubernetes administration topics including storage, networking, security, and troubleshooting with focus on real-world scenarios, updated with the latest CKA exam curriculum changes.",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "cka-001",
+      "assetPath": "assets/exams/cka/001",
+      "name": "CKA Practice Lab - Core Concepts",
+      "category": "CKA",
+      "description": "Practice essential Kubernetes administrator tasks covering cluster management, networking, storage, and security",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Easy",
+      "examDurationInMinutes": 60
+    },
+    {
+      "id": "docker-001",
+      "assetPath": "assets/exams/other/001",
+      "name": "Docker Speed Run - Core Concepts",
+      "category": "Other",
+      "description": "Fast-paced practice lab covering Docker fundamentals including images, containers, volumes, networking, OCI, logging, and security best practices.",
+      "warmUpTimeInSeconds": 120,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 90
+    },
+    {
+      "id": "helm-001",
+      "assetPath": "assets/exams/other/002",
+      "name": "Helm Fundamentals Lab",
+      "category": "Other",
+      "description": "Comprehensive lab covering Helm basics including chart installation, repositories, customization, packaging, debugging, and advanced Helm operations for Kubernetes applications.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 90
+    },
+    {
+      "id": "ckad-003",
+      "assetPath": "assets/exams/ckad/003",
+      "name": "CKAD Simulation 1 - Dojo Suzaku",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Phénix Vermillon du Sud) with 21 exam-style tasks covering pods, deployments, services, kubectl, helm, volumes, networking. Worth 112 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-004",
+      "assetPath": "assets/exams/ckad/004",
+      "name": "CKAD Simulation 2 - Dojo Byakko",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Tigre Blanc de l'Ouest) with 20 exam-style tasks covering pods, volumes, security, networking, deployments, multi container, scheduling. Worth 106 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-005",
+      "assetPath": "assets/exams/ckad/005",
+      "name": "CKAD Simulation 3 - Dojo Genbu",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Tortue Noire du Nord) with 20 exam-style tasks covering deployments, pods, kubectl, services, networking, jobs, volumes. Worth 107 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-006",
+      "assetPath": "assets/exams/ckad/006",
+      "name": "CKAD Simulation 4 - Dojo Kappa",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Kappa des Rivières) with 17 exam-style tasks covering deployments, troubleshooting, services, networking, scheduling, rbac, serviceaccounts. Worth 91 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-007",
+      "assetPath": "assets/exams/ckad/007",
+      "name": "CKAD Simulation 5 - Dojo Kirin",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Kirin Céleste) with 20 exam-style tasks covering pods, networking, configuration, security, deployments, scheduling, observability. Worth 105 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-008",
+      "assetPath": "assets/exams/ckad/008",
+      "name": "CKAD Simulation 6 - Dojo Tengu",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Tengu des Montagnes) with 20 exam-style tasks covering pods, configuration, deployments, volumes, configmaps, environment variables, batch. Worth 106 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-009",
+      "assetPath": "assets/exams/ckad/009",
+      "name": "CKAD Simulation 7 - Dojo Tanuki",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Tanuki des Forets) with 20 exam-style tasks covering pods, deployments, observability, jobs, batch, scheduling, cronjobs. Worth 100 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-010",
+      "assetPath": "assets/exams/ckad/010",
+      "name": "CKAD Simulation 8 - Dojo Inari",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Inari des Moissons) with 20 exam-style tasks covering services, pods, resources, helm, deployments, probes, resourcequota. Worth 104 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-011",
+      "assetPath": "assets/exams/ckad/011",
+      "name": "CKAD Simulation 9 - Dojo Ryujin",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Ryujin des Profondeurs) with 20 exam-style tasks covering observability, pods, helm, deployments, storage, persistentvolumeclaim, volumes. Worth 99 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-012",
+      "assetPath": "assets/exams/ckad/012",
+      "name": "CKAD Simulation 10 - Dojo Oni",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Oni of the Demon Gate) with 20 exam-style tasks covering deployments, services, pods, networking, environment variables, ingress, labels. Worth 102 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-013",
+      "assetPath": "assets/exams/ckad/013",
+      "name": "CKAD Simulation 11 - Dojo Amaterasu",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Amaterasu of the Rising Sun) with 20 exam-style tasks covering deployments, pods, services, troubleshooting, secrets, tls, networking. Worth 104 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-014",
+      "assetPath": "assets/exams/ckad/014",
+      "name": "CKAD Simulation 12 - Dojo Tsukuyomi",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Tsukuyomi of the Silver Moon) with 20 exam-style tasks covering pods, dns, deployments, secrets, configmaps, networking, services. Worth 108 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-015",
+      "assetPath": "assets/exams/ckad/015",
+      "name": "CKAD Simulation 13 - Dojo Fujin",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Fujin of the Howling Winds) with 20 exam-style tasks covering pods, deployments, services, debugging, resources, security, networking. Worth 110 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-016",
+      "assetPath": "assets/exams/ckad/016",
+      "name": "CKAD Simulation 14 - Dojo Raijin",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Raijin of the Thunder) with 20 exam-style tasks covering pods, configuration, networking, deployments, observability, services, kubectl. Worth 112 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-017",
+      "assetPath": "assets/exams/ckad/017",
+      "name": "CKAD Simulation 15 - Dojo Susanoo",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Susanoo of the Raging Seas) with 20 exam-style tasks covering pods, deployments, services, troubleshooting, images, volumes, jobs. Worth 110 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-018",
+      "assetPath": "assets/exams/ckad/018",
+      "name": "CKAD Simulation 16 - Dojo Benzaiten",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Benzaiten of Flowing Wisdom) with 20 exam-style tasks covering pods, deployments, configmaps, networkpolicy, ingress, networking, services. Worth 114 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-019",
+      "assetPath": "assets/exams/ckad/019",
+      "name": "CKAD Simulation 17 - Dojo Hachiman",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Hachiman the War Strategist) with 20 exam-style tasks covering resources, pods, deployments, configmap, volumes, services, troubleshooting. Worth 119 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-020",
+      "assetPath": "assets/exams/ckad/020",
+      "name": "CKAD Simulation 18 - Dojo Izanagi",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Izanagi the Creator) with 20 exam-style tasks covering pods, secrets, networking, securitycontext, deployments, services, networkpolicy. Worth 118 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-021",
+      "assetPath": "assets/exams/ckad/021",
+      "name": "CKAD Simulation 19 - Dojo Bishamonten",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Bishamonten the Guardian) with 20 exam-style tasks covering pods, security, deployments, networking, volumes, observability, rbac. Worth 120 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-022",
+      "assetPath": "assets/exams/ckad/022",
+      "name": "CKAD Simulation 20 - Dojo Musashi",
+      "category": "CKAD",
+      "description": "Full CKAD exam simulation (Musashi the Undefeated) with 20 exam-style tasks covering pods, networking, deployments, security, services, batch, labels. Worth 122 points; passing tasks are graded on the live cluster.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    }
+  ]
+}
