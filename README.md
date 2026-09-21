@@ -1,14 +1,42 @@
-# CK-X Simulator — CKAD Dojo Edition (Fork)
+
+![Master Kubernetes the Right Way (2)](https://github.com/user-attachments/assets/16edd8d8-5f96-4422-8659-3bb490b77204)
+
+# CK-X Simulator 🚀
 
 > **Notice — this is a fork, not the original project.**
 > This repository does not claim ownership of the platform or the exam content. It is a fork that **combines two open-source projects**, and all credit goes to their authors and communities 🙏
 >
-> - **[CK-X Simulator](https://github.com/sailor-sh/CK-X)** — by **[Sailor.sh](https://github.com/sailor-sh)**. The Kubernetes certification practice platform this repository is built on (web UI, remote desktop, KIND cluster, jumphost, evaluation engine). Licensed under the Business Source License 1.1.
+> - **[CK-X Simulator](https://github.com/sailor-sh/CK-X)** — by **[Sailor.sh](https://github.com/sailor-sh)**. The Kubernetes certification practice platform this repository is built on. Licensed under the Business Source License 1.1.
 > - **[ckad-dojo](https://github.com/TiPunchLabs/ckad-dojo)** — by **Xavier Guéret / [TiPunch Labs](https://ckad-dojo.tipunchlabs.fr/)**. The source of the 20 CKAD exam simulations added here as labs **`ckad-003` … `ckad-022`**. Licensed under **CC BY-NC-SA 4.0** (© 2025 Xavier Guéret).
 >
-> For full platform documentation, installation, and usage, please refer to the upstream **[CK-X Simulator](https://github.com/sailor-sh/CK-X)**. How the ckad-dojo exams were mapped into CK-X labs is documented in the [Lab Creation Guide](docs/how-to-add-new-labs.md).
+> See the [Lab Creation Guide](docs/how-to-add-new-labs.md) for how the ckad-dojo exams were mapped into CK-X labs.
 
 > 🤖 **Supported by [Claude](https://claude.ai/code)** — Anthropic's Claude Code.
+
+A powerful Kubernetes certification practice environment that provides a realistic exam-like experience for kubernetess exam preparation.
+
+## Major Features
+
+- **Realistic exam environment** with web-based interface and remote desktop support
+- Comprehensive practice labs for **CKAD, CKA, CKS**, and other Kubernetes certifications
+- **Smart evaluation system** with real-time solution verification
+- **Docker-based deployment** for easy setup and consistent environment
+- **Timed exam mode** with real exam-like conditions and countdown timer 
+
+## Installation
+
+#### Linux & macOS
+```bash
+curl -fsSL https://raw.githubusercontent.com/sailor-sh/CK-X/master/scripts/install.sh | bash
+```
+
+#### Windows ( make sure WSL2 is enabled in the docker desktop )
+```powershell
+irm  https://raw.githubusercontent.com/sailor-sh/CK-X/master/scripts/install.ps1 | iex
+```
+
+### Manual Installation
+For detailed installation instructions, please refer to our [Deployment Guide](scripts/COMPOSE-DEPLOY.md).
 
 ## Disclaimer
 
