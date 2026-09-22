@@ -1,0 +1,11 @@
+{
+  "id": "4",
+  "namespace": "survey",
+  "machineHostname": "ckad9999",
+  "question": "Several Pods are running in namespace `survey`. Write two command files. Each file must contain a `kubectl` command, will be executed with `bash <file>`, and must work no matter which namespace is the current default.\n\n1. `/home/candidate/exam/q4/oldest-first.sh`: print only the names of all Pods in namespace `survey`, one per line, sorted by creation time (oldest first). No header and no `pod/` prefix.\n2. `/home/candidate/exam/q4/pod-ips.sh`: print all Pods in namespace `survey` using `-o custom-columns` with exactly two columns titled `NAME` (the Pod name) and `POD_IP` (the Pod IP), including the header row.",
+  "concepts": ["kubectl", "sort-by", "custom-columns", "pods"],
+  "verification": [
+    { "id": "1", "description": "oldest-first.sh prints survey Pod names sorted by creation time", "verificationScriptFile": "q4_s1_validate_oldest_first.sh", "expectedOutput": "0", "weightage": 2 },
+    { "id": "2", "description": "pod-ips.sh prints NAME and POD_IP custom columns for all survey Pods", "verificationScriptFile": "q4_s2_validate_pod_ips.sh", "expectedOutput": "0", "weightage": 2 }
+  ]
+}

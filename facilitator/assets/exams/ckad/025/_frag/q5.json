@@ -1,0 +1,13 @@
+{
+  "id": "5",
+  "namespace": "spectra",
+  "machineHostname": "ckad9999",
+  "question": "In namespace `spectra`, create a Pod named `prism` whose log file is streamed to stdout by a **native sidecar**:\n\n- A volume `logs` of type `emptyDir`, mounted at `/var/log/prism` in both containers below.\n- Main container `emitter`, image `busybox:1.36`, running with `sh -c`:\n  `i=0; while true; do i=$((i+1)); echo \"spectral-line $i\" >> /var/log/prism/emission.log; sleep 2; done`\n- Sidecar `log-tailer`, image `busybox:1.36`, running with `sh -c`: `tail -F /var/log/prism/emission.log`. It must be declared as a native sidecar, i.e. under `initContainers` with `restartPolicy: Always`.\n\nThe Pod must be Running and Ready, and `kubectl logs prism -c log-tailer` must show the `spectral-line` entries.",
+  "concepts": ["pods", "native sidecar", "init containers", "logging", "volumes"],
+  "verification": [
+    { "id": "1", "description": "log-tailer is an initContainer with restartPolicy Always (busybox:1.36), emitter is the main container", "verificationScriptFile": "q5_s1_validate_native_sidecar.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "2", "description": "emptyDir logs is mounted at /var/log/prism in emitter and log-tailer", "verificationScriptFile": "q5_s2_validate_shared_volume.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "3", "description": "Pod prism is Running and Ready with the sidecar running", "verificationScriptFile": "q5_s3_validate_pod_ready.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "4", "description": "kubectl logs -c log-tailer shows spectral-line entries", "verificationScriptFile": "q5_s4_validate_sidecar_logs.sh", "expectedOutput": "0", "weightage": 1 }
+  ]
+}

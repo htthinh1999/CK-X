@@ -1,0 +1,13 @@
+{
+  "id": "6",
+  "namespace": "almanac",
+  "machineHostname": "ckad9999",
+  "question": "Work in namespace `almanac`.\n\n1. Create a ConfigMap named `sky-settings` from the env-file `/home/candidate/exam/q6/almanac.env`, so that each variable in the file becomes its own key.\n2. Create a Pod named `almanac-reader` (image `busybox:1.36`, command `sleep 3600`) that exposes **all** keys of `sky-settings` as environment variables using `envFrom`.\n3. Some outdated ConfigMaps in the namespace carry the label `stale=true`. Delete all of them with a single `kubectl delete` that uses a label selector. ConfigMaps without that exact label (for example those labelled `stale=false`) must be kept.",
+  "concepts": ["configmaps", "envfrom", "labels", "label selectors"],
+  "verification": [
+    { "id": "1", "description": "ConfigMap sky-settings has one key per env-file variable", "verificationScriptFile": "q6_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "2", "description": "Pod almanac-reader loads sky-settings via envFrom", "verificationScriptFile": "q6_s2_validate_envfrom.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "3", "description": "almanac-reader is Running and has all four variables in its environment", "verificationScriptFile": "q6_s3_validate_env_runtime.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "4", "description": "All stale=true ConfigMaps deleted, other ConfigMaps kept", "verificationScriptFile": "q6_s4_validate_stale_deleted.sh", "expectedOutput": "0", "weightage": 1 }
+  ]
+}
