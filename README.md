@@ -47,8 +47,18 @@ docker compose up -d --build
 then open **http://localhost:30080**. To stop the stack, run `docker compose down --volumes --remove-orphans`.
 
 > **Requirements:** Docker and the Docker Compose plugin. On Windows, enable WSL2 in Docker Desktop and run the commands from a WSL / Git Bash shell.
->
-> **Multi-cluster exams:** the CKAD and CKA multi-cluster labs spin up 2–3 k3d clusters at once, so give Docker plenty of headroom (≈12–16 GB RAM recommended). Each such exam declares its clusters/servers in its `config.json`.
+
+### System requirements
+
+| Resource  | Minimum | Recommended |
+| --------- | ------- | ----------- |
+| RAM       | 8 GB    | 16 GB       |
+| CPU       | 4 cores | 6–8 cores   |
+| Free disk | 20 GB   | 40 GB       |
+
+- **Minimum** runs the full stack and the standard single-cluster labs (CKAD / CKA / CKS / Docker / Helm).
+- **Recommended** is for the multi-cluster exams: the CKAD and CKA multi-cluster labs start **2–3 k3d clusters at once** (each such exam declares its clusters/servers in its `config.json`), so they need the extra RAM and CPU headroom.
+- Also needs outbound internet access (to pull images/charts) and host port `30080` free.
 
 ### Detailed deployment
 For prerequisites, management commands, and troubleshooting, see the [Deployment Guide](scripts/COMPOSE-DEPLOY.md).

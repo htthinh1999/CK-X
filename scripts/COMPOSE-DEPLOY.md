@@ -4,11 +4,22 @@ This guide provides instructions for deploying the CK-X Simulator on different o
 
 ## Prerequisites
 
-- Docker Desktop (Windows/Mac) or Docker Engine (Linux)
-- 4GB RAM minimum (8GB recommended)
-- 10GB free disk space
-- Internet connection
-- Port 30080 available
+- Docker Desktop (Windows/Mac) or Docker Engine (Linux) with the Docker Compose plugin
+- Internet connection (to pull images and Helm charts)
+- Host port `30080` available
+
+### System requirements
+
+| Resource  | Minimum | Recommended |
+| --------- | ------- | ----------- |
+| RAM       | 8 GB    | 16 GB       |
+| CPU       | 4 cores | 6–8 cores   |
+| Free disk | 20 GB   | 40 GB       |
+
+- **Minimum** is enough for the full stack and the standard single-cluster labs
+  (CKAD / CKA / CKS / Docker / Helm).
+- **Recommended** is for the multi-cluster exams (the CKAD and CKA multi-cluster
+  labs start 2–3 k3d clusters at once), which need the extra RAM and CPU headroom.
 
 ## Install (build from source)
 
