@@ -215,8 +215,12 @@ fi
 echo -e "${CYAN}The following services are available:${NC}"
 echo -e "\n${STAR} ${GREEN}Access Simulator here:${NC} ${BOLD}http://${HOST_IP}:30080${NC}"
 
-#open browser on host machine
-open http://${HOST_IP}:30080
+#open browser on host machine (best-effort; skip if no opener is available)
+if command -v open >/dev/null 2>&1; then
+  open "http://${HOST_IP}:30080" >/dev/null 2>&1 || true
+elif command -v xdg-open >/dev/null 2>&1; then
+  xdg-open "http://${HOST_IP}:30080" >/dev/null 2>&1 || true
+fi
 echo -e "${INFO} ${GRAY}Note: All other services (VNC, jumphost, K8s) are only accessible internally through the web application.${NC}"
 
 # ===============================================================================

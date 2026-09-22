@@ -32,16 +32,24 @@ The added CKAD exams are bundled into the images at build time, so install this 
 git clone https://github.com/htthinh1999/CK-X.git
 cd CK-X
 
-# Build the images (this bundles the exams) and start the stack
+# Build all images from source (this bundles the exams) and start the stack
+./compose-deploy.sh
+```
+
+`compose-deploy.sh` builds every image locally, starts the services, waits for the Kubernetes cluster to be ready, and prints the access URL. When it finishes, open **http://localhost:30080** in your browser.
+
+Prefer plain Docker Compose (or on Windows)? Run the equivalent directly:
+
+```bash
 docker compose up -d --build
 ```
 
-Then open **http://localhost:30080** in your browser. To stop the stack, run `docker compose down`.
+then open **http://localhost:30080**. To stop the stack, run `docker compose down --volumes --remove-orphans`.
 
-> **Requirements:** Docker and the Docker Compose plugin. On Windows, enable WSL2 in Docker Desktop.
+> **Requirements:** Docker and the Docker Compose plugin. On Windows, enable WSL2 in Docker Desktop and run the commands from a WSL / Git Bash shell.
 
 ### Detailed deployment
-For more deployment options, see the [Deployment Guide](scripts/COMPOSE-DEPLOY.md).
+For prerequisites, management commands, and troubleshooting, see the [Deployment Guide](scripts/COMPOSE-DEPLOY.md).
 
 ## Disclaimer
 

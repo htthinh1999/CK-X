@@ -10,63 +10,26 @@ This guide provides instructions for deploying the CK-X Simulator on different o
 - Internet connection
 - Port 30080 available
 
-## Quick Install
+## Install (build from source)
 
-### Linux & macOS
+This fork adds new CKAD exams that are **bundled into the images at build time**, so install by building locally. The upstream published images do not include these labs, so do **not** use the upstream one-line installer or `docker compose pull`.
 
-Open Terminal and run:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/sailor-sh/CK-X/master/scripts/install.sh | bash   
-```
-
-or, if the current user does not have the permission to run docker commands:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/sailor-sh/CK-X/master/scripts/install.sh | sudo bash
-```
-
-### Windows
-
-Open PowerShell as Administrator and run:
-
-```powershell
-irm https://raw.githubusercontent.com/sailor-sh/CK-X/master/scripts/install.ps1 | iex
-```
-
-## Manual Installation
-
-# By cloning the repository
-
-1. Clone the repository:
+1. Clone this repository:
    ```bash
-   git clone https://github.com/sailor-sh/CK-X.git
+   git clone https://github.com/htthinh1999/CK-X.git
    cd CK-X
    ```
 
-2. Build and start the services using Docker Compose:
+2. Build all images and start the stack. Either use the helper script:
    ```bash
-   docker compose up -d
+   ./compose-deploy.sh
+   ```
+   which builds every image from source, starts the services, waits for the Kubernetes cluster, and prints the access URL — or run Docker Compose directly:
+   ```bash
+   docker compose up -d --build
    ```
 
-### Via Script 
-
-If you prefer to install manually or the quick install doesn't work:
-
-1. Download the installation script:
-   - Linux/macOS: [install.sh](https://raw.githubusercontent.com/sailor-sh/CK-X/master/scripts/install.sh)
-   - Windows: [install.ps1](https://raw.githubusercontent.com/sailor-sh/CK-X/master/scripts/install.ps1)
-
-2. Run the script:
-   - Linux/macOS:
-     ```bash
-     chmod +x install.sh
-     ./install.sh
-     ```
-   - Windows (in PowerShell as Administrator):
-     ```powershell
-     .\install.ps1
-     ```
+> On Windows, enable WSL2 in Docker Desktop and run these commands from a WSL / Git Bash shell.
 
 ## Post-Installation
 
@@ -94,8 +57,8 @@ docker compose logs -f
 
 ### Update
 ```bash
-docker compose pull
-docker compose up -d
+git pull
+docker compose up -d --build
 ```
 
 ## Troubleshooting
@@ -124,7 +87,7 @@ docker compose up -d
 
 If you encounter issues:
 1. Check the logs: `docker compose logs -f`
-2. Visit our [GitHub Issues](https://github.com/sailor-sh/CK-X/issues)
+2. Visit our [GitHub Issues](https://github.com/htthinh1999/CK-X/issues)
 3. Contact support with logs and system information
 
 ## Uninstallation
@@ -135,7 +98,7 @@ To completely remove CK-X Simulator:
 # Stop and remove containers
 docker compose down
 
-# Remove downloaded files
+# Remove the cloned repository
 cd ..
-rm -rf ck-x-simulator
+rm -rf CK-X
 ```
