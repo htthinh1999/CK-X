@@ -1,0 +1,43 @@
+{
+  "id": "16",
+  "namespace": "nightly",
+  "machineHostname": "ckad9977",
+  "question": "In namespace `nightly`, create a CronJob named `star-catalog-sync` with these settings:\n\n- schedule `15 3 * * *`, `concurrencyPolicy: Forbid` and `startingDeadlineSeconds: 200`\n- created **suspended**, so it does not run until someone resumes it\n- a single container `sync` with image `busybox:1.36`, command `[\"sh\", \"-c\", \"echo catalog synced\"]` and restartPolicy `OnFailure`\n- the container's `securityContext` sets `allowPrivilegeEscalation: false`, drops `ALL` capabilities and uses the `RuntimeDefault` seccomp profile",
+  "concepts": [
+    "cronjobs",
+    "jobs",
+    "securitycontext",
+    "capabilities",
+    "seccomp"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "CronJob star-catalog-sync: schedule 15 3 * * *, concurrencyPolicy Forbid, startingDeadlineSeconds 200, container sync busybox:1.36",
+      "verificationScriptFile": "q16_s1_validate_schedule_policy.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "CronJob is suspended",
+      "verificationScriptFile": "q16_s2_validate_suspended.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "3",
+      "description": "Container sync: allowPrivilegeEscalation false and capabilities drop ALL",
+      "verificationScriptFile": "q16_s3_validate_privesc_capabilities.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "4",
+      "description": "Container sync uses seccompProfile RuntimeDefault",
+      "verificationScriptFile": "q16_s4_validate_seccomp.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "13",
+  "namespace": "nightwatch",
+  "machineHostname": "ckad9977",
+  "question": "In namespace `nightwatch`, the Deployment `watchtower` (2 replicas, label `app=watchtower`, nginx on port `80`) and the Pod `insomniac` are already running.\n\n1. Create a **headless** Service named `watchtower-peers` that selects `app=watchtower` and exposes port `80` (targetPort `80`).\n2. From a temporary Pod using image `busybox:1.36`, run `nslookup watchtower-peers.nightwatch.svc.cluster.local` and save the command's output to `/home/candidate/exam/q13/dns.txt`. The output must list the IP address of every `watchtower` Pod. Remove the temporary Pod afterwards.\n3. The container of Pod `insomniac` crashed once and was restarted; its current logs look healthy. Save the logs of the **previous** (crashed) container instance, and nothing else, to `/home/candidate/exam/q13/crash.log`.",
+  "concepts": [
+    "services",
+    "headless-service",
+    "dns",
+    "logging",
+    "troubleshooting"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "Headless Service watchtower-peers (clusterIP None) selects app=watchtower on port 80 and has 2 endpoints",
+      "verificationScriptFile": "q13_s1_validate_headless_service.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "dns.txt contains the IP of every watchtower Pod",
+      "verificationScriptFile": "q13_s2_validate_dns_output.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "3",
+      "description": "crash.log contains the crashed (previous) container's logs and not the current instance's",
+      "verificationScriptFile": "q13_s3_validate_previous_logs.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    }
+  ]
+}
