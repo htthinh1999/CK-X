@@ -25,18 +25,23 @@ A powerful Kubernetes certification practice environment that provides a realist
 
 ## Installation
 
-#### Linux & macOS
+The added CKAD exams are bundled into the images at build time, so install this fork by **building from source**. The upstream published images do **not** include these labs, so build locally rather than using the upstream one-line installer.
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/sailor-sh/CK-X/master/scripts/install.sh | bash
+# Clone this repository
+git clone https://github.com/htthinh1999/CK-X.git
+cd CK-X
+
+# Build the images (this bundles the exams) and start the stack
+docker compose up -d --build
 ```
 
-#### Windows ( make sure WSL2 is enabled in the docker desktop )
-```powershell
-irm  https://raw.githubusercontent.com/sailor-sh/CK-X/master/scripts/install.ps1 | iex
-```
+Then open **http://localhost:30080** in your browser. To stop the stack, run `docker compose down`.
 
-### Manual Installation
-For detailed installation instructions, please refer to our [Deployment Guide](scripts/COMPOSE-DEPLOY.md).
+> **Requirements:** Docker and the Docker Compose plugin. On Windows, enable WSL2 in Docker Desktop.
+
+### Detailed deployment
+For more deployment options, see the [Deployment Guide](scripts/COMPOSE-DEPLOY.md).
 
 ## Disclaimer
 
