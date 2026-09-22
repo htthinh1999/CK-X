@@ -4,6 +4,8 @@ This document contains solutions for all questions in the CKAD-002 lab
 
 ## Question 1: Core Concepts
 
+> Server: `ssh ckad9999`
+
 Create a namespace and a pod with labels:
 
 ```bash
@@ -36,6 +38,8 @@ EOF
 ```
 
 ## Question 2: Multi-container Pods
+
+> Server: `ssh ckad9999`
 
 Create a multi-container pod with a shared volume:
 
@@ -78,6 +82,8 @@ EOF
 ```
 
 ## Question 3: Pod Design - Deployment & Service
+
+> Server: `ssh ckad9999`
 
 Create a deployment and a service:
 
@@ -136,6 +142,8 @@ EOF
 
 ## Question 4: Configuration - ConfigMaps & Secrets
 
+> Server: `ssh ckad9999`
+
 Create ConfigMap, Secret, and Pod using them:
 
 ```bash
@@ -179,6 +187,8 @@ EOF
 ```
 
 ## Question 5: Observability - Probes & Resource Limits
+
+> Server: `ssh ckad9999`
 
 Create a pod with liveness/readiness probes and resource limits:
 
@@ -225,6 +235,8 @@ EOF
 ```
 
 ## Question 6: Services - Different Service Types
+
+> Server: `ssh ckad9999`
 
 Create deployment with different service types:
 
@@ -304,6 +316,8 @@ EOF
 
 ## Question 7: State - PV, PVC, and StatefulApp
 
+> Server: `ssh ckad9999`
+
 Set up persistent storage for MySQL:
 
 ```bash
@@ -372,10 +386,12 @@ EOF
 
 ## Question 8: Pod Design - CronJob
 
+> Server: `ssh ckad9988`
+
 Create a CronJob:
 
 ```bash
-# Ensure namespace exists (should be created from Question 3)
+# Ensure namespace exists
 kubectl get namespace pod-design || kubectl create namespace pod-design
 
 # Create CronJob
@@ -401,6 +417,8 @@ EOF
 ```
 
 ## Question 9: Troubleshooting a Deployment
+
+> Server: `ssh ckad9988`
 
 Fix a broken deployment (assuming it's already created but not working):
 
@@ -428,6 +446,8 @@ kubectl rollout status deployment/broken-deployment -n troubleshooting
 ```
 
 ## Question 10: Networking - NetworkPolicy
+
+> Server: `ssh ckad9988`
 
 Create pods and a NetworkPolicy:
 
@@ -514,6 +534,8 @@ EOF
 
 ## Question 11: Security Context
 
+> Server: `ssh ckad9988`
+
 Create a Pod with security configurations:
 
 ```bash
@@ -549,6 +571,8 @@ EOF
 
 ## Question 12: Docker Basics
 
+> Server: `ssh ckad9988`
+
 Create a simple Docker image and run it:
 
 ```bash
@@ -580,6 +604,8 @@ docker ps | grep my-web
 ```
 
 ## Question 13: Jobs
+
+> Server: `ssh ckad9988`
 
 Create a Job with specific configurations:
 
@@ -613,6 +639,8 @@ EOF
 ```
 
 ## Question 14: Init Containers
+
+> Server: `ssh ckad9988`
 
 Create a Pod with init container and service:
 
@@ -665,6 +693,8 @@ EOF
 
 ## Question 15 - Helm Basics
 
+> Server: `ssh ckad9977`
+
 The task is to perform basic Helm operations including creating a namespace, adding a repository, installing a chart, and saving release notes.
 
 ```bash
@@ -689,6 +719,8 @@ These commands:
 4. Save the release notes to /tmp/release-notes.txt using the `helm get notes` command
 
 ## Question 16: Health Checks
+
+> Server: `ssh ckad9977`
 
 Create a Pod with multiple health probes:
 
@@ -738,6 +770,8 @@ EOF
 
 ## Question 17: Pod Lifecycle
 
+> Server: `ssh ckad9977`
+
 Create a Pod with lifecycle hooks:
 
 ```bash
@@ -772,6 +806,8 @@ EOF
 ```
 
 ## Question 18: Custom Resource Definitions
+
+> Server: `ssh ckad9977`
 
 Create a CRD and a custom resource:
 
@@ -832,6 +868,8 @@ kubectl get application -n crd-demo
 
 ## Question 19: Custom Column Output
 
+> Server: `ssh ckad9977`
+
 Use kubectl custom columns to extract pod information:
 
 ```bash
@@ -874,6 +912,8 @@ This solution creates two output files:
 2. `/tmp/all-container-images.txt` - Shows all pods with all container images, properly handling multi-container pods
 
 ## Question 20: Pod Configuration
+
+> Server: `ssh ckad9977`
 
 Create a Pod that uses ConfigMaps and Secrets for configuration:
 

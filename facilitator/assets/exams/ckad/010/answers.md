@@ -6,11 +6,13 @@
 >
 > **Original Questions**: Adapted from [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) by [@dgkanatsios](https://github.com/dgkanatsios)
 >
-> Everything runs on the single `ckad9999` jumphost against one cluster (no SSH needed). Files live under `/tmp/exam/course/N/`.
+> Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host). Files live under `/tmp/exam/course/N/` on that host.
 
 ---
 
 ## Question 1 | Service ClusterIP and Endpoints (5 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl run web --image=nginx:1.25 --restart=Never --port=80 --expose -n harvest
@@ -34,6 +36,8 @@ kubectl get ep web -n harvest
 
 ## Question 2 | Convert Service to NodePort (5 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl patch svc app-svc -n grain -p '{"spec":{"type":"NodePort"}}'
 ```
@@ -49,6 +53,8 @@ kubectl edit svc app-svc -n grain
 
 ## Question 3 | Deployment with Service (6 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Create Deployment
 kubectl create deployment backend --image=nginx:1.25 --replicas=3 --port=8080 -n rice
@@ -60,6 +66,8 @@ kubectl expose deployment backend --port=6262 --target-port=8080 -n rice
 ---
 
 ## Question 4 | Readiness Probe HTTP (5 points)
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -83,6 +91,8 @@ spec:
 
 ## Question 5 | Liveness Probe with Delay (5 points)
 
+> Server: `ssh ckad9999`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -105,6 +115,8 @@ spec:
 
 ## Question 6 | LimitRange for Namespace (6 points)
 
+> Server: `ssh ckad9999`
+
 ```yaml
 apiVersion: v1
 kind: LimitRange
@@ -123,6 +135,8 @@ spec:
 ---
 
 ## Question 7 | ResourceQuota with Requests and Limits (6 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl create quota compute-quota -n fortune \
@@ -149,6 +163,8 @@ spec:
 
 ## Question 8 | Pod within ResourceQuota (5 points)
 
+> Server: `ssh ckad9988`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -172,6 +188,8 @@ spec:
 
 ## Question 9 | Security Context with Capabilities (6 points)
 
+> Server: `ssh ckad9999`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -192,6 +210,8 @@ spec:
 ---
 
 ## Question 10 | Shared Volume Between Containers (6 points)
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: v1
@@ -222,6 +242,8 @@ spec:
 
 ## Question 11 | Annotations (4 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl run annotated-pod --image=nginx:1.25 --restart=Never -n prosperity
 kubectl annotate pod annotated-pod owner=marketing -n prosperity
@@ -230,6 +252,8 @@ kubectl annotate pod annotated-pod owner=marketing -n prosperity
 ---
 
 ## Question 12 | Labels Selection (5 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 # Create pods
@@ -250,6 +274,8 @@ kubectl get pods -n harvest -l env=prod > /tmp/exam/course/12/pods.txt
 
 ## Question 13 | Helm Add Repository (4 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
@@ -258,6 +284,8 @@ helm repo update
 ---
 
 ## Question 14 | Helm Show Values (5 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 mkdir -p /tmp/exam/course/14
@@ -268,6 +296,8 @@ helm show values bitnami/nginx | head -50 > /tmp/exam/course/14/values.txt
 
 ## Question 15 | Helm List Releases (4 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 mkdir -p /tmp/exam/course/15
 helm list -A > /tmp/exam/course/15/releases.txt
@@ -276,6 +306,8 @@ helm list -A > /tmp/exam/course/15/releases.txt
 ---
 
 ## Question 16 | Canary Deployment Setup (6 points)
+
+> Server: `ssh ckad9977`
 
 ```yaml
 # app-v1 Deployment
@@ -344,6 +376,8 @@ spec:
 
 ## Question 17 | emptyDir Volume for Data Sharing (5 points)
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -373,6 +407,8 @@ spec:
 
 ## Question 18 | Pod DNS Resolution (5 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 mkdir -p /tmp/exam/course/18
 kubectl run busybox --rm -it --restart=Never --image=busybox:1.36 -n field -- nslookup web-svc.field.svc.cluster.local | grep -A1 "Name:" | tail -1 | awk '{print $2}' > /tmp/exam/course/18/dns.txt
@@ -388,6 +424,8 @@ kubectl run busybox --rm -it --restart=Never --image=busybox:1.36 -n field -- sh
 ---
 
 ## Question 19 | Network Policy Allow Specific Label (6 points)
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -411,6 +449,8 @@ spec:
 ---
 
 ## Question 20 | Generate API Token for ServiceAccount (5 points)
+
+> Server: `ssh ckad9977`
 
 ```bash
 # Create ServiceAccount

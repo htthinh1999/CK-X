@@ -2,6 +2,8 @@
 
 ## Question 1: Create a deployment called nginx-deployment in the namespace dev with 3 replicas and image nginx:latest
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Create the namespace if it doesn't exist
 kubectl create namespace dev
@@ -11,6 +13,8 @@ kubectl create deployment nginx-deployment -n dev --image=nginx:latest --replica
 ```
 
 ## Question 2: Create a PersistentVolume named 'pv-storage' with 1Gi capacity, access mode ReadWriteOnce, hostPath type at /mnt/data, and reclaim policy Retain
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -35,6 +39,8 @@ kubectl apply -f pv-storage.yaml
 
 ## Question 3: Create a StorageClass named 'fast-storage' with provisioner 'kubernetes.io/no-provisioner' and volumeBindingMode 'WaitForFirstConsumer'
 
+> Server: `ssh ckad9999`
+
 ```yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -51,6 +57,8 @@ kubectl apply -f storage-class.yaml
 ```
 
 ## Question 4: Create a PersistentVolumeClaim named 'pvc-app' that requests 500Mi of storage with ReadWriteOnce access mode and uses the 'fast-storage' StorageClass
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -74,6 +82,8 @@ kubectl apply -f pvc.yaml -n storage-test
 ```
 
 ## Question 5: The deployment 'broken-app' in namespace 'troubleshooting' is failing to start. Identify and fix the issue
+
+> Server: `ssh ckad9999`
 
 Troubleshooting steps:
 ```bash
@@ -102,6 +112,8 @@ Potential fixes:
    ```
 
 ## Question 6: Create a multi-container pod with sidecar logging pattern
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -148,6 +160,8 @@ kubectl describe pod sidecar-pod -n troubleshooting
 
 ## Question 7: Service 'web-service' in namespace 'troubleshooting' is not routing traffic to pods properly. Identify and fix the issue
 
+> Server: `ssh ckad9999`
+
 Troubleshooting steps:
 ```bash
 # Check the service configuration
@@ -182,6 +196,8 @@ kubectl apply -f fixed-service.yaml
 
 ## Question 8: Pod 'logging-pod' in namespace 'troubleshooting' is consuming excessive CPU resources. Set appropriate CPU and memory limits
 
+> Server: `ssh ckad9988`
+
 Solution:
 1. After identifying which container is causing high CPU usage, edit the pod to add resource limits:
 
@@ -207,6 +223,8 @@ kubectl replace -f tmp/<file.yaml> --force
 ```
 
 ## Question 9: Create a ConfigMap named 'app-config' in namespace 'workloads' containing the following key-value pairs: APP_ENV=production, LOG_LEVEL=info. Then create a Pod named 'config-pod' using 'nginx' image that mounts these configurations as environment variables
+
+> Server: `ssh ckad9988`
 
 ```bash
 # Create the ConfigMap
@@ -251,6 +269,8 @@ kubectl apply -f config-pod.yaml
 
 ## Question 10: Create a Secret named 'db-credentials' in namespace 'workloads' containing username=admin, random=true and password=securepass. Then create a Pod named 'secure-pod' using 'mysql:9.5.0' image with these credentials set as environment variables DB_USER, MYSQL_RANDOM_ROOT_PASSWORD and DB_PASSWORD
 
+> Server: `ssh ckad9988`
+
 ```bash
 # Create the Secret
 kubectl create secret generic db-credentials -n workloads --from-literal=username=admin --from-literal=password=securepass --from-literal=random=true
@@ -293,6 +313,8 @@ kubectl apply -f secure-pod.yaml
 
 ## Question 11: Create a CronJob named 'log-cleaner' in namespace 'workloads' that runs hourly to clean up log files
 
+> Server: `ssh ckad9988`
+
 ```yaml
 apiVersion: batch/v1
 kind: CronJob
@@ -330,6 +352,8 @@ kubectl get cronjob log-cleaner -n workloads -o yaml
 
 ## Question 12: Create a Pod named 'health-pod' in namespace 'workloads' using 'nginx' image with a liveness probe that checks the path /healthz on port 80 every 15 seconds, and a readiness probe that checks port 80 every 10 seconds
 
+> Server: `ssh ckad9988`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -361,6 +385,8 @@ kubectl apply -f health-pod.yaml
 ```
 
 ## Question 13: Create a ClusterRole named 'pod-reader' that allows getting, watching, and listing pods. Then create a ClusterRoleBinding named 'read-pods' that grants this role to the user 'jane' in the namespace 'cluster-admin'
+
+> Server: `ssh ckad9988`
 
 ```bash
 # Create the ClusterRole
@@ -408,6 +434,8 @@ kubectl apply -f cluster-role-binding.yaml
 
 ## Question 14: Deploy the Bitnami Nginx chart in the 'web' namespace using Helm
 
+> Server: `ssh ckad9988`
+
 ```bash
 # Create the namespace if it doesn't exist
 kubectl create namespace web
@@ -433,6 +461,8 @@ kubectl get deployment -n web
 ```
 
 ## Question 15: Create a CRD (CustomResourceDefinition) for a new resource type 'Backup' in API group 'data.example.com' with version 'v1alpha1' that includes fields 'spec.source' and 'spec.destination'
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: apiextensions.k8s.io/v1
@@ -472,6 +502,8 @@ kubectl apply -f backup-crd.yaml
 
 ## Question 16: Create a NetworkPolicy named 'allow-traffic' in namespace 'networking' that allows traffic to pods with label 'app=web' only from pods with label 'tier=frontend' on port 80
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -499,6 +531,8 @@ kubectl apply -f network-policy.yaml
 
 ## Question 17: Create a ClusterIP service named 'internal-app' in namespace 'networking' that routes traffic to pods with label 'app=backend' on port 8080, exposing the service on port 80
 
+> Server: `ssh ckad9977`
+
 Or using YAML:
 ```yaml
 apiVersion: v1
@@ -522,6 +556,8 @@ kubectl apply -f internal-service.yaml
 ```
 
 ## Question 18: Create a NodePort service named public-web in namespace networking that will expose the web-frontend deployment to external users.
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: v1
@@ -549,6 +585,8 @@ kubectl apply -f loadbalancer-service.yaml
 
 ## Question 19: Create an Ingress resource named 'api-ingress' in namespace 'networking' that routes traffic from 'api.example.com' to the service 'api-service' on port 80
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -575,6 +613,8 @@ kubectl apply -f ingress.yaml
 ```
 
 ## Question 20: Create a simple Kubernetes Job named 'hello-job' that executes a command and completes
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: batch/v1
@@ -613,6 +653,8 @@ kubectl logs -n networking -l job-name=hello-job
 ```
 
 ## Question 21: Work with the Open Container Initiative (OCI) format
+
+> Server: `ssh ckad9977`
 
 ```bash
 # Pull the image

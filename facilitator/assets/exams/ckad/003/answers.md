@@ -6,11 +6,13 @@
 
 Total Score: 112 points | Passing Score: ~66% (74 points)
 
-> Environment notes: everything runs on the single `ckad9999` jumphost against one shared cluster (no SSH to other instances needed). The scratch/course workspace is `/tmp/exam/course/N/...`. A local registry runs at `localhost:5000` for image questions.
+> Environment notes: each question names its instance — `ssh` to it and work there; that server's cluster is its only (default) context, so there is nothing to switch. The scratch/course workspace `/tmp/exam/course/N/...` lives on the question's server. A local registry runs at `localhost:5000` on the server of the image question.
 
 ---
 
 ## Question 1 | API Resources
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl api-resources > /tmp/exam/course/1/api-resources
@@ -21,6 +23,8 @@ kubectl api-resources > /tmp/exam/course/1/api-resources
 ---
 
 ## Question 2 | Deployment Recreate Strategy
+
+> Server: `ssh ckad9999`
 
 ```bash
 cat <<EOF > /tmp/exam/course/2/fire-app.yaml
@@ -57,6 +61,8 @@ The `Recreate` strategy terminates all existing pods before creating new ones.
 
 ## Question 3 | Job with Timeout
 
+> Server: `ssh ckad9999`
+
 ```bash
 cat <<EOF > /tmp/exam/course/3/job.yaml
 apiVersion: batch/v1
@@ -85,6 +91,8 @@ kubectl apply -f /tmp/exam/course/3/job.yaml
 
 ## Question 4 | Helm Template Debug
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Render the manifests from the installed release
 helm get manifest phoenix-web -n flare > /tmp/exam/course/4/rendered.yaml
@@ -99,6 +107,8 @@ helm get manifest phoenix-web -n flare > /tmp/exam/course/4/rendered.yaml
 ---
 
 ## Question 5 | Fix CrashLoopBackOff
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl describe pod crash-app -n ember
@@ -138,6 +148,8 @@ CrashLoopBackOff here is caused by the non-existent command `sleepx`; fixing it 
 
 ## Question 6 | ConfigMap Items Mount
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -171,6 +183,8 @@ Using `items` in a ConfigMap volume selectively mounts specific keys as files.
 
 ## Question 7 | Secret from File
 
+> Server: `ssh ckad9999`
+
 ```bash
 mkdir -p /tmp/exam/course/7
 echo -n 'FirePhoenix2024!' > /tmp/exam/course/7/password.txt
@@ -185,6 +199,8 @@ kubectl create secret generic db-credentials \
 ---
 
 ## Question 8 | Headless Service
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -209,6 +225,8 @@ A headless service (`clusterIP: None`) returns pod IPs directly via DNS instead 
 ---
 
 ## Question 9 | Canary Deployment
+
+> Server: `ssh ckad9988`
 
 ```bash
 # Canary deployment (starter at /tmp/exam/course/9/canary.yaml)
@@ -260,6 +278,8 @@ The service selector (`app: web-frontend` only) matches both `stable-v1` (3 pods
 
 ## Question 10 | Sidecar Data Processing
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -292,6 +312,8 @@ The sidecar pattern uses two containers sharing an `emptyDir` volume: the produc
 ---
 
 ## Question 11 | Cross-Namespace NetworkPolicy
+
+> Server: `ssh ckad9988`
 
 ```bash
 # The flame namespace is labelled name=flame (done in setup); if needed:
@@ -326,6 +348,8 @@ EOF
 
 ## Question 12 | Docker Build with ARG
 
+> Server: `ssh ckad9988`
+
 ```bash
 # The template already exists at /tmp/exam/course/12/image/ (Dockerfile + index.html)
 cat <<EOF > /tmp/exam/course/12/image/Dockerfile
@@ -354,6 +378,8 @@ docker push localhost:5000/phoenix-app:2.0.0
 
 ## Question 13 | Helm Values File
 
+> Server: `ssh ckad9988`
+
 ```bash
 # values.yaml already exists at /tmp/exam/course/13/values.yaml
 helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -369,6 +395,8 @@ The values file overrides the chart defaults (3 replicas, service port 8080).
 ---
 
 ## Question 14 | PostStart Lifecycle Hook
+
+> Server: `ssh ckad9988`
 
 ```bash
 # Starter at /tmp/exam/course/14/lifecycle.yaml
@@ -397,6 +425,8 @@ The `postStart` hook runs right after the container is created, writing `started
 
 ## Question 15 | Guaranteed QoS Class
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -423,6 +453,8 @@ Guaranteed QoS requires every container to set both CPU and memory requests AND 
 ---
 
 ## Question 16 | ServiceAccount Projected Token
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -458,6 +490,8 @@ Projected volumes mount ServiceAccount tokens with a configurable expiration and
 
 ## Question 17 | TCP Liveness Probe
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -484,6 +518,8 @@ A `tcpSocket` probe succeeds when a TCP connection to the port can be establishe
 ---
 
 ## Question 18 | Service with Named Ports
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -513,6 +549,8 @@ EOF
 ---
 
 ## Question 19 | Topology Spread Constraints
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -552,6 +590,8 @@ EOF
 
 ## Question 20 | Field Selectors
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl get pods --all-namespaces --field-selector=status.phase=Running \
   -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' > /tmp/exam/course/20/running-pods.txt
@@ -562,6 +602,8 @@ kubectl get pods --all-namespaces --field-selector=status.phase=Running \
 ---
 
 ## Question 21 | Node Drain
+
+> Server: `ssh ckad9977`
 
 ```bash
 mkdir -p /tmp/exam/course/21

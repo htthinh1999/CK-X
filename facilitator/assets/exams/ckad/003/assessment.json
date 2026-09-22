@@ -3,7 +3,7 @@
     {
       "id": "1",
       "namespace": "default",
-      "machineHostname": "ckad9999",
+      "machineHostname": "ckad9977",
       "question": "The DevOps team needs a complete list of all API resources available in the cluster, including the resource name, shortnames, API group, and whether the resource is namespaced.\n\nSave the complete output to `/tmp/exam/course/1/api-resources`.",
       "concepts": [
         "api-resources",
@@ -909,7 +909,7 @@
     {
       "id": "19",
       "namespace": "blaze",
-      "machineHostname": "ckad9977",
+      "machineHostname": "ckad9999",
       "question": "Create a Deployment named `spread-deploy` in namespace `blaze` that:\n\n- Image: `nginx:1.21`\n- Replicas: `4`\n- Container name: `web`\n- Label selector: `app=spread-app`\n- Uses `topologySpreadConstraints` to spread pods evenly across nodes with:\n  - `topologyKey`: `kubernetes.io/hostname`\n  - `maxSkew`: `1`\n  - `whenUnsatisfiable`: `ScheduleAnyway`",
       "concepts": [
         "deployments",

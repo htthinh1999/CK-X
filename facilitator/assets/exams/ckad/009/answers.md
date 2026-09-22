@@ -7,11 +7,13 @@
 >
 > **Original Questions**: Adapted from [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) by [@dgkanatsios](https://github.com/dgkanatsios)
 >
-> Paths use `/tmp/exam/course/N/...`. Everything runs on the single `ckad9999` host and one shared cluster (no SSH between instances).
+> Paths use `/tmp/exam/course/N/...`. Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host).
 
 ---
 
 ## Question 1 | Pod with Exposed Port (4 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl run nginx --image=nginx:1.25 --restart=Never --port=80 --expose -n grove
@@ -30,6 +32,8 @@ kubectl get ep nginx -n grove
 ---
 
 ## Question 2 | Get Pod IP and Test Connectivity (5 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 # Create the Pod
@@ -51,6 +55,8 @@ kubectl run busybox --rm -it --restart=Never --image=busybox:1.36 -n thicket -- 
 
 ## Question 3 | Pod Logs (4 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Create the Pod (use --command so the loop lands in .spec.containers[0].command)
 kubectl run logger --image=busybox:1.36 --restart=Never --command -n glade -- /bin/sh -c 'i=0; while true; do echo "$i: $(date)"; i=$((i+1)); sleep 1; done'
@@ -67,6 +73,8 @@ kubectl logs logger -n glade | head -10 > /tmp/exam/course/3/logs.txt
 
 ## Question 4 | Debug Pod with Error (5 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Create the Pod with error command
 kubectl run debug-pod --image=busybox:1.36 --restart=Never -n meadow -- ls /notexist
@@ -82,6 +90,8 @@ kubectl logs debug-pod -n meadow > /tmp/exam/course/4/error.txt 2>&1
 ---
 
 ## Question 5 | Pod with Node Selector (6 points)
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -104,6 +114,8 @@ kubectl apply -f gpu-pod.yaml
 ---
 
 ## Question 6 | Pod with Tolerations (6 points)
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -129,6 +141,8 @@ kubectl apply -f tolerate-pod.yaml
 ---
 
 ## Question 7 | Deployment with Replicas (5 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl create deployment app-deploy --image=nginx:1.18.0 --replicas=3 --port=80 -n root
@@ -163,6 +177,8 @@ spec:
 
 ## Question 8 | Scale Deployment (4 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl scale deployment app-deploy --replicas=5 -n root
 ```
@@ -178,6 +194,8 @@ kubectl get pods -n root -l app=app-deploy
 
 ## Question 9 | Horizontal Pod Autoscaler (6 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl autoscale deployment app-deploy --min=5 --max=10 --cpu-percent=80 -n root
 ```
@@ -191,6 +209,8 @@ kubectl get hpa app-deploy -n root
 ---
 
 ## Question 10 | Deployment Rollout Pause and Resume (6 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 # Pause the rollout
@@ -212,6 +232,8 @@ kubectl describe deployment pause-deploy -n bark | grep Image
 ---
 
 ## Question 11 | Job with Parallelism (5 points)
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: batch/v1
@@ -238,6 +260,8 @@ kubectl apply -f parallel-job.yaml
 
 ## Question 12 | Job with Active Deadline (5 points)
 
+> Server: `ssh ckad9988`
+
 ```yaml
 apiVersion: batch/v1
 kind: Job
@@ -262,6 +286,8 @@ kubectl apply -f deadline-job.yaml
 ---
 
 ## Question 13 | CronJob with Starting Deadline (5 points)
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: batch/v1
@@ -291,6 +317,8 @@ kubectl apply -f deadline-cron.yaml
 
 ## Question 14 | Create Job from CronJob (4 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 # Create the CronJob
 kubectl create cronjob source-cron --image=busybox:1.36 --schedule="*/5 * * * *" -n thicket -- echo "source job"
@@ -302,6 +330,8 @@ kubectl create job manual-job --from=cronjob/source-cron -n thicket
 ---
 
 ## Question 15 | ConfigMap from File (5 points)
+
+> Server: `ssh ckad9977`
 
 ```bash
 # Create the file
@@ -321,6 +351,8 @@ kubectl get configmap file-config -n glade -o yaml
 ---
 
 ## Question 16 | ConfigMap with envFrom (5 points)
+
+> Server: `ssh ckad9977`
 
 ```bash
 # Create ConfigMap
@@ -352,6 +384,8 @@ kubectl exec -n meadow env-pod -- env | grep var
 
 ## Question 17 | Secret from File (5 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 # Create the file
 mkdir -p /tmp/exam/course/17
@@ -370,6 +404,8 @@ kubectl get secret file-secret -n fern -o yaml
 ---
 
 ## Question 18 | Secret as Environment Variable (5 points)
+
+> Server: `ssh ckad9977`
 
 ```bash
 # Create Secret
@@ -404,6 +440,8 @@ kubectl exec -n moss api-pod -- env | grep API_KEY
 
 ## Question 19 | ServiceAccount and Pod (5 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 # Create ServiceAccount
 kubectl create serviceaccount app-sa -n root
@@ -431,6 +469,8 @@ kubectl get pod sa-pod -n root -o jsonpath='{.spec.serviceAccountName}'
 ---
 
 ## Question 20 | Copy File from Pod (5 points)
+
+> Server: `ssh ckad9977`
 
 ```bash
 # Create Pod

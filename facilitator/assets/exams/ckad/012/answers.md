@@ -8,11 +8,13 @@
 >
 > **Focus**: Debugging and fixing real workloads — the core of the CKAD exam.
 >
-> Everything runs on the single `ckad9999` jumphost against one shared cluster. Files live under `/tmp/exam/course/N/...`. A local registry runs at `localhost:5000`.
+> Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host). Files live under `/tmp/exam/course/N/...` on that host. A local registry runs at `localhost:5000` on `ckad9999` (Question 7).
 
 ---
 
 ## Question 1 | Secrets & Environment Variables (5 points)
+
+> Server: `ssh ckad9999`
 
 Inspect the existing Pod:
 
@@ -72,6 +74,8 @@ kubectl apply -f webapp-fixed.yaml
 
 ## Question 2 | Fix a Broken Ingress (6 points)
 
+> Server: `ssh ckad9999`
+
 Inspect the Service first:
 
 ```bash
@@ -113,6 +117,8 @@ spec:
 
 ## Question 3 | Create a New Ingress (5 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl create ingress api-ingress \
   --rule="api.example.com/app=api-svc:80" \
@@ -149,6 +155,8 @@ kubectl apply -f api-ingress.yaml
 
 ## Question 4 | NetworkPolicy — Label Pods for Communication (6 points)
 
+> Server: `ssh ckad9999`
+
 Inspect the NetworkPolicies:
 
 ```bash
@@ -179,6 +187,8 @@ kubectl get pods -n rampart --show-labels
 
 ## Question 5 | Resource Requests and Limits (5 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl set resources deployment compute-app -n tower \
   --requests=cpu=100m,memory=128Mi \
@@ -195,6 +205,8 @@ kubectl get deployment compute-app -n tower -o jsonpath='{.spec.template.spec.co
 ---
 
 ## Question 6 | Fix ResourceQuota Issue (5 points)
+
+> Server: `ssh ckad9999`
 
 Check the quota:
 
@@ -221,6 +233,8 @@ kubectl get pods -n garrison
 
 ## Question 7 | Docker Image Build and Save (5 points)
 
+> Server: `ssh ckad9999`
+
 A local registry is already running at `localhost:5000` on this host.
 
 ```bash
@@ -245,6 +259,8 @@ curl -s http://localhost:5000/v2/oni-app/tags/list
 ---
 
 ## Question 8 | Canary Deployment (6 points)
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: apps/v1
@@ -286,6 +302,8 @@ kubectl get ep app-svc -n bulwark
 
 ## Question 9 | Fix Service Selector Mismatch (4 points)
 
+> Server: `ssh ckad9988`
+
 Check Pod labels and Service selector:
 
 ```bash
@@ -308,6 +326,8 @@ kubectl get endpoints backend-svc -n parapet
 ---
 
 ## Question 10 | CronJob with Proper Exit (5 points)
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: batch/v1
@@ -339,6 +359,8 @@ kubectl apply -f cleanup-job.yaml
 
 ## Question 11 | SecurityContext — Merge Settings (5 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl edit deployment secure-app -n fortress
 ```
@@ -362,6 +384,8 @@ kubectl get pods -n fortress -l app=secure-app
 ---
 
 ## Question 12 | RBAC — Fix Forbidden Error (7 points)
+
+> Server: `ssh ckad9988`
 
 Create the Role:
 
@@ -392,6 +416,8 @@ kubectl rollout restart deployment pod-reader -n bastion
 
 ## Question 13 | Deployment Rollback (5 points)
 
+> Server: `ssh ckad9988`
+
 Save the rollout history to file:
 
 ```bash
@@ -417,6 +443,8 @@ kubectl get deployment web-server -n citadel -o jsonpath='{.spec.template.spec.c
 ---
 
 ## Question 14 | Fix Deprecated API Version (4 points)
+
+> Server: `ssh ckad9988`
 
 Edit `/tmp/exam/course/14/broken-deploy.yaml`:
 
@@ -459,6 +487,8 @@ kubectl apply -f /tmp/exam/course/14/broken-deploy.yaml
 
 ## Question 15 | Troubleshoot Failing Deployment (5 points)
 
+> Server: `ssh ckad9977`
+
 Investigate the failing Pods:
 
 ```bash
@@ -495,6 +525,8 @@ kubectl get pods -n tower -l app=health-app
 
 ## Question 16 | ConfigMap as Environment Variables (5 points)
 
+> Server: `ssh ckad9977`
+
 Create the ConfigMap:
 
 ```bash
@@ -530,6 +562,8 @@ kubectl exec config-app -n gate -- env | grep APP_
 
 ## Question 17 | Create ClusterIP Service (4 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl expose deployment backend-app \
   --name=backend-svc \
@@ -548,6 +582,8 @@ kubectl get ep backend-svc -n gate
 ---
 
 ## Question 18 | Job with Completions and Parallelism (5 points)
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: batch/v1
@@ -576,6 +612,8 @@ kubectl get job batch-processor -n bulwark
 
 ## Question 19 | Deployment Rolling Update Strategy (5 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl patch deployment rolling-app -n parapet -p '
 {
@@ -600,6 +638,8 @@ kubectl get deployment rolling-app -n parapet -o jsonpath='{.spec.strategy}'
 ---
 
 ## Question 20 | Multi-container Pod with Shared Volume (5 points)
+
+> Server: `ssh ckad9977`
 
 Complete the template at `/tmp/exam/course/20/sidecar-pod.yaml`:
 

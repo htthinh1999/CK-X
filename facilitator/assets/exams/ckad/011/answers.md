@@ -6,11 +6,13 @@
 >
 > Original Questions: Adapted from [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) by [@dgkanatsios](https://github.com/dgkanatsios).
 >
-> Paths use `/tmp/exam/course/N/...`. Everything runs on the single `ckad9999` host / one cluster.
+> Paths use `/tmp/exam/course/N/...`. Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host).
 
 ---
 
 ## Question 1 | Helm Create Chart
+
+> Server: `ssh ckad9999`
 
 ```bash
 mkdir -p /tmp/exam/course/1
@@ -21,6 +23,8 @@ helm create sea-app
 ---
 
 ## Question 2 | Helm Install with Custom Values
+
+> Server: `ssh ckad9999`
 
 ```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -33,6 +37,8 @@ helm install my-release bitnami/nginx -n tide --set replicaCount=2
 
 ## Question 3 | Helm Upgrade Release
 
+> Server: `ssh ckad9999`
+
 ```bash
 # my-release must exist first (see Q2). Then upgrade it:
 helm upgrade my-release bitnami/nginx -n tide --set replicaCount=3
@@ -41,6 +47,8 @@ helm upgrade my-release bitnami/nginx -n tide --set replicaCount=3
 ---
 
 ## Question 4 | Helm Rollback
+
+> Server: `ssh ckad9999`
 
 ```bash
 # Check current revision
@@ -53,6 +61,8 @@ helm rollback rollback-app 1 -n wave
 ---
 
 ## Question 5 | PersistentVolume Creation
+
+> Server: `ssh ckad9999`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -75,6 +85,8 @@ EOF
 
 ## Question 6 | PersistentVolumeClaim
 
+> Server: `ssh ckad9999`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -95,6 +107,8 @@ EOF
 ---
 
 ## Question 7 | Pod with PVC
+
+> Server: `ssh ckad9999`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -122,6 +136,8 @@ EOF
 
 ## Question 8 | Pod with nodeName
 
+> Server: `ssh ckad9988`
+
 ```bash
 NODE=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')
 
@@ -143,6 +159,8 @@ EOF
 
 ## Question 9 | Pod Lifecycle - Echo and Exit
 
+> Server: `ssh ckad9988`
+
 ```bash
 # Create a Pod that echoes and exits (stays around as Succeeded)
 kubectl run echo-pod -n current --image=busybox:1.36 --restart=Never -- /bin/sh -c 'echo "hello world"'
@@ -157,6 +175,8 @@ Using `--restart=Never` (without `--rm`) leaves the Pod in phase `Succeeded`, wh
 
 ## Question 10 | Get Pod YAML
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/10
 
@@ -169,6 +189,8 @@ kubectl get pod inspect-pod -n abyss -o yaml > /tmp/exam/course/10/pod.yaml
 
 ## Question 11 | Describe Pod and Find Events
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/11
 
@@ -178,6 +200,8 @@ kubectl describe pod problem-pod -n pearl | sed -n '/^Events:/,$p' > /tmp/exam/c
 ---
 
 ## Question 12 | Execute Command in Pod
+
+> Server: `ssh ckad9988`
 
 ```bash
 mkdir -p /tmp/exam/course/12
@@ -193,6 +217,8 @@ kubectl exec exec-pod -n storm -- hostname > /tmp/exam/course/12/hostname.txt
 
 ## Question 13 | Get Previous Container Logs
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/13
 
@@ -202,6 +228,8 @@ kubectl logs restart-pod -n harbor --previous > /tmp/exam/course/13/previous.txt
 ---
 
 ## Question 14 | Top Nodes
+
+> Server: `ssh ckad9988`
 
 ```bash
 mkdir -p /tmp/exam/course/14
@@ -213,6 +241,8 @@ kubectl top nodes > /tmp/exam/course/14/nodes.txt 2>&1
 ---
 
 ## Question 15 | ConfigMap from .env File
+
+> Server: `ssh ckad9977`
 
 ```bash
 mkdir -p /tmp/exam/course/15
@@ -229,6 +259,8 @@ kubectl create configmap env-config -n voyage --from-env-file=/tmp/exam/course/1
 
 ## Question 16 | Deployment Rollout to Specific Revision
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl rollout history deployment/web-deploy -n tide
 
@@ -239,6 +271,8 @@ kubectl rollout undo deployment/web-deploy -n tide --to-revision=2
 
 ## Question 17 | Check Rollout History Details
 
+> Server: `ssh ckad9977`
+
 ```bash
 mkdir -p /tmp/exam/course/17
 
@@ -248,6 +282,8 @@ kubectl rollout history deployment/history-deploy -n wave --revision=3 > /tmp/ex
 ---
 
 ## Question 18 | Job with Perl Image
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -274,6 +310,8 @@ EOF
 ---
 
 ## Question 19 | Multi-Container Pod with Shared Volume
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -307,6 +345,8 @@ EOF
 ---
 
 ## Question 20 | Resource Utilization of Pods
+
+> Server: `ssh ckad9977`
 
 ```bash
 mkdir -p /tmp/exam/course/20

@@ -216,7 +216,7 @@
     {
       "id": "7",
       "namespace": "fortune",
-      "machineHostname": "ckad9999",
+      "machineHostname": "ckad9988",
       "question": "Work in namespace `fortune`.\n\nCreate a ResourceQuota named `compute-quota` in namespace `fortune` with:\n- Hard requests: `cpu=1`, `memory=1Gi`\n- Hard limits: `cpu=2`, `memory=2Gi`\n\nHint: use `requests.cpu`, `requests.memory`, `limits.cpu`, `limits.memory`.",
       "concepts": [
         "resourcequota",
@@ -297,7 +297,7 @@
     {
       "id": "9",
       "namespace": "golden",
-      "machineHostname": "ckad9988",
+      "machineHostname": "ckad9999",
       "question": "Work in namespace `golden`.\n\nCreate a Pod named `cap-pod` in namespace `golden` with image `nginx:1.25` that adds the capabilities:\n- `NET_ADMIN`\n- `SYS_TIME`\n\nHint: use `securityContext.capabilities.add` at the container level.",
       "concepts": [
         "securitycontext",

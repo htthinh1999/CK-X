@@ -3,11 +3,13 @@
 *Dojo Byakko 🐯 — Tigre Blanc de l'Ouest*
 *「白虎は精密に打つ」 - Le tigre frappe avec précision*
 
-This document contains reference solutions for all 20 questions. All work happens on the single `ckad9999` jumphost against the shared cluster; student files live under `/tmp/exam/...`.
+This document contains reference solutions for all 20 questions. Each question is solved on the instance it names (`ssh` to it; that server's cluster is its only context); student files live under `/tmp/exam/...` on that server.
 
 ---
 
 ## Question 1 | Pod with Anti-Affinity
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -39,6 +41,8 @@ kubectl apply -f titan-alpha.yaml
 ---
 
 ## Question 2 | ConfigMap from Multiple Sources
+
+> Server: `ssh ckad9999`
 
 ```bash
 # Create ConfigMap with literals
@@ -72,6 +76,8 @@ EOF
 
 ## Question 3 | ExternalName Service
 
+> Server: `ssh ckad9999`
+
 ```yaml
 apiVersion: v1
 kind: Service
@@ -90,6 +96,8 @@ kubectl apply -f external-api.yaml
 ---
 
 ## Question 4 | LimitRange Configuration
+
+> Server: `ssh ckad9999`
 
 ```yaml
 # LimitRange
@@ -128,6 +136,8 @@ kubectl apply -f limitrange.yaml
 
 ## Question 5 | SecurityContext - Read-Only Root Filesystem
 
+> Server: `ssh ckad9999`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -159,6 +169,8 @@ spec:
 ---
 
 ## Question 6 | Pod with Multiple Init Containers
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -195,6 +207,8 @@ spec:
 
 ## Question 7 | Deployment with Pause/Resume
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Ensure the target directory exists
 mkdir -p /tmp/exam/course/7
@@ -214,6 +228,8 @@ kubectl rollout status deployment/battle-app -n ares > /tmp/exam/course/7/rollou
 ---
 
 ## Question 8 | Ambassador Pattern - Sidecar Proxy
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: v1
@@ -238,6 +254,8 @@ spec:
 
 ## Question 9 | Job with Backoff Limit
 
+> Server: `ssh ckad9988`
+
 ```yaml
 apiVersion: batch/v1
 kind: Job
@@ -258,6 +276,8 @@ spec:
 ---
 
 ## Question 10 | Secret Types - Docker Registry
+
+> Server: `ssh ckad9988`
 
 ```bash
 # Create docker-registry secret
@@ -287,6 +307,8 @@ EOF
 
 ## Question 11 | Adapter Pattern - Log Transformer
 
+> Server: `ssh ckad9988`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -315,6 +337,8 @@ spec:
 ---
 
 ## Question 12 | Network Policy - Egress Rules
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -348,6 +372,8 @@ spec:
 
 ## Question 13 | RBAC - Service Account Permissions
 
+> Server: `ssh ckad9988`
+
 ```bash
 # Create ServiceAccount
 kubectl create serviceaccount deployment-manager -n hermes
@@ -377,6 +403,8 @@ kubectl create rolebinding deploy-binding -n hermes \
 ---
 
 ## Question 14 | Deployment Rolling Update Strategy
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: apps/v1
@@ -409,6 +437,8 @@ spec:
 
 ## Question 15 | Ingress with Path-Based Routing
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -439,6 +469,8 @@ spec:
 
 ## Question 16 | Pod with Token Projection
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -466,6 +498,8 @@ spec:
 
 ## Question 17 | CronJob with Concurrency Policy
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: batch/v1
 kind: CronJob
@@ -492,6 +526,8 @@ spec:
 
 ## Question 18 | Pod Disruption Budget
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -508,6 +544,8 @@ spec:
 ---
 
 ## Question 19 | Deployment with Annotations
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: apps/v1
@@ -537,6 +575,8 @@ spec:
 ---
 
 ## Question 20 | Multi-Container Pod with Shared Process Namespace
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: v1
