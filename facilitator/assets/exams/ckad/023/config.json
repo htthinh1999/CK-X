@@ -1,38 +1,20 @@
 {
-  "lab": "ckad-023",
-  "workerNodes": 1,
-  "clusters": [
-    {
-      "name": "cluster1",
-      "workerNodes": 1
-    },
-    {
-      "name": "cluster2",
-      "workerNodes": 0
-    },
-    {
-      "name": "cluster3",
-      "workerNodes": 0
-    }
-  ],
-  "servers": [
-    {
-      "name": "ckad9999",
-      "cluster": "cluster1"
-    },
-    {
-      "name": "ckad9988",
-      "cluster": "cluster2"
-    },
-    {
-      "name": "ckad9977",
-      "cluster": "cluster3"
-    }
-  ],
-  "answers": "assets/exams/ckad/023/answers.md",
-  "questions": "assessment.json",
-  "totalMarks": 48,
-  "lowScore": 19,
-  "mediumScore": 29,
-  "highScore": 43
+    "lab": "ckad-023",
+    "workerNodes": 1,
+    "clusters": [
+        { "name": "dev", "workerNodes": 1 },
+        { "name": "staging", "workerNodes": 0 },
+        { "name": "prod", "workerNodes": 0 }
+    ],
+    "servers": [
+        { "name": "ckad9999", "cluster": "dev" },
+        { "name": "ckad9988", "cluster": "staging" },
+        { "name": "ckad9977", "cluster": "prod" }
+    ],
+    "answers": "assets/exams/ckad/023/answers.md",
+    "questions": "assessment.json",
+    "totalMarks": 48,
+    "lowScore": 19,
+    "mediumScore": 29,
+    "highScore": 43
 }

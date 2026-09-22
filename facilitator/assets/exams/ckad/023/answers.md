@@ -1,16 +1,19 @@
 # CKAD Multi-Cluster Practice Lab — Answers
 
-This lab spans **two clusters**. Connect to the instance named in each question
-and select the matching context:
+This lab models an app promoted across **three environments, each its own cluster**.
+Connect to the instance named in each question and select the matching context:
 
-- `dev`  → `ssh ckad9999`, then `kubectl config use-context k3d-dev`
-- `prod` → `ssh ckad9988`, then `kubectl config use-context k3d-prod`
+- `dev`     → `ssh ckad9999`, then `kubectl config use-context k3d-dev`     (namespace `dev`)
+- `staging` → `ssh ckad9988`, then `kubectl config use-context k3d-staging` (namespace `staging`)
+- `prod`    → `ssh ckad9977`, then `kubectl config use-context k3d-prod`    (namespace `prod`)
 
 `kubectl config get-contexts` lists every context available from any server.
 
 ---
 
-## Question 1 — Multi-container Pod with shared volume (dev)
+## dev cluster (`ssh ckad9999`, context `k3d-dev`)
+
+### Question 1 — Multi-container Pod with shared volume
 
 ```bash
 kubectl config use-context k3d-dev
@@ -39,95 +42,69 @@ spec:
 YAML
 ```
 
-## Question 2 — Resource requests/limits (dev)
+### Question 2 — Resource requests/limits
 
 ```bash
-cat <<'YAML' | kubectl apply -f -
-apiVersion: v1
-kind: Pod
-metadata:
-  name: limited
-  namespace: dev
-spec:
-  containers:
-    - name: app
-      image: nginx:1.25
-      resources:
-        requests:
-          cpu: "100m"
-          memory: "64Mi"
-        limits:
-          cpu: "200m"
-          memory: "128Mi"
-YAML
+kubectl -n dev run limited --image=nginx:1.25 \
+  --restart=Never \
+  -o yaml --dry-run=client > limited.yaml
+# add resources.requests {cpu:100m,memory:64Mi} and limits {cpu:200m,memory:128Mi}, then:
+kubectl apply -f limited.yaml
 ```
 
-## Question 3 — ConfigMap as volume (dev)
+### Question 3 — ConfigMap as volume
 
 ```bash
 kubectl -n dev create configmap feature-flags --from-literal=DARK_MODE=true --from-literal=BETA=false
 cat <<'YAML' | kubectl apply -f -
 apiVersion: apps/v1
 kind: Deployment
-metadata:
-  name: flags-app
-  namespace: dev
+metadata: { name: flags-app, namespace: dev }
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      app: flags-app
+  selector: { matchLabels: { app: flags-app } }
   template:
-    metadata:
-      labels:
-        app: flags-app
+    metadata: { labels: { app: flags-app } }
     spec:
       volumes:
         - name: flags
-          configMap:
-            name: feature-flags
+          configMap: { name: feature-flags }
       containers:
         - name: app
           image: nginx:1.25
           volumeMounts:
-            - name: flags
-              mountPath: /etc/flags
+            - { name: flags, mountPath: /etc/flags }
 YAML
 ```
 
-## Question 4 — Liveness + readiness probes (dev)
+### Question 4 — Liveness + readiness probes
 
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: v1
 kind: Pod
-metadata:
-  name: probed
-  namespace: dev
+metadata: { name: probed, namespace: dev }
 spec:
   containers:
     - name: web
       image: nginx:1.25
-      livenessProbe:
-        httpGet:
-          path: /
-          port: 80
-      readinessProbe:
-        httpGet:
-          path: /
-          port: 80
+      livenessProbe:  { httpGet: { path: /, port: 80 } }
+      readinessProbe: { httpGet: { path: /, port: 80 } }
 YAML
 ```
 
-## Question 5 — Job with completions/parallelism (dev)
+---
+
+## staging cluster (`ssh ckad9988`, context `k3d-staging`)
+
+### Question 5 — Job
 
 ```bash
+kubectl config use-context k3d-staging
 cat <<'YAML' | kubectl apply -f -
 apiVersion: batch/v1
 kind: Job
-metadata:
-  name: batch
-  namespace: dev
+metadata: { name: batch, namespace: staging }
 spec:
   completions: 3
   parallelism: 2
@@ -136,82 +113,73 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: worker
-          image: busybox:1.36
-          command: ["sh", "-c", "echo done"]
+        - { name: worker, image: busybox:1.36, command: ["sh","-c","echo done"] }
 YAML
 ```
 
-## Question 6 — securityContext (dev)
+### Question 6 — securityContext
 
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: v1
 kind: Pod
-metadata:
-  name: secured
-  namespace: dev
+metadata: { name: secured, namespace: staging }
 spec:
-  securityContext:
-    runAsUser: 1000
+  securityContext: { runAsUser: 1000 }
   containers:
     - name: app
       image: nginx:1.25
-      securityContext:
-        allowPrivilegeEscalation: false
+      securityContext: { allowPrivilegeEscalation: false }
 YAML
 ```
 
-## Question 7 — Rolling update (dev)
+### Question 7 — Rolling update
 
 ```bash
-kubectl -n dev set image deployment/rollme app=nginx:1.25
-kubectl -n dev rollout status deployment/rollme
+kubectl -n staging set image deployment/rollme app=nginx:1.25
+kubectl -n staging rollout status deployment/rollme
 ```
 
-## Question 8 — Deployment + ClusterIP Service (prod)
+### Question 8 — Deployment + ClusterIP Service
+
+```bash
+kubectl -n staging create deployment store --image=nginx:1.25 --replicas=2
+kubectl -n staging expose deployment store --name=store-svc --port=80 --target-port=80
+```
+
+---
+
+## prod cluster (`ssh ckad9977`, context `k3d-prod`)
+
+### Question 9 — Secret as volume
 
 ```bash
 kubectl config use-context k3d-prod
-kubectl -n prod create deployment store --image=nginx:1.25 --replicas=2
-kubectl -n prod expose deployment store --name=store-svc --port=80 --target-port=80
-# `kubectl create deployment` labels pods app=store, which store-svc selects.
-```
-
-## Question 9 — Secret as volume (prod)
-
-```bash
 kubectl -n prod create secret generic app-secret --from-literal=api-key=abc123 --from-literal=token=xyz789
 cat <<'YAML' | kubectl apply -f -
 apiVersion: v1
 kind: Pod
-metadata:
-  name: secret-consumer
-  namespace: prod
+metadata: { name: secret-consumer, namespace: prod }
 spec:
   volumes:
     - name: sec
-      secret:
-        secretName: app-secret
+      secret: { secretName: app-secret }
   containers:
     - name: app
       image: busybox:1.36
       command: ["sh", "-c", "sleep 3600"]
       volumeMounts:
-        - name: sec
-          mountPath: /etc/secret
+        - { name: sec, mountPath: /etc/secret }
 YAML
 ```
 
-## Question 10 — Ingress (prod)
+### Question 10 — Ingress
 
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
 kind: Ingress
-metadata:
-  name: shop-ing
-  namespace: prod
+metadata: { name: shop-ing, namespace: prod }
 spec:
   rules:
     - host: shop.local
@@ -222,20 +190,17 @@ spec:
             backend:
               service:
                 name: shop-svc
-                port:
-                  number: 80
+                port: { number: 80 }
 YAML
 ```
 
-## Question 11 — CronJob (prod)
+### Question 11 — CronJob
 
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: batch/v1
 kind: CronJob
-metadata:
-  name: backup
-  namespace: prod
+metadata: { name: backup, namespace: prod }
 spec:
   schedule: "0 */6 * * *"
   jobTemplate:
@@ -244,31 +209,22 @@ spec:
         spec:
           restartPolicy: OnFailure
           containers:
-            - name: backup
-              image: busybox:1.36
-              command: ["sh", "-c", "echo backup"]
+            - { name: backup, image: busybox:1.36, command: ["sh","-c","echo backup"] }
 YAML
 ```
 
-## Question 12 — NetworkPolicy (prod)
+### Question 12 — NetworkPolicy
 
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
-metadata:
-  name: allow-web
-  namespace: prod
+metadata: { name: allow-web, namespace: prod }
 spec:
-  podSelector:
-    matchLabels:
-      app: web
-  policyTypes:
-    - Ingress
+  podSelector: { matchLabels: { app: web } }
+  policyTypes: [Ingress]
   ingress:
     - from:
-        - podSelector:
-            matchLabels:
-              app: client
+        - podSelector: { matchLabels: { app: client } }
 YAML
 ```

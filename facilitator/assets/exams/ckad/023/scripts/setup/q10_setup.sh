@@ -3,7 +3,6 @@ export KUBECONFIG=/home/candidate/.kube/kubeconfig
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 kubectl $CTX create namespace prod --dry-run=client -o yaml | kubectl $CTX apply -f - || true
 kubectl $CTX -n prod delete ingress shop-ing --ignore-not-found=true
-# Backend the student's Ingress routes to (independent prerequisite).
 kubectl $CTX -n prod apply -f - <<'YAML'
 apiVersion: apps/v1
 kind: Deployment

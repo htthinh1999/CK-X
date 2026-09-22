@@ -1,14 +1,13 @@
 #!/bin/bash
 export KUBECONFIG=/home/candidate/.kube/kubeconfig
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
-kubectl $CTX create namespace dev --dry-run=client -o yaml | kubectl $CTX apply -f - || true
-# Old version the student must roll forward to nginx:1.25
-kubectl $CTX -n dev apply -f - <<'YAML'
+kubectl $CTX create namespace staging --dry-run=client -o yaml | kubectl $CTX apply -f - || true
+kubectl $CTX -n staging apply -f - <<'YAML'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rollme
-  namespace: dev
+  namespace: staging
 spec:
   replicas: 2
   selector:
