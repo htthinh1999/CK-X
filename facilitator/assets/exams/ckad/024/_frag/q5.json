@@ -1,0 +1,12 @@
+{
+  "id": "5",
+  "namespace": "manifest",
+  "machineHostname": "ckad9999",
+  "question": "In namespace `manifest`, the ClusterIP Service `manifest-api` should expose the pods of Deployment `manifest-api` on port `8080`, but it has no endpoints and every request to it fails.\n\nFix the **Service** in place (keep its name, type `ClusterIP` and port `8080`) so that it selects the pods of Deployment `manifest-api` and forwards traffic to the container port declared by the Deployment's nginx container. Do not modify or recreate the Deployment.\n\nWhen done, the Service must list both `manifest-api` pods as endpoints.",
+  "concepts": ["services", "selectors", "endpoints", "troubleshooting"],
+  "verification": [
+    { "id": "1", "description": "Service selector matches the (unchanged) manifest-api pod labels", "verificationScriptFile": "q5_s1_validate_selector.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "2", "description": "Service is still ClusterIP and port 8080 targets container port 80 (http)", "verificationScriptFile": "q5_s2_validate_ports.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "3", "description": "Endpoints list both manifest-api pods on port 80", "verificationScriptFile": "q5_s3_validate_endpoints.sh", "expectedOutput": "0", "weightage": 2 }
+  ]
+}

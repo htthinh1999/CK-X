@@ -1,0 +1,12 @@
+{
+  "id": "1",
+  "namespace": "quayside",
+  "machineHostname": "ckad9999",
+  "question": "The Deployment `crane` in namespace `quayside` has gone through several rollouts. Its most recent update broke it: the new pods can never start and the rollout is stuck.\n\n1. Roll `crane` back to the **last revision that was working** (the revision right before the broken update). Do not delete or recreate the Deployment.\n2. Make sure the rollback completes and all `3` replicas are updated and ready.\n3. Write the revision number the Deployment is running now, i.e. the value of its `deployment.kubernetes.io/revision` annotation after the rollback, to `/home/candidate/exam/q1/revision.txt` (only the number).",
+  "concepts": ["deployments", "rollouts", "rollback", "revision history"],
+  "verification": [
+    { "id": "1", "description": "Deployment crane runs the last working template (nginx:1.25 with LIFT_MODE=tandem)", "verificationScriptFile": "q1_s1_validate_template.sh", "expectedOutput": "0", "weightage": 2 },
+    { "id": "2", "description": "Rollback completed: 3/3 replicas updated and ready, no stuck pods left", "verificationScriptFile": "q1_s2_validate_ready.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "3", "description": "revision.txt contains the Deployment's active revision number after the rollback", "verificationScriptFile": "q1_s3_validate_revision_file.sh", "expectedOutput": "0", "weightage": 1 }
+  ]
+}
