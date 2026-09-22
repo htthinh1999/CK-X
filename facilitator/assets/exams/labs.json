@@ -285,7 +285,7 @@
       "assetPath": "assets/exams/ckad/023",
       "name": "CKAD Multi-Cluster Practice Lab",
       "category": "CKAD",
-      "description": "Original multi-cluster CKAD-style exam spanning a dev cluster (`ssh ckad9999`) and a prod cluster (`ssh ckad9988`). Practice context switching plus multi-container pods, resources, probes, jobs, securityContext, configmaps/secrets as volumes, ingress, cronjobs and network policies across servers.",
+      "description": "Original multi-cluster CKAD-style exam modelling an app promoted across three environments, one cluster per server: dev (`ssh ckad9999`), staging (`ssh ckad9988`) and prod (`ssh ckad9977`). Covers multi-container pods, resources, probes, jobs, securityContext, rolling updates, configmaps/secrets as volumes, ingress, cronjobs and network policies.",
       "warmUpTimeInSeconds": 300,
       "difficulty": "Hard",
       "examDurationInMinutes": 90
