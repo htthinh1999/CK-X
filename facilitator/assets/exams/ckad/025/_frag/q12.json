@@ -1,0 +1,13 @@
+{
+  "id": "12",
+  "namespace": "orbit",
+  "machineHostname": "ckad9988",
+  "question": "In namespace `orbit`, the Service `telemetry` (selector `app=telemetry`) sends traffic to two Deployments: the stable `telemetry` (3 replicas, `nginx:1.25`) and the canary `telemetry-canary` (1 replica, `nginx:1.26`). The canary has been approved, so promote it:\n\n1. The stable app is managed with Kustomize from `/home/candidate/exam/q12/telemetry/`. Add an `images` entry to its `kustomization.yaml` so that the `nginx` image is rendered with tag `1.26`. Do **not** edit `deployment.yaml` (it must still reference `nginx:1.25`).\n2. Apply the directory with `kubectl apply -k` and make sure all 3 replicas of `telemetry` run `nginx:1.26` and are Ready.\n3. Delete the Deployment `telemetry-canary`, so that the Service's endpoints are exactly the 3 stable Pods.",
+  "concepts": ["kustomize", "canary", "deployments", "images"],
+  "verification": [
+    {"id": "1", "description": "kustomization.yaml has an images entry; the build renders nginx:1.26 and deployment.yaml is unchanged", "verificationScriptFile": "q12_s1_validate_kustomization.sh", "expectedOutput": "0", "weightage": 1},
+    {"id": "2", "description": "Deployment telemetry runs nginx:1.26 with 3/3 updated and Ready replicas", "verificationScriptFile": "q12_s2_validate_stable.sh", "expectedOutput": "0", "weightage": 1},
+    {"id": "3", "description": "Deployment telemetry-canary and its pods are gone", "verificationScriptFile": "q12_s3_validate_canary_removed.sh", "expectedOutput": "0", "weightage": 1},
+    {"id": "4", "description": "Service telemetry has exactly 3 endpoints, none from the canary", "verificationScriptFile": "q12_s4_validate_endpoints.sh", "expectedOutput": "0", "weightage": 1}
+  ]
+}

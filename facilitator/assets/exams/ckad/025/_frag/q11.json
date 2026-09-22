@@ -1,0 +1,13 @@
+{
+  "id": "11",
+  "namespace": "tracker",
+  "machineHostname": "ckad9988",
+  "question": "In namespace `tracker`, the Deployment `satpos` is already running with memory requests set. A PodDisruptionBudget manifest was left at `/home/candidate/exam/q11/satpos-pdb.yaml`, but it was written for the removed `policy/v1beta1` API and can no longer be applied.\n\n1. Update that file **in place** so it uses the `policy/v1` API (keep the name `satpos-pdb`, `minAvailable: 1` and the selector), then apply it.\n2. Create a HorizontalPodAutoscaler named `satpos-hpa` with API `autoscaling/v2` that scales the Deployment `satpos` between `2` and `6` replicas using a single Resource metric: **memory** with an average utilization target of `75` percent. Give it a scale-down behavior with `stabilizationWindowSeconds: 180`.",
+  "concepts": ["api-deprecation", "poddisruptionbudget", "hpa", "autoscaling"],
+  "verification": [
+    {"id": "1", "description": "satpos-pdb.yaml uses policy/v1 and is accepted by kubectl", "verificationScriptFile": "q11_s1_validate_pdb_file.sh", "expectedOutput": "0", "weightage": 1},
+    {"id": "2", "description": "PDB satpos-pdb (policy/v1) has minAvailable 1 and selects app=satpos", "verificationScriptFile": "q11_s2_validate_pdb.sh", "expectedOutput": "0", "weightage": 1},
+    {"id": "3", "description": "HPA satpos-hpa targets Deployment satpos, 2-6 replicas, memory utilization 75%", "verificationScriptFile": "q11_s3_validate_hpa.sh", "expectedOutput": "0", "weightage": 1},
+    {"id": "4", "description": "HPA scaleDown stabilizationWindowSeconds is 180", "verificationScriptFile": "q11_s4_validate_scaledown.sh", "expectedOutput": "0", "weightage": 1}
+  ]
+}
