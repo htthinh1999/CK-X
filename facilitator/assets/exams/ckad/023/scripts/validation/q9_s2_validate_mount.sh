@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 kubectl $CTX -n prod get pod secret-consumer >/dev/null 2>&1 || { echo "ERR: pod secret-consumer not found"; exit 1; }
 vol=$(kubectl $CTX -n prod get pod secret-consumer -o jsonpath='{.spec.volumes[*].secret.secretName}' 2>/dev/null)

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 a=$(kubectl $CTX -n prod get secret app-secret -o jsonpath='{.data.api-key}' 2>/dev/null)
 t=$(kubectl $CTX -n prod get secret app-secret -o jsonpath='{.data.token}' 2>/dev/null)

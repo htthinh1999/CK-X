@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 img=$(kubectl $CTX -n alpha get deployment web -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
 [ "$img" = "nginx:1.25" ] && { echo "OK: image nginx:1.25"; exit 0; }

@@ -62,10 +62,12 @@ else
   # distinct API port (6443 + index).
   MULTI=1
   idx=0
+  CLUSTER_NAMES=""
   OLDIFS=$IFS
   IFS=','
   for pair in $CLUSTER_SPEC; do
     cname=${pair%%:*}
+    CLUSTER_NAMES="$CLUSTER_NAMES $cname"
     cworkers=${pair#*:}
     [ "$cworkers" = "$pair" ] && cworkers=0   # no ":" -> default 0 workers
     log "Creating cluster '$cname' (workers=$cworkers, index=$idx)"
@@ -95,10 +97,23 @@ export KUBECONFIG=/home/candidate/.kube/kubeconfig
 sleep 5
 
 #wait till api-server is ready
-while ! kubectl get nodes > /dev/null 2>&1; do
-  log "API server is not ready, retrying..."
-  sleep 5
-done
+if [ "$MULTI" = "1" ]; then
+  # Multi-cluster: wait on EVERY cluster through its own per-cluster kubeconfig
+  # (the merged file's current-context only covers one of them).
+  for cname in $CLUSTER_NAMES; do
+    kc=/home/candidate/.kube/kubeconfig-$cname
+    until [ -f "$kc" ] && KUBECONFIG="$kc" kubectl get nodes > /dev/null 2>&1; do
+      log "API server for cluster '$cname' is not ready, retrying..."
+      sleep 5
+    done
+    log "API server for cluster '$cname' is ready"
+  done
+else
+  while ! kubectl get nodes > /dev/null 2>&1; do
+    log "API server is not ready, retrying..."
+    sleep 5
+  done
+fi
 
 echo "API server is ready"
 

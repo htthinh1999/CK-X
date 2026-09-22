@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 kubectl $CTX -n beta get pod writer >/dev/null 2>&1 || { echo "ERR: pod writer not found"; exit 1; }
 mp=$(kubectl $CTX -n beta get pod writer -o jsonpath='{.spec.containers[0].volumeMounts[*].mountPath}' 2>/dev/null)

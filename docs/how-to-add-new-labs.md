@@ -292,9 +292,26 @@ cluster, so **plain `kubectl` hits the right cluster** — no `--context` needed
 ```bash
 #!/bin/bash
 # KUBECONFIG is exported by the facilitator (the target cluster's kubeconfig for
-# multi-cluster labs, or the shared one for single-cluster labs).
+# multi-cluster labs, or the shared one for single-cluster labs). Only default it.
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl -n beta get pod writer
 ```
+
+> **Never hardcode** `export KUBECONFIG=/home/candidate/.kube/kubeconfig` in a
+> multi-cluster lab's scripts. It overrides the facilitator's per-cluster file and
+> points the script at the shared kubeconfig, so setup and grading would hit the
+> wrong cluster. Use the `${KUBECONFIG:-…}` default form shown above.
+
+Because every server is a separate container, a question's setup, the
+candidate's work and its validation all run on that question's server: files
+(e.g. under `/opt/course`), local docker images and helm repo config exist only
+there. Keep each question self-contained on its server — if two questions are
+chained (one builds on the other's result), assign them the same
+`machineHostname`, and give each question's setup script everything it needs
+(namespace, pre-existing resources) instead of relying on another question's
+setup. Clusters with `workerNodes: 0` are a single node, so put any question
+that needs a worker node, node labels/taints or multi-node scheduling on a
+cluster that has workers.
 
 The older `CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"` pattern is still safe
 (`KUBE_CONTEXT` is unset now, so `$CTX` is empty and `kubectl` uses the current

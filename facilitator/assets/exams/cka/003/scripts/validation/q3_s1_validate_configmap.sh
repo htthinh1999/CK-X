@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 m=$(kubectl $CTX -n alpha get configmap app-config -o jsonpath='{.data.APP_MODE}' 2>/dev/null)
 x=$(kubectl $CTX -n alpha get configmap app-config -o jsonpath='{.data.MAX}' 2>/dev/null)

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 kubectl $CTX -n dev get deployment flags-app >/dev/null 2>&1 || { echo "ERR: deployment flags-app not found"; exit 1; }
 vol=$(kubectl $CTX -n dev get deployment flags-app -o jsonpath='{.spec.template.spec.volumes[*].configMap.name}' 2>/dev/null)

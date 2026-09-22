@@ -15,6 +15,8 @@ context to switch:
 
 ### Question 1 — Multi-container Pod with shared volume
 
+> Server: `ssh ckad9999`
+
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: v1
@@ -43,6 +45,8 @@ YAML
 
 ### Question 2 — Resource requests/limits
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl -n dev run limited --image=nginx:1.25 \
   --restart=Never \
@@ -52,6 +56,8 @@ kubectl apply -f limited.yaml
 ```
 
 ### Question 3 — ConfigMap as volume
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl -n dev create configmap feature-flags --from-literal=DARK_MODE=true --from-literal=BETA=false
@@ -78,6 +84,8 @@ YAML
 
 ### Question 4 — Liveness + readiness probes
 
+> Server: `ssh ckad9999`
+
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: v1
@@ -98,6 +106,8 @@ YAML
 
 ### Question 5 — Job
 
+> Server: `ssh ckad9988`
+
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: batch/v1
@@ -117,6 +127,8 @@ YAML
 
 ### Question 6 — securityContext
 
+> Server: `ssh ckad9988`
+
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: v1
@@ -133,12 +145,16 @@ YAML
 
 ### Question 7 — Rolling update
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl -n staging set image deployment/rollme app=nginx:1.25
 kubectl -n staging rollout status deployment/rollme
 ```
 
 ### Question 8 — Deployment + ClusterIP Service
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl -n staging create deployment store --image=nginx:1.25 --replicas=2
@@ -150,6 +166,8 @@ kubectl -n staging expose deployment store --name=store-svc --port=80 --target-p
 ## prod cluster (`ssh ckad9977`)
 
 ### Question 9 — Secret as volume
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl -n prod create secret generic app-secret --from-literal=api-key=abc123 --from-literal=token=xyz789
@@ -172,6 +190,8 @@ YAML
 
 ### Question 10 — Ingress
 
+> Server: `ssh ckad9977`
+
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
@@ -193,6 +213,8 @@ YAML
 
 ### Question 11 — CronJob
 
+> Server: `ssh ckad9977`
+
 ```bash
 cat <<'YAML' | kubectl apply -f -
 apiVersion: batch/v1
@@ -211,6 +233,8 @@ YAML
 ```
 
 ### Question 12 — NetworkPolicy
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<'YAML' | kubectl apply -f -

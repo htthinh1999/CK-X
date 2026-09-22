@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 kubectl $CTX -n prod get cronjob backup >/dev/null 2>&1 || { echo "ERR: cronjob backup not found"; exit 1; }
 s=$(kubectl $CTX -n prod get cronjob backup -o jsonpath='{.spec.schedule}' 2>/dev/null)

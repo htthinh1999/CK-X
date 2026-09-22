@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 u=$(kubectl $CTX -n beta get secret db-cred -o jsonpath='{.data.username}' 2>/dev/null)
 p=$(kubectl $CTX -n beta get secret db-cred -o jsonpath='{.data.password}' 2>/dev/null)

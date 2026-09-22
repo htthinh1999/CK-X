@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 node=$(kubectl $CTX -n alpha get pod pinned -o jsonpath='{.spec.nodeName}' 2>/dev/null)
 [ -z "$node" ] && { echo "ERR: pod pinned not scheduled"; exit 1; }

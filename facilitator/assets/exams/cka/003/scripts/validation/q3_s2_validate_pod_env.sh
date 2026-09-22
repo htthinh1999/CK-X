@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 kubectl $CTX -n alpha get pod config-reader >/dev/null 2>&1 || { echo "ERR: pod config-reader not found"; exit 1; }
 ef=$(kubectl $CTX -n alpha get pod config-reader -o jsonpath='{.spec.containers[0].envFrom[*].configMapRef.name}' 2>/dev/null)

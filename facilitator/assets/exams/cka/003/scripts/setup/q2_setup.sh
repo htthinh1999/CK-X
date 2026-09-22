@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 kubectl $CTX create namespace alpha --dry-run=client -o yaml | kubectl $CTX apply -f - || true
 # Prerequisite workload the student's Service must select (independent of Q1).

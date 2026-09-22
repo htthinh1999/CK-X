@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 res=$(kubectl $CTX -n alpha get role deployer-role -o jsonpath='{.rules[*].resources}' 2>/dev/null)
 vrb=$(kubectl $CTX -n alpha get role deployer-role -o jsonpath='{.rules[*].verbs}' 2>/dev/null)

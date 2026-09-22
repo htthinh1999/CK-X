@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 v=$(kubectl $CTX -n dev get pod sidecar-pod -o jsonpath='{.spec.volumes[?(@.emptyDir)].name}' 2>/dev/null)
 m0=$(kubectl $CTX -n dev get pod sidecar-pod -o jsonpath='{.spec.containers[0].volumeMounts[*].name}' 2>/dev/null)

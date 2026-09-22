@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
 d=$(kubectl $CTX -n dev get configmap feature-flags -o jsonpath='{.data.DARK_MODE}' 2>/dev/null)
 b=$(kubectl $CTX -n dev get configmap feature-flags -o jsonpath='{.data.BETA}' 2>/dev/null)
