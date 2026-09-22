@@ -1,0 +1,41 @@
+{
+  "id": "9",
+  "namespace": "ledger",
+  "machineHostname": "ckad9988",
+  "question": "The finance team needs a nightly ledger reconciliation in namespace `ledger`.\n\nCreate a CronJob named `reconcile` with:\n- schedule `15 2 * * *`\n- `successfulJobsHistoryLimit: 5` and `failedJobsHistoryLimit: 2`\n- Pod `restartPolicy: Never` and one container named `reconciler`, image `busybox:1.36`, command `[\"sh\", \"-c\", \"echo ledger-ok uid=$(id -u)\"]`\n- Pod-level securityContext `runAsUser: 2500` and `runAsNonRoot: true`\n- container-level securityContext `readOnlyRootFilesystem: true`\n\nThen, without waiting for the schedule, create a one-off Job named `reconcile-manual-01` from the CronJob `reconcile`. The Job must complete successfully.",
+  "concepts": [
+    "cronjobs",
+    "jobs",
+    "security-context"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "CronJob reconcile: schedule 15 2 * * *, history limits 5/2, restartPolicy Never, image busybox:1.36",
+      "verificationScriptFile": "q9_s1_validate_cronjob.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "Pod runs as uid 2500 with runAsNonRoot=true and readOnlyRootFilesystem=true",
+      "verificationScriptFile": "q9_s2_validate_securitycontext.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "3",
+      "description": "Job reconcile-manual-01 was created from (is owned by) CronJob reconcile",
+      "verificationScriptFile": "q9_s3_validate_job_owner.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "4",
+      "description": "Job reconcile-manual-01 succeeded and its log shows uid=2500",
+      "verificationScriptFile": "q9_s4_validate_job_run.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    }
+  ]
+}
