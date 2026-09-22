@@ -49,11 +49,18 @@ function buildClusterSpec(examConfig) {
   return clusters.map((c) => `${c.name}:${c.workerNodes || 0}`).join(',');
 }
 
-/** Shell prefix that exports KUBECONFIG and, when set, KUBE_CONTEXT. */
+/**
+ * Shell prefix that exports KUBECONFIG and, for multi-cluster labs, points this
+ * invocation at the question's cluster. It sets the current-context with
+ * `kubectl config use-context` (so plain `kubectl`/`helm` calls in existing
+ * scripts hit the right cluster with no per-script changes) AND exports
+ * KUBE_CONTEXT (for scripts that pass `--context=$KUBE_CONTEXT` explicitly).
+ * With no context (single-cluster labs) the behaviour is unchanged.
+ */
 function envPrefix(context) {
   let p = 'export KUBECONFIG=/home/candidate/.kube/kubeconfig';
   if (context) {
-    p += ` && export KUBE_CONTEXT=${context}`;
+    p += ` && kubectl config use-context ${context} >/dev/null 2>&1; export KUBE_CONTEXT=${context}`;
   }
   return p;
 }

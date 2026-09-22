@@ -1,10 +1,38 @@
 {
-    "lab": "ckad-020",
-    "workerNodes": 1,
-    "answers": "assets/exams/ckad/020/answers.md",
-    "questions": "assessment.json",
-    "totalMarks": 118,
-    "lowScore": 47,
-    "mediumScore": 71,
-    "highScore": 106
+  "lab": "ckad-020",
+  "workerNodes": 1,
+  "answers": "assets/exams/ckad/020/answers.md",
+  "questions": "assessment.json",
+  "totalMarks": 118,
+  "lowScore": 47,
+  "mediumScore": 71,
+  "highScore": 106,
+  "clusters": [
+    {
+      "name": "cluster1",
+      "workerNodes": 1
+    },
+    {
+      "name": "cluster2",
+      "workerNodes": 0
+    },
+    {
+      "name": "cluster3",
+      "workerNodes": 0
+    }
+  ],
+  "servers": [
+    {
+      "name": "ckad9999",
+      "cluster": "cluster1"
+    },
+    {
+      "name": "ckad9988",
+      "cluster": "cluster2"
+    },
+    {
+      "name": "ckad9977",
+      "cluster": "cluster3"
+    }
+  ]
 }

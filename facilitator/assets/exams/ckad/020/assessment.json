@@ -4,8 +4,13 @@
       "id": "1",
       "namespace": "genesis",
       "machineHostname": "ckad9999",
-      "question": "There is a skeleton Dockerfile located at `/tmp/exam/course/1/Dockerfile`.\n\n1. Modify the `Dockerfile` to use a non-root user. Add an instruction to create a user named `izanagi` with UID `1000` and switch to this user.\n2. Build the Docker image from this `Dockerfile` and tag it as `localhost:5000/genesis-app:v1`.\n3. Push the image to the local registry at `localhost:5000`.\n4. Create a Pod named `genesis-pod` in the `genesis` namespace using this image `localhost:5000/genesis-app:v1`. Ensure it executes the default command defined in the Dockerfile.",
-      "concepts": ["docker", "images", "pods", "securitycontext"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nThere is a skeleton Dockerfile located at `/tmp/exam/course/1/Dockerfile`.\n\n1. Modify the `Dockerfile` to use a non-root user. Add an instruction to create a user named `izanagi` with UID `1000` and switch to this user.\n2. Build the Docker image from this `Dockerfile` and tag it as `localhost:5000/genesis-app:v1`.\n3. Push the image to the local registry at `localhost:5000`.\n4. Create a Pod named `genesis-pod` in the `genesis` namespace using this image `localhost:5000/genesis-app:v1`. Ensure it executes the default command defined in the Dockerfile.",
+      "concepts": [
+        "docker",
+        "images",
+        "pods",
+        "securitycontext"
+      ],
       "verification": [
         {
           "id": "1",
@@ -41,8 +46,13 @@
       "id": "2",
       "namespace": "origin",
       "machineHostname": "ckad9999",
-      "question": "Create a Pod named `data-transformer` in the `origin` namespace implementing the Adapter pattern.\n\n- The Pod should have an `emptyDir` volume named `shared-data`.\n- Main container:\n  - Name: `app-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `while true; do echo \"$(date) - DATA\" >> /var/log/app.log; sleep 5; done`\n  - Volume mount: Mount `shared-data` at `/var/log`\n- Adapter container:\n  - Name: `adapter-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `tail -f /var/log/app.log | sed 's/DATA/TRANSFORMED_DATA/g' > /var/log/transformed.log`\n  - Volume mount: Mount `shared-data` at `/var/log`",
-      "concepts": ["pods", "multi-container", "volumes", "adapter-pattern"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `data-transformer` in the `origin` namespace implementing the Adapter pattern.\n\n- The Pod should have an `emptyDir` volume named `shared-data`.\n- Main container:\n  - Name: `app-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `while true; do echo \"$(date) - DATA\" >> /var/log/app.log; sleep 5; done`\n  - Volume mount: Mount `shared-data` at `/var/log`\n- Adapter container:\n  - Name: `adapter-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `tail -f /var/log/app.log | sed 's/DATA/TRANSFORMED_DATA/g' > /var/log/transformed.log`\n  - Volume mount: Mount `shared-data` at `/var/log`",
+      "concepts": [
+        "pods",
+        "multi-container",
+        "volumes",
+        "adapter-pattern"
+      ],
       "verification": [
         {
           "id": "1",
@@ -78,8 +88,12 @@
       "id": "3",
       "namespace": "primal",
       "machineHostname": "ckad9999",
-      "question": "Create a Job named `index-processor` in the `primal` namespace.\n\n- Configure it to use Indexed completion mode (`completionMode: Indexed`).\n- It should run a total of `5` completions.\n- It should run up to `2` pods in parallel.\n- The container should use the `busybox:1.32` image and run the command: `sh`, `-c`, `echo \"Processing item $JOB_COMPLETION_INDEX\"`",
-      "concepts": ["jobs", "indexed-jobs", "parallelism"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Job named `index-processor` in the `primal` namespace.\n\n- Configure it to use Indexed completion mode (`completionMode: Indexed`).\n- It should run a total of `5` completions.\n- It should run up to `2` pods in parallel.\n- The container should use the `busybox:1.32` image and run the command: `sh`, `-c`, `echo \"Processing item $JOB_COMPLETION_INDEX\"`",
+      "concepts": [
+        "jobs",
+        "indexed-jobs",
+        "parallelism"
+      ],
       "verification": [
         {
           "id": "1",
@@ -115,8 +129,12 @@
       "id": "4",
       "namespace": "ancient",
       "machineHostname": "ckad9999",
-      "question": "Create a Pod named `graceful-shutdown` in the `ancient` namespace.\n\n- Image: `nginx:1.21`\n- Set the `terminationGracePeriodSeconds` to `45`.\n- Configure a `preStop` hook using `exec` that runs the command: `sh`, `-c`, `sleep 10 && nginx -s quit`",
-      "concepts": ["pods", "lifecycle-hooks", "prestop"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `graceful-shutdown` in the `ancient` namespace.\n\n- Image: `nginx:1.21`\n- Set the `terminationGracePeriodSeconds` to `45`.\n- Configure a `preStop` hook using `exec` that runs the command: `sh`, `-c`, `sleep 10 && nginx -s quit`",
+      "concepts": [
+        "pods",
+        "lifecycle-hooks",
+        "prestop"
+      ],
       "verification": [
         {
           "id": "1",
@@ -145,8 +163,12 @@
       "id": "5",
       "namespace": "nexus",
       "machineHostname": "ckad9999",
-      "question": "A Helm release named `genesis-web` is deployed in the `nexus` namespace.\n\n1. Inspect the chart values currently deployed.\n2. Upgrade the release to change the `replicaCount` to `3` without altering any other custom values that were previously set (use `--reuse-values`).\n3. You can find the chart source at `/tmp/exam/course/5/genesis-web-chart` if needed, but you only need to modify the deployed release.",
-      "concepts": ["helm", "upgrade", "reuse-values"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Helm release named `genesis-web` is deployed in the `nexus` namespace.\n\n1. Inspect the chart values currently deployed.\n2. Upgrade the release to change the `replicaCount` to `3` without altering any other custom values that were previously set (use `--reuse-values`).\n3. You can find the chart source at `/tmp/exam/course/5/genesis-web-chart` if needed, but you only need to modify the deployed release.",
+      "concepts": [
+        "helm",
+        "upgrade",
+        "reuse-values"
+      ],
       "verification": [
         {
           "id": "1",
@@ -168,8 +190,12 @@
       "id": "6",
       "namespace": "terra",
       "machineHostname": "ckad9999",
-      "question": "1. Create a Deployment named `terra-web` in the `terra` namespace with `4` replicas using the `nginx:1.21` image.\n2. Create a PodDisruptionBudget named `terra-pdb` in the same namespace targeting the pods of the `terra-web` Deployment.\n3. Configure the PDB to require a `minAvailable` of `75%`.",
-      "concepts": ["deployments", "poddisruptionbudget", "availability"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\n1. Create a Deployment named `terra-web` in the `terra` namespace with `4` replicas using the `nginx:1.21` image.\n2. Create a PodDisruptionBudget named `terra-pdb` in the same namespace targeting the pods of the `terra-web` Deployment.\n3. Configure the PDB to require a `minAvailable` of `75%`.",
+      "concepts": [
+        "deployments",
+        "poddisruptionbudget",
+        "availability"
+      ],
       "verification": [
         {
           "id": "1",
@@ -205,8 +231,12 @@
       "id": "7",
       "namespace": "eden",
       "machineHostname": "ckad9999",
-      "question": "A Deployment named `eden-api` exists in the `eden` namespace.\n\n1. Update the Deployment's image from `nginx:1.20` to `nginx:1.21`.\n2. Ensure that the change is recorded in the rollout history by setting the revision annotation (`kubernetes.io/change-cause`) on the Deployment resource.\n3. Ensure the Deployment uses a rolling update strategy with `maxSurge` set to `2` and `maxUnavailable` set to `0`.",
-      "concepts": ["deployments", "rollout", "rolling-update"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Deployment named `eden-api` exists in the `eden` namespace.\n\n1. Update the Deployment's image from `nginx:1.20` to `nginx:1.21`.\n2. Ensure that the change is recorded in the rollout history by setting the revision annotation (`kubernetes.io/change-cause`) on the Deployment resource.\n3. Ensure the Deployment uses a rolling update strategy with `maxSurge` set to `2` and `maxUnavailable` set to `0`.",
+      "concepts": [
+        "deployments",
+        "rollout",
+        "rolling-update"
+      ],
       "verification": [
         {
           "id": "1",
@@ -234,9 +264,13 @@
     {
       "id": "8",
       "namespace": "matrix",
-      "machineHostname": "ckad9999",
-      "question": "In `/tmp/exam/course/8/kustomize`, there is a `kustomization.yaml` file.\n\n1. Add a `secretGenerator` to the `kustomization.yaml` to generate a secret named `matrix-secret`.\n2. The secret should contain a literal `db-password=supersecret`.\n3. Configure `generatorOptions` to disable the suffix hash (`disableNameSuffixHash: true`).\n4. Apply the kustomization to the `matrix` namespace.",
-      "concepts": ["kustomize", "secrets", "secretgenerator"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn `/tmp/exam/course/8/kustomize`, there is a `kustomization.yaml` file.\n\n1. Add a `secretGenerator` to the `kustomization.yaml` to generate a secret named `matrix-secret`.\n2. The secret should contain a literal `db-password=supersecret`.\n3. Configure `generatorOptions` to disable the suffix hash (`disableNameSuffixHash: true`).\n4. Apply the kustomization to the `matrix` namespace.",
+      "concepts": [
+        "kustomize",
+        "secrets",
+        "secretgenerator"
+      ],
       "verification": [
         {
           "id": "1",
@@ -257,9 +291,13 @@
     {
       "id": "9",
       "namespace": "cosmos",
-      "machineHostname": "ckad9999",
-      "question": "A Pod named `stuck-pod` in the `cosmos` namespace is stuck in the `Init:Error` state.\n\n1. Identify the reason why the init container is failing.\n2. Fix the pod so that it reaches the `Running` state. You may recreate the pod if necessary. Note: The init container is supposed to successfully run a shell command and exit.",
-      "concepts": ["troubleshooting", "init-containers", "pods"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Pod named `stuck-pod` in the `cosmos` namespace is stuck in the `Init:Error` state.\n\n1. Identify the reason why the init container is failing.\n2. Fix the pod so that it reaches the `Running` state. You may recreate the pod if necessary. Note: The init container is supposed to successfully run a shell command and exit.",
+      "concepts": [
+        "troubleshooting",
+        "init-containers",
+        "pods"
+      ],
       "verification": [
         {
           "id": "1",
@@ -273,9 +311,13 @@
     {
       "id": "10",
       "namespace": "zenith",
-      "machineHostname": "ckad9999",
-      "question": "Extract the latest events from the `zenith` namespace and output them to a file at `/tmp/exam/course/10/events.txt`.\n\nUse `custom-columns` output format to display only the event `TYPE`, `REASON`, and `MESSAGE`.\n\nEnsure the output has the exact headers `TYPE`, `REASON`, and `MESSAGE`.",
-      "concepts": ["events", "observability", "custom-columns"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nExtract the latest events from the `zenith` namespace and output them to a file at `/tmp/exam/course/10/events.txt`.\n\nUse `custom-columns` output format to display only the event `TYPE`, `REASON`, and `MESSAGE`.\n\nEnsure the output has the exact headers `TYPE`, `REASON`, and `MESSAGE`.",
+      "concepts": [
+        "events",
+        "observability",
+        "custom-columns"
+      ],
       "verification": [
         {
           "id": "1",
@@ -296,9 +338,13 @@
     {
       "id": "11",
       "namespace": "genesis",
-      "machineHostname": "ckad9999",
-      "question": "There is a deployment `backend-api` in the `genesis` namespace that is exposing an API internally on port `8080`.\n\n1. Create a script at `/tmp/exam/course/11/check.sh` that sets up a temporary port-forwarding to the `backend-api` service on local port `9999` mapping to the service port `8080`.\n2. The script should use `curl` to fetch `http://localhost:9999/health`, append the output to `/tmp/exam/course/11/health.log`, and then terminate the port-forward process.\n\n(You don't need to actually run the script in the background for grading, but ensure it contains the correct commands to perform this sequence).",
-      "concepts": ["port-forward", "services", "debugging"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nThere is a deployment `backend-api` in the `genesis` namespace that is exposing an API internally on port `8080`.\n\n1. Create a script at `/tmp/exam/course/11/check.sh` that sets up a temporary port-forwarding to the `backend-api` service on local port `9999` mapping to the service port `8080`.\n2. The script should use `curl` to fetch `http://localhost:9999/health`, append the output to `/tmp/exam/course/11/health.log`, and then terminate the port-forward process.\n\n(You don't need to actually run the script in the background for grading, but ensure it contains the correct commands to perform this sequence).",
+      "concepts": [
+        "port-forward",
+        "services",
+        "debugging"
+      ],
       "verification": [
         {
           "id": "1",
@@ -326,9 +372,14 @@
     {
       "id": "12",
       "namespace": "origin",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `projected-pod` in the `origin` namespace using the `nginx:alpine` image.\n\nUse a single `projected` volume mounted at `/var/run/projected` to expose all of the following sources:\n\n1. A Secret named `my-secret` (already exists in the namespace) - expose the `username` key.\n2. A ConfigMap named `my-config` (already exists) - expose all its keys.\n3. DownwardAPI - expose the pod's `metadata.labels` as a file named `labels`.\n4. A ServiceAccountToken with audience `vault` and expiration of `3600` seconds, exposed as a file named `token`.",
-      "concepts": ["projected-volumes", "secrets", "downwardapi", "serviceaccount"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `projected-pod` in the `origin` namespace using the `nginx:alpine` image.\n\nUse a single `projected` volume mounted at `/var/run/projected` to expose all of the following sources:\n\n1. A Secret named `my-secret` (already exists in the namespace) - expose the `username` key.\n2. A ConfigMap named `my-config` (already exists) - expose all its keys.\n3. DownwardAPI - expose the pod's `metadata.labels` as a file named `labels`.\n4. A ServiceAccountToken with audience `vault` and expiration of `3600` seconds, exposed as a file named `token`.",
+      "concepts": [
+        "projected-volumes",
+        "secrets",
+        "downwardapi",
+        "serviceaccount"
+      ],
       "verification": [
         {
           "id": "1",
@@ -370,9 +421,12 @@
     {
       "id": "13",
       "namespace": "primal",
-      "machineHostname": "ckad9999",
-      "question": "Create a Secret named `static-creds` in the `primal` namespace.\n\n- It should contain the literal `api-key=12345ABC`.\n- Make the Secret immutable so its contents cannot be modified.",
-      "concepts": ["secrets", "immutable"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Secret named `static-creds` in the `primal` namespace.\n\n- It should contain the literal `api-key=12345ABC`.\n- Make the Secret immutable so its contents cannot be modified.",
+      "concepts": [
+        "secrets",
+        "immutable"
+      ],
       "verification": [
         {
           "id": "1",
@@ -393,9 +447,13 @@
     {
       "id": "14",
       "namespace": "ancient",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `secure-pod` in the `ancient` namespace using the `nginx:alpine` image.\n\nConfigure the container's security context with the following hardening settings:\n\n- It must run as a non-root user (e.g., `runAsNonRoot: true`, `runAsUser: 1000`).\n- The root filesystem must be read-only.\n- Drop ALL capabilities.\n- Privilege escalation must not be allowed (`allowPrivilegeEscalation: false`).\n\n(Note: You will need to add an `emptyDir` volume mounted at `/var/cache/nginx` and `/var/run` so nginx can start up with a read-only root filesystem).",
-      "concepts": ["securitycontext", "pods", "hardening"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `secure-pod` in the `ancient` namespace using the `nginx:alpine` image.\n\nConfigure the container's security context with the following hardening settings:\n\n- It must run as a non-root user (e.g., `runAsNonRoot: true`, `runAsUser: 1000`).\n- The root filesystem must be read-only.\n- Drop ALL capabilities.\n- Privilege escalation must not be allowed (`allowPrivilegeEscalation: false`).\n\n(Note: You will need to add an `emptyDir` volume mounted at `/var/cache/nginx` and `/var/run` so nginx can start up with a read-only root filesystem).",
+      "concepts": [
+        "securitycontext",
+        "pods",
+        "hardening"
+      ],
       "verification": [
         {
           "id": "1",
@@ -437,9 +495,13 @@
     {
       "id": "15",
       "namespace": "default",
-      "machineHostname": "ckad9999",
-      "question": "Create a ClusterRole named `monitor-viewer`.\n\n1. It should have permissions to `get`, `list`, and `watch` all `pods` and `services` cluster-wide.\n2. Create another ClusterRole named `aggregated-monitor` that uses aggregation labels to automatically inherit the rules from `monitor-viewer`.\n3. Add the required label to `monitor-viewer` so it gets aggregated into `aggregated-monitor`.",
-      "concepts": ["rbac", "clusterrole", "aggregation"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a ClusterRole named `monitor-viewer`.\n\n1. It should have permissions to `get`, `list`, and `watch` all `pods` and `services` cluster-wide.\n2. Create another ClusterRole named `aggregated-monitor` that uses aggregation labels to automatically inherit the rules from `monitor-viewer`.\n3. Add the required label to `monitor-viewer` so it gets aggregated into `aggregated-monitor`.",
+      "concepts": [
+        "rbac",
+        "clusterrole",
+        "aggregation"
+      ],
       "verification": [
         {
           "id": "1",
@@ -467,9 +529,13 @@
     {
       "id": "16",
       "namespace": "eden",
-      "machineHostname": "ckad9999",
-      "question": "Create a ResourceQuota named `priority-quota` in the `eden` namespace.\n\n1. Configure it to limit the total number of pods to `5` and total `requests.cpu` to `2`.\n2. Apply a scope selector so that this quota ONLY applies to Pods that have the `PriorityClass` of `high-priority`. Use the scope `PriorityClassIn` with values `high-priority` (scopeName `PriorityClass`, operator `In`).",
-      "concepts": ["resourcequota", "priorityclass", "scopes"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a ResourceQuota named `priority-quota` in the `eden` namespace.\n\n1. Configure it to limit the total number of pods to `5` and total `requests.cpu` to `2`.\n2. Apply a scope selector so that this quota ONLY applies to Pods that have the `PriorityClass` of `high-priority`. Use the scope `PriorityClassIn` with values `high-priority` (scopeName `PriorityClass`, operator `In`).",
+      "concepts": [
+        "resourcequota",
+        "priorityclass",
+        "scopes"
+      ],
       "verification": [
         {
           "id": "1",
@@ -504,9 +570,13 @@
     {
       "id": "17",
       "namespace": "matrix",
-      "machineHostname": "ckad9999",
-      "question": "Create a NetworkPolicy named `allow-named-port` in the `matrix` namespace.\n\n- It should apply to pods with the label `role=backend`.\n- It should allow incoming TCP traffic on the named port `api-port`.\n- It should only allow this traffic from pods in the `matrix` namespace with the label `role=frontend`.",
-      "concepts": ["networkpolicy", "named-ports", "networking"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a NetworkPolicy named `allow-named-port` in the `matrix` namespace.\n\n- It should apply to pods with the label `role=backend`.\n- It should allow incoming TCP traffic on the named port `api-port`.\n- It should only allow this traffic from pods in the `matrix` namespace with the label `role=frontend`.",
+      "concepts": [
+        "networkpolicy",
+        "named-ports",
+        "networking"
+      ],
       "verification": [
         {
           "id": "1",
@@ -527,9 +597,13 @@
     {
       "id": "18",
       "namespace": "cosmos",
-      "machineHostname": "ckad9999",
-      "question": "An Ingress named `cosmos-ingress` exists in the `cosmos` namespace.\n\nUpdate this Ingress to explicitly use the IngressClass named `nginx` by setting the `ingressClassName` field.\n\nEnsure the routing rule points traffic for `cosmos.local` to the service `cosmos-svc` on port `80`.",
-      "concepts": ["ingress", "networking", "ingressclass"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nAn Ingress named `cosmos-ingress` exists in the `cosmos` namespace.\n\nUpdate this Ingress to explicitly use the IngressClass named `nginx` by setting the `ingressClassName` field.\n\nEnsure the routing rule points traffic for `cosmos.local` to the service `cosmos-svc` on port `80`.",
+      "concepts": [
+        "ingress",
+        "networking",
+        "ingressclass"
+      ],
       "verification": [
         {
           "id": "1",
@@ -557,9 +631,13 @@
     {
       "id": "19",
       "namespace": "zenith",
-      "machineHostname": "ckad9999",
-      "question": "There is a service named `data-svc` in the `ancient` namespace.\n\nCreate a Pod named `dns-tester` in the `zenith` namespace using the `busybox:1.32` image. It should run a sleep command (`sleep 3600`).\n\nCreate a file at `/tmp/exam/course/19/fqdn.txt` containing the Fully Qualified Domain Name (FQDN) that the `dns-tester` pod can use to reach the `data-svc` service in the `ancient` namespace.",
-      "concepts": ["dns", "services", "fqdn"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nThere is a service named `data-svc` in the `ancient` namespace.\n\nCreate a Pod named `dns-tester` in the `zenith` namespace using the `busybox:1.32` image. It should run a sleep command (`sleep 3600`).\n\nCreate a file at `/tmp/exam/course/19/fqdn.txt` containing the Fully Qualified Domain Name (FQDN) that the `dns-tester` pod can use to reach the `data-svc` service in the `ancient` namespace.",
+      "concepts": [
+        "dns",
+        "services",
+        "fqdn"
+      ],
       "verification": [
         {
           "id": "1",
@@ -580,9 +658,13 @@
     {
       "id": "20",
       "namespace": "nexus",
-      "machineHostname": "ckad9999",
-      "question": "Create a NetworkPolicy named `isolate-namespace` in the `nexus` namespace.\n\n- It should apply to ALL pods in the `nexus` namespace.\n- It should allow all incoming traffic from pods within the `nexus` namespace.\n- It should explicitly block all incoming traffic from pods in ANY OTHER namespace.\n- It should allow all outgoing (egress) traffic.",
-      "concepts": ["networkpolicy", "isolation", "networking"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a NetworkPolicy named `isolate-namespace` in the `nexus` namespace.\n\n- It should apply to ALL pods in the `nexus` namespace.\n- It should allow all incoming traffic from pods within the `nexus` namespace.\n- It should explicitly block all incoming traffic from pods in ANY OTHER namespace.\n- It should allow all outgoing (egress) traffic.",
+      "concepts": [
+        "networkpolicy",
+        "isolation",
+        "networking"
+      ],
       "verification": [
         {
           "id": "1",

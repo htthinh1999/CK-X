@@ -4,8 +4,12 @@
       "id": "1",
       "namespace": "apex",
       "machineHostname": "ckad9999",
-      "question": "Create an optimized `Dockerfile` that builds a Go application using multi-stage builds. Use the source code provided in `/tmp/exam/course/1/main.go`.\n\nThe final image should be based on `alpine:latest` and run as a non-root user (UID 1000). Tag the image as `localhost:5000/musashi-app:v1`.\n\nThen create a Pod named `musashi-pod` in the `apex` namespace using this image. Save the Dockerfile at `/tmp/exam/course/1/Dockerfile` and the Pod manifest at `/tmp/exam/course/1/pod.yaml`.",
-      "concepts": ["docker", "images", "pods"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate an optimized `Dockerfile` that builds a Go application using multi-stage builds. Use the source code provided in `/tmp/exam/course/1/main.go`.\n\nThe final image should be based on `alpine:latest` and run as a non-root user (UID 1000). Tag the image as `localhost:5000/musashi-app:v1`.\n\nThen create a Pod named `musashi-pod` in the `apex` namespace using this image. Save the Dockerfile at `/tmp/exam/course/1/Dockerfile` and the Pod manifest at `/tmp/exam/course/1/pod.yaml`.",
+      "concepts": [
+        "docker",
+        "images",
+        "pods"
+      ],
       "verification": [
         {
           "id": "1",
@@ -27,8 +31,12 @@
       "id": "2",
       "namespace": "summit",
       "machineHostname": "ckad9999",
-      "question": "Create a multi-container Pod named `tri-blade` in the `summit` namespace with three containers sharing an `emptyDir` volume:\n\n1. `main`: image `nginx:1.24`, mounts the shared volume at `/var/log/nginx`.\n2. `sidecar`: image `busybox`, writes the current time to `/shared/time.log` every 5 seconds (volume mounted at `/shared`).\n3. `adapter`: image `fluentd`, tails `/var/log/shared/time.log` (volume mounted at `/var/log/shared`).\n\nSave the manifest at `/tmp/exam/course/2/multi-pod.yaml`.",
-      "concepts": ["pods", "multi-container", "volumes"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a multi-container Pod named `tri-blade` in the `summit` namespace with three containers sharing an `emptyDir` volume:\n\n1. `main`: image `nginx:1.24`, mounts the shared volume at `/var/log/nginx`.\n2. `sidecar`: image `busybox`, writes the current time to `/shared/time.log` every 5 seconds (volume mounted at `/shared`).\n3. `adapter`: image `fluentd`, tails `/var/log/shared/time.log` (volume mounted at `/var/log/shared`).\n\nSave the manifest at `/tmp/exam/course/2/multi-pod.yaml`.",
+      "concepts": [
+        "pods",
+        "multi-container",
+        "volumes"
+      ],
       "verification": [
         {
           "id": "1",
@@ -50,8 +58,11 @@
       "id": "3",
       "namespace": "pinnacle",
       "machineHostname": "ckad9999",
-      "question": "Create a Job named `data-processor` in the `pinnacle` namespace.\n\nThe job should calculate the value of pi using the `perl` image with the command `perl -Mbignum=bpi -wle 'print bpi(2000)'`.\n\nConfigure the Job to complete 3 successful pods, with 2 running in parallel. Save the manifest at `/tmp/exam/course/3/job.yaml`.",
-      "concepts": ["jobs", "batch"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Job named `data-processor` in the `pinnacle` namespace.\n\nThe job should calculate the value of pi using the `perl` image with the command `perl -Mbignum=bpi -wle 'print bpi(2000)'`.\n\nConfigure the Job to complete 3 successful pods, with 2 running in parallel. Save the manifest at `/tmp/exam/course/3/job.yaml`.",
+      "concepts": [
+        "jobs",
+        "batch"
+      ],
       "verification": [
         {
           "id": "1",
@@ -73,8 +84,12 @@
       "id": "4",
       "namespace": "zenith",
       "machineHostname": "ckad9999",
-      "question": "Create a CronJob named `db-backup` in the `zenith` namespace.\n\n- Schedule: every 15 minutes (`*/15 * * * *`).\n- Image: `postgres:15`.\n- Command: `pg_dump -U admin mydb`.\n- Retain 3 successful jobs and 1 failed job.\n\nSave the manifest at `/tmp/exam/course/4/cronjob.yaml`.",
-      "concepts": ["cronjobs", "batch", "scheduling"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a CronJob named `db-backup` in the `zenith` namespace.\n\n- Schedule: every 15 minutes (`*/15 * * * *`).\n- Image: `postgres:15`.\n- Command: `pg_dump -U admin mydb`.\n- Retain 3 successful jobs and 1 failed job.\n\nSave the manifest at `/tmp/exam/course/4/cronjob.yaml`.",
+      "concepts": [
+        "cronjobs",
+        "batch",
+        "scheduling"
+      ],
       "verification": [
         {
           "id": "1",
@@ -96,8 +111,12 @@
       "id": "5",
       "namespace": "crown",
       "machineHostname": "ckad9999",
-      "question": "Create a Helm chart named `my-chart` from scratch in `/tmp/exam/course/5/my-chart`.\n\nCreate a `values.yaml` in `/tmp/exam/course/5/` that overrides the replica count to 3, the image repository to `nginx` and the tag to `alpine`.\n\nInstall the chart into the `crown` namespace with the release name `crown-release`.",
-      "concepts": ["helm", "charts", "deployment"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Helm chart named `my-chart` from scratch in `/tmp/exam/course/5/my-chart`.\n\nCreate a `values.yaml` in `/tmp/exam/course/5/` that overrides the replica count to 3, the image repository to `nginx` and the tag to `alpine`.\n\nInstall the chart into the `crown` namespace with the release name `crown-release`.",
+      "concepts": [
+        "helm",
+        "charts",
+        "deployment"
+      ],
       "verification": [
         {
           "id": "1",
@@ -112,8 +131,12 @@
       "id": "6",
       "namespace": "glory",
       "machineHostname": "ckad9999",
-      "question": "A deployment `glory-deploy` exists in the `glory` namespace.\n\n1. Update its image to `nginx:1.25` and record the change.\n2. Then rollback the deployment to the previous revision.\n3. Finally, scale it to 5 replicas.\n\nSave any manifest you use at `/tmp/exam/course/6/deploy.yaml`.",
-      "concepts": ["deployments", "rollout", "scaling"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA deployment `glory-deploy` exists in the `glory` namespace.\n\n1. Update its image to `nginx:1.25` and record the change.\n2. Then rollback the deployment to the previous revision.\n3. Finally, scale it to 5 replicas.\n\nSave any manifest you use at `/tmp/exam/course/6/deploy.yaml`.",
+      "concepts": [
+        "deployments",
+        "rollout",
+        "scaling"
+      ],
       "verification": [
         {
           "id": "1",
@@ -142,8 +165,12 @@
       "id": "7",
       "namespace": "legacy",
       "machineHostname": "ckad9999",
-      "question": "Implement a canary deployment in the `legacy` namespace.\n\nCreate a new deployment `legacy-canary` alongside the existing `legacy-main` deployment. The canary should have 1 replica using `httpd:2.4`, while the main has 4.\n\nEnsure they both carry the label `app=legacy-web` so the existing service routes ~20% of traffic to the canary. Save the manifest at `/tmp/exam/course/7/canary.yaml`.",
-      "concepts": ["deployments", "canary", "labels"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nImplement a canary deployment in the `legacy` namespace.\n\nCreate a new deployment `legacy-canary` alongside the existing `legacy-main` deployment. The canary should have 1 replica using `httpd:2.4`, while the main has 4.\n\nEnsure they both carry the label `app=legacy-web` so the existing service routes ~20% of traffic to the canary. Save the manifest at `/tmp/exam/course/7/canary.yaml`.",
+      "concepts": [
+        "deployments",
+        "canary",
+        "labels"
+      ],
       "verification": [
         {
           "id": "1",
@@ -164,9 +191,13 @@
     {
       "id": "8",
       "namespace": "mastery",
-      "machineHostname": "ckad9999",
-      "question": "Use Kustomize in `/tmp/exam/course/8/`.\n\nA base exists in `/tmp/exam/course/8/base` (containing a Deployment named `my-app`). Create a production overlay in `/tmp/exam/course/8/prod`.\n\nThe overlay should:\n- Add a label `env=prod`\n- Change the replica count to 4\n- Apply the generated resources to the `mastery` namespace.",
-      "concepts": ["kustomize", "deployments", "labels"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nUse Kustomize in `/tmp/exam/course/8/`.\n\nA base exists in `/tmp/exam/course/8/base` (containing a Deployment named `my-app`). Create a production overlay in `/tmp/exam/course/8/prod`.\n\nThe overlay should:\n- Add a label `env=prod`\n- Change the replica count to 4\n- Apply the generated resources to the `mastery` namespace.",
+      "concepts": [
+        "kustomize",
+        "deployments",
+        "labels"
+      ],
       "verification": [
         {
           "id": "1",
@@ -187,9 +218,13 @@
     {
       "id": "9",
       "namespace": "ascend",
-      "machineHostname": "ckad9999",
-      "question": "There are 3 broken pods in the `ascend` namespace: `bug-1`, `bug-2`, and `bug-3`.\n\nTroubleshoot and fix them so that all three reach the `Running` state. You may delete and recreate them if necessary, or edit them in place.",
-      "concepts": ["debugging", "pods", "troubleshooting"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nThere are 3 broken pods in the `ascend` namespace: `bug-1`, `bug-2`, and `bug-3`.\n\nTroubleshoot and fix them so that all three reach the `Running` state. You may delete and recreate them if necessary, or edit them in place.",
+      "concepts": [
+        "debugging",
+        "pods",
+        "troubleshooting"
+      ],
       "verification": [
         {
           "id": "1",
@@ -217,9 +252,12 @@
     {
       "id": "10",
       "namespace": "triumph",
-      "machineHostname": "ckad9999",
-      "question": "Extract the logs from the `triumph-app` pod in the `triumph` namespace.\n\nFind all lines containing `ERROR` and save them to `/tmp/exam/course/10/logs.txt`.",
-      "concepts": ["logging", "observability"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nExtract the logs from the `triumph-app` pod in the `triumph` namespace.\n\nFind all lines containing `ERROR` and save them to `/tmp/exam/course/10/logs.txt`.",
+      "concepts": [
+        "logging",
+        "observability"
+      ],
       "verification": [
         {
           "id": "1",
@@ -240,9 +278,13 @@
     {
       "id": "11",
       "namespace": "apex",
-      "machineHostname": "ckad9999",
-      "question": "Use an ephemeral debug container to troubleshoot `distroless-pod` in the `apex` namespace.\n\nAttach an ephemeral container using the `busybox` image and run `nslookup kubernetes.default` inside it.",
-      "concepts": ["debugging", "ephemeral-containers", "observability"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nUse an ephemeral debug container to troubleshoot `distroless-pod` in the `apex` namespace.\n\nAttach an ephemeral container using the `busybox` image and run `nslookup kubernetes.default` inside it.",
+      "concepts": [
+        "debugging",
+        "ephemeral-containers",
+        "observability"
+      ],
       "verification": [
         {
           "id": "1",
@@ -256,9 +298,13 @@
     {
       "id": "12",
       "namespace": "summit",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod `secure-pod` in the `summit` namespace.\n\n- Image: `nginx`.\n- Container security context: `runAsUser: 2000`, `allowPrivilegeEscalation: false`, drop `ALL` capabilities and add `NET_BIND_SERVICE`.\n\nSave the manifest at `/tmp/exam/course/12/secure-pod.yaml`.",
-      "concepts": ["securitycontext", "pods", "security"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod `secure-pod` in the `summit` namespace.\n\n- Image: `nginx`.\n- Container security context: `runAsUser: 2000`, `allowPrivilegeEscalation: false`, drop `ALL` capabilities and add `NET_BIND_SERVICE`.\n\nSave the manifest at `/tmp/exam/course/12/secure-pod.yaml`.",
+      "concepts": [
+        "securitycontext",
+        "pods",
+        "security"
+      ],
       "verification": [
         {
           "id": "1",
@@ -279,9 +325,13 @@
     {
       "id": "13",
       "namespace": "pinnacle",
-      "machineHostname": "ckad9999",
-      "question": "Create a ServiceAccount `sword-master` in `pinnacle`.\n\nCreate a Role `blade-reader` that can `get`, `list`, `watch` pods and configmaps.\n\nCreate a RoleBinding `master-binding` binding the role to the service account. Save the manifest at `/tmp/exam/course/13/rbac.yaml`.",
-      "concepts": ["rbac", "serviceaccount", "security"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a ServiceAccount `sword-master` in `pinnacle`.\n\nCreate a Role `blade-reader` that can `get`, `list`, `watch` pods and configmaps.\n\nCreate a RoleBinding `master-binding` binding the role to the service account. Save the manifest at `/tmp/exam/course/13/rbac.yaml`.",
+      "concepts": [
+        "rbac",
+        "serviceaccount",
+        "security"
+      ],
       "verification": [
         {
           "id": "1",
@@ -295,9 +345,13 @@
     {
       "id": "14",
       "namespace": "zenith",
-      "machineHostname": "ckad9999",
-      "question": "Create a ConfigMap `app-config` with `THEME=dark`.\n\nCreate a Secret `app-secret` with `API_KEY=musashi123`.\n\nCreate a Pod `inject-pod` in `zenith` that uses `app-config` as environment variables and mounts `app-secret` at `/etc/secret/`. Save the manifest at `/tmp/exam/course/14/inject.yaml`.",
-      "concepts": ["configmaps", "secrets", "pods"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a ConfigMap `app-config` with `THEME=dark`.\n\nCreate a Secret `app-secret` with `API_KEY=musashi123`.\n\nCreate a Pod `inject-pod` in `zenith` that uses `app-config` as environment variables and mounts `app-secret` at `/etc/secret/`. Save the manifest at `/tmp/exam/course/14/inject.yaml`.",
+      "concepts": [
+        "configmaps",
+        "secrets",
+        "pods"
+      ],
       "verification": [
         {
           "id": "1",
@@ -318,9 +372,13 @@
     {
       "id": "15",
       "namespace": "crown",
-      "machineHostname": "ckad9999",
-      "question": "Create a LimitRange `cpu-limits` in `crown`: default `500m`, defaultRequest `200m` for CPU.\n\nCreate a ResourceQuota `compute-quota` in `crown`: max 4 pods, max 2 CPU, max 4Gi memory. Save the manifest at `/tmp/exam/course/15/quota.yaml`.",
-      "concepts": ["limitrange", "resourcequota", "resources"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a LimitRange `cpu-limits` in `crown`: default `500m`, defaultRequest `200m` for CPU.\n\nCreate a ResourceQuota `compute-quota` in `crown`: max 4 pods, max 2 CPU, max 4Gi memory. Save the manifest at `/tmp/exam/course/15/quota.yaml`.",
+      "concepts": [
+        "limitrange",
+        "resourcequota",
+        "resources"
+      ],
       "verification": [
         {
           "id": "1",
@@ -341,9 +399,13 @@
     {
       "id": "16",
       "namespace": "glory",
-      "machineHostname": "ckad9999",
-      "question": "Create a PersistentVolume `glory-pv` (1Gi, hostPath `/data/glory`, ReadWriteOnce).\n\nCreate a PersistentVolumeClaim `glory-pvc` (500Mi, ReadWriteOnce) in `glory`.\n\nCreate a Pod `glory-pod` that mounts this PVC at `/var/data`. Save the manifest at `/tmp/exam/course/16/storage.yaml`.",
-      "concepts": ["persistentvolume", "pvc", "storage"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a PersistentVolume `glory-pv` (1Gi, hostPath `/data/glory`, ReadWriteOnce).\n\nCreate a PersistentVolumeClaim `glory-pvc` (500Mi, ReadWriteOnce) in `glory`.\n\nCreate a Pod `glory-pod` that mounts this PVC at `/var/data`. Save the manifest at `/tmp/exam/course/16/storage.yaml`.",
+      "concepts": [
+        "persistentvolume",
+        "pvc",
+        "storage"
+      ],
       "verification": [
         {
           "id": "1",
@@ -364,9 +426,13 @@
     {
       "id": "17",
       "namespace": "legacy",
-      "machineHostname": "ckad9999",
-      "question": "In the `legacy` namespace, create a default deny-all NetworkPolicy.\n\nThen create a NetworkPolicy `allow-web` that allows ingress traffic to pods with `app=web` ONLY from pods with `app=api` on port 80. Save the manifest at `/tmp/exam/course/17/netpol.yaml`.",
-      "concepts": ["networkpolicy", "networking", "security"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nIn the `legacy` namespace, create a default deny-all NetworkPolicy.\n\nThen create a NetworkPolicy `allow-web` that allows ingress traffic to pods with `app=web` ONLY from pods with `app=api` on port 80. Save the manifest at `/tmp/exam/course/17/netpol.yaml`.",
+      "concepts": [
+        "networkpolicy",
+        "networking",
+        "security"
+      ],
       "verification": [
         {
           "id": "1",
@@ -380,9 +446,13 @@
     {
       "id": "18",
       "namespace": "mastery",
-      "machineHostname": "ckad9999",
-      "question": "Create an Ingress `mastery-ing` in `mastery`.\n\n- Rule host `musashi.com`, path `/api` (prefix) routes to service `api-svc` on port 8080.\n- Path `/web` (prefix) routes to service `web-svc` on port 80.\n\nSave the manifest at `/tmp/exam/course/18/ingress.yaml`.",
-      "concepts": ["ingress", "networking", "services"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate an Ingress `mastery-ing` in `mastery`.\n\n- Rule host `musashi.com`, path `/api` (prefix) routes to service `api-svc` on port 8080.\n- Path `/web` (prefix) routes to service `web-svc` on port 80.\n\nSave the manifest at `/tmp/exam/course/18/ingress.yaml`.",
+      "concepts": [
+        "ingress",
+        "networking",
+        "services"
+      ],
       "verification": [
         {
           "id": "1",
@@ -396,9 +466,13 @@
     {
       "id": "19",
       "namespace": "ascend",
-      "machineHostname": "ckad9999",
-      "question": "Create a NodePort service `ascend-svc` in `ascend` exposing port 80, targetPort 80, nodePort 30080.\n\nIt should select pods with `app=ascend-app`. Save the manifest at `/tmp/exam/course/19/svc.yaml`.",
-      "concepts": ["services", "networking", "nodeport"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a NodePort service `ascend-svc` in `ascend` exposing port 80, targetPort 80, nodePort 30080.\n\nIt should select pods with `app=ascend-app`. Save the manifest at `/tmp/exam/course/19/svc.yaml`.",
+      "concepts": [
+        "services",
+        "networking",
+        "nodeport"
+      ],
       "verification": [
         {
           "id": "1",
@@ -419,9 +493,13 @@
     {
       "id": "20",
       "namespace": "triumph",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod `dns-test` in `triumph`.\n\nRun a command to lookup the SRV record for the `kubernetes.default` service and save the output to `/tmp/exam/course/20/dns-output.txt`.",
-      "concepts": ["dns", "networking", "services"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod `dns-test` in `triumph`.\n\nRun a command to lookup the SRV record for the `kubernetes.default` service and save the output to `/tmp/exam/course/20/dns-output.txt`.",
+      "concepts": [
+        "dns",
+        "networking",
+        "services"
+      ],
       "verification": [
         {
           "id": "1",

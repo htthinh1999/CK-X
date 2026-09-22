@@ -222,11 +222,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "2"
-          memory: 4G
+          cpus: "4"
+          memory: 8G # multi-cluster exams run up to 3 k3d clusters here
         reservations:
           cpus: "1"
-          memory: 2G
+          memory: 3G
     networks:
       - ckx-network
     healthcheck:

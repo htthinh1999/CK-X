@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "stream",
       "machineHostname": "ckad9999",
-      "question": "In namespace `stream`, Deployment `api-server` exists with hard-coded environment variables:\n\n- `DB_USER=admin`\n- `DB_PASS=Secret123!`\n\nYour tasks:\n\n1. Create a Secret named `db-credentials` in namespace `stream` containing these credentials\n2. Update Deployment `api-server` to use the Secret via `valueFrom.secretKeyRef`\n3. Do not change the Deployment name or namespace",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn namespace `stream`, Deployment `api-server` exists with hard-coded environment variables:\n\n- `DB_USER=admin`\n- `DB_PASS=Secret123!`\n\nYour tasks:\n\n1. Create a Secret named `db-credentials` in namespace `stream` containing these credentials\n2. Update Deployment `api-server` to use the Secret via `valueFrom.secretKeyRef`\n3. Do not change the Deployment name or namespace",
       "concepts": [
         "secrets",
         "deployments",
@@ -45,7 +45,7 @@
       "id": "2",
       "namespace": "pond",
       "machineHostname": "ckad9999",
-      "question": "Create a CronJob named `backup-job` in namespace `pond` with the following specifications:\n\n- Schedule: Run every 30 minutes (`*/30 * * * *`)\n- Image: `busybox:latest`\n- Container name: `backup`\n- Container command: `echo \"Backup completed\"`\n- Set `successfulJobsHistoryLimit: 3`\n- Set `failedJobsHistoryLimit: 2`\n- Set `activeDeadlineSeconds: 300`\n- Use `restartPolicy: Never`\n\nTip: Use `kubectl explain cronjob.spec` to find the correct field names.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a CronJob named `backup-job` in namespace `pond` with the following specifications:\n\n- Schedule: Run every 30 minutes (`*/30 * * * *`)\n- Image: `busybox:latest`\n- Container name: `backup`\n- Container command: `echo \"Backup completed\"`\n- Set `successfulJobsHistoryLimit: 3`\n- Set `failedJobsHistoryLimit: 2`\n- Set `activeDeadlineSeconds: 300`\n- Use `restartPolicy: Never`\n\nTip: Use `kubectl explain cronjob.spec` to find the correct field names.",
       "concepts": [
         "cronjobs",
         "jobs",
@@ -114,7 +114,7 @@
       "id": "3",
       "namespace": "marsh",
       "machineHostname": "ckad9999",
-      "question": "In namespace `marsh`, Pod `log-collector` exists but is failing with authorization errors.\n\nCheck the Pod logs to identify what permissions are needed. The logs show:\n\n`User \"system:serviceaccount:marsh:default\" cannot list pods in the namespace \"marsh\"`\n\nYour tasks:\n\n1. Create a ServiceAccount named `log-sa` in namespace `marsh`\n2. Create a Role `log-role` that grants `get`, `list`, and `watch` on resource `pods`\n3. Create a RoleBinding `log-rb` binding `log-role` to `log-sa`\n4. Update Pod `log-collector` to use ServiceAccount `log-sa` (delete and recreate if needed)",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn namespace `marsh`, Pod `log-collector` exists but is failing with authorization errors.\n\nCheck the Pod logs to identify what permissions are needed. The logs show:\n\n`User \"system:serviceaccount:marsh:default\" cannot list pods in the namespace \"marsh\"`\n\nYour tasks:\n\n1. Create a ServiceAccount named `log-sa` in namespace `marsh`\n2. Create a Role `log-role` that grants `get`, `list`, and `watch` on resource `pods`\n3. Create a RoleBinding `log-rb` binding `log-role` to `log-sa`\n4. Update Pod `log-collector` to use ServiceAccount `log-sa` (delete and recreate if needed)",
       "concepts": [
         "rbac",
         "serviceaccounts",
@@ -183,7 +183,7 @@
       "id": "4",
       "namespace": "delta",
       "machineHostname": "ckad9999",
-      "question": "In namespace `delta`, Pod `metrics-pod` is using ServiceAccount `wrong-sa` and receiving authorization errors.\n\nMultiple ServiceAccounts, Roles, and RoleBindings already exist in the namespace:\n\n- ServiceAccounts: `monitor-sa`, `wrong-sa`, `admin-sa`\n- Roles: `metrics-reader`, `full-access`, `view-only`\n- RoleBindings: `monitor-binding`, `admin-binding`\n\nYour tasks:\n\n1. Identify which ServiceAccount/Role/RoleBinding combination has the correct permissions\n2. Update Pod `metrics-pod` to use the correct ServiceAccount (`monitor-sa`)\n3. Verify the Pod stops showing authorization errors\n\nHint: Check existing RoleBindings to see which ServiceAccount is bound to which Role.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn namespace `delta`, Pod `metrics-pod` is using ServiceAccount `wrong-sa` and receiving authorization errors.\n\nMultiple ServiceAccounts, Roles, and RoleBindings already exist in the namespace:\n\n- ServiceAccounts: `monitor-sa`, `wrong-sa`, `admin-sa`\n- Roles: `metrics-reader`, `full-access`, `view-only`\n- RoleBindings: `monitor-binding`, `admin-binding`\n\nYour tasks:\n\n1. Identify which ServiceAccount/Role/RoleBinding combination has the correct permissions\n2. Update Pod `metrics-pod` to use the correct ServiceAccount (`monitor-sa`)\n3. Verify the Pod stops showing authorization errors\n\nHint: Check existing RoleBindings to see which ServiceAccount is bound to which Role.",
       "concepts": [
         "rbac",
         "serviceaccounts",
@@ -217,7 +217,7 @@
       "id": "5",
       "namespace": "default",
       "machineHostname": "ckad9999",
-      "question": "Directory `/tmp/exam/course/5/image/` contains a valid `Dockerfile`.\n\nYour tasks:\n\n1. Build a container image using Docker with name `my-app:1.0` using `/tmp/exam/course/5/image/` as build context\n2. Save the image as a tarball to `/tmp/exam/course/5/my-app.tar`",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nDirectory `/tmp/exam/course/5/image/` contains a valid `Dockerfile`.\n\nYour tasks:\n\n1. Build a container image using Docker with name `my-app:1.0` using `/tmp/exam/course/5/image/` as build context\n2. Save the image as a tarball to `/tmp/exam/course/5/my-app.tar`",
       "concepts": [
         "docker",
         "images",
@@ -244,7 +244,7 @@
       "id": "6",
       "namespace": "default",
       "machineHostname": "ckad9999",
-      "question": "In namespace `default`, the following resources exist:\n\n- Deployment `web-app` with 5 replicas, labels `app=webapp, version=v1`\n- Service `web-service` with selector `app=webapp`\n\nYour tasks:\n\n1. Scale Deployment `web-app` to 8 replicas (80% of 10 total)\n2. Create a new Deployment `web-app-canary` with 2 replicas, labels `app=webapp, version=v2`\n3. Both Deployments should be selected by `web-service`\n\nNote: This is a manual canary pattern where traffic is split based on replica counts.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn namespace `default`, the following resources exist:\n\n- Deployment `web-app` with 5 replicas, labels `app=webapp, version=v1`\n- Service `web-service` with selector `app=webapp`\n\nYour tasks:\n\n1. Scale Deployment `web-app` to 8 replicas (80% of 10 total)\n2. Create a new Deployment `web-app-canary` with 2 replicas, labels `app=webapp, version=v2`\n3. Both Deployments should be selected by `web-service`\n\nNote: This is a manual canary pattern where traffic is split based on replica counts.",
       "concepts": [
         "deployments",
         "canary",
@@ -298,8 +298,8 @@
     {
       "id": "7",
       "namespace": "spring",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `spring`, three Pods exist:\n\n- `frontend` with label `role=wrong-frontend`\n- `backend` with label `role=wrong-backend`\n- `database` with label `role=wrong-db`\n\nThree NetworkPolicies exist:\n\n- `deny-all` (default deny)\n- `allow-frontend-to-backend` (allows traffic from `role=frontend` to `role=backend`)\n- `allow-backend-to-db` (allows traffic from `role=backend` to `role=db`)\n\nYour task:\n\nUpdate the Pod labels (do NOT modify NetworkPolicies) to enable the communication chain:\n\n`frontend` -> `backend` -> `database`\n\nTip: Use `kubectl label` instead of editing YAML.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `spring`, three Pods exist:\n\n- `frontend` with label `role=wrong-frontend`\n- `backend` with label `role=wrong-backend`\n- `database` with label `role=wrong-db`\n\nThree NetworkPolicies exist:\n\n- `deny-all` (default deny)\n- `allow-frontend-to-backend` (allows traffic from `role=frontend` to `role=backend`)\n- `allow-backend-to-db` (allows traffic from `role=backend` to `role=db`)\n\nYour task:\n\nUpdate the Pod labels (do NOT modify NetworkPolicies) to enable the communication chain:\n\n`frontend` -> `backend` -> `database`\n\nTip: Use `kubectl label` instead of editing YAML.",
       "concepts": [
         "networkpolicy",
         "labels",
@@ -332,8 +332,8 @@
     {
       "id": "8",
       "namespace": "default",
-      "machineHostname": "ckad9999",
-      "question": "File `/tmp/exam/course/8/broken-deploy.yaml` contains a Deployment manifest that fails to apply.\n\nThe file has the following issues:\n\n1. Uses deprecated API version\n2. Missing required `selector` field\n3. Selector doesn't match template labels\n\nYour tasks:\n\n1. Fix the YAML file to use `apiVersion: apps/v1`\n2. Add a proper `selector` field that matches the template labels\n3. Apply the fixed manifest and ensure the Deployment `broken-app` is running",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nFile `/tmp/exam/course/8/broken-deploy.yaml` contains a Deployment manifest that fails to apply.\n\nThe file has the following issues:\n\n1. Uses deprecated API version\n2. Missing required `selector` field\n3. Selector doesn't match template labels\n\nYour tasks:\n\n1. Fix the YAML file to use `apiVersion: apps/v1`\n2. Add a proper `selector` field that matches the template labels\n3. Apply the fixed manifest and ensure the Deployment `broken-app` is running",
       "concepts": [
         "deployments",
         "troubleshooting",
@@ -373,8 +373,8 @@
     {
       "id": "9",
       "namespace": "brook",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `brook`, Deployment `app-v1` exists with image `nginx:1.20`.\n\nYour tasks:\n\n1. Update the Deployment to use image `nginx:1.25`\n2. Verify the rolling update completes successfully\n3. Rollback to the previous revision\n4. Verify the rollback completed\n5. Save the current revision number to `/tmp/exam/course/9/rollback-revision.txt`",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `brook`, Deployment `app-v1` exists with image `nginx:1.20`.\n\nYour tasks:\n\n1. Update the Deployment to use image `nginx:1.25`\n2. Verify the rolling update completes successfully\n3. Rollback to the previous revision\n4. Verify the rollback completed\n5. Save the current revision number to `/tmp/exam/course/9/rollback-revision.txt`",
       "concepts": [
         "deployments",
         "rollout",
@@ -421,8 +421,8 @@
     {
       "id": "10",
       "namespace": "rapids",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `rapids`, Deployment `api-deploy` exists with a container listening on port `8080`.\n\nYour task:\n\nAdd a readiness probe to the Deployment with:\n\n- HTTP GET on path `/ready`\n- Port `8080`\n- `initialDelaySeconds: 5`\n- `periodSeconds: 10`\n\nEnsure the Deployment rolls out successfully.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `rapids`, Deployment `api-deploy` exists with a container listening on port `8080`.\n\nYour task:\n\nAdd a readiness probe to the Deployment with:\n\n- HTTP GET on path `/ready`\n- Port `8080`\n- `initialDelaySeconds: 5`\n- `periodSeconds: 10`\n\nEnsure the Deployment rolls out successfully.",
       "concepts": [
         "probes",
         "deployments",
@@ -462,8 +462,8 @@
     {
       "id": "11",
       "namespace": "cascade",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `cascade`, Deployment `secure-app` exists without any security context.\n\nYour tasks:\n\n1. Set Pod-level `runAsUser: 1000`\n2. Add container-level capability `NET_ADMIN` to the container named `app`\n\nNote: Capabilities are set at the container level, not the Pod level.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `cascade`, Deployment `secure-app` exists without any security context.\n\nYour tasks:\n\n1. Set Pod-level `runAsUser: 1000`\n2. Add container-level capability `NET_ADMIN` to the container named `app`\n\nNote: Capabilities are set at the container level, not the Pod level.",
       "concepts": [
         "securitycontext",
         "capabilities",
@@ -503,8 +503,8 @@
     {
       "id": "12",
       "namespace": "shoal",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `shoal`, Deployment `web-app` exists with Pods labeled `app=webapp, tier=frontend`.\n\nService `web-svc` exists but has incorrect selector `app=wrongapp`.\n\nYour task:\n\nUpdate Service `web-svc` to correctly select Pods from Deployment `web-app`.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `shoal`, Deployment `web-app` exists with Pods labeled `app=webapp, tier=frontend`.\n\nService `web-svc` exists but has incorrect selector `app=wrongapp`.\n\nYour task:\n\nUpdate Service `web-svc` to correctly select Pods from Deployment `web-app`.",
       "concepts": [
         "services",
         "selectors",
@@ -530,8 +530,8 @@
     {
       "id": "13",
       "namespace": "default",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `default`, Deployment `api-server` exists with Pods labeled `app=api` and container port `9090`.\n\nYour task:\n\nCreate a Service named `api-nodeport` that:\n\n- Type: `NodePort`\n- Selects Pods with label `app=api`\n- Exposes Service port `80` mapping to target port `9090`",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nIn namespace `default`, Deployment `api-server` exists with Pods labeled `app=api` and container port `9090`.\n\nYour task:\n\nCreate a Service named `api-nodeport` that:\n\n- Type: `NodePort`\n- Selects Pods with label `app=api`\n- Exposes Service port `80` mapping to target port `9090`",
       "concepts": [
         "services",
         "nodeport",
@@ -571,8 +571,8 @@
     {
       "id": "14",
       "namespace": "eddy",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `eddy`, the following resources exist:\n\n- Deployment `web-deploy` with Pods labeled `app=web`\n- Service `web-svc` with selector `app=web` on port `8080`\n\nYour task:\n\nCreate an Ingress named `web-ingress` that:\n\n- Routes host `web.example.com`\n- Path `/` with `pathType: Prefix`\n- Backend Service `web-svc` on port `8080`\n- Uses API version `networking.k8s.io/v1`",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nIn namespace `eddy`, the following resources exist:\n\n- Deployment `web-deploy` with Pods labeled `app=web`\n- Service `web-svc` with selector `app=web` on port `8080`\n\nYour task:\n\nCreate an Ingress named `web-ingress` that:\n\n- Routes host `web.example.com`\n- Path `/` with `pathType: Prefix`\n- Backend Service `web-svc` on port `8080`\n- Uses API version `networking.k8s.io/v1`",
       "concepts": [
         "ingress",
         "services",
@@ -612,8 +612,8 @@
     {
       "id": "15",
       "namespace": "default",
-      "machineHostname": "ckad9999",
-      "question": "File `/tmp/exam/course/15/fix-ingress.yaml` contains an Ingress manifest that fails to apply due to an invalid `pathType` value.\n\nYour tasks:\n\n1. Apply the file and note the error\n2. Fix the `pathType` to a valid value (`Prefix`, `Exact`, or `ImplementationSpecific`)\n3. Ensure the Ingress `api-ingress` routes path `/api` to Service `api-svc` on port `8080`\n4. Apply the fixed manifest successfully",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nFile `/tmp/exam/course/15/fix-ingress.yaml` contains an Ingress manifest that fails to apply due to an invalid `pathType` value.\n\nYour tasks:\n\n1. Apply the file and note the error\n2. Fix the `pathType` to a valid value (`Prefix`, `Exact`, or `ImplementationSpecific`)\n3. Ensure the Ingress `api-ingress` routes path `/api` to Service `api-svc` on port `8080`\n4. Apply the fixed manifest successfully",
       "concepts": [
         "ingress",
         "troubleshooting",
@@ -653,8 +653,8 @@
     {
       "id": "16",
       "namespace": "pond",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `pond`, a ResourceQuota exists that sets resource limits for the namespace.\n\nYour tasks:\n\n1. Check the ResourceQuota for namespace `pond` to see the limits set\n2. Create a Pod named `resource-pod` with:\n   - Image: `nginx:latest`\n   - Container name: `web`\n   - Set the CPU and memory limits to half of the limits set in the ResourceQuota\n   - Set appropriate requests (at least `100m` CPU and `128Mi` memory)",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nIn namespace `pond`, a ResourceQuota exists that sets resource limits for the namespace.\n\nYour tasks:\n\n1. Check the ResourceQuota for namespace `pond` to see the limits set\n2. Create a Pod named `resource-pod` with:\n   - Image: `nginx:latest`\n   - Container name: `web`\n   - Set the CPU and memory limits to half of the limits set in the ResourceQuota\n   - Set appropriate requests (at least `100m` CPU and `128Mi` memory)",
       "concepts": [
         "resourcequota",
         "resources",
@@ -694,8 +694,8 @@
     {
       "id": "17",
       "namespace": "eddy",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `spread-pod` in namespace `eddy` with:\n\n- Image: `nginx`\n- Topology spread constraint that spreads across nodes with `maxSkew: 1`\n- Use `topologyKey: kubernetes.io/hostname`\n- `whenUnsatisfiable: DoNotSchedule`\n\nNote: This is a preview question for advanced topics.",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `spread-pod` in namespace `eddy` with:\n\n- Image: `nginx`\n- Topology spread constraint that spreads across nodes with `maxSkew: 1`\n- Use `topologyKey: kubernetes.io/hostname`\n- `whenUnsatisfiable: DoNotSchedule`\n\nNote: This is a preview question for advanced topics.",
       "concepts": [
         "scheduling",
         "topologyspread",

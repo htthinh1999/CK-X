@@ -4,8 +4,12 @@
       "id": "1",
       "namespace": "harmony",
       "machineHostname": "ckad9999",
-      "question": "You have been asked to build an application container image. A directory has been provided at `/tmp/exam/course/1/app` with the application source code.\n\nCreate a `Dockerfile` at `/tmp/exam/course/1/Dockerfile` to build an image named `localhost:5000/benzaiten-wisdom:v1` using `nginx:alpine` as the base image.\n\nCopy the contents of the `app` directory into `/usr/share/nginx/html/` in the container.\n\nBuild the image and push it to the local registry at `localhost:5000`.\n\nThen create a pod named `wisdom-server` in the `harmony` namespace using this image.",
-      "concepts": ["docker", "images", "pods"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nYou have been asked to build an application container image. A directory has been provided at `/tmp/exam/course/1/app` with the application source code.\n\nCreate a `Dockerfile` at `/tmp/exam/course/1/Dockerfile` to build an image named `localhost:5000/benzaiten-wisdom:v1` using `nginx:alpine` as the base image.\n\nCopy the contents of the `app` directory into `/usr/share/nginx/html/` in the container.\n\nBuild the image and push it to the local registry at `localhost:5000`.\n\nThen create a pod named `wisdom-server` in the `harmony` namespace using this image.",
+      "concepts": [
+        "docker",
+        "images",
+        "pods"
+      ],
       "verification": [
         {
           "id": "1",
@@ -20,8 +24,12 @@
       "id": "2",
       "namespace": "melody",
       "machineHostname": "ckad9999",
-      "question": "Create a Pod named `ambassador-pod` in the `melody` namespace.\n\nThe Pod should run a main application container using image `busybox` running `sleep 3600`.\n\nIt should also run a sidecar ambassador container using image `haproxy:2.4-alpine`.\n\nThe ambassador should proxy traffic from `localhost:8080` to an external service. A ConfigMap named `haproxy-config` has already been created in the `melody` namespace containing the HAProxy configuration. Mount this ConfigMap to `/usr/local/etc/haproxy/haproxy.cfg` in the ambassador container.",
-      "concepts": ["pods", "sidecar", "configmaps"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `ambassador-pod` in the `melody` namespace.\n\nThe Pod should run a main application container using image `busybox` running `sleep 3600`.\n\nIt should also run a sidecar ambassador container using image `haproxy:2.4-alpine`.\n\nThe ambassador should proxy traffic from `localhost:8080` to an external service. A ConfigMap named `haproxy-config` has already been created in the `melody` namespace containing the HAProxy configuration. Mount this ConfigMap to `/usr/local/etc/haproxy/haproxy.cfg` in the ambassador container.",
+      "concepts": [
+        "pods",
+        "sidecar",
+        "configmaps"
+      ],
       "verification": [
         {
           "id": "1",
@@ -43,8 +51,11 @@
       "id": "3",
       "namespace": "rhythm",
       "machineHostname": "ckad9999",
-      "question": "Create a Job named `data-cleanup` in the `rhythm` namespace.\n\nThe Job should run a single container using the `busybox` image and execute the command `echo \"Cleaning up old records\"; sleep 5`.\n\nConfigure the Job to automatically delete itself 10 seconds after it finishes successfully.",
-      "concepts": ["jobs", "ttl"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Job named `data-cleanup` in the `rhythm` namespace.\n\nThe Job should run a single container using the `busybox` image and execute the command `echo \"Cleaning up old records\"; sleep 5`.\n\nConfigure the Job to automatically delete itself 10 seconds after it finishes successfully.",
+      "concepts": [
+        "jobs",
+        "ttl"
+      ],
       "verification": [
         {
           "id": "1",
@@ -66,8 +77,11 @@
       "id": "4",
       "namespace": "cadence",
       "machineHostname": "ckad9999",
-      "question": "Create a Pod named `shared-process-pod` in the `cadence` namespace.\n\nThe Pod should run two containers:\n\n1. `app-container` using image `nginx:alpine`\n2. `debug-container` using image `busybox` running the command `sleep 3600`\n\nEnable process namespace sharing between the containers in this Pod so the `debug-container` can see processes running in the `app-container`.",
-      "concepts": ["pods", "shareProcessNamespace"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `shared-process-pod` in the `cadence` namespace.\n\nThe Pod should run two containers:\n\n1. `app-container` using image `nginx:alpine`\n2. `debug-container` using image `busybox` running the command `sleep 3600`\n\nEnable process namespace sharing between the containers in this Pod so the `debug-container` can see processes running in the `app-container`.",
+      "concepts": [
+        "pods",
+        "shareProcessNamespace"
+      ],
       "verification": [
         {
           "id": "1",
@@ -89,8 +103,11 @@
       "id": "5",
       "namespace": "chorus",
       "machineHostname": "ckad9999",
-      "question": "A Helm chart is located at `/tmp/exam/course/5/chart`. It has a dependency on a subchart.\n\nFirst, update the chart dependencies.\n\nThen, create a values file at `/tmp/exam/course/5/values.yaml` to set `replicaCount: 3` and `service.port: 8080`.\n\nInstall the chart as a release named `wisdom-app` in the `chorus` namespace using the values file.",
-      "concepts": ["helm", "releases"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Helm chart is located at `/tmp/exam/course/5/chart`. It has a dependency on a subchart.\n\nFirst, update the chart dependencies.\n\nThen, create a values file at `/tmp/exam/course/5/values.yaml` to set `replicaCount: 3` and `service.port: 8080`.\n\nInstall the chart as a release named `wisdom-app` in the `chorus` namespace using the values file.",
+      "concepts": [
+        "helm",
+        "releases"
+      ],
       "verification": [
         {
           "id": "1",
@@ -112,8 +129,12 @@
       "id": "6",
       "namespace": "sonata",
       "machineHostname": "ckad9999",
-      "question": "Create a Deployment named `rolling-deploy` in the `sonata` namespace with 5 replicas using the `nginx:1.24-alpine` image.\n\nConfigure the deployment strategy to be a RollingUpdate. Set `maxSurge` to `40%` and `maxUnavailable` to `20%`.\n\nAfter creation, update the image to `nginx:1.25-alpine` and record the rollout in the deployment's history.",
-      "concepts": ["deployments", "rollingupdate", "rollout"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Deployment named `rolling-deploy` in the `sonata` namespace with 5 replicas using the `nginx:1.24-alpine` image.\n\nConfigure the deployment strategy to be a RollingUpdate. Set `maxSurge` to `40%` and `maxUnavailable` to `20%`.\n\nAfter creation, update the image to `nginx:1.25-alpine` and record the rollout in the deployment's history.",
+      "concepts": [
+        "deployments",
+        "rollingupdate",
+        "rollout"
+      ],
       "verification": [
         {
           "id": "1",
@@ -135,8 +156,11 @@
       "id": "7",
       "namespace": "verse",
       "machineHostname": "ckad9999",
-      "question": "A Deployment named `legacy-app` exists in the `verse` namespace. It was updated multiple times and the latest version is failing.\n\nUndo the rollout and rollback to exactly revision 2.",
-      "concepts": ["deployments", "rollback"],
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Deployment named `legacy-app` exists in the `verse` namespace. It was updated multiple times and the latest version is failing.\n\nUndo the rollout and rollback to exactly revision 2.",
+      "concepts": [
+        "deployments",
+        "rollback"
+      ],
       "verification": [
         {
           "id": "1",
@@ -150,9 +174,13 @@
     {
       "id": "8",
       "namespace": "lyric",
-      "machineHostname": "ckad9999",
-      "question": "A base kustomize configuration is at `/tmp/exam/course/8/base`.\n\nCreate an overlay for a `production` environment at `/tmp/exam/course/8/overlays/production`.\n\nThe overlay should:\n\n1. Change the namespace to `lyric`\n2. Apply a common label `env: production` to all resources\n3. Update the replicas of the deployment `app-deploy` to 4\n\nApply the overlay to the cluster using Kustomize.",
-      "concepts": ["kustomize", "overlays", "deployments"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA base kustomize configuration is at `/tmp/exam/course/8/base`.\n\nCreate an overlay for a `production` environment at `/tmp/exam/course/8/overlays/production`.\n\nThe overlay should:\n\n1. Change the namespace to `lyric`\n2. Apply a common label `env: production` to all resources\n3. Update the replicas of the deployment `app-deploy` to 4\n\nApply the overlay to the cluster using Kustomize.",
+      "concepts": [
+        "kustomize",
+        "overlays",
+        "deployments"
+      ],
       "verification": [
         {
           "id": "1",
@@ -173,9 +201,13 @@
     {
       "id": "9",
       "namespace": "tempo",
-      "machineHostname": "ckad9999",
-      "question": "A Pod named `metrics-pod` exists in the `tempo` namespace but is stuck in `ContainerCreating`.\n\nIdentify the cause of the issue and fix it. The pod should be running. Do not change the image or basic pod structure, but create or fix any missing dependencies. (Hint: Missing ConfigMap).",
-      "concepts": ["debugging", "pods", "configmaps"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Pod named `metrics-pod` exists in the `tempo` namespace but is stuck in `ContainerCreating`.\n\nIdentify the cause of the issue and fix it. The pod should be running. Do not change the image or basic pod structure, but create or fix any missing dependencies. (Hint: Missing ConfigMap).",
+      "concepts": [
+        "debugging",
+        "pods",
+        "configmaps"
+      ],
       "verification": [
         {
           "id": "1",
@@ -189,9 +221,12 @@
     {
       "id": "10",
       "namespace": "aria",
-      "machineHostname": "ckad9999",
-      "question": "Use the `kubectl` raw API to query the metrics API server.\n\nFind the memory usage of the pod `heavy-worker` in the `aria` namespace.\n\nWrite the memory usage (in Ki or Mi, exactly as output by the API) to `/tmp/exam/course/10/metrics.txt`.",
-      "concepts": ["metrics", "observability"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nUse the `kubectl` raw API to query the metrics API server.\n\nFind the memory usage of the pod `heavy-worker` in the `aria` namespace.\n\nWrite the memory usage (in Ki or Mi, exactly as output by the API) to `/tmp/exam/course/10/metrics.txt`.",
+      "concepts": [
+        "metrics",
+        "observability"
+      ],
       "verification": [
         {
           "id": "1",
@@ -205,9 +240,13 @@
     {
       "id": "11",
       "namespace": "harmony",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `health-check` in the `harmony` namespace using image `nginx:alpine`.\n\nConfigure a Liveness probe that sends an HTTP GET request to `/healthz` on port 80, starting 5 seconds after the container starts, with a period of 10 seconds.\n\nConfigure a Readiness probe that sends an HTTP GET request to `/ready` on port 80, with an initial delay of 10 seconds and period of 5 seconds.",
-      "concepts": ["probes", "pods", "liveness"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `health-check` in the `harmony` namespace using image `nginx:alpine`.\n\nConfigure a Liveness probe that sends an HTTP GET request to `/healthz` on port 80, starting 5 seconds after the container starts, with a period of 10 seconds.\n\nConfigure a Readiness probe that sends an HTTP GET request to `/ready` on port 80, with an initial delay of 10 seconds and period of 5 seconds.",
+      "concepts": [
+        "probes",
+        "pods",
+        "liveness"
+      ],
       "verification": [
         {
           "id": "1",
@@ -228,9 +267,13 @@
     {
       "id": "12",
       "namespace": "melody",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `projected-pod` in the `melody` namespace using image `busybox`, command `sleep 3600`.\n\nUse a projected volume named `all-in-one` mounted at `/etc/projected`.\n\nThe volume should project:\n\n1. A Downward API volume projecting the pod's labels into a file named `pod-labels.txt`\n2. A ConfigMap named `info-cm` projecting its contents\n3. A Secret named `info-secret` projecting its contents\n\n(The ConfigMap and Secret already exist).",
-      "concepts": ["volumes", "projected", "downwardapi"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `projected-pod` in the `melody` namespace using image `busybox`, command `sleep 3600`.\n\nUse a projected volume named `all-in-one` mounted at `/etc/projected`.\n\nThe volume should project:\n\n1. A Downward API volume projecting the pod's labels into a file named `pod-labels.txt`\n2. A ConfigMap named `info-cm` projecting its contents\n3. A Secret named `info-secret` projecting its contents\n\n(The ConfigMap and Secret already exist).",
+      "concepts": [
+        "volumes",
+        "projected",
+        "downwardapi"
+      ],
       "verification": [
         {
           "id": "1",
@@ -251,9 +294,12 @@
     {
       "id": "13",
       "namespace": "rhythm",
-      "machineHostname": "ckad9999",
-      "question": "A binary file is provided at `/tmp/exam/course/13/data.bin`.\n\nCreate a ConfigMap named `binary-config` in the `rhythm` namespace containing this file as binary data.",
-      "concepts": ["configmaps", "binarydata"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA binary file is provided at `/tmp/exam/course/13/data.bin`.\n\nCreate a ConfigMap named `binary-config` in the `rhythm` namespace containing this file as binary data.",
+      "concepts": [
+        "configmaps",
+        "binarydata"
+      ],
       "verification": [
         {
           "id": "1",
@@ -267,9 +313,13 @@
     {
       "id": "14",
       "namespace": "cadence",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `selinux-pod` in the `cadence` namespace using image `busybox` and command `sleep 3600`.\n\nConfigure the Pod's SecurityContext to set the SELinux options:\n`level: \"s0:c123,c456\"`",
-      "concepts": ["securitycontext", "selinux", "pods"],
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `selinux-pod` in the `cadence` namespace using image `busybox` and command `sleep 3600`.\n\nConfigure the Pod's SecurityContext to set the SELinux options:\n`level: \"s0:c123,c456\"`",
+      "concepts": [
+        "securitycontext",
+        "selinux",
+        "pods"
+      ],
       "verification": [
         {
           "id": "1",
@@ -290,9 +340,13 @@
     {
       "id": "15",
       "namespace": "sonata",
-      "machineHostname": "ckad9999",
-      "question": "Create a ServiceAccount named `vault-accessor` in the `sonata` namespace.\n\nCreate a token for this ServiceAccount with a duration of 1 hour (3600 seconds) using the TokenRequest API (via kubectl).\n\nSave the raw token string to `/tmp/exam/course/15/token.txt`.",
-      "concepts": ["serviceaccounts", "tokens", "rbac"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a ServiceAccount named `vault-accessor` in the `sonata` namespace.\n\nCreate a token for this ServiceAccount with a duration of 1 hour (3600 seconds) using the TokenRequest API (via kubectl).\n\nSave the raw token string to `/tmp/exam/course/15/token.txt`.",
+      "concepts": [
+        "serviceaccounts",
+        "tokens",
+        "rbac"
+      ],
       "verification": [
         {
           "id": "1",
@@ -306,9 +360,13 @@
     {
       "id": "16",
       "namespace": "chorus",
-      "machineHostname": "ckad9999",
-      "question": "Create a NetworkPolicy named `port-range-allow` in the `chorus` namespace.\n\nIt should apply to pods with the label `role: backend`.\n\nAllow INGRESS traffic on TCP ports 3000 through 3010 from any pod in the `chorus` namespace.",
-      "concepts": ["networkpolicy", "ingress", "ports"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a NetworkPolicy named `port-range-allow` in the `chorus` namespace.\n\nIt should apply to pods with the label `role: backend`.\n\nAllow INGRESS traffic on TCP ports 3000 through 3010 from any pod in the `chorus` namespace.",
+      "concepts": [
+        "networkpolicy",
+        "ingress",
+        "ports"
+      ],
       "verification": [
         {
           "id": "1",
@@ -329,9 +387,13 @@
     {
       "id": "17",
       "namespace": "verse",
-      "machineHostname": "ckad9999",
-      "question": "Create a NetworkPolicy named `egress-external-only` in the `verse` namespace.\n\nIt should apply to pods with the label `role: egress-app`.\n\nAllow EGRESS traffic to the CIDR `10.0.0.0/8`, but explicitly deny/exclude traffic to the smaller CIDR `10.200.0.0/16`.\n\n(Note: Do this using an `except` block in the policy).",
-      "concepts": ["networkpolicy", "egress", "ipblock"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a NetworkPolicy named `egress-external-only` in the `verse` namespace.\n\nIt should apply to pods with the label `role: egress-app`.\n\nAllow EGRESS traffic to the CIDR `10.0.0.0/8`, but explicitly deny/exclude traffic to the smaller CIDR `10.200.0.0/16`.\n\n(Note: Do this using an `except` block in the policy).",
+      "concepts": [
+        "networkpolicy",
+        "egress",
+        "ipblock"
+      ],
       "verification": [
         {
           "id": "1",
@@ -352,9 +414,13 @@
     {
       "id": "18",
       "namespace": "lyric",
-      "machineHostname": "ckad9999",
-      "question": "Create an Ingress named `multi-tls-ingress` in the `lyric` namespace.\n\nRoute requests for `app1.benzaiten.dojo` to service `app1-svc` on port 80.\n\nRoute requests for `app2.benzaiten.dojo` to service `app2-svc` on port 80.\n\nConfigure TLS for both hosts. Use the existing secret `app1-tls` for `app1.benzaiten.dojo` and `app2-tls` for `app2.benzaiten.dojo`.\n\n(The services and secrets already exist).",
-      "concepts": ["ingress", "tls", "networking"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate an Ingress named `multi-tls-ingress` in the `lyric` namespace.\n\nRoute requests for `app1.benzaiten.dojo` to service `app1-svc` on port 80.\n\nRoute requests for `app2.benzaiten.dojo` to service `app2-svc` on port 80.\n\nConfigure TLS for both hosts. Use the existing secret `app1-tls` for `app1.benzaiten.dojo` and `app2-tls` for `app2.benzaiten.dojo`.\n\n(The services and secrets already exist).",
+      "concepts": [
+        "ingress",
+        "tls",
+        "networking"
+      ],
       "verification": [
         {
           "id": "1",
@@ -375,9 +441,13 @@
     {
       "id": "19",
       "namespace": "tempo",
-      "machineHostname": "ckad9999",
-      "question": "Find the EndpointSlice for the Service `external-db-svc` in the `tempo` namespace.\n\nExtract the IPv4 addresses from this EndpointSlice and write them to `/tmp/exam/course/19/endpoints.txt`, one address per line.",
-      "concepts": ["endpointslice", "services", "networking"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nFind the EndpointSlice for the Service `external-db-svc` in the `tempo` namespace.\n\nExtract the IPv4 addresses from this EndpointSlice and write them to `/tmp/exam/course/19/endpoints.txt`, one address per line.",
+      "concepts": [
+        "endpointslice",
+        "services",
+        "networking"
+      ],
       "verification": [
         {
           "id": "1",
@@ -391,9 +461,13 @@
     {
       "id": "20",
       "namespace": "aria",
-      "machineHostname": "ckad9999",
-      "question": "Create a Deployment named `local-app` in the `aria` namespace with 3 replicas using image `nginx:alpine`.\n\nCreate a NodePort service named `local-app-svc` exposing the deployment on port 80.\n\nConfigure the service to use `Local` for `externalTrafficPolicy` to preserve client source IPs.",
-      "concepts": ["services", "nodeport", "deployments"],
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Deployment named `local-app` in the `aria` namespace with 3 replicas using image `nginx:alpine`.\n\nCreate a NodePort service named `local-app-svc` exposing the deployment on port 80.\n\nConfigure the service to use `Local` for `externalTrafficPolicy` to preserve client source IPs.",
+      "concepts": [
+        "services",
+        "nodeport",
+        "deployments"
+      ],
       "verification": [
         {
           "id": "1",

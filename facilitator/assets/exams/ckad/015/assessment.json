@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "default",
       "machineHostname": "ckad9999",
-      "question": "There is a Dockerfile located at `/tmp/exam/course/1/Dockerfile`.\nBuild a container image using this Dockerfile and tag it as `localhost:5000/fujin-api:v2`.\nPush the built image to the local registry at `localhost:5000`.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nThere is a Dockerfile located at `/tmp/exam/course/1/Dockerfile`.\nBuild a container image using this Dockerfile and tag it as `localhost:5000/fujin-api:v2`.\nPush the built image to the local registry at `localhost:5000`.",
       "concepts": [
         "container-images",
         "docker",
@@ -24,7 +24,7 @@
       "id": "2",
       "namespace": "gale",
       "machineHostname": "ckad9999",
-      "question": "An application is running in a pod named `wind-logger` in the `gale` namespace. It generates logs in a format that is not easily parsable by our central logging system.\nModify the pod to include an adapter container using the image `busybox:1.31.1`.\nThe main container `app` writes logs to `/var/log/wind.log`. The adapter container should mount the same volume, tail the log file, and output each line prepended with `[WIND-LOG]` to stdout using `tail -f /var/log/wind.log | sed 's/^/[WIND-LOG] /'`.\nMake sure the adapter container is named `adapter` and both containers share a volume named `logs` mounted at `/var/log`. The pod is already created but might need to be replaced.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nAn application is running in a pod named `wind-logger` in the `gale` namespace. It generates logs in a format that is not easily parsable by our central logging system.\nModify the pod to include an adapter container using the image `busybox:1.31.1`.\nThe main container `app` writes logs to `/var/log/wind.log`. The adapter container should mount the same volume, tail the log file, and output each line prepended with `[WIND-LOG]` to stdout using `tail -f /var/log/wind.log | sed 's/^/[WIND-LOG] /'`.\nMake sure the adapter container is named `adapter` and both containers share a volume named `logs` mounted at `/var/log`. The pod is already created but might need to be replaced.",
       "concepts": [
         "sidecar",
         "multi-container",
@@ -51,7 +51,7 @@
       "id": "3",
       "namespace": "breeze",
       "machineHostname": "ckad9999",
-      "question": "Create a Job named `storm-processor` in the `breeze` namespace.\nThe Job should use the `busybox:1.31.1` image and execute the command: `sh -c 'sleep 2; echo \"Processing storm data\"'`.\nConfigure the Job to run a total of `6` successful completions, with `3` pods running in parallel.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Job named `storm-processor` in the `breeze` namespace.\nThe Job should use the `busybox:1.31.1` image and execute the command: `sh -c 'sleep 2; echo \"Processing storm data\"'`.\nConfigure the Job to run a total of `6` successful completions, with `3` pods running in parallel.",
       "concepts": [
         "jobs",
         "batch",
@@ -71,7 +71,7 @@
       "id": "4",
       "namespace": "tempest",
       "machineHostname": "ckad9999",
-      "question": "There is a deployment named `tempest-app` in the `tempest` namespace.\nExtract its pod template and create a standalone Pod named `tempest-debug` in the `tempest` namespace.\nThe `tempest-debug` Pod should have the exact same container specifications (image, ports, env vars) as the deployment's pod template, but change the container's command to `['sleep', '3600']`.\nSave the YAML definition used to create this Pod at `/tmp/exam/course/4/pod.yaml`.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nThere is a deployment named `tempest-app` in the `tempest` namespace.\nExtract its pod template and create a standalone Pod named `tempest-debug` in the `tempest` namespace.\nThe `tempest-debug` Pod should have the exact same container specifications (image, ports, env vars) as the deployment's pod template, but change the container's command to `['sleep', '3600']`.\nSave the YAML definition used to create this Pod at `/tmp/exam/course/4/pod.yaml`.",
       "concepts": [
         "pods",
         "deployments",
@@ -98,7 +98,7 @@
       "id": "5",
       "namespace": "typhoon",
       "machineHostname": "ckad9999",
-      "question": "A Helm chart has been deployed to the `typhoon` namespace with the release name `storm-app`.\nUpdate the release `storm-app` using the chart located at `/tmp/exam/course/5/storm-chart`.\nOverride the replica count to `3` and change the image tag to `v2.0.0` during the upgrade.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Helm chart has been deployed to the `typhoon` namespace with the release name `storm-app`.\nUpdate the release `storm-app` using the chart located at `/tmp/exam/course/5/storm-chart`.\nOverride the replica count to `3` and change the image tag to `v2.0.0` during the upgrade.",
       "concepts": [
         "helm",
         "deployments",
@@ -125,7 +125,7 @@
       "id": "6",
       "namespace": "cyclone",
       "machineHostname": "ckad9999",
-      "question": "Update the existing deployment named `cyclone-web` in the `cyclone` namespace.\nChange its `revisionHistoryLimit` to `2`.\nThen perform a rolling update to change the image of the container to `nginx:1.23.1`.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nUpdate the existing deployment named `cyclone-web` in the `cyclone` namespace.\nChange its `revisionHistoryLimit` to `2`.\nThen perform a rolling update to change the image of the container to `nginx:1.23.1`.",
       "concepts": [
         "deployments",
         "rolling-update"
@@ -144,7 +144,7 @@
       "id": "7",
       "namespace": "zephyr",
       "machineHostname": "ckad9999",
-      "question": "In the `zephyr` namespace, a blue-green deployment is currently active. The service `zephyr-svc` is routing traffic to the `blue` deployment.\nSwitch the traffic to the `green` deployment by updating the service's selector.\nEnsure that the `zephyr-svc` routes all traffic to pods with the label `version: green`.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn the `zephyr` namespace, a blue-green deployment is currently active. The service `zephyr-svc` is routing traffic to the `blue` deployment.\nSwitch the traffic to the `green` deployment by updating the service's selector.\nEnsure that the `zephyr-svc` routes all traffic to pods with the label `version: green`.",
       "concepts": [
         "services",
         "blue-green",
@@ -163,8 +163,8 @@
     {
       "id": "8",
       "namespace": "tornado",
-      "machineHostname": "ckad9999",
-      "question": "A Kustomization directory is located at `/tmp/exam/course/8/`.\nAdd a Kustomization file (`kustomization.yaml`) in that directory.\nIt should include the `deployment.yaml` file located in the same directory as a resource.\nAlso, generate a ConfigMap named `tornado-config` from a literal value `WIND_SPEED=150mph` using `configMapGenerator`.\nThen apply the Kustomization to the `tornado` namespace.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Kustomization directory is located at `/tmp/exam/course/8/`.\nAdd a Kustomization file (`kustomization.yaml`) in that directory.\nIt should include the `deployment.yaml` file located in the same directory as a resource.\nAlso, generate a ConfigMap named `tornado-config` from a literal value `WIND_SPEED=150mph` using `configMapGenerator`.\nThen apply the Kustomization to the `tornado` namespace.",
       "concepts": [
         "kustomize",
         "configmaps"
@@ -189,8 +189,8 @@
     {
       "id": "9",
       "namespace": "mistral",
-      "machineHostname": "ckad9999",
-      "question": "A pod named `memory-hog` in the `mistral` namespace is repeatedly crashing with an `OOMKilled` status.\nInvestigate and fix the issue by increasing the memory limit of the container named `hog` to `256Mi`. The memory request should remain unchanged at `64Mi`.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA pod named `memory-hog` in the `mistral` namespace is repeatedly crashing with an `OOMKilled` status.\nInvestigate and fix the issue by increasing the memory limit of the container named `hog` to `256Mi`. The memory request should remain unchanged at `64Mi`.",
       "concepts": [
         "troubleshooting",
         "resources",
@@ -209,8 +209,8 @@
     {
       "id": "10",
       "namespace": "sirocco",
-      "machineHostname": "ckad9999",
-      "question": "Identify the top 3 pods in the `sirocco` namespace that are consuming the most memory.\nWrite the names of these pods (just the pod names, one per line) to `/tmp/exam/course/10/top-pods.txt`, sorted from highest memory consumption to lowest.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIdentify the top 3 pods in the `sirocco` namespace that are consuming the most memory.\nWrite the names of these pods (just the pod names, one per line) to `/tmp/exam/course/10/top-pods.txt`, sorted from highest memory consumption to lowest.",
       "concepts": [
         "observability",
         "metrics",
@@ -229,8 +229,8 @@
     {
       "id": "11",
       "namespace": "monsoon",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `monsoon-checker` in the `monsoon` namespace using the image `busybox:1.31.1`.\nThe container should run the command `sh -c 'touch /tmp/ready && sleep 3600'`.\nConfigure a readiness probe for the container that uses the `exec` action to run `cat /tmp/ready`.\nSet the initial delay to `5` seconds and period to `10` seconds.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `monsoon-checker` in the `monsoon` namespace using the image `busybox:1.31.1`.\nThe container should run the command `sh -c 'touch /tmp/ready && sleep 3600'`.\nConfigure a readiness probe for the container that uses the `exec` action to run `cat /tmp/ready`.\nSet the initial delay to `5` seconds and period to `10` seconds.",
       "concepts": [
         "probes",
         "readiness",
@@ -249,8 +249,8 @@
     {
       "id": "12",
       "namespace": "gale",
-      "machineHostname": "ckad9999",
-      "question": "Create a Secret named `gale-secret` in the `gale` namespace with a key `password.txt` containing the value `super-secret-wind`.\nCreate a Pod named `secret-reader` in the `gale` namespace using image `alpine:3.14` and command `sleep 3600`.\nMount the Secret into the pod such that only the file `password.txt` appears at `/etc/secrets/password.txt` without deleting any other files that might exist in `/etc/secrets` (use `subPath`).",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Secret named `gale-secret` in the `gale` namespace with a key `password.txt` containing the value `super-secret-wind`.\nCreate a Pod named `secret-reader` in the `gale` namespace using image `alpine:3.14` and command `sleep 3600`.\nMount the Secret into the pod such that only the file `password.txt` appears at `/etc/secrets/password.txt` without deleting any other files that might exist in `/etc/secrets` (use `subPath`).",
       "concepts": [
         "secrets",
         "volumes",
@@ -269,8 +269,8 @@
     {
       "id": "13",
       "namespace": "breeze",
-      "machineHostname": "ckad9999",
-      "question": "Create a Role named `breeze-manager` in the `breeze` namespace that grants `create`, `delete`, `list`, and `watch` permissions on `deployments` and `statefulsets` (which are in the `apps` API group).\nCreate a RoleBinding named `breeze-manager-binding` in the same namespace binding this Role to a ServiceAccount named `breeze-admin` (the ServiceAccount already exists).",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Role named `breeze-manager` in the `breeze` namespace that grants `create`, `delete`, `list`, and `watch` permissions on `deployments` and `statefulsets` (which are in the `apps` API group).\nCreate a RoleBinding named `breeze-manager-binding` in the same namespace binding this Role to a ServiceAccount named `breeze-admin` (the ServiceAccount already exists).",
       "concepts": [
         "rbac",
         "roles",
@@ -296,8 +296,8 @@
     {
       "id": "14",
       "namespace": "tempest",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `secure-storage` in the `tempest` namespace using the image `nginx:1.23.1`.\nConfigure the pod's security context so that all processes in the containers run with the filesystem group (`fsGroup`) set to `2000`.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `secure-storage` in the `tempest` namespace using the image `nginx:1.23.1`.\nConfigure the pod's security context so that all processes in the containers run with the filesystem group (`fsGroup`) set to `2000`.",
       "concepts": [
         "securitycontext",
         "fsgroup",
@@ -316,8 +316,8 @@
     {
       "id": "15",
       "namespace": "cyclone",
-      "machineHostname": "ckad9999",
-      "question": "Create a LimitRange named `cyclone-limits` in the `cyclone` namespace.\nIt should enforce the following constraints for Pods:\n- Maximum memory: `500Mi`\n- Minimum memory: `100Mi`\nFor Containers:\n- Default CPU limit: `500m`\n- Default CPU request: `200m`",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a LimitRange named `cyclone-limits` in the `cyclone` namespace.\nIt should enforce the following constraints for Pods:\n- Maximum memory: `500Mi`\n- Minimum memory: `100Mi`\nFor Containers:\n- Default CPU limit: `500m`\n- Default CPU request: `200m`",
       "concepts": [
         "limitrange",
         "resources",
@@ -336,8 +336,8 @@
     {
       "id": "16",
       "namespace": "zephyr",
-      "machineHostname": "ckad9999",
-      "question": "Update the pod `zephyr-api` in the `zephyr` namespace so that it does NOT automatically mount the default ServiceAccount token. (You may need to recreate the pod).",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nUpdate the pod `zephyr-api` in the `zephyr` namespace so that it does NOT automatically mount the default ServiceAccount token. (You may need to recreate the pod).",
       "concepts": [
         "serviceaccount",
         "security",
@@ -356,8 +356,8 @@
     {
       "id": "17",
       "namespace": "typhoon",
-      "machineHostname": "ckad9999",
-      "question": "Create a NetworkPolicy named `allow-dns-egress` in the `typhoon` namespace.\nIt should apply to pods with the label `role: worker`.\nAllow egress traffic only to port `53` (TCP and UDP) on all destinations.\nEnsure all other egress traffic from these pods is denied.",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a NetworkPolicy named `allow-dns-egress` in the `typhoon` namespace.\nIt should apply to pods with the label `role: worker`.\nAllow egress traffic only to port `53` (TCP and UDP) on all destinations.\nEnsure all other egress traffic from these pods is denied.",
       "concepts": [
         "networkpolicy",
         "egress",
@@ -376,8 +376,8 @@
     {
       "id": "18",
       "namespace": "tornado",
-      "machineHostname": "ckad9999",
-      "question": "Create an Ingress named `tornado-ingress` in the `tornado` namespace.\nIt should route traffic for host `tornado.dojo.com` as follows:\n- Path `/api` routes to service `api-svc` on port `8080`.\n- Path `/web` routes to service `web-svc` on port `80`.\nAssume path type `Prefix` for both.",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate an Ingress named `tornado-ingress` in the `tornado` namespace.\nIt should route traffic for host `tornado.dojo.com` as follows:\n- Path `/api` routes to service `api-svc` on port `8080`.\n- Path `/web` routes to service `web-svc` on port `80`.\nAssume path type `Prefix` for both.",
       "concepts": [
         "ingress",
         "networking",
@@ -396,8 +396,8 @@
     {
       "id": "19",
       "namespace": "mistral",
-      "machineHostname": "ckad9999",
-      "question": "There is a StatefulSet named `mistral-db` in the `mistral` namespace that expects a headless service.\nCreate a headless service named `mistral-db-headless` in the `mistral` namespace that targets pods with label `app: mistral-db`. The service should expose port `3306`.",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nThere is a StatefulSet named `mistral-db` in the `mistral` namespace that expects a headless service.\nCreate a headless service named `mistral-db-headless` in the `mistral` namespace that targets pods with label `app: mistral-db`. The service should expose port `3306`.",
       "concepts": [
         "services",
         "headless",
@@ -416,8 +416,8 @@
     {
       "id": "20",
       "namespace": "sirocco",
-      "machineHostname": "ckad9999",
-      "question": "There is a pod named `sirocco-app` and a service named `sirocco-backend` in the `sirocco` namespace.\nWhen the pod was started, Kubernetes automatically injected environment variables for the service.\nFind the name of the environment variable that stores the IP address of the `sirocco-backend` service inside the `sirocco-app` pod.\nWrite the name of this environment variable (just the variable name, e.g., `SIROCCO_BACKEND_SERVICE_HOST`) into `/tmp/exam/course/20/svc-env.txt`.",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nThere is a pod named `sirocco-app` and a service named `sirocco-backend` in the `sirocco` namespace.\nWhen the pod was started, Kubernetes automatically injected environment variables for the service.\nFind the name of the environment variable that stores the IP address of the `sirocco-backend` service inside the `sirocco-app` pod.\nWrite the name of this environment variable (just the variable name, e.g., `SIROCCO_BACKEND_SERVICE_HOST`) into `/tmp/exam/course/20/svc-env.txt`.",
       "concepts": [
         "services",
         "debugging",

@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "shell",
       "machineHostname": "ckad9999",
-      "question": "Create a `ResourceQuota` named `namespace-limits` in namespace `shell` that enforces the following hard limits:\n\n- Max pods: `10`\n- Max CPU requests (`requests.cpu`): `4`\n- Max memory requests (`requests.memory`): `4Gi`\n- Max CPU limits (`limits.cpu`): `8`\n- Max memory limits (`limits.memory`): `8Gi`\n- Max ConfigMaps (`configmaps`): `10`\n- Max Secrets (`secrets`): `10`\n\nVerify the quota is applied with `kubectl describe quota namespace-limits -n shell`.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a `ResourceQuota` named `namespace-limits` in namespace `shell` that enforces the following hard limits:\n\n- Max pods: `10`\n- Max CPU requests (`requests.cpu`): `4`\n- Max memory requests (`requests.memory`): `4Gi`\n- Max CPU limits (`limits.cpu`): `8`\n- Max memory limits (`limits.memory`): `8Gi`\n- Max ConfigMaps (`configmaps`): `10`\n- Max Secrets (`secrets`): `10`\n\nVerify the quota is applied with `kubectl describe quota namespace-limits -n shell`.",
       "concepts": [
         "resourcequota",
         "configuration",
@@ -52,7 +52,7 @@
       "id": "2",
       "namespace": "ocean",
       "machineHostname": "ckad9999",
-      "question": "A Deployment named `web-app` already exists in namespace `ocean`.\n\nCreate a `HorizontalPodAutoscaler` named `web-app-hpa` in namespace `ocean` that:\n\n- Targets Deployment `web-app`\n- Min replicas: `2`\n- Max replicas: `10`\n- Target CPU utilization: `70%`\n\nUse `kubectl autoscale` or create the HPA manifest directly.\n\nNote: The HPA needs metrics-server to read CPU usage; scoring checks the HPA spec only.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Deployment named `web-app` already exists in namespace `ocean`.\n\nCreate a `HorizontalPodAutoscaler` named `web-app-hpa` in namespace `ocean` that:\n\n- Targets Deployment `web-app`\n- Min replicas: `2`\n- Max replicas: `10`\n- Target CPU utilization: `70%`\n\nUse `kubectl autoscale` or create the HPA manifest directly.\n\nNote: The HPA needs metrics-server to read CPU usage; scoring checks the HPA spec only.",
       "concepts": [
         "hpa",
         "autoscaling",
@@ -107,7 +107,7 @@
       "id": "3",
       "namespace": "reef",
       "machineHostname": "ckad9999",
-      "question": "Create a `StatefulSet` named `db-cluster` in namespace `reef` for a database cluster:\n\n- Image: `redis:7-alpine`\n- Replicas: `3`\n- Container name: `redis`\n- Container port: `6379`\n- Volume claim template named `data` with `100Mi` storage\n- `serviceName`: `db-headless`\n\nAlso create a Headless `Service` named `db-headless` in namespace `reef`:\n\n- Selector: `app: db-cluster`\n- ClusterIP: `None`\n- Port: `6379`\n\nVerify pods are created with ordinal names (`db-cluster-0`, `db-cluster-1`, `db-cluster-2`).",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a `StatefulSet` named `db-cluster` in namespace `reef` for a database cluster:\n\n- Image: `redis:7-alpine`\n- Replicas: `3`\n- Container name: `redis`\n- Container port: `6379`\n- Volume claim template named `data` with `100Mi` storage\n- `serviceName`: `db-headless`\n\nAlso create a Headless `Service` named `db-headless` in namespace `reef`:\n\n- Selector: `app: db-cluster`\n- ClusterIP: `None`\n- Port: `6379`\n\nVerify pods are created with ordinal names (`db-cluster-0`, `db-cluster-1`, `db-cluster-2`).",
       "concepts": [
         "statefulset",
         "headless-service",
@@ -176,7 +176,7 @@
       "id": "4",
       "namespace": "deep",
       "machineHostname": "ckad9999",
-      "question": "Create a `DaemonSet` named `node-monitor` in namespace `deep`:\n\n- Image: `busybox:1.36`\n- Container name: `monitor`\n- Command: `[\"sh\", \"-c\", \"while true; do echo Node: $NODE_NAME; sleep 60; done\"]`\n\nThe container must have an environment variable `NODE_NAME` set via the Downward API from `spec.nodeName`.\n\nAdd a toleration so it runs on all nodes including control-plane nodes:\n\n- Key: `node-role.kubernetes.io/control-plane`\n- Operator: `Exists`\n- Effect: `NoSchedule`",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a `DaemonSet` named `node-monitor` in namespace `deep`:\n\n- Image: `busybox:1.36`\n- Container name: `monitor`\n- Command: `[\"sh\", \"-c\", \"while true; do echo Node: $NODE_NAME; sleep 60; done\"]`\n\nThe container must have an environment variable `NODE_NAME` set via the Downward API from `spec.nodeName`.\n\nAdd a toleration so it runs on all nodes including control-plane nodes:\n\n- Key: `node-role.kubernetes.io/control-plane`\n- Operator: `Exists`\n- Effect: `NoSchedule`",
       "concepts": [
         "daemonset",
         "downward-api",
@@ -231,7 +231,7 @@
       "id": "5",
       "namespace": "tide",
       "machineHostname": "ckad9999",
-      "question": "1. Create a `PriorityClass` named `critical-priority`:\n\n- Value: `1000000`\n- Global default: `false`\n- Description: `Critical workloads priority`\n\n2. Create a `Pod` named `critical-pod` in namespace `tide`:\n\n- Image: `nginx:1.21`\n- Container name: `nginx`\n- Use the `critical-priority` PriorityClass\n\nVerify with `kubectl get pod critical-pod -n tide -o yaml | grep priority`.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\n1. Create a `PriorityClass` named `critical-priority`:\n\n- Value: `1000000`\n- Global default: `false`\n- Description: `Critical workloads priority`\n\n2. Create a `Pod` named `critical-pod` in namespace `tide`:\n\n- Image: `nginx:1.21`\n- Container name: `nginx`\n- Use the `critical-priority` PriorityClass\n\nVerify with `kubectl get pod critical-pod -n tide -o yaml | grep priority`.",
       "concepts": [
         "priorityclass",
         "scheduling",
@@ -279,7 +279,7 @@
       "id": "6",
       "namespace": "wave",
       "machineHostname": "ckad9999",
-      "question": "Create a `Pod` named `slow-starter` in namespace `wave` for an application that takes a long time to start:\n\n- Image: `nginx:1.21`\n- Container name: `app`\n\nConfigure a `startupProbe`:\n\n- HTTP GET path `/` on port `80`\n- `failureThreshold`: `30`\n- `periodSeconds`: `10`\n\nThis allows up to 5 minutes (30 * 10 seconds) for the application to start.\n\nAlso add a `livenessProbe` with HTTP GET on `/` port `80` with default settings.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a `Pod` named `slow-starter` in namespace `wave` for an application that takes a long time to start:\n\n- Image: `nginx:1.21`\n- Container name: `app`\n\nConfigure a `startupProbe`:\n\n- HTTP GET path `/` on port `80`\n- `failureThreshold`: `30`\n- `periodSeconds`: `10`\n\nThis allows up to 5 minutes (30 * 10 seconds) for the application to start.\n\nAlso add a `livenessProbe` with HTTP GET on `/` port `80` with default settings.",
       "concepts": [
         "probes",
         "startupprobe",
@@ -327,7 +327,7 @@
       "id": "7",
       "namespace": "coral",
       "machineHostname": "ckad9999",
-      "question": "Create a `Deployment` named `web-frontend` in namespace `coral`:\n\n- Image: `nginx:1.21`\n- Replicas: `3`\n- Container name: `frontend`\n- Pod labels: `app: web-frontend`, `tier: frontend`\n\nConfigure `preferredDuringSchedulingIgnoredDuringExecution` pod affinity:\n\n- Weight: `100`\n- Prefer scheduling on the same node as pods with label `app: cache`\n- Topology key: `kubernetes.io/hostname`\n\nNote: This is a soft preference. Pods will be scheduled even if no cache pods exist.",
+      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a `Deployment` named `web-frontend` in namespace `coral`:\n\n- Image: `nginx:1.21`\n- Replicas: `3`\n- Container name: `frontend`\n- Pod labels: `app: web-frontend`, `tier: frontend`\n\nConfigure `preferredDuringSchedulingIgnoredDuringExecution` pod affinity:\n\n- Weight: `100`\n- Prefer scheduling on the same node as pods with label `app: cache`\n- Topology key: `kubernetes.io/hostname`\n\nNote: This is a soft preference. Pods will be scheduled even if no cache pods exist.",
       "concepts": [
         "affinity",
         "scheduling",
@@ -381,8 +381,8 @@
     {
       "id": "8",
       "namespace": "lagoon",
-      "machineHostname": "ckad9999",
-      "question": "Services `api-v1-svc` and `api-v2-svc` already exist in namespace `lagoon`.\n\nCreate an `Ingress` named `api-routing` in namespace `lagoon` with path-based routing:\n\n- Path `/v1` -> Service `api-v1-svc` port `80`\n- Path `/v2` -> Service `api-v2-svc` port `80`\n\nConfiguration:\n\n- Host: `api.lagoon.local`\n- PathType: `Prefix`\n- IngressClassName: `nginx`",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nServices `api-v1-svc` and `api-v2-svc` already exist in namespace `lagoon`.\n\nCreate an `Ingress` named `api-routing` in namespace `lagoon` with path-based routing:\n\n- Path `/v1` -> Service `api-v1-svc` port `80`\n- Path `/v2` -> Service `api-v2-svc` port `80`\n\nConfiguration:\n\n- Host: `api.lagoon.local`\n- PathType: `Prefix`\n- IngressClassName: `nginx`",
       "concepts": [
         "ingress",
         "networking",
@@ -436,8 +436,8 @@
     {
       "id": "9",
       "namespace": "current",
-      "machineHostname": "ckad9999",
-      "question": "Create a `Job` named `parallel-processor` in namespace `current`:\n\n- Image: `busybox:1.36`\n- Container name: `processor`\n- Command: `[\"sh\", \"-c\", \"echo Processing batch $RANDOM && sleep 5\"]`\n- Completions: `6`\n- Parallelism: `3`\n- backoffLimit: `4`\n\nThe Job should run 6 total completions with 3 running in parallel at a time.\n\nVerify with `kubectl get jobs -n current` that completions reach 6/6.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a `Job` named `parallel-processor` in namespace `current`:\n\n- Image: `busybox:1.36`\n- Container name: `processor`\n- Command: `[\"sh\", \"-c\", \"echo Processing batch $RANDOM && sleep 5\"]`\n- Completions: `6`\n- Parallelism: `3`\n- backoffLimit: `4`\n\nThe Job should run 6 total completions with 3 running in parallel at a time.\n\nVerify with `kubectl get jobs -n current` that completions reach 6/6.",
       "concepts": [
         "jobs",
         "parallelism",
@@ -484,8 +484,8 @@
     {
       "id": "10",
       "namespace": "anchor",
-      "machineHostname": "ckad9999",
-      "question": "A Pod named `troubled-app` exists in namespace `anchor` but you need to debug it.\n\n1. Use `kubectl debug` to create an ephemeral container in the running pod:\n\n- Image: `busybox:1.36`\n- Container name: `debugger`\n\n2. From within the ephemeral container, run `ls -la /data` and save the output to `/tmp/exam/course/10/debug-output.txt`.\n\nNote: If your cluster doesn't support ephemeral containers, use `kubectl debug` with `--copy-to` to create a debug copy of the pod instead. You may also capture the listing with `kubectl exec troubled-app -n anchor -- ls -la /data`.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Pod named `troubled-app` exists in namespace `anchor` but you need to debug it.\n\n1. Use `kubectl debug` to create an ephemeral container in the running pod:\n\n- Image: `busybox:1.36`\n- Container name: `debugger`\n\n2. From within the ephemeral container, run `ls -la /data` and save the output to `/tmp/exam/course/10/debug-output.txt`.\n\nNote: If your cluster doesn't support ephemeral containers, use `kubectl debug` with `--copy-to` to create a debug copy of the pod instead. You may also capture the listing with `kubectl exec troubled-app -n anchor -- ls -la /data`.",
       "concepts": [
         "debugging",
         "ephemeral-containers",
@@ -525,8 +525,8 @@
     {
       "id": "11",
       "namespace": "shell",
-      "machineHostname": "ckad9999",
-      "question": "A Service named `backend-svc` exists in namespace `shell` with multiple pod endpoints.\n\n1. List all `EndpointSlices` for the service `backend-svc`.\n2. Save the following information to `/tmp/exam/course/11/endpoints-info.txt`:\n\n- Number of endpoints\n- IP addresses of all endpoints\n- Ports exposed\n\nUse `kubectl get endpointslices -n shell -l kubernetes.io/service-name=backend-svc` and `kubectl describe endpointslice`.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Service named `backend-svc` exists in namespace `shell` with multiple pod endpoints.\n\n1. List all `EndpointSlices` for the service `backend-svc`.\n2. Save the following information to `/tmp/exam/course/11/endpoints-info.txt`:\n\n- Number of endpoints\n- IP addresses of all endpoints\n- Ports exposed\n\nUse `kubectl get endpointslices -n shell -l kubernetes.io/service-name=backend-svc` and `kubectl describe endpointslice`.",
       "concepts": [
         "endpointslice",
         "services",
@@ -559,8 +559,8 @@
     {
       "id": "12",
       "namespace": "ocean",
-      "machineHostname": "ckad9999",
-      "question": "A Service named `local-svc` exists in namespace `ocean`.\n\nModify the Service to use node-local traffic routing:\n\n1. Set `internalTrafficPolicy: Local`\n\nThis ensures traffic is only routed to pods on the same node as the client, reducing latency.\n\nVerify the change with `kubectl get svc local-svc -n ocean -o yaml`.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Service named `local-svc` exists in namespace `ocean`.\n\nModify the Service to use node-local traffic routing:\n\n1. Set `internalTrafficPolicy: Local`\n\nThis ensures traffic is only routed to pods on the same node as the client, reducing latency.\n\nVerify the change with `kubectl get svc local-svc -n ocean -o yaml`.",
       "concepts": [
         "services",
         "internaltrafficpolicy",
@@ -586,8 +586,8 @@
     {
       "id": "13",
       "namespace": "reef",
-      "machineHostname": "ckad9999",
-      "question": "Create a `Pod` named `cache-pod` in namespace `reef`:\n\n- Image: `redis:7-alpine`\n- Container name: `cache`\n\nAdd an `emptyDir` volume with:\n\n- Name: `cache-volume`\n- sizeLimit: `100Mi`\n- medium: `Memory` (RAM-backed tmpfs)\n\nMount the volume at `/cache`.\n\nThis creates a memory-backed cache limited to 100Mi.",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a `Pod` named `cache-pod` in namespace `reef`:\n\n- Image: `redis:7-alpine`\n- Container name: `cache`\n\nAdd an `emptyDir` volume with:\n\n- Name: `cache-volume`\n- sizeLimit: `100Mi`\n- medium: `Memory` (RAM-backed tmpfs)\n\nMount the volume at `/cache`.\n\nThis creates a memory-backed cache limited to 100Mi.",
       "concepts": [
         "volumes",
         "emptydir",
@@ -627,8 +627,8 @@
     {
       "id": "14",
       "namespace": "deep",
-      "machineHostname": "ckad9999",
-      "question": "1. Create a `Secret` named `app-credentials` in namespace `deep` using `stringData` (plain text, auto-encoded):\n\n- `api-key`: `super-secret-key-12345`\n- `db-password`: `postgres@secure!`\n\n2. Make the Secret immutable.\n\n3. Create a `Pod` named `secret-consumer` in namespace `deep`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"cat /secrets/api-key && sleep 3600\"]`\n- Mount the secret `app-credentials` at `/secrets`",
+      "machineHostname": "ckad9988",
+      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\n1. Create a `Secret` named `app-credentials` in namespace `deep` using `stringData` (plain text, auto-encoded):\n\n- `api-key`: `super-secret-key-12345`\n- `db-password`: `postgres@secure!`\n\n2. Make the Secret immutable.\n\n3. Create a `Pod` named `secret-consumer` in namespace `deep`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"cat /secrets/api-key && sleep 3600\"]`\n- Mount the secret `app-credentials` at `/secrets`",
       "concepts": [
         "secrets",
         "configuration",
@@ -668,8 +668,8 @@
     {
       "id": "15",
       "namespace": "tide",
-      "machineHostname": "ckad9999",
-      "question": "A Deployment named `patch-demo` exists in namespace `tide`.\n\nUse `kubectl patch` to make the following changes:\n\n1. Strategic merge patch: update the image to `nginx:1.22`\n2. JSON patch: add a new environment variable `ENV_MODE=production`\n3. JSON patch: update replicas to `4`\n\nSave all three patch commands to `/tmp/exam/course/15/patch-commands.sh`.\n\nVerify changes with `kubectl describe deployment patch-demo -n tide`.",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nA Deployment named `patch-demo` exists in namespace `tide`.\n\nUse `kubectl patch` to make the following changes:\n\n1. Strategic merge patch: update the image to `nginx:1.22`\n2. JSON patch: add a new environment variable `ENV_MODE=production`\n3. JSON patch: update replicas to `4`\n\nSave all three patch commands to `/tmp/exam/course/15/patch-commands.sh`.\n\nVerify changes with `kubectl describe deployment patch-demo -n tide`.",
       "concepts": [
         "kubectl-patch",
         "deployments",
@@ -716,8 +716,8 @@
     {
       "id": "16",
       "namespace": "wave",
-      "machineHostname": "ckad9999",
-      "question": "Pods labeled `tier: api` exist in namespace `wave`.\n\nCreate a `NetworkPolicy` named `external-access` in namespace `wave` that:\n\n1. Applies to pods with label `tier: api`\n\n2. Allows ingress from:\n\n- Pods with label `tier: client` on port `80`\n- External IP range `10.0.0.0/8` on port `80` (using `ipBlock`)\n- Except block `10.0.1.0/24` (internal restricted subnet)\n\n3. Allows egress to:\n\n- DNS on port `53` UDP/TCP (any destination)\n- External IP range `0.0.0.0/0` on port `443` (HTTPS to external APIs)",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nPods labeled `tier: api` exist in namespace `wave`.\n\nCreate a `NetworkPolicy` named `external-access` in namespace `wave` that:\n\n1. Applies to pods with label `tier: api`\n\n2. Allows ingress from:\n\n- Pods with label `tier: client` on port `80`\n- External IP range `10.0.0.0/8` on port `80` (using `ipBlock`)\n- Except block `10.0.1.0/24` (internal restricted subnet)\n\n3. Allows egress to:\n\n- DNS on port `53` UDP/TCP (any destination)\n- External IP range `0.0.0.0/0` on port `443` (HTTPS to external APIs)",
       "concepts": [
         "networkpolicy",
         "ipblock",
@@ -785,8 +785,8 @@
     {
       "id": "17",
       "namespace": "coral",
-      "machineHostname": "ckad9999",
-      "question": "Create a `Pod` named `network-diagnostic` in namespace `coral` for network troubleshooting:\n\n- Image: `nicolaka/netshoot:latest`\n- Container name: `netshoot`\n- Command: `[\"sleep\", \"3600\"]`\n\nConfigure the pod with:\n\n- `hostNetwork: true` (use the host's network namespace)\n- `hostPID: true` (use the host's PID namespace)\n\nWarning: This gives the pod elevated access. Verify with `kubectl exec network-diagnostic -n coral -- ip addr`.",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a `Pod` named `network-diagnostic` in namespace `coral` for network troubleshooting:\n\n- Image: `nicolaka/netshoot:latest`\n- Container name: `netshoot`\n- Command: `[\"sleep\", \"3600\"]`\n\nConfigure the pod with:\n\n- `hostNetwork: true` (use the host's network namespace)\n- `hostPID: true` (use the host's PID namespace)\n\nWarning: This gives the pod elevated access. Verify with `kubectl exec network-diagnostic -n coral -- ip addr`.",
       "concepts": [
         "hostnetwork",
         "securitycontext",
@@ -833,8 +833,8 @@
     {
       "id": "18",
       "namespace": "lagoon",
-      "machineHostname": "ckad9999",
-      "question": "Create cluster-wide RBAC for node monitoring:\n\n1. Create a `ServiceAccount` named `node-monitor-sa` in namespace `lagoon`.\n\n2. Create a `ClusterRole` named `node-reader`:\n\n- Allow `get`, `list`, `watch` on `nodes`\n- Allow `get`, `list` on `namespaces`\n- Allow `get` on `nodes/status`\n\n3. Create a `ClusterRoleBinding` named `node-reader-binding` binding the `node-reader` ClusterRole to the `node-monitor-sa` ServiceAccount.\n\nVerify with `kubectl auth can-i list nodes --as=system:serviceaccount:lagoon:node-monitor-sa`.",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate cluster-wide RBAC for node monitoring:\n\n1. Create a `ServiceAccount` named `node-monitor-sa` in namespace `lagoon`.\n\n2. Create a `ClusterRole` named `node-reader`:\n\n- Allow `get`, `list`, `watch` on `nodes`\n- Allow `get`, `list` on `namespaces`\n- Allow `get` on `nodes/status`\n\n3. Create a `ClusterRoleBinding` named `node-reader-binding` binding the `node-reader` ClusterRole to the `node-monitor-sa` ServiceAccount.\n\nVerify with `kubectl auth can-i list nodes --as=system:serviceaccount:lagoon:node-monitor-sa`.",
       "concepts": [
         "rbac",
         "clusterrole",
@@ -888,8 +888,8 @@
     {
       "id": "19",
       "namespace": "current",
-      "machineHostname": "ckad9999",
-      "question": "A ServiceAccount named `app-deployer` exists in namespace `current` with specific permissions.\n\nUse `kubectl auth can-i` to check and document its permissions:\n\n1. Check if it can:\n\n- Create deployments in `current` namespace\n- Delete deployments in `current` namespace\n- Create pods in `current` namespace\n- Delete secrets in `current` namespace\n- List nodes (cluster-wide)\n\n2. Save the results in the following format to `/tmp/exam/course/19/permissions.txt`:\n\n```\ncreate deployments: yes/no\ndelete deployments: yes/no\ncreate pods: yes/no\ndelete secrets: yes/no\nlist nodes: yes/no\n```",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nA ServiceAccount named `app-deployer` exists in namespace `current` with specific permissions.\n\nUse `kubectl auth can-i` to check and document its permissions:\n\n1. Check if it can:\n\n- Create deployments in `current` namespace\n- Delete deployments in `current` namespace\n- Create pods in `current` namespace\n- Delete secrets in `current` namespace\n- List nodes (cluster-wide)\n\n2. Save the results in the following format to `/tmp/exam/course/19/permissions.txt`:\n\n```\ncreate deployments: yes/no\ndelete deployments: yes/no\ncreate pods: yes/no\ndelete secrets: yes/no\nlist nodes: yes/no\n```",
       "concepts": [
         "rbac",
         "authorization",
@@ -929,8 +929,8 @@
     {
       "id": "20",
       "namespace": "anchor",
-      "machineHostname": "ckad9999",
-      "question": "Create a `Pod` named `data-pipeline` in namespace `anchor` implementing a producer-consumer pattern.\n\nContainer 1 `producer`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do date >> /data/log.txt; sleep 5; done\"]`\n\nContainer 2 `consumer`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"tail -f /data/log.txt\"]`\n\nContainer 3 `monitor`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do wc -l /data/log.txt; sleep 10; done\"]`\n\nAll three containers must share an `emptyDir` volume mounted at `/data`.\n\nVerify all containers are running and check logs of the consumer container.",
+      "machineHostname": "ckad9977",
+      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a `Pod` named `data-pipeline` in namespace `anchor` implementing a producer-consumer pattern.\n\nContainer 1 `producer`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do date >> /data/log.txt; sleep 5; done\"]`\n\nContainer 2 `consumer`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"tail -f /data/log.txt\"]`\n\nContainer 3 `monitor`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do wc -l /data/log.txt; sleep 10; done\"]`\n\nAll three containers must share an `emptyDir` volume mounted at `/data`.\n\nVerify all containers are running and check logs of the consumer container.",
       "concepts": [
         "multi-container",
         "volumes",
