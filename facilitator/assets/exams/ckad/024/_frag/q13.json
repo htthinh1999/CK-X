@@ -1,0 +1,13 @@
+{
+  "id": "13",
+  "namespace": "signal",
+  "machineHostname": "ckad9977",
+  "question": "The harbor signal team wants a quick smoke test of its new status page.\n\nIn namespace `signal`:\n\n1. Create a Pod named `foghorn` (image `nginx:1.25`) with the label `app=foghorn`.\n2. Create a Service named `foghorn-svc` of type `ClusterIP` that selects `app=foghorn` and listens on port `8080`, forwarding to container port `80`.\n3. From a temporary Pod (image `busybox:1.36`) in namespace `signal` that is removed once it finishes, request `http://foghorn-svc:8080/` and save the response body to `/home/candidate/exam/q13/response.html`.\n4. After that request, save the logs of the `foghorn` Pod to `/home/candidate/exam/q13/foghorn.log`.",
+  "concepts": ["services", "clusterip", "logs", "kubectl run", "troubleshooting"],
+  "verification": [
+    { "id": "1", "description": "Pod foghorn runs nginx:1.25 with label app=foghorn", "verificationScriptFile": "q13_s1_validate_pod.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "2", "description": "Service foghorn-svc is ClusterIP, port 8080 -> targetPort 80, with the foghorn Pod as endpoint", "verificationScriptFile": "q13_s2_validate_service.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "3", "description": "response.html contains the nginx welcome page", "verificationScriptFile": "q13_s3_validate_response.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "4", "description": "foghorn.log contains an nginx GET access log line", "verificationScriptFile": "q13_s4_validate_logs.sh", "expectedOutput": "0", "weightage": 1 }
+  ]
+}

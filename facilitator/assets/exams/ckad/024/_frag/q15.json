@@ -1,0 +1,13 @@
+{
+  "id": "15",
+  "namespace": "cargo",
+  "machineHostname": "ckad9977",
+  "question": "The cargo team keeps its manifest ledger on node-local storage that must be provisioned by hand.\n\n1. Create a PersistentVolume named `ledger-pv` with capacity `200Mi`, access mode `ReadWriteOnce` (only), `storageClassName: manual` and a `hostPath` volume at `/tmp/cargo-ledger` (hostPath type `DirectoryOrCreate`).\n2. In namespace `cargo`, create a PersistentVolumeClaim named `ledger-claim` with `storageClassName: manual`, access mode `ReadWriteOnce` and a request of `200Mi`. It must be `Bound` to `ledger-pv`.\n3. In namespace `cargo`, create a Pod named `ledger-writer` (image `busybox:1.36`) that mounts `ledger-claim` at `/ledger`, writes the text `manifest=sealed` to the file `/ledger/entry.txt` and then keeps running (for example with `sleep 86400`).",
+  "concepts": ["persistentvolumes", "persistentvolumeclaims", "hostpath", "storage", "volumes"],
+  "verification": [
+    { "id": "1", "description": "PV ledger-pv: storageClassName manual, 200Mi, ReadWriteOnce, hostPath /tmp/cargo-ledger", "verificationScriptFile": "q15_s1_validate_pv.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "2", "description": "PVC ledger-claim (class manual, RWO) is Bound to ledger-pv", "verificationScriptFile": "q15_s2_validate_pvc_bound.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "3", "description": "Pod ledger-writer (busybox:1.36) is Running and mounts ledger-claim at /ledger", "verificationScriptFile": "q15_s3_validate_pod_mount.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "4", "description": "/ledger/entry.txt in ledger-writer contains manifest=sealed", "verificationScriptFile": "q15_s4_validate_file.sh", "expectedOutput": "0", "weightage": 1 }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+    "lab": "ckad-025",
+    "workerNodes": 1,
+    "clusters": [
+        { "name": "cluster1", "workerNodes": 1 },
+        { "name": "cluster2", "workerNodes": 0 },
+        { "name": "cluster3", "workerNodes": 0 }
+    ],
+    "servers": [
+        { "name": "ckad9999", "cluster": "cluster1" },
+        { "name": "ckad9988", "cluster": "cluster2" },
+        { "name": "ckad9977", "cluster": "cluster3" }
+    ],
+    "answers": "assets/exams/ckad/025/answers.md",
+    "questions": "assessment.json",
+    "totalMarks": 68,
+    "lowScore": 27,
+    "mediumScore": 41,
+    "highScore": 61
+}

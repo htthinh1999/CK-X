@@ -1,0 +1,12 @@
+{
+  "id": "14",
+  "namespace": "lighthouse",
+  "machineHostname": "ckad9977",
+  "question": "In namespace `lighthouse`, the Deployment `lamp-driver` (2 replicas) sets the environment variable `LAMP_ROTATION` from key `rotation` of the ConfigMap `lamp-config`. Operations wants the lamp to rotate faster.\n\n1. Change the value of key `rotation` in ConfigMap `lamp-config` to `fast`. Leave the other keys of the ConfigMap unchanged.\n2. Make sure the running Pods of `lamp-driver` actually use the new value. The Deployment must keep reading `LAMP_ROTATION` from the ConfigMap key (do not hard-code the value) and must end up with 2 ready, up-to-date replicas.\n3. Annotate the ConfigMap `lamp-config` with `harbor-logistics.io/change-ticket=HL-4471`.",
+  "concepts": ["configmaps", "environment variables", "rollout restart", "annotations", "deployments"],
+  "verification": [
+    { "id": "1", "description": "ConfigMap lamp-config has rotation=fast and color unchanged", "verificationScriptFile": "q14_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "2", "description": "lamp-driver still reads LAMP_ROTATION from the ConfigMap, 2 ready replicas, and every running Pod has LAMP_ROTATION=fast", "verificationScriptFile": "q14_s2_validate_pod_env.sh", "expectedOutput": "0", "weightage": 2 },
+    { "id": "3", "description": "ConfigMap lamp-config is annotated harbor-logistics.io/change-ticket=HL-4471", "verificationScriptFile": "q14_s3_validate_annotation.sh", "expectedOutput": "0", "weightage": 1 }
+  ]
+}

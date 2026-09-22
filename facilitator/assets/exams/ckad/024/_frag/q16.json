@@ -1,0 +1,13 @@
+{
+  "id": "16",
+  "namespace": "pier",
+  "machineHostname": "ckad9977",
+  "question": "Namespace `pier` runs three Pods: `gate-ui` (label `tier=frontend`), `dispatch-api` (label `tier=backend`) and `berth-db` (label `tier=db`, Redis listening on TCP port `6379`). At the moment every Pod can connect to `berth-db`.\n\nCreate a NetworkPolicy named `berth-db-access` in namespace `pier` that:\n\n- applies only to Pods with the label `tier=db`\n- has `policyTypes` set to `Ingress` only (egress must not be restricted)\n- in a single ingress rule, allows traffic only from Pods with the label `tier=backend` in namespace `pier`, and only on TCP port `6379`\n\nDo not modify the existing Pods.",
+  "concepts": ["networkpolicy", "ingress", "podselector", "labels", "security"],
+  "verification": [
+    { "id": "1", "description": "berth-db-access selects the tier=db Pod and no other Pod", "verificationScriptFile": "q16_s1_validate_podselector.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "2", "description": "policyTypes is exactly [Ingress]", "verificationScriptFile": "q16_s2_validate_policytypes.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "3", "description": "Single ingress rule whose only peer is a podSelector for tier=backend in namespace pier", "verificationScriptFile": "q16_s3_validate_from.sh", "expectedOutput": "0", "weightage": 1 },
+    { "id": "4", "description": "Ingress rule allows only TCP port 6379", "verificationScriptFile": "q16_s4_validate_port.sh", "expectedOutput": "0", "weightage": 1 }
+  ]
+}
