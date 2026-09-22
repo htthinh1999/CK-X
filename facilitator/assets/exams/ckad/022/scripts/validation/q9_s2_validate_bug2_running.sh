@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 phase=$(kubectl get pod bug-2 -n ascend -o jsonpath='{.status.phase}' 2>/dev/null)
 if [ "$phase" = "Running" ]; then
   echo "Success: bug-2 is Running"

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 anno=$(kubectl get deployment eden-api -n eden -o jsonpath='{.metadata.annotations.kubernetes\.io/change-cause}' 2>/dev/null)
 if [ -n "$anno" ]; then
   echo "Success: change-cause annotation is set"

@@ -2,11 +2,13 @@
 
 > Dojo Musashi 🏆 — *「武蔵は二刀を極める」- Musashi masters the two swords*
 >
-> All paths use `/tmp/exam/course/N/...`. Everything runs on the single `ckad9999` jumphost against one cluster (no SSH between instances). A throwaway local registry on `localhost:5000` is started by the setup for questions that push images.
+> All paths use `/tmp/exam/course/N/...`. Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host). A throwaway local registry on `localhost:5000` is started by the setup for questions that push images.
 
 ---
 
 ## Question 1 | Multi-Stage Go Dockerfile
+
+> Server: `ssh ckad9999`
 
 ```bash
 mkdir -p /tmp/exam/course/1
@@ -38,6 +40,8 @@ Multi-stage build compiles the Go binary in a `golang` stage, then copies it int
 ---
 
 ## Question 2 | Three-Container Pod Pattern
+
+> Server: `ssh ckad9999`
 
 ```bash
 mkdir -p /tmp/exam/course/2
@@ -79,6 +83,8 @@ Three containers (`main`, `sidecar`, `adapter`) share one `emptyDir` volume moun
 
 ## Question 3 | Job with completions and parallelism
 
+> Server: `ssh ckad9999`
+
 ```bash
 mkdir -p /tmp/exam/course/3
 cat <<EOF > /tmp/exam/course/3/job.yaml
@@ -106,6 +112,8 @@ kubectl apply -f /tmp/exam/course/3/job.yaml
 ---
 
 ## Question 4 | CronJob with history limits
+
+> Server: `ssh ckad9999`
 
 ```bash
 mkdir -p /tmp/exam/course/4
@@ -138,6 +146,8 @@ Schedule `*/15 * * * *`, image `postgres:15`, command `pg_dump -U admin mydb`, r
 
 ## Question 5 | Helm Chart from Scratch
 
+> Server: `ssh ckad9999`
+
 ```bash
 mkdir -p /tmp/exam/course/5
 helm create /tmp/exam/course/5/my-chart
@@ -155,6 +165,8 @@ Creates the `my-chart` chart, a `values.yaml` overriding replicas/image, and ins
 ---
 
 ## Question 6 | Deployment update, rollback and scale
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl set image deployment/glory-deploy nginx=nginx:1.25 -n glory --record
@@ -174,6 +186,8 @@ Final state: image `nginx:1.25`, 5 replicas.
 ---
 
 ## Question 7 | Canary Deployment with Labels
+
+> Server: `ssh ckad9999`
 
 ```bash
 mkdir -p /tmp/exam/course/7
@@ -209,6 +223,8 @@ The canary shares `app=legacy-web` with `legacy-main`, so the existing service l
 
 ## Question 8 | Kustomize overlay
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/8/prod
 cat <<EOF > /tmp/exam/course/8/prod/kustomization.yaml
@@ -234,6 +250,8 @@ The overlay references the base (which contains Deployment `my-app`), adds label
 
 ## Question 9 | Multiple Broken Pods Debug
 
+> Server: `ssh ckad9988`
+
 ```bash
 # bug-1: CrashLoopBackOff — command typo "eccho" -> "echo"
 kubectl delete pod bug-1 -n ascend
@@ -257,6 +275,8 @@ Each pod is recreated with the fault corrected so all three reach `Running`.
 
 ## Question 10 | Log Extraction and Filter
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/10
 kubectl logs triumph-app -n triumph | grep ERROR > /tmp/exam/course/10/logs.txt
@@ -268,6 +288,8 @@ Filters the pod logs for `ERROR` lines into `/tmp/exam/course/10/logs.txt`.
 
 ## Question 11 | Ephemeral Container Debugging
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl debug distroless-pod -n apex -it --image=busybox --target=main -- nslookup kubernetes.default
 ```
@@ -277,6 +299,8 @@ Attaches a `busybox` ephemeral container to `distroless-pod` and runs the DNS lo
 ---
 
 ## Question 12 | Pod with SecurityContext
+
+> Server: `ssh ckad9988`
 
 ```bash
 mkdir -p /tmp/exam/course/12
@@ -306,6 +330,8 @@ Container runs as UID 2000, disables privilege escalation, drops ALL capabilitie
 
 ## Question 13 | RBAC — ServiceAccount, Role, RoleBinding
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl create sa sword-master -n pinnacle
 kubectl create role blade-reader --verb=get,list,watch --resource=pods,configmaps -n pinnacle
@@ -317,6 +343,8 @@ Creates the SA, a Role granting get/list/watch on pods and configmaps, and the R
 ---
 
 ## Question 14 | ConfigMap Env and Secret Volume
+
+> Server: `ssh ckad9988`
 
 ```bash
 mkdir -p /tmp/exam/course/14
@@ -351,6 +379,8 @@ kubectl apply -f /tmp/exam/course/14/inject.yaml
 ---
 
 ## Question 15 | LimitRange and ResourceQuota
+
+> Server: `ssh ckad9977`
 
 ```bash
 mkdir -p /tmp/exam/course/15
@@ -389,6 +419,8 @@ LimitRange sets CPU default 500m / request 200m; ResourceQuota caps 4 pods, 2 CP
 ---
 
 ## Question 16 | PersistentVolume, PVC and Pod
+
+> Server: `ssh ckad9977`
 
 ```bash
 mkdir -p /tmp/exam/course/16
@@ -443,6 +475,8 @@ PV `glory-pv` (1Gi hostPath), PVC `glory-pvc` (500Mi), and a pod mounting it at 
 
 ## Question 17 | Default Deny + allow-web NetworkPolicy
 
+> Server: `ssh ckad9977`
+
 ```bash
 mkdir -p /tmp/exam/course/17
 cat <<EOF > /tmp/exam/course/17/netpol.yaml
@@ -485,6 +519,8 @@ A default deny-all ingress policy plus `allow-web` permitting `app=api` → `app
 
 ## Question 18 | Ingress with two paths
 
+> Server: `ssh ckad9977`
+
 ```bash
 mkdir -p /tmp/exam/course/18
 cat <<EOF > /tmp/exam/course/18/ingress.yaml
@@ -522,6 +558,8 @@ Host `musashi.com` routes `/api` → `api-svc:8080` and `/web` → `web-svc:80`.
 
 ## Question 19 | NodePort Service
 
+> Server: `ssh ckad9977`
+
 ```bash
 mkdir -p /tmp/exam/course/19
 cat <<EOF > /tmp/exam/course/19/svc.yaml
@@ -547,6 +585,8 @@ NodePort service `ascend-svc` exposing port 80 / targetPort 80 / nodePort 30080,
 ---
 
 ## Question 20 | DNS SRV Record Lookup
+
+> Server: `ssh ckad9977`
 
 ```bash
 mkdir -p /tmp/exam/course/20

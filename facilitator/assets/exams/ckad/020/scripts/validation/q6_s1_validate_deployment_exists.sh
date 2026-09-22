@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get deployment terra-web -n terra >/dev/null 2>&1; then
   echo "Success: deployment terra-web exists in terra"
   exit 0

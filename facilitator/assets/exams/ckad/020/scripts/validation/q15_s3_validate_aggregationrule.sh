@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if ! kubectl get clusterrole aggregated-monitor >/dev/null 2>&1; then
   echo "Error: clusterrole aggregated-monitor not found"
   exit 1

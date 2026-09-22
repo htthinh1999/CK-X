@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get networkpolicy allow-web -n legacy >/dev/null 2>&1; then
   echo "Success: networkpolicy allow-web exists in legacy"
   exit 0

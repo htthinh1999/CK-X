@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get rolebinding master-binding -n pinnacle >/dev/null 2>&1; then
   echo "Success: rolebinding master-binding exists in pinnacle"
   exit 0

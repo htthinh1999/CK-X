@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 # Cluster-scoped RBAC question; no namespace prerequisites needed.
 # Clean up any leftover ClusterRoles from a previous attempt.

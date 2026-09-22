@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get pod data-transformer -n origin >/dev/null 2>&1; then
   echo "Success: pod data-transformer exists in origin"
   exit 0

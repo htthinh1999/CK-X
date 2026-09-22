@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f="/tmp/exam/course/1/Dockerfile"
 if [ -f "$f" ]; then
   from_cnt=$(grep -ci "FROM" "$f")

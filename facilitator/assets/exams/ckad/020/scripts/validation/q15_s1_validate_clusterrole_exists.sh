@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get clusterrole monitor-viewer >/dev/null 2>&1; then
   echo "Success: clusterrole monitor-viewer exists"
   exit 0

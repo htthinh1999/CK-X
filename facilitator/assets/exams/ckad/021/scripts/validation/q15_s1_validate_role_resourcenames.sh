@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if ! kubectl get role config-editor -n haven >/dev/null 2>&1; then
   echo "Error: role config-editor missing in haven"
   exit 1

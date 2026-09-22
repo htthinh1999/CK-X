@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f="/tmp/exam/course/13/token.txt"
 if [ -f "$f" ]; then
   ts=$(wc -c <"$f")

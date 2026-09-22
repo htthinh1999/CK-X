@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if ! kubectl get pod stuck-pod -n cosmos >/dev/null 2>&1; then
   echo "Error: pod stuck-pod not found in cosmos"
   exit 1

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 min_reps=$(kubectl get hpa api-hpa -n refuge -o jsonpath='{.spec.minReplicas}' 2>/dev/null)
 if [[ "$min_reps" == "2" ]]; then
   echo "Success: HPA minReplicas is 2"

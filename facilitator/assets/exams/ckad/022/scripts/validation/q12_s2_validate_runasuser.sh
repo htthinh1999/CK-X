@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 user=$(kubectl get pod secure-pod -n summit -o jsonpath='{.spec.containers[0].securityContext.runAsUser}' 2>/dev/null)
 if [ "$user" = "2000" ]; then
   echo "Success: runAsUser is 2000"

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get pod secure-pod -n ancient -o jsonpath='{.spec.containers[0].securityContext.runAsNonRoot}' 2>/dev/null)
 if [ "$val" = "true" ]; then
   echo "Success: runAsNonRoot is true"

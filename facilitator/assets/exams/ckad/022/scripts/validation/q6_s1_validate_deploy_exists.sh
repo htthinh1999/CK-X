@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get deployment glory-deploy -n glory >/dev/null 2>&1; then
   echo "Success: deployment glory-deploy exists in glory"
   exit 0

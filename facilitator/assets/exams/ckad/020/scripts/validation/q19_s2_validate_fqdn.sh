@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 fqdn_file="/tmp/exam/course/19/fqdn.txt"
 if [ ! -f "$fqdn_file" ]; then
   echo "Error: $fqdn_file not found"

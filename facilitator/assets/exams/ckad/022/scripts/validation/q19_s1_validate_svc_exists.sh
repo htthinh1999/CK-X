@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get svc ascend-svc -n ascend >/dev/null 2>&1; then
   echo "Success: service ascend-svc exists in ascend"
   exit 0

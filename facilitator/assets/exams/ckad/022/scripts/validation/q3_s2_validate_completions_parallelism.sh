@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 completions=$(kubectl get job data-processor -n pinnacle -o jsonpath='{.spec.completions}' 2>/dev/null)
 parallelism=$(kubectl get job data-processor -n pinnacle -o jsonpath='{.spec.parallelism}' 2>/dev/null)
 if [ "$completions" = "3" ] && [ "$parallelism" = "2" ]; then

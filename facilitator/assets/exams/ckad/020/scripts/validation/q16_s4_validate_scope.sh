@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 scopes=$(kubectl get resourcequota priority-quota -n eden -o jsonpath='{.spec.scopeSelector.matchExpressions[0].scopeName}' 2>/dev/null)
 if [ "$scopes" = "PriorityClass" ]; then
   echo "Success: scopeSelector scopeName is PriorityClass"

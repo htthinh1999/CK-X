@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 image=$(kubectl get deployment glory-deploy -n glory -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
 if [ "$image" = "nginx:1.25" ] || [ "$image" = "nginx" ]; then
   echo "Success: image is '$image'"

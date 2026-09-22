@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace ascend --dry-run=client -o yaml | kubectl apply -f - || true
 # Apply the three broken pods (fix-it question)
 kubectl delete pod bug-1 bug-2 bug-3 -n ascend --ignore-not-found >/dev/null 2>&1 || true

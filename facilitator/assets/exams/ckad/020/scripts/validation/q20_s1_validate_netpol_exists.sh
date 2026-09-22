@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get networkpolicy isolate-namespace -n nexus >/dev/null 2>&1; then
   echo "Success: networkpolicy isolate-namespace exists in nexus"
   exit 0

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if ! helm status genesis-web -n nexus >/dev/null 2>&1; then
   echo "Error: helm release genesis-web not found in nexus"
   exit 1

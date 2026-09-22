@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get resourcequota compute-quota -n crown >/dev/null 2>&1; then
   echo "Success: resourcequota compute-quota exists in crown"
   exit 0

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 max_s=$(kubectl get deployment eden-api -n eden -o jsonpath='{.spec.strategy.rollingUpdate.maxSurge}' 2>/dev/null)
 max_u=$(kubectl get deployment eden-api -n eden -o jsonpath='{.spec.strategy.rollingUpdate.maxUnavailable}' 2>/dev/null)
 if { [ "$max_s" = "2" ] || [ "$max_s" = "25%" ]; } && { [ "$max_u" = "0" ] || [ "$max_u" = "0%" ]; }; then

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 types=$(kubectl get networkpolicy isolate-namespace -n nexus -o jsonpath='{.spec.policyTypes}' 2>/dev/null)
 if [[ "$types" == *"Ingress"* && "$types" == *"Egress"* ]]; then
   echo "Success: policyTypes includes Ingress and Egress"

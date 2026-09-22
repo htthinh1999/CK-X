@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 ic=$(kubectl get ingress cosmos-ingress -n cosmos -o jsonpath='{.spec.ingressClassName}' 2>/dev/null)
 if [ "$ic" = "nginx" ]; then
   echo "Success: ingressClassName is nginx"

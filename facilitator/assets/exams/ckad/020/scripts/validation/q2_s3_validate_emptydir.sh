@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 vol=$(kubectl get pod data-transformer -n origin -o jsonpath='{.spec.volumes[?(@.name=="shared-data")].emptyDir}' 2>/dev/null)
 if [ -n "$vol" ]; then
   echo "Success: shared-data emptyDir volume found"

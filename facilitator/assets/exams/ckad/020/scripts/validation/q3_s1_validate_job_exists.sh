@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get job index-processor -n primal >/dev/null 2>&1; then
   echo "Success: job index-processor exists in primal"
   exit 0

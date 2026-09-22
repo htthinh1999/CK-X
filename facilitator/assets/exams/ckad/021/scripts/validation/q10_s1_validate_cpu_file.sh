@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f="/tmp/exam/course/10/cpu-usage.txt"
 if [ -f "$f" ]; then
   content=$(cat "$f")

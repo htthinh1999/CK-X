@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get deployment legacy-canary -n legacy >/dev/null 2>&1; then
   echo "Success: deployment legacy-canary exists in legacy"
   exit 0

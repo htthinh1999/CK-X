@@ -2,11 +2,13 @@
 
 > Dojo Izanagi ✨ — *「イザナギは世界を創る」- Izanagi creates the world*
 >
-> Local simulator adaptations: `/opt/course/N/` → `/tmp/exam/course/N/`, registry → `localhost:5000`, single cluster on host `ckad9999` (no SSH).
+> Local simulator adaptations: `/opt/course/N/` → `/tmp/exam/course/N/`, registry → `localhost:5000`, one cluster per host: `ssh` to the server shown under each question heading and use its default context.
 
 ---
 
 ## Question 1 | Multi-Stage Dockerfile Build
+
+> Server: `ssh ckad9999`
 
 ```bash
 # 1. Modify Dockerfile
@@ -37,6 +39,8 @@ kubectl run genesis-pod -n genesis --image=localhost:5000/genesis-app:v1
 ---
 
 ## Question 2 | Adapter Pattern Sidecar
+
+> Server: `ssh ckad9999`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -71,6 +75,8 @@ EOF
 
 ## Question 3 | Parallel Job with Completions
 
+> Server: `ssh ckad9999`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: batch/v1
@@ -98,6 +104,8 @@ EOF
 
 ## Question 4 | Pod Lifecycle PreStop Hook
 
+> Server: `ssh ckad9999`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -123,6 +131,8 @@ EOF
 
 ## Question 5 | Helm Release Values Override
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Inspect the currently deployed values
 helm get values genesis-web -n nexus -a
@@ -139,6 +149,8 @@ helm get values genesis-web -n nexus -a
 ---
 
 ## Question 6 | Deployment Canary Split
+
+> Server: `ssh ckad9999`
 
 ```bash
 # Create Deployment
@@ -165,6 +177,8 @@ EOF
 
 ## Question 7 | Deployment Rollback
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Update image
 kubectl set image deployment/eden-api nginx=nginx:1.21 -n eden
@@ -181,6 +195,8 @@ kubectl patch deployment eden-api -n eden -p '{"spec":{"strategy":{"type":"Rolli
 ---
 
 ## Question 8 | Kustomize ConfigMap Generator
+
+> Server: `ssh ckad9988`
 
 ```bash
 # Modify kustomization.yaml
@@ -203,6 +219,8 @@ kubectl kustomize /tmp/exam/course/8/kustomize | kubectl apply -n matrix -f -
 
 ## Question 9 | Init Container Failure Debug
 
+> Server: `ssh ckad9988`
+
 ```bash
 # Inspect why the init container fails (it runs 'exit 1')
 kubectl describe pod stuck-pod -n cosmos
@@ -219,6 +237,8 @@ kubectl replace --force -f /tmp/exam/stuck.yaml
 
 ## Question 10 | Namespace Events Export
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl get events -n zenith -o custom-columns=TYPE:.type,REASON:.reason,MESSAGE:.message > /tmp/exam/course/10/events.txt
 ```
@@ -228,6 +248,8 @@ kubectl get events -n zenith -o custom-columns=TYPE:.type,REASON:.reason,MESSAGE
 ---
 
 ## Question 11 | Service Internal Traffic Policy
+
+> Server: `ssh ckad9988`
 
 ```bash
 cat <<EOF > /tmp/exam/course/11/check.sh
@@ -246,6 +268,8 @@ chmod +x /tmp/exam/course/11/check.sh
 ---
 
 ## Question 12 | Projected ServiceAccount Token
+
+> Server: `ssh ckad9988`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -292,6 +316,8 @@ EOF
 
 ## Question 13 | Secret stringData Entry
 
+> Server: `ssh ckad9988`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -311,6 +337,8 @@ EOF
 ---
 
 ## Question 14 | Pod with ReadOnlyRootFilesystem
+
+> Server: `ssh ckad9988`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -350,6 +378,8 @@ EOF
 
 ## Question 15 | ClusterRole and ClusterRoleBinding
 
+> Server: `ssh ckad9977`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
@@ -381,6 +411,8 @@ EOF
 
 ## Question 16 | ResourceQuota for Namespace
 
+> Server: `ssh ckad9977`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -406,6 +438,8 @@ EOF
 ---
 
 ## Question 17 | NetworkPolicy Named Port
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -437,6 +471,8 @@ EOF
 
 ## Question 18 | Ingress Default Backend
 
+> Server: `ssh ckad9977`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
@@ -466,6 +502,8 @@ EOF
 
 ## Question 19 | Service Endpoint Inspection
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl run dns-tester -n zenith --image=busybox:1.32 -- sleep 3600
 echo "data-svc.ancient.svc.cluster.local" > /tmp/exam/course/19/fqdn.txt
@@ -476,6 +514,8 @@ echo "data-svc.ancient.svc.cluster.local" > /tmp/exam/course/19/fqdn.txt
 ---
 
 ## Question 20 | Namespace Isolation NetworkPolicy
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF | kubectl apply -f -

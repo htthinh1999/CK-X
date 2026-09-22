@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 im=$(kubectl get secret static-creds -n primal -o jsonpath='{.immutable}' 2>/dev/null)
 if [ "$im" = "true" ]; then
   echo "Success: secret static-creds is immutable"

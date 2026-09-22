@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if grep -q "ERROR" /tmp/exam/course/10/logs.txt 2>/dev/null; then
   echo "Success: logs.txt contains ERROR"
   exit 0

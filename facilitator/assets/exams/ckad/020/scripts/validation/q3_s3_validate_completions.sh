@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 completions=$(kubectl get job index-processor -n primal -o jsonpath='{.spec.completions}' 2>/dev/null)
 if [ "$completions" = "5" ]; then
   echo "Success: completions is 5"

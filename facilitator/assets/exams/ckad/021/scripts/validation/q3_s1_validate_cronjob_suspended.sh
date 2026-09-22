@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 sus=$(kubectl get cronjob backup-cj -n shield -o jsonpath='{.spec.suspend}' 2>/dev/null)
 if [[ "$sus" == "true" ]]; then
   echo "Success: cronjob backup-cj suspended"

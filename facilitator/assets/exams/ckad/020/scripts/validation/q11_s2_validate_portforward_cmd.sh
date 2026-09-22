@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 script_path="/tmp/exam/course/11/check.sh"
 if [ ! -f "$script_path" ]; then
   echo "Error: $script_path not found"

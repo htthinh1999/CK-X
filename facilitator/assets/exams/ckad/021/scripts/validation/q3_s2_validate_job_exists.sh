@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get job manual-backup -n shield >/dev/null 2>&1; then
   echo "Success: job manual-backup exists in shield"
   exit 0

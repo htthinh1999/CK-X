@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace haven --dry-run=client -o yaml | kubectl apply -f - || true
 mkdir -p /tmp/exam/course/5
 [ -d /tmp/guardian-app ] || helm create /tmp/guardian-app >/dev/null 2>&1

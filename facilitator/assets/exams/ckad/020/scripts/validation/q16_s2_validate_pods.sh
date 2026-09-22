@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 pods=$(kubectl get resourcequota priority-quota -n eden -o jsonpath='{.spec.hard.pods}' 2>/dev/null)
 if [ "$pods" = "5" ]; then
   echo "Success: hard pods limit is 5"

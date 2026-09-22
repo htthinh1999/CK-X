@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace apex --dry-run=client -o yaml | kubectl apply -f - || true
 mkdir -p /tmp/exam/course/1
 cat > /tmp/exam/course/1/main.go <<'GO'

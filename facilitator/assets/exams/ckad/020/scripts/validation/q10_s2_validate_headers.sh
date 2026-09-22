@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 file_path="/tmp/exam/course/10/events.txt"
 if [ ! -f "$file_path" ]; then
   echo "Error: $file_path not found"
