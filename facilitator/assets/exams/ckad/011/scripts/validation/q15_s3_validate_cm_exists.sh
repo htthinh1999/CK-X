@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get configmap env-config -n voyage >/dev/null 2>&1; then
   echo "Success: ConfigMap env-config exists in voyage"
   exit 0

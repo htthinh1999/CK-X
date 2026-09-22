@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 u=$(kubectl get deploy web-deploy -n reef -o jsonpath='{.spec.strategy.rollingUpdate.maxUnavailable}' 2>/dev/null)
 if [ "$u" = "25%" ] || [ "$u" = "1" ]; then
   echo "Success: maxUnavailable is $u"; exit 0

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -f /tmp/exam/course/15/auth-check.txt ]; then
   a=$(cat /tmp/exam/course/15/auth-check.txt 2>/dev/null | tr -d '[:space:]')
   if [ "$a" = "yes" ]; then echo "Success: auth-check.txt contains yes"; exit 0; else echo "Error: auth-check.txt has $a"; exit 1; fi

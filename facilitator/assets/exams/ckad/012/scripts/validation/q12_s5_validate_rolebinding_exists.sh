@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get rolebinding pod-reader-binding -n bastion >/dev/null 2>&1; then
   echo "Success: RoleBinding pod-reader-binding exists in bastion"
   exit 0

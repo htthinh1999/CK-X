@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 v=$(kubectl get pv myvolume -o jsonpath='{.spec.capacity.storage}' 2>/dev/null)
 if [ "$v" = "10Gi" ]; then

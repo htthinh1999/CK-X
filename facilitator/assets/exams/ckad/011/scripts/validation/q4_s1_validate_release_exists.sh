@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 info=$(helm list -n wave -o json 2>/dev/null | grep -o '"name":"rollback-app"' || true)
 if [ -n "$info" ]; then
   echo "Success: helm release rollback-app exists in wave"

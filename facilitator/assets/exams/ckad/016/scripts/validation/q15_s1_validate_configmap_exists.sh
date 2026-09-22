@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get configmap app-args -n voltage >/dev/null 2>&1; then
   echo "Success: configmap app-args exists"; exit 0
 fi

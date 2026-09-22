@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f="/tmp/exam/course/15/config.env"
 if [ -s "$f" ] && grep -q "DB_HOST" "$f" 2>/dev/null && grep -q "DB_PORT" "$f" 2>/dev/null; then
   echo "Success: config.env has DB_HOST and DB_PORT keys"

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 cache=$(kubectl get pod secure-pod -n stalker -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/var/cache/nginx")].name}' 2>/dev/null)
 run=$(kubectl get pod secure-pod -n stalker -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/var/run")].name}' 2>/dev/null)
 conf=$(kubectl get pod secure-pod -n stalker -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/etc/nginx/conf.d")].name}' 2>/dev/null)

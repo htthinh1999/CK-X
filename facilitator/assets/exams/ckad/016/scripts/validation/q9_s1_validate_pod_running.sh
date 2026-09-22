@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if ! kubectl get pod data-processor -n flash >/dev/null 2>&1; then
   echo "Error: pod data-processor not found in flash"; exit 1
 fi

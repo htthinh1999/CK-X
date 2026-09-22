@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace surge --dry-run=client -o yaml | kubectl apply -f - || true
 kubectl delete ingress default-ing -n surge --ignore-not-found=true >/dev/null 2>&1 || true
 kubectl apply -f - <<'YAML'

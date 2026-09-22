@@ -2,11 +2,13 @@
 
 > Dojo Raijin ⚡ — *「雷神は天を裂く」- Raijin splits the heavens*
 >
-> Path mapping for this lab: `/opt/course/N/` and `./exam/course/N/` from the original are all under `/tmp/exam/course/N/`. Everything runs on the single `ckad9999` jumphost / one cluster (no SSH between instances).
+> Path mapping for this lab: `/opt/course/N/` and `./exam/course/N/` from the original are all under `/tmp/exam/course/N/`. Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host).
 
 ---
 
 ## Question 1 | Container Image with Healthcheck
+
+> Server: `ssh ckad9999`
 
 ```bash
 mkdir -p /tmp/exam/course/1
@@ -20,6 +22,8 @@ EOF
 ---
 
 ## Question 2 | Sidecar Logging and Filtering
+
+> Server: `ssh ckad9999`
 
 ```bash
 mkdir -p /tmp/exam/course/2
@@ -54,6 +58,8 @@ kubectl apply -f /tmp/exam/course/2/pod.yaml
 
 ## Question 3 | Advanced CronJob
 
+> Server: `ssh ckad9999`
+
 ```bash
 mkdir -p /tmp/exam/course/3
 cat <<EOF > /tmp/exam/course/3/cronjob.yaml
@@ -85,6 +91,8 @@ kubectl apply -f /tmp/exam/course/3/cronjob.yaml
 
 ## Question 4 | Init Container Dependency
 
+> Server: `ssh ckad9999`
+
 ```bash
 mkdir -p /tmp/exam/course/4
 cat <<EOF > /tmp/exam/course/4/pod.yaml
@@ -109,6 +117,8 @@ kubectl apply -f /tmp/exam/course/4/pod.yaml
 
 ## Question 5 | Helm Template Overrides
 
+> Server: `ssh ckad9999`
+
 ```bash
 mkdir -p /tmp/exam/course/5
 helm template thunder-web /tmp/exam/course/5/chart --namespace surge \
@@ -118,6 +128,8 @@ helm template thunder-web /tmp/exam/course/5/chart --namespace surge \
 ---
 
 ## Question 6 | Deployment Rollback
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl rollout history deployment api-gateway -n voltage
@@ -130,6 +142,8 @@ Revision 1 uses image `nginx:1.23`.
 ---
 
 ## Question 7 | Canary Deployment
+
+> Server: `ssh ckad9999`
 
 ```bash
 mkdir -p /tmp/exam/course/7
@@ -162,6 +176,8 @@ Keep the pod template label `app: backend` identical to `backend-v1` so `backend
 
 ## Question 8 | Kustomize Strategic Merge Patch
 
+> Server: `ssh ckad9988`
+
 ```bash
 cat <<EOF > /tmp/exam/course/8/kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -193,6 +209,8 @@ kubectl apply -k /tmp/exam/course/8/ -n charge
 ---
 
 ## Question 9 | Troubleshoot CrashLoopBackOff
+
+> Server: `ssh ckad9988`
 
 Inspect the failing pod:
 
@@ -228,6 +246,8 @@ The pod should now be `Running`.
 
 ## Question 10 | Kubectl Events
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/10
 kubectl get events -n strike --sort-by='.metadata.creationTimestamp' > /tmp/exam/course/10/events.txt
@@ -236,6 +256,8 @@ kubectl get events -n strike --sort-by='.metadata.creationTimestamp' > /tmp/exam
 ---
 
 ## Question 11 | All Three Probes
+
+> Server: `ssh ckad9988`
 
 ```bash
 mkdir -p /tmp/exam/course/11
@@ -275,6 +297,8 @@ kubectl apply -f /tmp/exam/course/11/pod.yaml
 
 ## Question 12 | Downward API
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/12
 cat <<EOF > /tmp/exam/course/12/pod.yaml
@@ -305,6 +329,8 @@ kubectl apply -f /tmp/exam/course/12/pod.yaml
 
 ## Question 13 | SecurityContext Capabilities
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/13
 cat <<EOF > /tmp/exam/course/13/pod.yaml
@@ -330,6 +356,8 @@ kubectl apply -f /tmp/exam/course/13/pod.yaml
 
 ## Question 14 | Secret with stringData
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/14
 cat <<EOF > /tmp/exam/course/14/secret.yaml
@@ -349,6 +377,8 @@ kubectl apply -f /tmp/exam/course/14/secret.yaml
 ---
 
 ## Question 15 | ConfigMap as Command Args
+
+> Server: `ssh ckad9977`
 
 ```bash
 mkdir -p /tmp/exam/course/15
@@ -380,6 +410,8 @@ kubectl apply -f /tmp/exam/course/15/pod.yaml
 
 ## Question 16 | ClusterRole and Binding
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl create serviceaccount app-sa -n spark
 kubectl create clusterrole secret-reader --verb=get,watch,list --resource=secrets
@@ -390,6 +422,8 @@ kubectl create clusterrolebinding secret-reader-binding \
 ---
 
 ## Question 17 | NetworkPolicy AND Logic
+
+> Server: `ssh ckad9977`
 
 ```bash
 mkdir -p /tmp/exam/course/17
@@ -426,6 +460,8 @@ The single `from` element containing both `namespaceSelector` and `podSelector` 
 
 ## Question 18 | Ingress Default Backend
 
+> Server: `ssh ckad9977`
+
 ```bash
 mkdir -p /tmp/exam/course/18
 cat <<EOF > /tmp/exam/course/18/ingress.yaml
@@ -447,6 +483,8 @@ kubectl apply -f /tmp/exam/course/18/ingress.yaml
 ---
 
 ## Question 19 | Service Session Affinity
+
+> Server: `ssh ckad9977`
 
 ```bash
 mkdir -p /tmp/exam/course/19
@@ -474,6 +512,8 @@ kubectl apply -f /tmp/exam/course/19/svc.yaml
 ---
 
 ## Question 20 | Port Forwarding
+
+> Server: `ssh ckad9977`
 
 ```bash
 mkdir -p /tmp/exam/course/20

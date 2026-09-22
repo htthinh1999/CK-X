@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 t=$(kubectl get service web-svc -n flame -o jsonpath='{.spec.type}' 2>/dev/null)
 if [ "$t" = "ClusterIP" ]; then
   echo "Success: type ClusterIP"

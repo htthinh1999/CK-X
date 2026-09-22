@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if kubectl get job parallel-job -n canopy >/dev/null 2>&1; then
   echo "Success: job parallel-job exists in canopy"; exit 0

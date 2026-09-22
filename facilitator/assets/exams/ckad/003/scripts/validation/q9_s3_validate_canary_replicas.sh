@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 r=$(kubectl get deployment canary-v2 -n blaze -o jsonpath='{.spec.replicas}' 2>/dev/null)
 if [ "$r" = "1" ]; then
   echo "Success: canary has 1 replica"

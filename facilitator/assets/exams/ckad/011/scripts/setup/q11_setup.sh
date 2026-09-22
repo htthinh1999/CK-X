@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 # Prerequisite: a broken pod the student will describe.
 kubectl create namespace pearl --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true

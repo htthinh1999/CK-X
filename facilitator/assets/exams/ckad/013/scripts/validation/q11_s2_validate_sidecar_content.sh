@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f=/tmp/exam/course/11/sidecar-logs.txt
 if [ ! -f "$f" ]; then echo "Error: file not found"; exit 1; fi
 lc=$(wc -l <"$f" 2>/dev/null)

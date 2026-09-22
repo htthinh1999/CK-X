@@ -2,11 +2,13 @@
 
 > Dojo Hachiman ⚔️ — *「八幡は戦略を練る」- Hachiman hones strategy*
 >
-> Adaptations for this simulator: paths `/opt/course/N/` and `./exam/course/N/` become `/tmp/exam/course/N/`; the registry is `localhost:5000`; everything runs on the single `ckad9999` host / one cluster (no SSH).
+> Adaptations for this simulator: paths `/opt/course/N/` and `./exam/course/N/` become `/tmp/exam/course/N/`; the registry is `localhost:5000`; each question runs on the server named in its `Server` line (`ssh` there and work with that server's only, default context).
 
 ---
 
 ## Question 1 | Pod Command and Args Override
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl run entry-override -n fortress --image=nginx:alpine \
@@ -19,6 +21,8 @@ kubectl apply -f /tmp/exam/course/1/pod.yaml
 ---
 
 ## Question 2 | ConfigMap as Init Script Volume
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl create configmap init-script-cm -n fortress --from-literal=setup.sh='#!/bin/sh
@@ -64,6 +68,8 @@ kubectl apply -f /tmp/exam/course/2/init-pod.yaml
 
 ## Question 3 | CronJob Scheduled Report
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl create cronjob siege-report -n siege --image=busybox:1.36 \
   --schedule="30 * * * *" --dry-run=client -o yaml \
@@ -86,6 +92,8 @@ kubectl apply -f /tmp/exam/course/3/cronjob.yaml
 ---
 
 ## Question 4 | Sidecar Process Monitor
+
+> Server: `ssh ckad9999`
 
 ```yaml
 # /tmp/exam/course/4/shared-pid.yaml
@@ -112,6 +120,8 @@ kubectl apply -f /tmp/exam/course/4/shared-pid.yaml
 
 ## Question 5 | Helm Release Upgrade (Atomic)
 
+> Server: `ssh ckad9999`
+
 ```bash
 helm upgrade battle-web /tmp/exam/course/5/battle-chart/ -n garrison \
   --atomic --timeout 1m --set replicaCount=3
@@ -122,6 +132,8 @@ helm upgrade battle-web /tmp/exam/course/5/battle-chart/ -n garrison \
 ---
 
 ## Question 6 | Deployment with progressDeadlineSeconds
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl create deployment citadel-guard -n citadel --image=nginx:1.24.0-alpine \
@@ -154,6 +166,8 @@ kubectl apply -f /tmp/exam/course/6/deploy.yaml
 
 ## Question 7 | Blue-Green Service Switch
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl create deployment api-server-green -n rampart \
   --image=nginx:1.25.0-alpine --replicas=2
@@ -167,6 +181,8 @@ Leave `api-server-blue` untouched. The Service now selects the green pods.
 ---
 
 ## Question 8 | Kustomize Image + Replica Patch
+
+> Server: `ssh ckad9988`
 
 ```yaml
 # /tmp/exam/course/8/kustomization.yaml
@@ -197,6 +213,8 @@ kubectl apply -f /tmp/exam/course/8/kustomize-output.yaml -n vanguard
 
 ## Question 9 | CrashLoopBackOff / OOMKilled Debug
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl get pod data-processor -n sentinel -o yaml > /tmp/exam/course/9/processor.yaml
 # Edit resources.limits.memory to 256Mi, keep requests.memory 64Mi
@@ -218,6 +236,8 @@ The larger limit lets the stress workload run without being OOMKilled, so the po
 
 ## Question 10 | Ephemeral Debug Container
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl debug -it secure-app -n outpost --image=busybox:1.36 \
   --target=app -c debugger -- sh -c "sleep 3600"
@@ -228,6 +248,8 @@ kubectl debug -it secure-app -n outpost --image=busybox:1.36 \
 ---
 
 ## Question 11 | ResourceQuota Troubleshooting
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl describe quota armory-quota -n armory
@@ -241,6 +263,8 @@ With 100m×3 = 300m CPU and 128Mi×3 = 384Mi memory, the pods fit the `500m` CPU
 ---
 
 ## Question 12 | Downward API Env Vars
+
+> Server: `ssh ckad9988`
 
 ```yaml
 # /tmp/exam/course/12/downward.yaml
@@ -280,6 +304,8 @@ kubectl apply -f /tmp/exam/course/12/downward.yaml
 
 ## Question 13 | ServiceAccount with Manual Token Mount
 
+> Server: `ssh ckad9988`
+
 ```yaml
 # /tmp/exam/course/13/sa-pod.yaml
 apiVersion: v1
@@ -318,6 +344,8 @@ kubectl apply -f /tmp/exam/course/13/sa-pod.yaml
 
 ## Question 14 | SecurityContext + seccomp
 
+> Server: `ssh ckad9988`
+
 ```yaml
 # /tmp/exam/course/14/seccomp.yaml
 apiVersion: v1
@@ -343,6 +371,8 @@ kubectl apply -f /tmp/exam/course/14/seccomp.yaml
 ---
 
 ## Question 15 | Selective Secret Key Volume
+
+> Server: `ssh ckad9977`
 
 ```yaml
 # /tmp/exam/course/15/multi-secret.yaml
@@ -388,6 +418,8 @@ Only the `password` key is projected, mounted as `/etc/db-creds/db-pass.txt`.
 
 ## Question 16 | LimitRange Defaults
 
+> Server: `ssh ckad9977`
+
 ```yaml
 # /tmp/exam/course/16/limit-range.yaml
 apiVersion: v1
@@ -426,6 +458,8 @@ kubectl apply -f /tmp/exam/course/16/limit-range.yaml
 
 ## Question 17 | Ingress NetworkPolicy
 
+> Server: `ssh ckad9977`
+
 ```yaml
 # /tmp/exam/course/17/netpol.yaml
 apiVersion: networking.k8s.io/v1
@@ -460,6 +494,8 @@ kubectl apply -f /tmp/exam/course/17/netpol.yaml
 
 ## Question 18 | Canary Ingress
 
+> Server: `ssh ckad9977`
+
 ```yaml
 # /tmp/exam/course/18/ingress.yaml
 apiVersion: networking.k8s.io/v1
@@ -492,6 +528,8 @@ kubectl apply -f /tmp/exam/course/18/ingress.yaml
 ---
 
 ## Question 19 | Selectorless Service + Endpoints
+
+> Server: `ssh ckad9977`
 
 ```yaml
 # /tmp/exam/course/19/manual-svc.yaml
@@ -528,6 +566,8 @@ The Service has no selector, so the manually-created Endpoints (matching name) r
 ---
 
 ## Question 20 | CoreDNS Rewrite Rule
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl get configmap coredns -n kube-system -o yaml > /tmp/exam/course/20/coredns.yaml

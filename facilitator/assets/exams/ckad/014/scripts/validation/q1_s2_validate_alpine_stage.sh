@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 F=/tmp/exam/course/1/Dockerfile
 if [ -f "$F" ] && grep -q "FROM alpine:3.18" "$F"; then
   echo "Success: alpine:3.18 stage defined"

@@ -6,11 +6,13 @@
 >
 > Original Questions: Adapted from [CKAD-Practice-Questions](https://github.com/aravind4799/CKAD-Practice-Questions) by [@aravind4799](https://github.com/aravind4799)
 >
-> Path note: `/opt/course/N/` from the original maps to `/tmp/exam/course/N/` on this jumphost. Everything runs on the single `ckad9999` host against one cluster (no SSH).
+> Path note: `/opt/course/N/` from the original maps to `/tmp/exam/course/N/` on the question's server. Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host).
 
 ---
 
 ## Question 1 | Secret from Hardcoded Variables (4 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 # Step 1: Create the Secret
@@ -49,6 +51,8 @@ kubectl get secret db-credentials -n stream
 
 ## Question 2 | CronJob with Schedule and History Limits (8 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: batch/v1
@@ -81,6 +85,8 @@ kubectl describe cronjob backup-job -n pond
 ---
 
 ## Question 3 | ServiceAccount, Role, and RoleBinding (8 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 # Step 1: Create ServiceAccount
@@ -120,6 +126,8 @@ kubectl logs log-collector -n marsh
 
 ## Question 4 | Fix Broken Pod with Correct ServiceAccount (4 points)
 
+> Server: `ssh ckad9977`
+
 The `monitor-binding` RoleBinding binds `monitor-sa` to the `metrics-reader` Role (which grants get/list/watch on pods), so `monitor-sa` is the correct ServiceAccount.
 
 ```bash
@@ -143,6 +151,8 @@ kubectl logs metrics-pod -n delta
 
 ## Question 5 | Build Container Image and Save as Tarball (8 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Step 1: Build the image
 cd /tmp/exam/course/5/image
@@ -161,6 +171,8 @@ ls -lh /tmp/exam/course/5/my-app.tar
 ---
 
 ## Question 6 | Canary Deployment with Manual Traffic Split (8 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 # Step 1: Scale existing Deployment
@@ -201,6 +213,8 @@ kubectl get pods -n default -l app=webapp --show-labels
 
 ## Question 7 | Fix NetworkPolicy by Updating Pod Labels (8 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 # Step 1: View existing NetworkPolicies
 kubectl get networkpolicies -n spring -o yaml
@@ -217,6 +231,8 @@ kubectl get pods -n spring --show-labels
 ---
 
 ## Question 8 | Fix Broken Deployment YAML (4 points)
+
+> Server: `ssh ckad9988`
 
 Edit `/tmp/exam/course/8/broken-deploy.yaml`:
 
@@ -252,6 +268,8 @@ kubectl rollout status deploy broken-app
 
 ## Question 9 | Perform Rolling Update and Rollback (8 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 # Step 1: Update the image
 kubectl set image deploy/app-v1 nginx=nginx:1.25 -n brook
@@ -277,6 +295,8 @@ kubectl rollout history deploy app-v1 -n brook | tail -1 | awk '{print $1}' > /t
 ---
 
 ## Question 10 | Add Readiness Probe to Deployment (4 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl edit deploy api-deploy -n rapids
@@ -308,6 +328,8 @@ kubectl describe deploy api-deploy -n rapids
 
 ## Question 11 | Configure Pod and Container Security Context (6 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl edit deploy secure-app -n cascade
 ```
@@ -338,6 +360,8 @@ kubectl get pod -n cascade -l app=secure-app -o yaml | grep -A 10 securityContex
 
 ## Question 12 | Fix Service Selector (2 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 # Check current state
 kubectl get pods -n shoal --show-labels
@@ -364,6 +388,8 @@ kubectl get endpoints web-svc -n shoal
 
 ## Question 13 | Create NodePort Service (4 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -389,6 +415,8 @@ kubectl describe svc api-nodeport -n default
 ---
 
 ## Question 14 | Create Ingress Resource (4 points)
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -420,6 +448,8 @@ kubectl describe ingress web-ingress -n eddy
 
 ## Question 15 | Fix Ingress PathType (4 points)
 
+> Server: `ssh ckad9977`
+
 Edit `/tmp/exam/course/15/fix-ingress.yaml` — change `pathType: InvalidType` to a valid value (`Prefix`):
 
 ```yaml
@@ -450,6 +480,8 @@ kubectl get ingress api-ingress -n default
 ---
 
 ## Question 16 | Add Resource Requests and Limits to Pod (4 points)
+
+> Server: `ssh ckad9977`
 
 The `pond-quota` ResourceQuota sets `limits.cpu: "2"` and `limits.memory: "4Gi"`, so use half: `cpu: "1"` and `memory: "2Gi"` for limits.
 
@@ -486,6 +518,8 @@ kubectl describe pod resource-pod -n pond
 ---
 
 ## Question 17 | Pod Topology Spread Constraints (3 points) — Preview
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl apply -f - <<EOF

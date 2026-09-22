@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get quota compute-quota -n fortune -o jsonpath='{.spec.hard.limits\.cpu}' 2>/dev/null)
 if [ "$val" = "2" ]; then
   echo "Success: limits.cpu is 2"

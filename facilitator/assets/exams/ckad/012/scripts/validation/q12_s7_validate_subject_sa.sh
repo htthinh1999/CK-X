@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get rolebinding pod-reader-binding -n bastion -o jsonpath='{.subjects[0].name}' 2>/dev/null)
 if [ "$val" = "pod-reader-sa" ]; then
   echo "Success: RoleBinding subject ServiceAccount ($val)"

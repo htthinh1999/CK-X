@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get pod quota-pod -n fortune -o jsonpath='{.spec.containers[0].resources.requests.cpu}' 2>/dev/null)
 if [ -n "$val" ]; then
   echo "Success: resource requests set"

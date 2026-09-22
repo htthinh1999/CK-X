@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 t1=$(kubectl get pod nginx1 -n ridge -o jsonpath='{.metadata.labels.tier}' 2>/dev/null)
 t3=$(kubectl get pod nginx3 -n ridge -o jsonpath='{.metadata.labels.tier}' 2>/dev/null)

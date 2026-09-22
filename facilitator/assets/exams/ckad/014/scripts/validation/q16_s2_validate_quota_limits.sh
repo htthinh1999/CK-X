@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 pods=$(kubectl get resourcequota compute-quota -n nightfall -o jsonpath='{.spec.hard.pods}' 2>/dev/null)
 cpu=$(kubectl get resourcequota compute-quota -n nightfall -o jsonpath='{.spec.hard.requests\.cpu}' 2>/dev/null)
 mem=$(kubectl get resourcequota compute-quota -n nightfall -o jsonpath='{.spec.hard.limits\.memory}' 2>/dev/null)

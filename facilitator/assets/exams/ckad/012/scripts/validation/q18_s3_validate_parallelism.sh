@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get job batch-processor -n bulwark -o jsonpath='{.spec.parallelism}' 2>/dev/null)
 if [ "$val" = "2" ]; then
   echo "Success: Parallelism ($val)"

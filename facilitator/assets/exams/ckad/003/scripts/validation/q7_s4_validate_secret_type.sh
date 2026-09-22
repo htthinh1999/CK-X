@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 t=$(kubectl get secret db-credentials -n magma -o jsonpath='{.type}' 2>/dev/null)
 if [ "$t" = "Opaque" ]; then
   echo "Success: type Opaque"

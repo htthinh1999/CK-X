@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 F=/tmp/exam/course/20/nslookup.txt
 if [ -f "$F" ] && grep -q "kubernetes.default.svc.cluster.local" "$F"; then
   echo "Success: nslookup output valid"

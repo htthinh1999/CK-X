@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 esc=$(kubectl get pod secure-pod -n abyss -o jsonpath='{.spec.containers[0].securityContext.allowPrivilegeEscalation}' 2>/dev/null)
 if [ "$esc" = "false" ]; then
   echo "Success: allowPrivilegeEscalation is false"; exit 0

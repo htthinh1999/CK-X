@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -s "/tmp/exam/course/20/token.txt" ]; then
   echo "Success: token.txt saved"
   exit 0

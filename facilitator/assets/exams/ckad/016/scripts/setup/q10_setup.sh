@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace strike --dry-run=client -o yaml | kubectl apply -f - || true
 mkdir -p /tmp/exam/course/10
 rm -f /tmp/exam/course/10/events.txt 2>/dev/null || true

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 cur=$(kubectl get deployment nginx-deploy -n valley -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
 rev1=$(kubectl rollout history deployment nginx-deploy -n valley --revision=1 2>/dev/null | awk '/Image:/ {print $2; exit}')

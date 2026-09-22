@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get networkpolicy api-allow -n sunbeam >/dev/null 2>&1; then
   echo "Success: NetworkPolicy api-allow exists"
   exit 0

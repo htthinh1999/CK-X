@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 F=/tmp/exam/course/8/kustomization.yaml
 if [ -f "$F" ] && grep -q "patch.json" "$F"; then
   echo "Success: patch.json referenced in kustomization.yaml"

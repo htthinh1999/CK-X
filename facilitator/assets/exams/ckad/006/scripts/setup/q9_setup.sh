@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace brook --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 mkdir -p /tmp/exam/course/9
 kubectl apply -f - <<'EOF' >/dev/null 2>&1 || true

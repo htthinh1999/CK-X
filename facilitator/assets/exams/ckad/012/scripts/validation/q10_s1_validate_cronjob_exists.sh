@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get cronjob cleanup-job -n stronghold >/dev/null 2>&1; then
   echo "Success: CronJob cleanup-job exists in stronghold"
   exit 0

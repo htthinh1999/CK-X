@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 p=$(kubectl get pod grpc-checker -n ocean -o jsonpath='{.spec.containers[0].livenessProbe.grpc.port}' 2>/dev/null)
 if [ "$p" = "8080" ]; then
   echo "Success: gRPC liveness probe configured on port 8080"; exit 0

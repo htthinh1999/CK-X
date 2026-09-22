@@ -6,11 +6,13 @@
 >
 > Total Score: 105 points | Passing Score: ~66% (69 points)
 >
-> Notes for the CK-X simulator: all work happens on the single `ckad9999` jumphost against one shared cluster (no SSH to other instances). File paths originally under `/opt/course/N` / `./exam/course/N` are mapped to `/tmp/exam/course/N`.
+> Notes for the CK-X simulator: each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host). File paths originally under `/opt/course/N` / `./exam/course/N` are mapped to `/tmp/exam/course/N`.
 
 ---
 
 ## Question 1 | ResourceQuota (5 points)
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -37,6 +39,8 @@ kubectl describe quota namespace-limits -n shell
 ---
 
 ## Question 2 | HorizontalPodAutoscaler (6 points)
+
+> Server: `ssh ckad9999`
 
 Using `kubectl autoscale`:
 
@@ -79,6 +83,8 @@ kubectl get hpa -n ocean
 ---
 
 ## Question 3 | StatefulSet (8 points)
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -138,6 +144,8 @@ kubectl get pods -n reef -l app=db-cluster
 
 ## Question 4 | DaemonSet (6 points)
 
+> Server: `ssh ckad9999`
+
 ```yaml
 apiVersion: apps/v1
 kind: DaemonSet
@@ -178,6 +186,8 @@ kubectl get pods -n deep -o wide
 
 ## Question 5 | PriorityClass (5 points)
 
+> Server: `ssh ckad9999`
+
 ```yaml
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
@@ -208,6 +218,8 @@ kubectl get pod critical-pod -n tide -o yaml | grep priority
 ---
 
 ## Question 6 | startupProbe (5 points)
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -242,6 +254,8 @@ kubectl describe pod slow-starter -n wave | grep -A5 "Startup"
 ---
 
 ## Question 7 | Pod Affinity (6 points)
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: apps/v1
@@ -284,6 +298,8 @@ kubectl get pods -n coral -o wide
 
 ## Question 8 | Ingress with Path Routing (6 points)
 
+> Server: `ssh ckad9988`
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -322,6 +338,8 @@ kubectl describe ingress api-routing -n lagoon
 
 ## Question 9 | Job with Completions and Parallelism (5 points)
 
+> Server: `ssh ckad9988`
+
 ```yaml
 apiVersion: batch/v1
 kind: Job
@@ -351,6 +369,8 @@ kubectl get pods -n current -l job-name=parallel-processor
 
 ## Question 10 | kubectl debug (4 points)
 
+> Server: `ssh ckad9988`
+
 Using ephemeral containers (K8s 1.25+):
 
 ```bash
@@ -378,6 +398,8 @@ kubectl debug troubled-app -n anchor -it --copy-to=troubled-app-debug --image=bu
 
 ## Question 11 | EndpointSlice (3 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 # List EndpointSlices for the service
 kubectl get endpointslices -n shell -l kubernetes.io/service-name=backend-svc
@@ -402,6 +424,8 @@ cat /tmp/exam/course/11/endpoints-info.txt
 
 ## Question 12 | Service internalTrafficPolicy (4 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl patch service local-svc -n ocean \
   -p '{"spec":{"internalTrafficPolicy":"Local"}}'
@@ -416,6 +440,8 @@ kubectl get svc local-svc -n ocean -o yaml | grep internalTrafficPolicy
 ---
 
 ## Question 13 | EmptyDir with sizeLimit (4 points)
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: v1
@@ -446,6 +472,8 @@ kubectl describe pod cache-pod -n reef | grep -A5 "Volumes"
 ---
 
 ## Question 14 | Secret with stringData (4 points)
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: v1
@@ -488,6 +516,8 @@ kubectl exec secret-consumer -n deep -- cat /secrets/api-key
 
 ## Question 15 | kubectl patch (5 points)
 
+> Server: `ssh ckad9977`
+
 Save the commands to `/tmp/exam/course/15/patch-commands.sh`:
 
 ```bash
@@ -516,6 +546,8 @@ kubectl describe deployment patch-demo -n tide
 ---
 
 ## Question 16 | NetworkPolicy with IPBlock (8 points)
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -567,6 +599,8 @@ kubectl describe networkpolicy external-access -n wave
 
 ## Question 17 | Pod with hostNetwork (5 points)
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -594,6 +628,8 @@ kubectl exec network-diagnostic -n coral -- ps aux | head
 ---
 
 ## Question 18 | ClusterRole and ClusterRoleBinding (6 points)
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: v1
@@ -640,6 +676,8 @@ kubectl auth can-i list nodes --as=system:serviceaccount:lagoon:node-monitor-sa
 
 ## Question 19 | kubectl auth can-i (4 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 SA="system:serviceaccount:current:app-deployer"
 
@@ -666,6 +704,8 @@ Note: the `app-deployer` Role grants `create`, `delete`, `get`, `list`, `patch`,
 ---
 
 ## Question 20 | Multi-Container with Shared Volume (6 points)
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: v1

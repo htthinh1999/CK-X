@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get secret db-credentials -n coral >/dev/null 2>&1; then
   echo "Success: secret db-credentials exists in coral"; exit 0
 fi

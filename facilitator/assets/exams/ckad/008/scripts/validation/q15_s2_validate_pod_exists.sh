@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if kubectl get pod secret-pod -n ridge >/dev/null 2>&1; then
   echo "Success: pod secret-pod exists"; exit 0

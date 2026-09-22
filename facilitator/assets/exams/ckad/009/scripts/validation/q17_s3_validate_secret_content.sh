@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 content=$(kubectl get secret file-secret -n fern -o jsonpath='{.data.username}' 2>/dev/null | base64 -d 2>/dev/null)
 if [ "$content" = "admin" ]; then

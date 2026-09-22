@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -s "/tmp/exam/course/12/pods.txt" ]; then
   echo "Success: pods.txt saved"
   exit 0

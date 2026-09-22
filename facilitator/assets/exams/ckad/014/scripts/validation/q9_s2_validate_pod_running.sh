@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 status=$(kubectl get pod metrics-gatherer -n starlight -o jsonpath='{.status.phase}' 2>/dev/null)
 if [ "$status" == "Running" ]; then
   echo "Success: pod metrics-gatherer is Running"

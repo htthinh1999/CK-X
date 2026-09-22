@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get networkpolicy allow-from-flame -n corona >/dev/null 2>&1; then
   echo "Success: networkpolicy exists"
   exit 0

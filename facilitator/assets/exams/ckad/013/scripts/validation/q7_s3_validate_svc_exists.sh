@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get service prod-web-svc -n zenith >/dev/null 2>&1; then
   echo "Success: service prod-web-svc exists"
   exit 0

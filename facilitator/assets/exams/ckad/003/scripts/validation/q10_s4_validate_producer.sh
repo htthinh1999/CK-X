@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 n=$(kubectl get pod data-transform -n phoenix -o jsonpath='{.spec.containers[?(@.name=="producer")].name}' 2>/dev/null)
 if [ "$n" = "producer" ]; then
   echo "Success: producer container exists"

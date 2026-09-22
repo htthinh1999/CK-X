@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get secret db-credentials -n fortress >/dev/null 2>&1; then
   echo "Success: Secret db-credentials exists in fortress"
   exit 0

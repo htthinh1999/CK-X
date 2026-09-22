@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 cache=$(kubectl get pod hardened-pod -n predator -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/var/cache/nginx")].name}' 2>/dev/null)
 run=$(kubectl get pod hardened-pod -n predator -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/var/run")].name}' 2>/dev/null)
 c=0

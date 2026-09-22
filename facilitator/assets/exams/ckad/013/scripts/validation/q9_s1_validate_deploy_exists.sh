@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get deployment slow-app -n eclipse >/dev/null 2>&1; then
   echo "Success: deployment slow-app exists"
   exit 0

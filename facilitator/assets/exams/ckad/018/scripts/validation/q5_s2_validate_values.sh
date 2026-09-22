@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 rep=$(helm get values wisdom-app -n chorus 2>/dev/null | grep replicaCount)
 if [[ -n "$rep" ]]; then
   echo "Success: custom replicaCount value set ($rep)"; exit 0

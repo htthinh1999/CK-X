@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -f /tmp/exam/course/1/solar-app.tar ]; then
   echo "Success: tarball exists"
   exit 0

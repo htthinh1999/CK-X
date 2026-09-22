@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 mem=$(kubectl get quota cliff-quota -n cliff -o jsonpath='{.spec.hard.memory}' 2>/dev/null)
 meml=$(kubectl get quota cliff-quota -n cliff -o jsonpath='{.spec.hard.limits\.memory}' 2>/dev/null)

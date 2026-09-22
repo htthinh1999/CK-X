@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get deployment backend-v2 -n spark >/dev/null 2>&1; then
   echo "Success: deployment backend-v2 exists"; exit 0
 fi

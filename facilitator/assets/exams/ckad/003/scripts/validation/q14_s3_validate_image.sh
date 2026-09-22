@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 image=$(kubectl get pod lifecycle-pod -n phoenix -o jsonpath='{.spec.containers[0].image}' 2>/dev/null)
 if [ "$image" = "nginx:1.21" ]; then
   echo "Success: image nginx:1.21"

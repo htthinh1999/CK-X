@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 s=$(kubectl get svc dns-svc -n sunbeam -o jsonpath='{.spec.selector.app}' 2>/dev/null)
 if [ "$s" = "dns-app" ]; then
   echo "Success: service selector app=dns-app"

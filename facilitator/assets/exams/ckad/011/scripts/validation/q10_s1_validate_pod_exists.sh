@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get pod inspect-pod -n abyss >/dev/null 2>&1; then
   echo "Success: Pod inspect-pod exists in abyss"
   exit 0

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 # The student must create namespace 'mynamespace' (its existence is scored),
 # so ensure a clean state and do NOT pre-create it.

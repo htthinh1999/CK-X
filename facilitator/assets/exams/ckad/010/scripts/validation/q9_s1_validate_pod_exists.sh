@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get pod cap-pod -n golden >/dev/null 2>&1; then
   echo "Success: Pod cap-pod exists in golden"
   exit 0

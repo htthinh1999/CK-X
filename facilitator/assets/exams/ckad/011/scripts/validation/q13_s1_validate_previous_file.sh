@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -s "/tmp/exam/course/13/previous.txt" ]; then
   echo "Success: /tmp/exam/course/13/previous.txt exists and contains output"
   exit 0

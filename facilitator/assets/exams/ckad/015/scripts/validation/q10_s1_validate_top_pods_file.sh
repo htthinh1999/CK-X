@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f=/tmp/exam/course/10/top-pods.txt
 [ -f "$f" ] || { echo "Error: $f not found"; exit 1; }
 lines=$(wc -l <"$f")

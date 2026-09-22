@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get pod annotated-pod -n prosperity -o jsonpath='{.metadata.annotations.owner}' 2>/dev/null)
 if [ "$val" = "marketing" ]; then
   echo "Success: annotation owner=marketing correct"

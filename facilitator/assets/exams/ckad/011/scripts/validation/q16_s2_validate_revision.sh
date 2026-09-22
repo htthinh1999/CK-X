@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 rev=$(kubectl rollout history deployment/web-deploy -n tide 2>/dev/null | tail -1 | awk '{print $1}')
 if [ -n "$rev" ] && [ "$rev" -ge 4 ] 2>/dev/null; then
   echo "Success: rollout undo performed (current revision $rev)"

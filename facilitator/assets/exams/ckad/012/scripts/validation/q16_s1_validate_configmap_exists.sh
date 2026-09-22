@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get configmap app-config -n gate >/dev/null 2>&1; then
   echo "Success: ConfigMap app-config exists in gate"
   exit 0

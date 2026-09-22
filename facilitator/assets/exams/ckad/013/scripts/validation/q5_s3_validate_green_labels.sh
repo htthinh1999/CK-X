@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 a=$(kubectl get deploy app-green -n flare -o jsonpath='{.spec.template.metadata.labels.app}' 2>/dev/null)
 v=$(kubectl get deploy app-green -n flare -o jsonpath='{.spec.template.metadata.labels.version}' 2>/dev/null)
 if [ "$a" = "webapp" ] && [ "$v" = "green" ]; then

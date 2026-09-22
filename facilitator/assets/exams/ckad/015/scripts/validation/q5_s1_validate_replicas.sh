@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 dep=$(kubectl get deploy -n typhoon -o name 2>/dev/null | grep storm-app | head -n 1)
 [ -n "$dep" ] || { echo "Error: storm-app deployment not found in typhoon"; exit 1; }
 reps=$(kubectl get "$dep" -n typhoon -o jsonpath='{.spec.replicas}' 2>/dev/null)

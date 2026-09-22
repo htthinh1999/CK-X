@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 image=$(kubectl get pod pvc-pod -n depths -o jsonpath='{.spec.containers[0].image}' 2>/dev/null)
 case "$image" in
   *busybox*) echo "Success: image is busybox ($image)"; exit 0 ;;

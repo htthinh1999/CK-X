@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 t=$(kubectl get deploy api-app -n dawn -o jsonpath='{.spec.strategy.type}' 2>/dev/null)
 if [ "$t" = "RollingUpdate" ]; then
   echo "Success: strategy type RollingUpdate"

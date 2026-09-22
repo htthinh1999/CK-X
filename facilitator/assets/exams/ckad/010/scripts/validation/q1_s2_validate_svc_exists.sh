@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get service web -n harvest >/dev/null 2>&1; then
   echo "Success: Service web exists in harvest"
   exit 0

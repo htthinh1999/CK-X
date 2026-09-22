@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 q=$(kubectl get pod qos-guaranteed -n spark -o jsonpath='{.status.qosClass}' 2>/dev/null)
 if [ "$q" = "Guaranteed" ]; then
   echo "Success: QoS Guaranteed"

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get pod shared-process-pod -n cadence >/dev/null 2>&1; then
   echo "Success: pod shared-process-pod exists"; exit 0
 fi

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 p=$(kubectl get deployment app-deploy -n root -o jsonpath='{.spec.template.spec.containers[0].ports[0].containerPort}' 2>/dev/null)
 if [ "$p" = "80" ]; then

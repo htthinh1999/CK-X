@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 ph=$(kubectl get pod crash-app -n ember -o jsonpath='{.status.phase}' 2>/dev/null)
 if [ "$ph" = "Running" ]; then
   echo "Success: pod Running"

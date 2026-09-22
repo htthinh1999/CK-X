@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f="/tmp/exam/course/21/drain-command.sh"
 if [ ! -f "$f" ]; then echo "Error: file missing"; exit 1; fi
 c=$(cat "$f")

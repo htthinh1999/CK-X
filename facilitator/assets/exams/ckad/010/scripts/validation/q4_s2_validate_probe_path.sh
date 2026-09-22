@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get pod ready-pod -n field -o jsonpath='{.spec.containers[0].readinessProbe.httpGet.path}' 2>/dev/null)
 if [ "$val" = "/" ]; then
   echo "Success: readiness probe path is /"

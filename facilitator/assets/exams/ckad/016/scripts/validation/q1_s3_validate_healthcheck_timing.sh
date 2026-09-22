@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f="/tmp/exam/course/1/Dockerfile"
 if [ -f "$f" ] && grep -q "HEALTHCHECK" "$f" && grep -q "\-\-interval=10s" "$f" && grep -q "\-\-timeout=3s" "$f"; then
   echo "Success: HEALTHCHECK timing options correct"; exit 0

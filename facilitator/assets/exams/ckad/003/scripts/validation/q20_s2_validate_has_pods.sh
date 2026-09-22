@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f="/tmp/exam/course/20/running-pods.txt"
 lc=$(wc -l <"$f" 2>/dev/null)
 if [ -f "$f" ] && [ "$lc" -gt 0 ] 2>/dev/null; then

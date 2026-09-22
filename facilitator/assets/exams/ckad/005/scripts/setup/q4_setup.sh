@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace prowl --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 kubectl apply -f - >/dev/null 2>&1 <<'YAML' || true
 apiVersion: batch/v1

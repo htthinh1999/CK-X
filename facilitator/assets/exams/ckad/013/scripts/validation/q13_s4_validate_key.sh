@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 k=$(kubectl get secret web-tls -n flare -o jsonpath='{.data.tls\.key}' 2>/dev/null)
 if [ -n "$k" ]; then
   echo "Success: has tls.key"

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if kubectl get configmap file-config -n glade >/dev/null 2>&1; then
   echo "Success: configmap file-config exists in glade"; exit 0

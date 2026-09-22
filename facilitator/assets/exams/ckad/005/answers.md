@@ -2,11 +2,13 @@
 
 *Dojo Genbu 🐢 — Tortue Noire du Nord — "The turtle carries the world. Patience is the key to success."*
 
-All file paths use `/tmp/exam/course/N/...` (the CK-X workspace). Everything runs on the single `ckad9999` jumphost against one cluster (no SSH to other instances needed).
+All file paths use `/tmp/exam/course/N/...` (the CK-X workspace). Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host).
 
 ---
 
 ## Question 1 | kubectl explain
+
+> Server: `ssh ckad9999`
 
 ```bash
 # Explore the API documentation
@@ -22,6 +24,8 @@ kubectl explain pod.spec.containers.resources --recursive > /tmp/exam/course/1/p
 ---
 
 ## Question 2 | Pod Anti-Affinity
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -63,6 +67,8 @@ EOF
 ---
 
 ## Question 3 | Blue-Green Deployment
+
+> Server: `ssh ckad9999`
 
 ```bash
 # Step 1: Create the green deployment
@@ -107,6 +113,8 @@ Blue-Green is a complete switch: changing the service selector routes 100% of tr
 
 ## Question 4 | CronJob Advanced
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Suspend the CronJob first
 kubectl patch cronjob data-sync -n prowl -p '{"spec":{"suspend":true}}'
@@ -126,6 +134,8 @@ kubectl get cronjob data-sync -n prowl -o yaml | grep -E "suspend|startingDeadli
 ---
 
 ## Question 5 | Immutable ConfigMap
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -147,6 +157,8 @@ Immutable ConfigMaps cannot be modified after creation; to change one you must d
 ---
 
 ## Question 6 | Projected Volume
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -182,6 +194,8 @@ A projected volume combines a ServiceAccount token (1h expiry) and the ConfigMap
 
 ## Question 7 | PodDisruptionBudget
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: policy/v1
@@ -205,6 +219,8 @@ With `minAvailable: 3` on a 5-replica deployment, at most 2 pods can be voluntar
 
 ## Question 8 | Service ExternalName
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -223,6 +239,8 @@ ExternalName services are pure DNS CNAME aliases — no ClusterIP and no proxyin
 ---
 
 ## Question 9 | LimitRange
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -254,6 +272,8 @@ kubectl describe limitrange container-limits -n pounce
 ---
 
 ## Question 10 | Pod Security Context
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -300,6 +320,8 @@ A read-only root filesystem needs writable `emptyDir` volumes wherever nginx mus
 
 ## Question 11 | Deployment Rollout Control
 
+> Server: `ssh ckad9988`
+
 ```bash
 # Step 1: Pause the rollout
 kubectl rollout pause deployment/rolling-app -n pounce
@@ -323,6 +345,8 @@ Pausing lets you batch changes; the rollout only starts on resume.
 
 ## Question 12 | kubectl exec Troubleshooting
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/12
 
@@ -338,6 +362,8 @@ The saved file contains the `server { listen 8080; ... }` block, satisfying the 
 ---
 
 ## Question 13 | Resource Metrics
+
+> Server: `ssh ckad9988`
 
 ```bash
 mkdir -p /tmp/exam/course/13
@@ -360,6 +386,8 @@ Scoring only requires the two files to exist and `pod-resources.txt` to be non-e
 ---
 
 ## Question 14 | Downward API
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -399,6 +427,8 @@ The Downward API exposes pod/node metadata via `fieldRef`.
 
 ## Question 15 | Job TTL
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: batch/v1
@@ -424,6 +454,8 @@ EOF
 ---
 
 ## Question 16 | Container Capabilities
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -467,6 +499,8 @@ Dropping ALL and adding only `NET_BIND_SERVICE` follows least privilege; running
 
 ## Question 17 | Service Session Affinity
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl patch service backend-svc -n claw -p '{"spec":{"sessionAffinity":"ClientIP","sessionAffinityConfig":{"clientIP":{"timeoutSeconds":3600}}}}'
 
@@ -479,6 +513,8 @@ kubectl get service backend-svc -n claw -o yaml | grep -A5 sessionAffinity
 ---
 
 ## Question 18 | Deployment Safe Rollout
+
+> Server: `ssh ckad9977`
 
 ```bash
 # Configure safe rollout settings
@@ -496,6 +532,8 @@ kubectl rollout status deployment/safe-deploy -n fang
 ---
 
 ## Question 19 | Container Lifecycle Hook
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -523,6 +561,8 @@ The `preStop` hook runs `nginx -s quit` for a graceful shutdown before SIGTERM; 
 ---
 
 ## Question 20 | NetworkPolicy Default Deny
+
+> Server: `ssh ckad9977`
 
 ```bash
 # Step 1: default deny-all

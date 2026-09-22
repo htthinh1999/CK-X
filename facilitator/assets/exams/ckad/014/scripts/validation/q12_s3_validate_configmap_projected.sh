@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 vols=$(kubectl get pod combined-app -n crescent -o jsonpath='{.spec.volumes[*].projected.sources}' 2>/dev/null)
 if [[ "$vols" == *"app-config"* ]]; then
   echo "Success: configmap app-config projected"

@@ -2,11 +2,13 @@
 
 > Dojo Tsukuyomi 🌙 — *「月読は闇を照らす」- Tsukuyomi illuminates the darkness*
 >
-> Path remapping for CK-X: `/opt/course/N/` and `./exam/course/N/` → `/tmp/exam/course/N/`. Everything runs on the single `ckad9999` jumphost against one cluster (no SSH between instances).
+> Path remapping for CK-X: `/opt/course/N/` and `./exam/course/N/` → `/tmp/exam/course/N/`. Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host).
 
 ---
 
 ## Question 1 | Multi-stage Dockerfile
+
+> Server: `ssh ckad9999`
 
 ```dockerfile
 # /tmp/exam/course/1/Dockerfile
@@ -24,6 +26,8 @@ Explanation: Multi-stage builds use `AS builder` to name the first stage, compil
 ---
 
 ## Question 2 | Init containers with dependencies
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: v1
@@ -46,6 +50,8 @@ Init containers run to completion before the main app containers start.
 ---
 
 ## Question 3 | CronJob with concurrencyPolicy
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: batch/v1
@@ -73,6 +79,8 @@ spec:
 
 ## Question 4 | Multi-container ambassador pattern
 
+> Server: `ssh ckad9999`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -93,6 +101,8 @@ spec:
 
 ## Question 5 | Helm rollback
 
+> Server: `ssh ckad9999`
+
 ```bash
 helm rollback api-release 1 -n nebula
 ```
@@ -102,6 +112,8 @@ helm rollback api-release 1 -n nebula
 ---
 
 ## Question 6 | Deployment with minReadySeconds
+
+> Server: `ssh ckad9999`
 
 ```yaml
 apiVersion: apps/v1
@@ -129,6 +141,8 @@ spec:
 
 ## Question 7 | Rollout pause
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl rollout pause deployment critical-processor -n nightfall
 ```
@@ -138,6 +152,8 @@ Pausing halts the update so no further pods roll out while you investigate.
 ---
 
 ## Question 8 | Kustomize with JSON patch
+
+> Server: `ssh ckad9988`
 
 ```json
 // /tmp/exam/course/8/patch.json
@@ -171,6 +187,8 @@ patches:
 
 ## Question 9 | Debug ImagePullBackOff
 
+> Server: `ssh ckad9988`
+
 The pod `metrics-gatherer` in `starlight` uses a misspelled image (`nginxxxxx:alpine`). Fix the image to a valid one (e.g. `nginx:alpine`). The simplest reliable approach is to recreate it:
 
 ```bash
@@ -191,6 +209,8 @@ A misspelled image name triggers ImagePullBackOff because the node cannot pull a
 
 ## Question 10 | Container resource metrics
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl top pods -n kube-system --sort-by=cpu
 # Record the top pod's name (metrics-server must be installed).
@@ -202,6 +222,8 @@ If `kubectl top` is unavailable, write any reasonable kube-system pod name into 
 ---
 
 ## Question 11 | Log aggregation sidecar
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: v1
@@ -232,6 +254,8 @@ spec:
 
 ## Question 12 | Projected volume (secret + configmap)
 
+> Server: `ssh ckad9988`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -259,6 +283,8 @@ spec:
 
 ## Question 13 | Immutable ConfigMap
 
+> Server: `ssh ckad9988`
+
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -273,6 +299,8 @@ immutable: true
 ---
 
 ## Question 14 | Pod with security constraints
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: v1
@@ -305,6 +333,8 @@ spec:
 
 ## Question 15 | Secret rotation
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl create secret generic legacy-token -n shadow \
   --from-literal=token=super-secret-v2 \
@@ -314,6 +344,8 @@ kubectl create secret generic legacy-token -n shadow \
 ---
 
 ## Question 16 | ResourceQuota
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: v1
@@ -331,6 +363,8 @@ spec:
 ---
 
 ## Question 17 | NetworkPolicy egress rules
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -354,6 +388,8 @@ spec:
 ---
 
 ## Question 18 | Multi-path Ingress
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -386,6 +422,8 @@ spec:
 
 ## Question 19 | ExternalName Service
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: v1
 kind: Service
@@ -400,6 +438,8 @@ spec:
 ---
 
 ## Question 20 | DNS debugging
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl exec dns-tester -n void -- nslookup kubernetes.default.svc.cluster.local > /tmp/exam/course/20/nslookup.txt

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get svc backend -n rice -o jsonpath='{.spec.ports[0].targetPort}' 2>/dev/null)
 if [ "$val" = "8080" ]; then
   echo "Success: service backend targetPort is 8080"

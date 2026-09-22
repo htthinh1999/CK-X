@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get rolebinding deploy-rb -n zenith >/dev/null 2>&1; then
   echo "Success: RoleBinding deploy-rb exists"
   exit 0

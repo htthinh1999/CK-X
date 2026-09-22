@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -f "/tmp/exam/course/20/running-pods.txt" ]; then
   echo "Success: running-pods.txt exists"
   exit 0

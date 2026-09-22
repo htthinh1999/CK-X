@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 mkdir -p /tmp/exam/course/5/image
 cat > /tmp/exam/course/5/image/Dockerfile <<'EOF'
 FROM nginx:alpine

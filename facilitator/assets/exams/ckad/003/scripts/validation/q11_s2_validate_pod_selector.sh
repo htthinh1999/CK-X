@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 s=$(kubectl get networkpolicy allow-from-flame -n corona -o jsonpath='{.spec.podSelector.matchLabels.app}' 2>/dev/null)
 if [ "$s" = "backend" ]; then
   echo "Success: podSelector app=backend"

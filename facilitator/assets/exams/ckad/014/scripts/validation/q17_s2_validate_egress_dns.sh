@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 ports=$(kubectl get netpol deny-external -n dusk -o jsonpath='{.spec.egress[*].ports[*].port}' 2>/dev/null)
 protos=$(kubectl get netpol deny-external -n dusk -o jsonpath='{.spec.egress[*].ports[*].protocol}' 2>/dev/null)
 if [ "$ports" == "53" ] && [ "$protos" == "UDP" ]; then

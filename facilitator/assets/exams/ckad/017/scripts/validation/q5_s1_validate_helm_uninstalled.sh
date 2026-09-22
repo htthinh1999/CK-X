@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 hr=$(helm list -n current --short 2>/dev/null | grep ocean-api || echo "")
 if [ -z "$hr" ]; then
   echo "Success: helm release ocean-api uninstalled"; exit 0

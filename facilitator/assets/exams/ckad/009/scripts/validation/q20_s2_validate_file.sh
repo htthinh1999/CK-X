@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if [ -s /tmp/exam/course/20/passwd ]; then
   echo "Success: passwd file exists and is not empty"; exit 0

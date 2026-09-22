@@ -4,11 +4,13 @@
 >
 > **Total Score**: 104 points | **Passing Score**: ~66% (69 points)
 
-All file paths use the CK-X workspace `/tmp/exam/course/...`. Everything runs on the single `ckad9999` jumphost against the shared cluster (no SSH to other instances).
+All file paths use the CK-X workspace `/tmp/exam/course/...`. Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host).
 
 ---
 
 ## Question 1 | Build Container Image and Save as Tarball (6 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 # Build the image
@@ -27,6 +29,8 @@ ls -lh /tmp/exam/course/1/solar-app.tar
 ---
 
 ## Question 2 | Create Deployment with Labels and Annotations (4 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -63,6 +67,8 @@ kubectl get deploy frontend-app -n solar
 
 ## Question 3 | Sidecar Container with Shared Volume (6 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -94,6 +100,8 @@ kubectl get pod web-with-sidecar -n corona
 ---
 
 ## Question 4 | Create PVC and Mount in Pod (6 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -137,6 +145,8 @@ kubectl get pod data-pod -n aurora
 
 ## Question 5 | Blue/Green Deployment (8 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: apps/v1
@@ -178,6 +188,8 @@ kubectl get endpoints webapp-svc -n flare
 
 ## Question 6 | Configure Rolling Update Strategy (6 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Patch the strategy
 kubectl patch deploy api-app -n dawn -p '{"spec":{"strategy":{"type":"RollingUpdate","rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}}'
@@ -194,6 +206,8 @@ kubectl get deploy api-app -n dawn -o jsonpath='{.spec.strategy}'
 ---
 
 ## Question 7 | Deploy with Kustomize (6 points)
+
+> Server: `ssh ckad9988`
 
 Create `/tmp/exam/course/7/kustomization.yaml`:
 
@@ -229,6 +243,8 @@ kubectl get svc prod-web-svc -n zenith
 
 ## Question 8 | Helm Upgrade with Custom Values (4 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 helm get values web-release -n radiance
 
@@ -241,6 +257,8 @@ helm history web-release -n radiance
 ---
 
 ## Question 9 | Add Startup Probe (4 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl edit deploy slow-app -n eclipse
@@ -270,6 +288,8 @@ kubectl rollout status deploy slow-app -n eclipse
 
 ## Question 10 | Troubleshoot Pending Pod (6 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Identify the issue
 kubectl describe pod stuck-pod -n solar
@@ -294,6 +314,8 @@ kubectl get pod stuck-pod -n solar
 
 ## Question 11 | Extract Logs from Multi-container Pod (4 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl logs multi-logger -n corona -c sidecar --tail=20 > /tmp/exam/course/11/sidecar-logs.txt
 
@@ -303,6 +325,8 @@ cat /tmp/exam/course/11/sidecar-logs.txt
 ---
 
 ## Question 12 | Discover and Use Custom Resource Definition (6 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl get crd | grep backup
@@ -329,6 +353,8 @@ kubectl get backup daily-backup -n aurora
 
 ## Question 13 | Create TLS Secret (4 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl create secret tls web-tls \
   --cert=/tmp/exam/course/13/tls.crt \
@@ -341,6 +367,8 @@ kubectl get secret web-tls -n flare
 ---
 
 ## Question 14 | Harden Deployment with SecurityContext (4 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl edit deploy hardened-app -n dawn
@@ -373,6 +401,8 @@ Note: the base `nginx:1.25` image will not start with `runAsNonRoot`/`readOnlyRo
 
 ## Question 15 | ServiceAccount with RBAC and Verification (6 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl create sa deploy-sa -n zenith
 
@@ -394,6 +424,8 @@ cat /tmp/exam/course/15/auth-check.txt
 ---
 
 ## Question 16 | ConfigMap from env-file (4 points)
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl create configmap app-config --from-env-file=/tmp/exam/course/16/app.env -n eclipse
@@ -420,6 +452,8 @@ kubectl exec config-pod -n eclipse -- env | grep APP_
 
 ## Question 17 | Create docker-registry Secret (4 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl create secret docker-registry registry-creds \
   --docker-server=registry.example.com \
@@ -433,6 +467,8 @@ kubectl get secret registry-creds -n radiance -o jsonpath='{.type}'
 ---
 
 ## Question 18 | NetworkPolicy with ipBlock (6 points)
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl apply -f - <<EOF
@@ -466,6 +502,8 @@ kubectl describe networkpolicy api-allow -n sunbeam
 
 ## Question 19 | Ingress with TLS Termination (6 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: networking.k8s.io/v1
@@ -497,6 +535,8 @@ kubectl describe ingress secure-ingress -n solstice
 ---
 
 ## Question 20 | Fix Service and Verify DNS Resolution (4 points)
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl get endpoints dns-svc -n sunbeam

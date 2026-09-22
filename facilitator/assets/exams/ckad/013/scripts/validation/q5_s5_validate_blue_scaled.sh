@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 r=$(kubectl get deploy app-blue -n flare -o jsonpath='{.spec.replicas}' 2>/dev/null)
 if [ "$r" = "0" ]; then
   echo "Success: blue scaled to 0"

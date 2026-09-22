@@ -255,7 +255,7 @@
     {
       "id": "7",
       "namespace": "zenith",
-      "machineHostname": "ckad9999",
+      "machineHostname": "ckad9988",
       "question": "Directory `/tmp/exam/course/7/` contains two base manifests: `deployment.yaml` and `service.yaml`.\n\n1. Create a `kustomization.yaml` file in `/tmp/exam/course/7/` that:\n- References both `deployment.yaml` and `service.yaml` as resources\n- Adds a `namePrefix: prod-`\n- Sets the replica count to `3` using a patch\n2. Apply with `kubectl apply -k /tmp/exam/course/7/`.\n3. Verify that Deployment `prod-web-app` and Service `prod-web-svc` exist in namespace `zenith`.",
       "concepts": [
         "kustomize",
@@ -363,7 +363,7 @@
     {
       "id": "10",
       "namespace": "solar",
-      "machineHostname": "ckad9988",
+      "machineHostname": "ckad9999",
       "question": "In namespace `solar`, Pod `stuck-pod` has been stuck in `Pending` state.\n\n1. Use `kubectl describe` and events to identify why the Pod is Pending.\n2. Save the `nodeSelector` key that causes the issue to `/tmp/exam/course/10/pending-reason.txt` (just the key name, e.g. `disktype`).\n3. Fix the Pod so it enters `Running` state (delete and recreate without the problematic nodeSelector, or label a node to match).",
       "concepts": [
         "troubleshooting",

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace tempo --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
 kubectl delete pod metrics-pod -n tempo --ignore-not-found=true 2>/dev/null || true
 kubectl delete configmap metrics-config -n tempo --ignore-not-found=true 2>/dev/null || true

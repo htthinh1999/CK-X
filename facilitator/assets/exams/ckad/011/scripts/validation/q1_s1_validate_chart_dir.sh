@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -d "/tmp/exam/course/1/sea-app" ]; then
   echo "Success: chart directory /tmp/exam/course/1/sea-app exists"
   exit 0

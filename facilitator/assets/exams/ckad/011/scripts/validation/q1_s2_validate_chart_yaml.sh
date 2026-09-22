@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -f "/tmp/exam/course/1/sea-app/Chart.yaml" ]; then
   echo "Success: Chart.yaml exists"
   exit 0

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 v=$(kubectl get deployment nginx-deploy -n valley -o jsonpath='{.spec.replicas}' 2>/dev/null)
 if [ "$v" = "2" ]; then

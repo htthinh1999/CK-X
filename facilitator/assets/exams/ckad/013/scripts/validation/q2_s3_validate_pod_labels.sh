@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 a=$(kubectl get deploy frontend-app -n solar -o jsonpath='{.spec.template.metadata.labels.app}' 2>/dev/null)
 t=$(kubectl get deploy frontend-app -n solar -o jsonpath='{.spec.template.metadata.labels.tier}' 2>/dev/null)
 if [ "$a" = "frontend" ] && [ "$t" = "web" ]; then

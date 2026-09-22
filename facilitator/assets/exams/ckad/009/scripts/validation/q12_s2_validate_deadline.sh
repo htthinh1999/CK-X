@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 d=$(kubectl get job deadline-job -n hollow -o jsonpath='{.spec.activeDeadlineSeconds}' 2>/dev/null)
 if [ "$d" = "30" ]; then

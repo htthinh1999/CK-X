@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 req=$(kubectl get deployment quota-app -n garrison -o jsonpath='{.spec.template.spec.containers[0].resources.requests.cpu}' 2>/dev/null)
 if [ -z "$req" ]; then echo "Error: no CPU requests set"; exit 1; fi
 case "$req" in

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f="/tmp/exam/course/14/broken-deploy.yaml"
 if [ ! -s "$f" ]; then echo "Error: $f not found"; exit 1; fi
 if grep -q "rollbackTo" "$f" 2>/dev/null; then echo "Error: deprecated rollbackTo field still present"; exit 1

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if [ -s /tmp/exam/course/17/username ]; then
   echo "Success: username file exists and is not empty"; exit 0

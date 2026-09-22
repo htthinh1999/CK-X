@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 v=$(kubectl get pod resource-pod -n cave -o jsonpath='{.spec.containers[0].resources.limits.cpu}' 2>/dev/null)
 if [ "$v" = "200m" ]; then

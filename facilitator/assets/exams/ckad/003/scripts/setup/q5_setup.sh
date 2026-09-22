@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 kubectl create namespace ember --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
 kubectl delete pod crash-app -n ember --ignore-not-found=true >/dev/null 2>&1 || true

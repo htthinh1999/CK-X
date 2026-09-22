@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 img=$(kubectl get deployment app-deploy -n root -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
 if [[ "$img" == *"nginx:1.18"* ]]; then

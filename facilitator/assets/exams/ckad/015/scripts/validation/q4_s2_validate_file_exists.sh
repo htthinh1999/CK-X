@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -f /tmp/exam/course/4/pod.yaml ]; then
   echo "Success: /tmp/exam/course/4/pod.yaml exists"
   exit 0

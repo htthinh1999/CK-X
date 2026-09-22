@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 m=$(kubectl get hpa app-deploy -n root -o jsonpath='{.spec.maxReplicas}' 2>/dev/null)
 if [ "$m" = "10" ]; then

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get pod shared-pod -n bounty >/dev/null 2>&1; then
   echo "Success: Pod shared-pod exists in bounty"
   exit 0

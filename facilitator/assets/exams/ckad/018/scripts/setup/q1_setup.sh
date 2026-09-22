@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace harmony --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
 kubectl delete pod wisdom-server -n harmony --ignore-not-found=true 2>/dev/null || true
 # provide app source and a starter Dockerfile

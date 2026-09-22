@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if kubectl get persistentvolumeclaim mypvc -n alpine >/dev/null 2>&1; then
   echo "Success: persistentvolumeclaim mypvc exists"; exit 0

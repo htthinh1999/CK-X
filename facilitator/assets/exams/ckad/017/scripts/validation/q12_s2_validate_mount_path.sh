@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if ! kubectl get pod config-consumer -n tide >/dev/null 2>&1; then
   echo "Error: pod config-consumer not found in tide"; exit 1
 fi

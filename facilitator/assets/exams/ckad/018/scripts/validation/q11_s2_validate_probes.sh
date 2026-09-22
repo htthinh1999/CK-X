@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 live=$(kubectl get pod health-check -n harmony -o jsonpath='{.spec.containers[0].livenessProbe}' 2>/dev/null)
 read_p=$(kubectl get pod health-check -n harmony -o jsonpath='{.spec.containers[0].readinessProbe}' 2>/dev/null)
 if [[ -n "$live" ]] && [[ -n "$read_p" ]]; then

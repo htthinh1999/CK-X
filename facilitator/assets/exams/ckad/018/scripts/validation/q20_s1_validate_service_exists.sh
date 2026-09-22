@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get service local-app-svc -n aria >/dev/null 2>&1; then
   echo "Success: service local-app-svc exists"; exit 0
 fi

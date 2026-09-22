@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl apply -f - <<'EOF' >/dev/null 2>&1 || true
 apiVersion: apps/v1
 kind: Deployment

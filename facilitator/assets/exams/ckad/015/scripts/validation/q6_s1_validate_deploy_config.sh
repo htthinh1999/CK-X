@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl get deploy cyclone-web -n cyclone >/dev/null 2>&1 || { echo "Error: Deployment cyclone-web not found in cyclone"; exit 1; }
 rev=$(kubectl get deploy cyclone-web -n cyclone -o jsonpath='{.spec.revisionHistoryLimit}' 2>/dev/null)
 img=$(kubectl get deploy cyclone-web -n cyclone -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)

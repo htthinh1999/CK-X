@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get networkpolicy port-range-allow -n chorus >/dev/null 2>&1; then
   echo "Success: networkpolicy port-range-allow exists"; exit 0
 fi

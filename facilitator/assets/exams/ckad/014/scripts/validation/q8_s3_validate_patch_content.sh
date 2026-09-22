@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 F=/tmp/exam/course/8/patch.json
 if [ -f "$F" ] && grep -q "production" "$F" && grep -q "MODE" "$F"; then
   echo "Success: patch.json contains MODE=production"

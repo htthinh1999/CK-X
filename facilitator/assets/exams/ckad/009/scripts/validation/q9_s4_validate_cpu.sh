@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 c=$(kubectl get hpa app-deploy -n root -o jsonpath='{.spec.metrics[0].resource.target.averageUtilization}' 2>/dev/null)
 if [ "$c" = "80" ]; then

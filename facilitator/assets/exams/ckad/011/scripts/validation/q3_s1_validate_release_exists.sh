@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 info=$(helm list -n tide -o json 2>/dev/null | grep -o '"name":"my-release"' || true)
 if [ -n "$info" ]; then
   echo "Success: helm release my-release exists in tide"

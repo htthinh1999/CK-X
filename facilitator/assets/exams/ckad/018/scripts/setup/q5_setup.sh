@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace chorus --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
 helm uninstall wisdom-app -n chorus 2>/dev/null || true
 mkdir -p /tmp/exam/course/5/chart/templates

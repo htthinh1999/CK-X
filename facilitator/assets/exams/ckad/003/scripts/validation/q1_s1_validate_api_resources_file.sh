@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 file="/tmp/exam/course/1/api-resources"
 if [ -f "$file" ] && grep -qE "NAME.*SHORTNAMES|pods.*po|deployments.*deploy" "$file" 2>/dev/null; then
   echo "Success: api-resources file present with resource list"

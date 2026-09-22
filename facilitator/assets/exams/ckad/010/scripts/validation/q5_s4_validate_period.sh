@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get pod live-pod -n shrine -o jsonpath='{.spec.containers[0].livenessProbe.periodSeconds}' 2>/dev/null)
 if [ "$val" = "10" ]; then
   echo "Success: periodSeconds is 10"

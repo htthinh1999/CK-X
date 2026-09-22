@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f=/tmp/exam/course/20/svc-env.txt
 [ -f "$f" ] || { echo "Error: $f not found"; exit 1; }
 if grep -q "SIROCCO_BACKEND_SERVICE_HOST" "$f"; then

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get pod exec-pod -n storm >/dev/null 2>&1; then
   echo "Success: Pod exec-pod exists in storm"
   exit 0

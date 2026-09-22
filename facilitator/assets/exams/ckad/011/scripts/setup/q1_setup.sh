@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 # Q1 is file-based: student runs `helm create sea-app` under /tmp/exam/course/1/
 mkdir -p /tmp/exam/course/1 || true

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 cnt=$(kubectl get pod shared-pod -n bounty -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
 if [ "$cnt" -ge 2 ] 2>/dev/null; then
   echo "Success: two containers present ($cnt containers)"

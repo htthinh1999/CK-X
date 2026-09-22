@@ -2,11 +2,13 @@
 
 > Dojo Susanoo 🌊 — *「スサノオは海を支配する」- Susanoo commands the seas*
 >
-> Everything runs on the single `ckad9999` jumphost against one shared cluster. Course files live under `/tmp/exam/course/...`.
+> Each question runs on the server named in its `Server` line: `ssh` there and work with that server's only (default) context. Course files live under `/tmp/exam/course/...` on that server.
 
 ---
 
 ## Question 1 | Multi-Stage Dockerfile
+
+> Server: `ssh ckad9999`
 
 Modify the `Dockerfile` to use a multi-stage build, copying the built artifact from the first stage.
 
@@ -27,6 +29,8 @@ EOF
 ---
 
 ## Question 2 | Sidecar Pod
+
+> Server: `ssh ckad9999`
 
 Two containers sharing an `emptyDir` volume; the main writes logs, the sidecar tails them.
 
@@ -61,6 +65,8 @@ EOF
 
 ## Question 3 | CronJob with Concurrency Policy
 
+> Server: `ssh ckad9999`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: batch/v1
@@ -90,6 +96,8 @@ EOF
 
 ## Question 4 | Batch Pod with restartPolicy
 
+> Server: `ssh ckad9999`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -110,6 +118,8 @@ EOF
 
 ## Question 5 | Uninstall Helm Release
 
+> Server: `ssh ckad9999`
+
 ```bash
 helm uninstall ocean-api -n current
 ```
@@ -117,6 +127,8 @@ helm uninstall ocean-api -n current
 ---
 
 ## Question 6 | Deployment with Rolling Update Strategy
+
+> Server: `ssh ckad9999`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -150,6 +162,8 @@ EOF
 
 ## Question 7 | Deployment Rollback
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Update to nginx:1.24 and record cause (revision 2)
 kubectl set image deployment/api-server nginx=nginx:1.24 -n lagoon
@@ -169,6 +183,8 @@ kubectl rollout undo deployment/api-server --to-revision=2 -n lagoon
 ---
 
 ## Question 8 | Kustomize with commonLabels/commonAnnotations
+
+> Server: `ssh ckad9988`
 
 ```bash
 mkdir -p /tmp/exam/course/8
@@ -196,6 +212,8 @@ kubectl apply -k . -n trench
 
 ## Question 9 | Fix ErrImagePull Pod
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl get pod backend-pod -n wave -o yaml > /tmp/exam/pod.yaml
 # Change image from wrongregistry.k8s.io/nginx:alpine to nginx:alpine
@@ -208,6 +226,8 @@ kubectl apply -f /tmp/exam/pod.yaml
 
 ## Question 10 | Extract Warning Events
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/10
 kubectl get events -n depths --field-selector type=Warning > /tmp/exam/course/10/events.txt
@@ -216,6 +236,8 @@ kubectl get events -n depths --field-selector type=Warning > /tmp/exam/course/10
 ---
 
 ## Question 11 | gRPC Liveness Probe
+
+> Server: `ssh ckad9988`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -239,6 +261,8 @@ EOF
 ---
 
 ## Question 12 | ConfigMap from Directory Mounted as Volume
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl create configmap app-config-dir --from-file=/tmp/exam/course/12/config-files/ -n tide
@@ -267,6 +291,8 @@ EOF
 ---
 
 ## Question 13 | Secret Exposed as Env Vars
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl create secret generic db-credentials \
@@ -300,6 +326,8 @@ EOF
 ---
 
 ## Question 14 | SecurityContext + NetworkPolicy
+
+> Server: `ssh ckad9988`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -342,6 +370,8 @@ EOF
 
 ## Question 15 | Ephemeral Debug Container
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl debug target-pod -n reef --image=busybox --container=debug-container
 ```
@@ -349,6 +379,8 @@ kubectl debug target-pod -n reef --image=busybox --container=debug-container
 ---
 
 ## Question 16 | Deployment + PodDisruptionBudget
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -388,6 +420,8 @@ EOF
 
 ## Question 17 | Deny-all + Allow-web NetworkPolicies
 
+> Server: `ssh ckad9977`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
@@ -426,6 +460,8 @@ EOF
 
 ## Question 18 | Fix Service Selector
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl patch service mesh-service -n wave -p '{"spec":{"selector":{"app":"mesh-app"}}}'
 # or: kubectl edit service mesh-service -n wave   (change selector to app: mesh-app)
@@ -434,6 +470,8 @@ kubectl patch service mesh-service -n wave -p '{"spec":{"selector":{"app":"mesh-
 ---
 
 ## Question 19 | Multi-Port Service
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -460,6 +498,8 @@ EOF
 ---
 
 ## Question 20 | Rewrite-Target Ingress
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF | kubectl apply -f -

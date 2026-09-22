@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 s=$(kubectl get service backend-headless -n corona -o jsonpath='{.spec.selector.app}' 2>/dev/null)
 if [ "$s" = "backend" ]; then
   echo "Success: selector app=backend"

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 # Q5 creates a cluster-scoped PersistentVolume (student creates sea-pv). No prerequisites.
 echo "Setup complete for Question 5"

@@ -2,11 +2,13 @@
 
 > Dojo Fujin 🌬️ — *「風神は嵐を呼ぶ」- Fujin summons the storm*
 >
-> Paths use `/tmp/exam/course/N/...`. The image registry is the local `localhost:5000` registry started during setup. Everything runs on the single `ckad9999` host / one cluster (no SSH).
+> Paths use `/tmp/exam/course/N/...`. The image registry is the local `localhost:5000` registry started during setup on the Question 1 server. Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host).
 
 ---
 
 ## Question 1 | Docker Image Build and Push
+
+> Server: `ssh ckad9999`
 
 ```bash
 cd /tmp/exam/course/1
@@ -19,6 +21,8 @@ docker push localhost:5000/fujin-api:v2
 ---
 
 ## Question 2 | Sidecar Logging Container
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl get pod wind-logger -n gale -o yaml > /tmp/exam/wind.yaml
@@ -45,6 +49,8 @@ kubectl replace --force -f /tmp/exam/wind.yaml
 
 ## Question 3 | Batch Job Processing
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl create job storm-processor -n breeze --image=busybox:1.31.1 --dry-run=client -o yaml -- sh -c 'sleep 2; echo "Processing storm data"' > /tmp/exam/job.yaml
 # Edit job.yaml to add completions and parallelism
@@ -65,6 +71,8 @@ kubectl apply -f /tmp/exam/job.yaml
 ---
 
 ## Question 4 | Fix Deployment CrashLoopBackOff
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl get deployment tempest-app -n tempest -o yaml > /tmp/exam/dep.yaml
@@ -100,6 +108,8 @@ kubectl apply -f /tmp/exam/course/4/pod.yaml
 
 ## Question 5 | Helm Release Upgrade
 
+> Server: `ssh ckad9999`
+
 ```bash
 helm upgrade storm-app /tmp/exam/course/5/storm-chart -n typhoon --set replicaCount=3 --set image.tag=v2.0.0
 ```
@@ -109,6 +119,8 @@ helm upgrade storm-app /tmp/exam/course/5/storm-chart -n typhoon --set replicaCo
 ---
 
 ## Question 6 | Rolling Update Strategy
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl patch deployment cyclone-web -n cyclone -p '{"spec":{"revisionHistoryLimit":2}}'
@@ -121,6 +133,8 @@ kubectl set image deployment/cyclone-web -n cyclone web=nginx:1.23.1
 
 ## Question 7 | Blue-Green Deployment Switch
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl patch svc zephyr-svc -n zephyr -p '{"spec":{"selector":{"version":"green"}}}'
 ```
@@ -130,6 +144,8 @@ kubectl patch svc zephyr-svc -n zephyr -p '{"spec":{"selector":{"version":"green
 ---
 
 ## Question 8 | Kustomize Apply
+
+> Server: `ssh ckad9988`
 
 ```bash
 cd /tmp/exam/course/8
@@ -152,6 +168,8 @@ kubectl apply -k . -n tornado
 
 ## Question 9 | OOMKilled Pod Troubleshooting
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl get pod memory-hog -n mistral -o yaml > /tmp/exam/hog.yaml
 # Edit hog.yaml: set spec.containers[0].resources.limits.memory to 256Mi (keep request 64Mi)
@@ -164,6 +182,8 @@ kubectl replace --force -f /tmp/exam/hog.yaml
 
 ## Question 10 | Top Memory-Consuming Pods
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl top pods -n sirocco --sort-by=memory
 # Write the top 3 pod names (highest -> lowest) to the file
@@ -175,6 +195,8 @@ kubectl top pods -n sirocco --sort-by=memory --no-headers | head -n 3 | awk '{pr
 ---
 
 ## Question 11 | Liveness and Readiness Probes
+
+> Server: `ssh ckad9988`
 
 ```bash
 cat <<EOF > /tmp/exam/q11.yaml
@@ -204,6 +226,8 @@ kubectl apply -f /tmp/exam/q11.yaml
 ---
 
 ## Question 12 | Secret from File
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl create secret generic gale-secret -n gale --from-literal=password.txt=super-secret-wind
@@ -236,6 +260,8 @@ kubectl apply -f /tmp/exam/q12.yaml
 
 ## Question 13 | Role and RoleBinding
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl create role breeze-manager -n breeze \
   --verb=create,delete,list,watch \
@@ -249,6 +275,8 @@ kubectl create rolebinding breeze-manager-binding -n breeze \
 ---
 
 ## Question 14 | Pod with Volume and SecurityContext
+
+> Server: `ssh ckad9988`
 
 ```bash
 cat <<EOF > /tmp/exam/q14.yaml
@@ -272,6 +300,8 @@ kubectl apply -f /tmp/exam/q14.yaml
 ---
 
 ## Question 15 | LimitRange Configuration
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF > /tmp/exam/q15.yaml
@@ -302,6 +332,8 @@ kubectl apply -f /tmp/exam/q15.yaml
 
 ## Question 16 | Disable Default ServiceAccount Automount
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl get pod zephyr-api -n zephyr -o yaml > /tmp/exam/q16.yaml
 # Add automountServiceAccountToken: false under spec
@@ -313,6 +345,8 @@ kubectl replace --force -f /tmp/exam/q16.yaml
 ---
 
 ## Question 17 | Egress NetworkPolicy for DNS
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF > /tmp/exam/q17.yaml
@@ -342,6 +376,8 @@ kubectl apply -f /tmp/exam/q17.yaml
 ---
 
 ## Question 18 | Ingress with Path Routing
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF > /tmp/exam/q18.yaml
@@ -379,6 +415,8 @@ kubectl apply -f /tmp/exam/q18.yaml
 
 ## Question 19 | Headless Service for StatefulSet
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl create service clusterip mistral-db-headless -n mistral \
   --clusterip="None" --tcp=3306:3306 --dry-run=client -o yaml > /tmp/exam/svc.yaml
@@ -408,6 +446,8 @@ spec:
 ---
 
 ## Question 20 | Debug Service Connectivity
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl exec sirocco-app -n sirocco -- env | grep SIROCCO_BACKEND

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 r=$(kubectl get deployment app-v2 -n grain -o jsonpath='{.spec.replicas}' 2>/dev/null)
 i=$(kubectl get deployment app-v2 -n grain -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
 l=$(kubectl get deployment app-v2 -n grain -o jsonpath='{.spec.template.metadata.labels.app}' 2>/dev/null)

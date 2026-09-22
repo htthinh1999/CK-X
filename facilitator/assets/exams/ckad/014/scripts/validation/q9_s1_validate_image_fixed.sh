@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if ! kubectl get pod metrics-gatherer -n starlight >/dev/null 2>&1; then
   echo "Error: pod metrics-gatherer not found in starlight"
   exit 1

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 img=$(kubectl get job batch-processor -n bulwark -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
 case "$img" in
   *busybox*) echo "Success: image is $img"; exit 0;;

@@ -182,7 +182,7 @@
     {
       "id": "4",
       "namespace": "delta",
-      "machineHostname": "ckad9999",
+      "machineHostname": "ckad9977",
       "question": "In namespace `delta`, Pod `metrics-pod` is using ServiceAccount `wrong-sa` and receiving authorization errors.\n\nMultiple ServiceAccounts, Roles, and RoleBindings already exist in the namespace:\n\n- ServiceAccounts: `monitor-sa`, `wrong-sa`, `admin-sa`\n- Roles: `metrics-reader`, `full-access`, `view-only`\n- RoleBindings: `monitor-binding`, `admin-binding`\n\nYour tasks:\n\n1. Identify which ServiceAccount/Role/RoleBinding combination has the correct permissions\n2. Update Pod `metrics-pod` to use the correct ServiceAccount (`monitor-sa`)\n3. Verify the Pod stops showing authorization errors\n\nHint: Check existing RoleBindings to see which ServiceAccount is bound to which Role.",
       "concepts": [
         "rbac",
@@ -694,7 +694,7 @@
     {
       "id": "17",
       "namespace": "eddy",
-      "machineHostname": "ckad9977",
+      "machineHostname": "ckad9999",
       "question": "Create a Pod named `spread-pod` in namespace `eddy` with:\n\n- Image: `nginx`\n- Topology spread constraint that spreads across nodes with `maxSkew: 1`\n- Use `topologyKey: kubernetes.io/hostname`\n- `whenUnsatisfiable: DoNotSchedule`\n\nNote: This is a preview question for advanced topics.",
       "concepts": [
         "scheduling",

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get rolebinding pod-reader-binding -n bastion -o jsonpath='{.roleRef.name}' 2>/dev/null)
 if [ "$val" = "pod-reader-role" ]; then
   echo "Success: RoleBinding roleRef name ($val)"

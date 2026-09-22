@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get deployment canary-v2 -n blaze >/dev/null 2>&1; then
   echo "Success: canary-v2 exists"
   exit 0

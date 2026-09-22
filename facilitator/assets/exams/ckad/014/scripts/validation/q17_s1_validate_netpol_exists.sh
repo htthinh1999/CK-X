@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get networkpolicy deny-external -n dusk >/dev/null 2>&1; then
   echo "Success: networkpolicy deny-external exists in dusk"
   exit 0

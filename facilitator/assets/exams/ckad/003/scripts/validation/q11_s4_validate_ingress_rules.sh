@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 ing=$(kubectl get networkpolicy allow-from-flame -n corona -o jsonpath='{.spec.ingress}' 2>/dev/null)
 if [ -n "$ing" ] && [ "$ing" != "[]" ]; then
   echo "Success: ingress rules defined"

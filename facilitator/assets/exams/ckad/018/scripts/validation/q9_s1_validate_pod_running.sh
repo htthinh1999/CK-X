@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if ! kubectl get pod metrics-pod -n tempo >/dev/null 2>&1; then
   echo "Error: pod metrics-pod not found in tempo"; exit 1
 fi

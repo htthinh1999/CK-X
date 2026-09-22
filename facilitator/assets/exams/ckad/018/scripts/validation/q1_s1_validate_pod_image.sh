@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if ! kubectl get pod wisdom-server -n harmony >/dev/null 2>&1; then
   echo "Error: pod wisdom-server not found in harmony"; exit 1
 fi

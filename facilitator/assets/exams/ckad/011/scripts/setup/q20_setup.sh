@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 # Prerequisite: a running pod in storm so `kubectl top pods -n storm` has data.
 kubectl create namespace storm --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true

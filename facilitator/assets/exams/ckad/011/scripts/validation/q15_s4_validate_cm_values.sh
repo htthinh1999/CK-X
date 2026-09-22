@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 host=$(kubectl get configmap env-config -n voyage -o jsonpath='{.data.DB_HOST}' 2>/dev/null)
 port=$(kubectl get configmap env-config -n voyage -o jsonpath='{.data.DB_PORT}' 2>/dev/null)
 if [ "$host" = "localhost" ] && [ "$port" = "5432" ]; then

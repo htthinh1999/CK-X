@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 t=$(kubectl get secret registry-creds -n radiance -o jsonpath='{.type}' 2>/dev/null)
 if [ "$t" = "kubernetes.io/dockerconfigjson" ]; then
   echo "Success: type dockerconfigjson"

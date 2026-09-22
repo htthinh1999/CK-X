@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if [ -s /tmp/exam/course/2/pod-ip.txt ]; then
   echo "Success: pod-ip.txt exists and is not empty"; exit 0

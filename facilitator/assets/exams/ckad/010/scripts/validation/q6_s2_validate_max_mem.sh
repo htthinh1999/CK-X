@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get limitrange pod-limits -n blessing -o jsonpath='{.spec.limits[0].max.memory}' 2>/dev/null)
 if [ "$val" = "500Mi" ]; then
   echo "Success: max memory is 500Mi"

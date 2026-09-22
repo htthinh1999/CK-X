@@ -6,11 +6,13 @@
 >
 > Original Questions: Adapted from [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) by [@dgkanatsios](https://github.com/dgkanatsios)
 >
-> Everything runs on the single `ckad9999` jumphost against one shared cluster (no SSH between instances). File paths use `/tmp/exam/course/...`.
+> Each question runs on the server shown under its heading: `ssh` to that host and use its default context (one cluster per host). File paths use `/tmp/exam/course/...`.
 
 ---
 
 ## Question 1 | Namespace and Pod Creation (4 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl create namespace mynamespace
@@ -35,6 +37,8 @@ spec:
 ---
 
 ## Question 2 | Pod with Environment Variables (5 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl run envpod --image=busybox:1.36 --restart=Never -n summit --env=VAR1=value1 -- env
@@ -63,6 +67,8 @@ spec:
 
 ## Question 3 | ResourceQuota (6 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl create quota cliff-quota -n cliff --hard=cpu=1,memory=1G,pods=2
 ```
@@ -86,6 +92,8 @@ spec:
 
 ## Question 4 | Labels and Selectors (5 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Create 3 pods with label app=v1
 kubectl run nginx1 --image=nginx:1.25 --restart=Never -n ridge --labels=app=v1
@@ -102,6 +110,8 @@ kubectl label po -n ridge -l app=v1 tier=web
 ---
 
 ## Question 5 | Deployment Creation (6 points)
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl create deployment nginx-deploy --image=nginx:1.18.0 --replicas=2 --port=80 -n valley
@@ -136,6 +146,8 @@ spec:
 
 ## Question 6 | Deployment Rollout (5 points)
 
+> Server: `ssh ckad9999`
+
 ```bash
 # Update the image
 kubectl set image deployment/nginx-deploy nginx=nginx:1.19.8 -n valley
@@ -150,6 +162,8 @@ kubectl rollout history deployment/nginx-deploy -n valley
 ---
 
 ## Question 7 | Deployment Rollback (5 points)
+
+> Server: `ssh ckad9999`
 
 The `rollback-deploy` Deployment in `cave` was updated to a broken image (`nginx:1.91`) creating a failing revision. Roll it back to the previous working revision.
 
@@ -167,6 +181,8 @@ kubectl get pods -n cave -l app=rollback-deploy
 ---
 
 ## Question 8 | Job with Completions (5 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl create job echo-job --image=busybox:1.36 -n stone --dry-run=client -o yaml \
@@ -200,6 +216,8 @@ kubectl apply -f /tmp/exam/echo-job.yaml
 
 ## Question 9 | CronJob (5 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl create cronjob date-job --image=busybox:1.36 --schedule="*/1 * * * *" -n mist \
   -- /bin/sh -c 'date; echo Hello from Kubernetes'
@@ -208,6 +226,8 @@ kubectl create cronjob date-job --image=busybox:1.36 --schedule="*/1 * * * *" -n
 ---
 
 ## Question 10 | Multi-Container Pod (6 points)
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: v1
@@ -228,6 +248,8 @@ spec:
 ---
 
 ## Question 11 | Init Container (6 points)
+
+> Server: `ssh ckad9988`
 
 ```yaml
 apiVersion: v1
@@ -260,6 +282,8 @@ spec:
 
 ## Question 12 | ConfigMap from Literals (4 points)
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl create configmap app-config --from-literal=foo=lala --from-literal=foo2=lolo -n peak
 ```
@@ -267,6 +291,8 @@ kubectl create configmap app-config --from-literal=foo=lala --from-literal=foo2=
 ---
 
 ## Question 13 | ConfigMap as Environment Variable (5 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl create configmap options --from-literal=var5=val5 -n summit
@@ -293,6 +319,8 @@ spec:
 ---
 
 ## Question 14 | ConfigMap as Volume (5 points)
+
+> Server: `ssh ckad9988`
 
 ```bash
 kubectl create configmap cmvolume --from-literal=var8=val8 --from-literal=var9=val9 -n cliff
@@ -321,6 +349,8 @@ spec:
 
 ## Question 15 | Secret Creation and Usage (5 points)
 
+> Server: `ssh ckad9977`
+
 ```bash
 kubectl create secret generic mysecret --from-literal=password=mypass -n ridge
 ```
@@ -348,6 +378,8 @@ spec:
 
 ## Question 16 | SecurityContext (5 points)
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -369,6 +401,8 @@ Note: `busybox` is used instead of `nginx` because the standard nginx image need
 ---
 
 ## Question 17 | Resource Requests and Limits (5 points)
+
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: v1
@@ -393,6 +427,8 @@ spec:
 
 ## Question 18 | Liveness Probe (5 points)
 
+> Server: `ssh ckad9977`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -414,6 +450,8 @@ spec:
 ---
 
 ## Question 19 | Service and NetworkPolicy (6 points)
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl create deployment web --image=nginx:1.25 --replicas=2 -n mist
@@ -442,6 +480,8 @@ spec:
 ---
 
 ## Question 20 | PersistentVolume and PersistentVolumeClaim (8 points)
+
+> Server: `ssh ckad9977`
 
 ```yaml
 # PersistentVolume (cluster-scoped)

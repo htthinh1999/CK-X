@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 ref=$(kubectl get pod env-pod -n meadow -o jsonpath='{.spec.containers[0].envFrom[0].configMapRef.name}' 2>/dev/null)
 if [ "$ref" = "env-config" ]; then

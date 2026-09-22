@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if kubectl get networkpolicy web-policy -n mist >/dev/null 2>&1; then
   echo "Success: networkpolicy web-policy exists"; exit 0

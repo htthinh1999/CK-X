@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 content=$(kubectl get configmap file-config -n glade -o jsonpath='{.data}' 2>/dev/null)
 if [[ "$content" == *"foo3"* ]] || [[ "$content" == *"lili"* ]]; then

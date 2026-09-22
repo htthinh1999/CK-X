@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 mkdir -p /tmp/exam/course/8
 cat > /tmp/exam/course/8/broken-deploy.yaml <<'EOF'
 # Q8: Broken Deployment YAML with intentional errors

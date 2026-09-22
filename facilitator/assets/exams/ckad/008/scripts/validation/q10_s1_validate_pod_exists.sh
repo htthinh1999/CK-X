@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if kubectl get pod multi-container -n alpine >/dev/null 2>&1; then
   echo "Success: pod multi-container exists"; exit 0

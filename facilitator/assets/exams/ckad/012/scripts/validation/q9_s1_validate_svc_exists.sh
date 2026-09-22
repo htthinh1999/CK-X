@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get service backend-svc -n parapet >/dev/null 2>&1; then
   echo "Success: Service backend-svc exists in parapet"
   exit 0

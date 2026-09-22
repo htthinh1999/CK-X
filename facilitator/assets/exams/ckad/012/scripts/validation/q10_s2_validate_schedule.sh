@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 val=$(kubectl get cronjob cleanup-job -n stronghold -o jsonpath='{.spec.schedule}' 2>/dev/null)
 if [ "$val" = "*/5 * * * *" ]; then
   echo "Success: Schedule ($val)"

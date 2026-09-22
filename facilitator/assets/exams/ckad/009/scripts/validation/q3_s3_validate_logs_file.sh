@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if [ -s /tmp/exam/course/3/logs.txt ]; then
   echo "Success: logs.txt exists and is not empty"; exit 0

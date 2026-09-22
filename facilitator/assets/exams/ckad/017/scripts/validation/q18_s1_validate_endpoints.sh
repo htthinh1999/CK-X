@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if ! kubectl get svc mesh-service -n wave >/dev/null 2>&1; then
   echo "Error: service mesh-service not found in wave"; exit 1
 fi

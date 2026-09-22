@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 cnt=$(kubectl get pods -n harvest -l env=prod -o name 2>/dev/null | wc -l)
 if [ "$cnt" -ge 2 ] 2>/dev/null; then
   echo "Success: pods with env=prod exist ($cnt pods)"

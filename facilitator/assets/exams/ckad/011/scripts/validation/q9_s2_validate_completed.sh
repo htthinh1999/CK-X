@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 phase=$(kubectl get pod echo-pod -n current -o jsonpath='{.status.phase}' 2>/dev/null)
 if [ "$phase" = "Succeeded" ] || [ "$phase" = "Completed" ]; then
   echo "Success: Pod echo-pod completed (phase $phase)"

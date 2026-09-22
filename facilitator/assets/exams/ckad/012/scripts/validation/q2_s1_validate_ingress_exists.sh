@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get ingress frontend-ingress -n bastion >/dev/null 2>&1; then
   echo "Success: Ingress frontend-ingress exists in bastion"
   exit 0

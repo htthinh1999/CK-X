@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get svc app-svc -n trench >/dev/null 2>&1; then
   echo "Success: service app-svc exists in trench"; exit 0
 fi

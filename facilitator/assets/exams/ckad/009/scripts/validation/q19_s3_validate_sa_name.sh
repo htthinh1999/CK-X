@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 sa=$(kubectl get pod sa-pod -n root -o jsonpath='{.spec.serviceAccountName}' 2>/dev/null)
 if [ "$sa" = "app-sa" ]; then

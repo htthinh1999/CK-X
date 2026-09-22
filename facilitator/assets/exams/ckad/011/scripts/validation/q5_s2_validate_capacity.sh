@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 capacity=$(kubectl get pv sea-pv -o jsonpath='{.spec.capacity.storage}' 2>/dev/null)
 if [ "$capacity" = "5Gi" ]; then
   echo "Success: capacity is 5Gi"

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 r=$(kubectl get deployment app-deploy -n root -o jsonpath='{.spec.replicas}' 2>/dev/null)
 if [ "$r" = "3" ] || [ "$r" = "5" ]; then

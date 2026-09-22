@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 v=$(kubectl get job echo-job -n stone -o jsonpath='{.spec.completions}' 2>/dev/null)
 if [ "$v" = "5" ]; then

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 if kubectl get hpa app-deploy -n root >/dev/null 2>&1; then
   echo "Success: hpa app-deploy exists in root"; exit 0

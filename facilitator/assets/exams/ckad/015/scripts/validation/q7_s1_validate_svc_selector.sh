@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 sel=$(kubectl get svc zephyr-svc -n zephyr -o jsonpath='{.spec.selector.version}' 2>/dev/null)
 if [ "$sel" == "green" ]; then
   echo "Success: zephyr-svc selector version=green"

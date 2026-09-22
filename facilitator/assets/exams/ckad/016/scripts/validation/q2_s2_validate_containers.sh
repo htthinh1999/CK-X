@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 names=$(kubectl get pod thunder-logger -n thunder -o jsonpath='{.spec.containers[*].name}' 2>/dev/null)
 if [[ "$names" == *"app-container"* ]] && [[ "$names" == *"error-tailer"* ]]; then
   echo "Success: both containers present"; exit 0

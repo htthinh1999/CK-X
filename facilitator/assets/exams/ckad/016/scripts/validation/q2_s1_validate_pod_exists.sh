@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get pod thunder-logger -n thunder >/dev/null 2>&1; then
   echo "Success: pod thunder-logger exists"; exit 0
 fi

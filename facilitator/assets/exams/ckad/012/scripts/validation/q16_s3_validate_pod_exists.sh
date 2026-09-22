@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get pod config-app -n gate >/dev/null 2>&1; then
   echo "Success: Pod config-app exists in gate"
   exit 0

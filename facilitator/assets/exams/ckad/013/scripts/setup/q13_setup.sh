@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace flare --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 mkdir -p /tmp/exam/course/13
 if [ ! -f /tmp/exam/course/13/tls.crt ] || [ ! -f /tmp/exam/course/13/tls.key ]; then

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 adapter=$(kubectl get pod wind-logger -n gale -o jsonpath='{.spec.containers[?(@.name=="adapter")].name}' 2>/dev/null)
 if [ "$adapter" == "adapter" ]; then
   echo "Success: adapter container present in wind-logger"

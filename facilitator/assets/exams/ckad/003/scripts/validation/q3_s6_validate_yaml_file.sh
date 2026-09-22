@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -f "/tmp/exam/course/3/job.yaml" ]; then
   echo "Success: job.yaml saved"
   exit 0

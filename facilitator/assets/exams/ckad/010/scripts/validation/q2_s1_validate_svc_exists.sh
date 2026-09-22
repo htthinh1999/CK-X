@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get service app-svc -n grain >/dev/null 2>&1; then
   echo "Success: Service app-svc exists in grain"
   exit 0

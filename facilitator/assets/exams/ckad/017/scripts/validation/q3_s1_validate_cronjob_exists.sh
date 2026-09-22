@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if kubectl get cronjob data-sync -n coral >/dev/null 2>&1; then
   echo "Success: cronjob data-sync exists in coral"; exit 0
 fi

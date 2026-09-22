@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace sirocco --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 mkdir -p /tmp/exam/course/10
 for p in sirocco-pod-a sirocco-pod-b sirocco-pod-c; do

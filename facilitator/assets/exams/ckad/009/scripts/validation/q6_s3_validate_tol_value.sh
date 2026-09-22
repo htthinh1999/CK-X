@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 val=$(kubectl get pod tolerate-pod -n moss -o jsonpath='{.spec.tolerations[?(@.key=="tier")].value}' 2>/dev/null)
 if [ "$val" = "frontend" ]; then

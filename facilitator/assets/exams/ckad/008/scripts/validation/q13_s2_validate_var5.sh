@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 v=$(kubectl get cm options -n summit -o jsonpath='{.data.var5}' 2>/dev/null)
 if [ "$v" = "val5" ]; then

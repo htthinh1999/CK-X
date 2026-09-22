@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 f="/tmp/exam/course/7/password.txt"
 if [ -f "$f" ] && [ "$(cat "$f")" = "FirePhoenix2024!" ]; then
   echo "Success: password content correct"

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 up=$(kubectl get pod secure-pod -n valley -o jsonpath='{.spec.securityContext.runAsUser}' 2>/dev/null)
 uc=$(kubectl get pod secure-pod -n valley -o jsonpath='{.spec.containers[0].securityContext.runAsUser}' 2>/dev/null)

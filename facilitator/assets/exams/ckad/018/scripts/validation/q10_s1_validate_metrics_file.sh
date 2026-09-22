@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 if [ -f /tmp/exam/course/10/metrics.txt ]; then
   val=$(cat /tmp/exam/course/10/metrics.txt 2>/dev/null)
   if [[ -n "$val" ]]; then

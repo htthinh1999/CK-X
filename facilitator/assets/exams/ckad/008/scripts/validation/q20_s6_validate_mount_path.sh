@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 mp=$(kubectl get pod pv-pod -n alpine -o jsonpath='{.spec.containers[0].volumeMounts[0].mountPath}' 2>/dev/null)
 mp="${mp%/}"

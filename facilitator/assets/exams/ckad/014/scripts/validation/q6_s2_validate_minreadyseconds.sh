@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 mr=$(kubectl get deployment slow-start-app -n shadow -o jsonpath='{.spec.minReadySeconds}' 2>/dev/null)
 if [ "$mr" == "20" ]; then
   echo "Success: minReadySeconds is 20"

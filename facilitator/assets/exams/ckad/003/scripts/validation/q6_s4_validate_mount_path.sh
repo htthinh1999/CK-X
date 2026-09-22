@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 mp=$(kubectl get pod config-reader -n flame -o jsonpath='{.spec.containers[0].volumeMounts[?(@.name=="cm-vol")].mountPath}' 2>/dev/null)
 if [ -z "$mp" ]; then
   mp=$(kubectl get pod config-reader -n flame -o json 2>/dev/null | grep -oP '"/config/?"' | head -1 | tr -d '"')

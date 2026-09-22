@@ -2,11 +2,13 @@
 
 > Dojo Benzaiten 🎶 — *「弁財天は智慧を授ける」- Benzaiten bestows wisdom*
 >
-> Paths are remapped to `/tmp/exam/course/N/...`. A local registry runs at `localhost:5000`. Everything happens on the single `ckad9999` host / one cluster (no SSH).
+> Paths are remapped to `/tmp/exam/course/N/...`. A local registry runs at `localhost:5000` on `ckad9999` (Question 1). Each question runs on the server named in its `Server` line: `ssh` there and work with that server's only (default) context.
 
 ---
 
 ## Question 1 | Dockerfile ARG and LABEL
+
+> Server: `ssh ckad9999`
 
 ```bash
 mkdir -p /tmp/exam/course/1/
@@ -22,6 +24,8 @@ kubectl run wisdom-server -n harmony --image=localhost:5000/benzaiten-wisdom:v1
 ---
 
 ## Question 2 | Adapter Sidecar Pattern
+
+> Server: `ssh ckad9999`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -52,6 +56,8 @@ EOF
 
 ## Question 3 | Parallel Job Execution
 
+> Server: `ssh ckad9999`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: batch/v1
@@ -75,6 +81,8 @@ EOF
 
 ## Question 4 | Init Container with ConfigMap
 
+> Server: `ssh ckad9999`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -97,6 +105,8 @@ EOF
 
 ## Question 5 | Helm Values Override
 
+> Server: `ssh ckad9999`
+
 ```bash
 helm dependency update /tmp/exam/course/5/chart
 cat <<EOF > /tmp/exam/course/5/values.yaml
@@ -110,6 +120,8 @@ helm install wisdom-app /tmp/exam/course/5/chart -n chorus -f /tmp/exam/course/5
 ---
 
 ## Question 6 | Canary Deployment
+
+> Server: `ssh ckad9999`
 
 ```bash
 kubectl create deploy rolling-deploy --image=nginx:1.24-alpine --replicas=5 -n sonata --dry-run=client -o yaml > deploy.yaml
@@ -128,6 +140,8 @@ kubectl set image deployment/rolling-deploy nginx=nginx:1.25-alpine -n sonata --
 
 ## Question 7 | Deployment Rollback History
 
+> Server: `ssh ckad9999`
+
 ```bash
 kubectl rollout undo deployment legacy-app --to-revision=2 -n verse
 ```
@@ -135,6 +149,8 @@ kubectl rollout undo deployment legacy-app --to-revision=2 -n verse
 ---
 
 ## Question 8 | Kustomize Overlay Patch
+
+> Server: `ssh ckad9988`
 
 ```bash
 mkdir -p /tmp/exam/course/8/overlays/production
@@ -160,6 +176,8 @@ kubectl apply -k /tmp/exam/course/8/overlays/production
 
 ## Question 9 | ContainerCreating Pod Debug
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl describe pod metrics-pod -n tempo
 # The pod references a ConfigMap named metrics-config that does not exist.
@@ -170,6 +188,8 @@ kubectl create configmap metrics-config -n tempo
 
 ## Question 10 | Metrics API Raw Query
 
+> Server: `ssh ckad9988`
+
 ```bash
 mkdir -p /tmp/exam/course/10
 kubectl get --raw /apis/metrics.k8s.io/v1beta1/namespaces/aria/pods/heavy-worker \
@@ -179,6 +199,8 @@ kubectl get --raw /apis/metrics.k8s.io/v1beta1/namespaces/aria/pods/heavy-worker
 ---
 
 ## Question 11 | Liveness HTTP Probe
+
+> Server: `ssh ckad9988`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -209,6 +231,8 @@ EOF
 ---
 
 ## Question 12 | Projected Volume with ServiceAccount
+
+> Server: `ssh ckad9988`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -246,6 +270,8 @@ EOF
 
 ## Question 13 | Secret from Binary File
 
+> Server: `ssh ckad9988`
+
 ```bash
 kubectl create configmap binary-config --from-file=data.bin=/tmp/exam/course/13/data.bin -n rhythm
 ```
@@ -253,6 +279,8 @@ kubectl create configmap binary-config --from-file=data.bin=/tmp/exam/course/13/
 ---
 
 ## Question 14 | SELinux SecurityContext
+
+> Server: `ssh ckad9988`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -276,6 +304,8 @@ EOF
 
 ## Question 15 | ServiceAccount with RBAC
 
+> Server: `ssh ckad9977`
+
 ```bash
 mkdir -p /tmp/exam/course/15
 kubectl create serviceaccount vault-accessor -n sonata
@@ -285,6 +315,8 @@ kubectl create token vault-accessor -n sonata --duration=3600s > /tmp/exam/cours
 ---
 
 ## Question 16 | Port-Range NetworkPolicy
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -313,6 +345,8 @@ EOF
 
 ## Question 17 | Egress External NetworkPolicy
 
+> Server: `ssh ckad9977`
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
@@ -338,6 +372,8 @@ EOF
 ---
 
 ## Question 18 | Multi-TLS Ingress
+
+> Server: `ssh ckad9977`
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -382,6 +418,8 @@ EOF
 
 ## Question 19 | EndpointSlice Inspection
 
+> Server: `ssh ckad9977`
+
 ```bash
 mkdir -p /tmp/exam/course/19
 kubectl get endpointslice -n tempo -l kubernetes.io/service-name=external-db-svc \
@@ -391,6 +429,8 @@ kubectl get endpointslice -n tempo -l kubernetes.io/service-name=external-db-svc
 ---
 
 ## Question 20 | Local Registry Deployment
+
+> Server: `ssh ckad9977`
 
 ```bash
 kubectl create deployment local-app --image=nginx:alpine --replicas=3 -n aria

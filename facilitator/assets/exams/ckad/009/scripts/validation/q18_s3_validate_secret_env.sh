@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 ref=$(kubectl get pod api-pod -n moss -o jsonpath='{.spec.containers[0].env[0].valueFrom.secretKeyRef.name}' 2>/dev/null)
 if [ "$ref" = "api-secret" ]; then

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 v=$(kubectl get pod nginx2 -n ridge -o jsonpath='{.metadata.labels.app}' 2>/dev/null)
 if [ "$v" = "v2" ]; then

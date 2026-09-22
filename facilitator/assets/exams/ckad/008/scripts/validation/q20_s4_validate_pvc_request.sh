@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
 v=$(kubectl get pvc mypvc -n alpine -o jsonpath='{.spec.resources.requests.storage}' 2>/dev/null)
 if [ "$v" = "4Gi" ]; then

@@ -1,5 +1,5 @@
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
+export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 exc=$(kubectl get netpol egress-external-only -n verse -o jsonpath='{.spec.egress[0].to[0].ipBlock.except}' 2>/dev/null)
 if [[ -n "$exc" ]]; then
   echo "Success: egress ipBlock has except block ($exc)"; exit 0
