@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "mynamespace",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a namespace called `mynamespace` and a Pod named `nginx` in this namespace.\n\nThe Pod should:\n- Use the `nginx:1.25` image\n- Have `restartPolicy: Never`\n\nHint: use `kubectl create namespace` and `kubectl run`.",
+      "question": "Create a namespace called `mynamespace` and a Pod named `nginx` in this namespace.\n\nThe Pod should:\n- Use the `nginx:1.25` image\n- Have `restartPolicy: Never`\n\nHint: use `kubectl create namespace` and `kubectl run`.",
       "concepts": [
         "namespaces",
         "pods"
@@ -37,7 +37,7 @@
       "id": "2",
       "namespace": "summit",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `envpod` in namespace `summit` with the following specifications:\n\n- Image: `busybox:1.36`\n- Command: `env`\n- Environment variable: `VAR1=value1`\n- `restartPolicy: Never`\n\nHint: use the `--env` flag with `kubectl run`.",
+      "question": "Create a Pod named `envpod` in namespace `summit` with the following specifications:\n\n- Image: `busybox:1.36`\n- Command: `env`\n- Environment variable: `VAR1=value1`\n- `restartPolicy: Never`\n\nHint: use the `--env` flag with `kubectl run`.",
       "concepts": [
         "pods",
         "configuration",
@@ -71,7 +71,7 @@
       "id": "3",
       "namespace": "cliff",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a ResourceQuota named `cliff-quota` in namespace `cliff` with the following hard limits:\n\n- CPU: `1`\n- Memory: `1G`\n- Pods: `2`\n\nHint: use `kubectl create quota`.",
+      "question": "Create a ResourceQuota named `cliff-quota` in namespace `cliff` with the following hard limits:\n\n- CPU: `1`\n- Memory: `1G`\n- Pods: `2`\n\nHint: use `kubectl create quota`.",
       "concepts": [
         "resourcequota",
         "configuration"
@@ -111,7 +111,7 @@
       "id": "4",
       "namespace": "ridge",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn namespace `ridge`:\n\n1. Create 3 Pods named `nginx1`, `nginx2`, `nginx3` using image `nginx:1.25`. All of them should have the label `app=v1`.\n2. Change the label of Pod `nginx2` to `app=v2`.\n3. Add a new label `tier=web` to all Pods having label `app=v1`.\n\nHint: use `kubectl run --labels` and `kubectl label`.",
+      "question": "In namespace `ridge`:\n\n1. Create 3 Pods named `nginx1`, `nginx2`, `nginx3` using image `nginx:1.25`. All of them should have the label `app=v1`.\n2. Change the label of Pod `nginx2` to `app=v2`.\n3. Add a new label `tier=web` to all Pods having label `app=v1`.\n\nHint: use `kubectl run --labels` and `kubectl label`.",
       "concepts": [
         "pods",
         "labels",
@@ -145,7 +145,7 @@
       "id": "5",
       "namespace": "valley",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Deployment named `nginx-deploy` in namespace `valley` with:\n\n- Image: `nginx:1.18.0`\n- Replicas: `2`\n- Container port: `80`\n\nDo NOT create a Service for this Deployment.\n\nHint: use `kubectl create deployment`.",
+      "question": "Create a Deployment named `nginx-deploy` in namespace `valley` with:\n\n- Image: `nginx:1.18.0`\n- Replicas: `2`\n- Container port: `80`\n\nDo NOT create a Service for this Deployment.\n\nHint: use `kubectl create deployment`.",
       "concepts": [
         "deployments"
       ],
@@ -184,7 +184,7 @@
       "id": "6",
       "namespace": "valley",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nThe Deployment `nginx-deploy` from Question 5 exists in namespace `valley`.\n\n1. Update the image to `nginx:1.19.8`.\n2. Verify the rollout completed successfully.\n3. Check the rollout history.\n\nHint: use `kubectl set image` and `kubectl rollout`.",
+      "question": "The Deployment `nginx-deploy` from Question 5 exists in namespace `valley`.\n\n1. Update the image to `nginx:1.19.8`.\n2. Verify the rollout completed successfully.\n3. Check the rollout history.\n\nHint: use `kubectl set image` and `kubectl rollout`.",
       "concepts": [
         "deployments",
         "rollout"
@@ -217,7 +217,7 @@
       "id": "7",
       "namespace": "cave",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Deployment `rollback-deploy` exists in namespace `cave` with a wrong image `nginx:1.91` causing pods to fail.\n\n1. Identify that the rollout has failed.\n2. Rollback to the previous working revision.\n3. Verify the rollback was successful and pods are running.\n\nHint: use `kubectl rollout undo`.",
+      "question": "A Deployment `rollback-deploy` exists in namespace `cave` with a wrong image `nginx:1.91` causing pods to fail.\n\n1. Identify that the rollout has failed.\n2. Rollback to the previous working revision.\n3. Verify the rollback was successful and pods are running.\n\nHint: use `kubectl rollout undo`.",
       "concepts": [
         "deployments",
         "rollback",
@@ -251,7 +251,7 @@
       "id": "8",
       "namespace": "stone",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Job named `echo-job` in namespace `stone` that:\n\n- Uses image `busybox:1.36`\n- Runs the command: `echo hello; sleep 5; echo world`\n- Should complete `5` times sequentially (one after the other)\n\nHint: use the `spec.completions` field.",
+      "question": "Create a Job named `echo-job` in namespace `stone` that:\n\n- Uses image `busybox:1.36`\n- Runs the command: `echo hello; sleep 5; echo world`\n- Should complete `5` times sequentially (one after the other)\n\nHint: use the `spec.completions` field.",
       "concepts": [
         "jobs",
         "batch"
@@ -284,7 +284,7 @@
       "id": "9",
       "namespace": "mist",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a CronJob named `date-job` in namespace `mist` that:\n\n- Uses image `busybox:1.36`\n- Runs every minute (`*/1 * * * *`)\n- Executes the command: `date; echo Hello from Kubernetes`\n\nHint: use `kubectl create cronjob`.",
+      "question": "Create a CronJob named `date-job` in namespace `mist` that:\n\n- Uses image `busybox:1.36`\n- Runs every minute (`*/1 * * * *`)\n- Executes the command: `date; echo Hello from Kubernetes`\n\nHint: use `kubectl create cronjob`.",
       "concepts": [
         "cronjobs",
         "batch"
@@ -317,7 +317,7 @@
       "id": "10",
       "namespace": "alpine",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `multi-container` in namespace `alpine` with two containers:\n\nContainer 1:\n- Name: `container1`\n- Image: `busybox:1.36`\n- Command: `echo hello; sleep 3600`\n\nContainer 2:\n- Name: `container2`\n- Image: `busybox:1.36`\n- Command: `echo hello; sleep 3600`\n\nHint: generate YAML with `--dry-run=client -o yaml` and add the second container.",
+      "question": "Create a Pod named `multi-container` in namespace `alpine` with two containers:\n\nContainer 1:\n- Name: `container1`\n- Image: `busybox:1.36`\n- Command: `echo hello; sleep 3600`\n\nContainer 2:\n- Name: `container2`\n- Image: `busybox:1.36`\n- Command: `echo hello; sleep 3600`\n\nHint: generate YAML with `--dry-run=client -o yaml` and add the second container.",
       "concepts": [
         "pods",
         "multi-container"
@@ -350,7 +350,7 @@
       "id": "11",
       "namespace": "crest",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `init-pod` in namespace `crest` with:\n\nMain container:\n- Name: `nginx`\n- Image: `nginx:1.25`\n- Port: `80`\n- Volume mount: `/usr/share/nginx/html`\n\nInit container:\n- Name: `init`\n- Image: `busybox:1.36`\n- Command: `echo \"Initialized\" > /work-dir/index.html`\n- Volume mount: `/work-dir`\n\nBoth containers should share an `emptyDir` volume.\n\nHint: use the `initContainers` field in the Pod spec.",
+      "question": "Create a Pod named `init-pod` in namespace `crest` with:\n\nMain container:\n- Name: `nginx`\n- Image: `nginx:1.25`\n- Port: `80`\n- Volume mount: `/usr/share/nginx/html`\n\nInit container:\n- Name: `init`\n- Image: `busybox:1.36`\n- Command: `echo \"Initialized\" > /work-dir/index.html`\n- Volume mount: `/work-dir`\n\nBoth containers should share an `emptyDir` volume.\n\nHint: use the `initContainers` field in the Pod spec.",
       "concepts": [
         "pods",
         "init-containers",
@@ -391,7 +391,7 @@
       "id": "12",
       "namespace": "peak",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a ConfigMap named `app-config` in namespace `peak` with the following key-value pairs:\n\n- `foo=lala`\n- `foo2=lolo`\n\nHint: use `kubectl create configmap --from-literal`.",
+      "question": "Create a ConfigMap named `app-config` in namespace `peak` with the following key-value pairs:\n\n- `foo=lala`\n- `foo2=lolo`\n\nHint: use `kubectl create configmap --from-literal`.",
       "concepts": [
         "configmaps",
         "configuration"
@@ -424,7 +424,7 @@
       "id": "13",
       "namespace": "summit",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\n1. Create a ConfigMap named `options` in namespace `summit` with value `var5=val5`.\n2. Create a Pod named `config-pod` with image `nginx:1.25` that loads the value from key `var5` into an environment variable called `OPTION`.\n\nHint: use `valueFrom.configMapKeyRef` in the Pod spec.",
+      "question": "1. Create a ConfigMap named `options` in namespace `summit` with value `var5=val5`.\n2. Create a Pod named `config-pod` with image `nginx:1.25` that loads the value from key `var5` into an environment variable called `OPTION`.\n\nHint: use `valueFrom.configMapKeyRef` in the Pod spec.",
       "concepts": [
         "configmaps",
         "pods",
@@ -465,7 +465,7 @@
       "id": "14",
       "namespace": "cliff",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\n1. Create a ConfigMap named `cmvolume` in namespace `cliff` with values `var8=val8` and `var9=val9`.\n2. Create a Pod named `vol-pod` with image `nginx:1.25` that mounts this ConfigMap as a volume at `/etc/lala`.\n\nHint: use `volumes` and `volumeMounts` in the Pod spec.",
+      "question": "1. Create a ConfigMap named `cmvolume` in namespace `cliff` with values `var8=val8` and `var9=val9`.\n2. Create a Pod named `vol-pod` with image `nginx:1.25` that mounts this ConfigMap as a volume at `/etc/lala`.\n\nHint: use `volumes` and `volumeMounts` in the Pod spec.",
       "concepts": [
         "configmaps",
         "volumes",
@@ -499,7 +499,7 @@
       "id": "15",
       "namespace": "ridge",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\n1. Create a Secret named `mysecret` in namespace `ridge` with value `password=mypass`.\n2. Create a Pod named `secret-pod` with image `nginx:1.25` that mounts the Secret as a volume at `/etc/foo`.\n\nHint: use `kubectl create secret generic` and mount it as a volume.",
+      "question": "1. Create a Secret named `mysecret` in namespace `ridge` with value `password=mypass`.\n2. Create a Pod named `secret-pod` with image `nginx:1.25` that mounts the Secret as a volume at `/etc/foo`.\n\nHint: use `kubectl create secret generic` and mount it as a volume.",
       "concepts": [
         "secrets",
         "volumes",
@@ -533,7 +533,7 @@
       "id": "16",
       "namespace": "valley",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `secure-pod` in namespace `valley` with:\n\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Run as user ID: `101`\n- `restartPolicy: Never`\n\nHint: use `spec.securityContext.runAsUser`.",
+      "question": "Create a Pod named `secure-pod` in namespace `valley` with:\n\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Run as user ID: `101`\n- `restartPolicy: Never`\n\nHint: use `spec.securityContext.runAsUser`.",
       "concepts": [
         "securitycontext",
         "pods",
@@ -560,7 +560,7 @@
       "id": "17",
       "namespace": "cave",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `resource-pod` in namespace `cave` with:\n\n- Image: `nginx:1.25`\n- Resource requests: `cpu=100m`, `memory=256Mi`\n- Resource limits: `cpu=200m`, `memory=512Mi`\n\nHint: use `spec.containers[].resources`.",
+      "question": "Create a Pod named `resource-pod` in namespace `cave` with:\n\n- Image: `nginx:1.25`\n- Resource requests: `cpu=100m`, `memory=256Mi`\n- Resource limits: `cpu=200m`, `memory=512Mi`\n\nHint: use `spec.containers[].resources`.",
       "concepts": [
         "resources",
         "pods",
@@ -608,7 +608,7 @@
       "id": "18",
       "namespace": "stone",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `liveness-pod` in namespace `stone` with:\n\n- Image: `nginx:1.25`\n- Liveness probe that executes the command `ls`\n- Initial delay: `5` seconds\n- Period: `5` seconds\n\nHint: use `spec.containers[].livenessProbe.exec`.",
+      "question": "Create a Pod named `liveness-pod` in namespace `stone` with:\n\n- Image: `nginx:1.25`\n- Liveness probe that executes the command `ls`\n- Initial delay: `5` seconds\n- Period: `5` seconds\n\nHint: use `spec.containers[].livenessProbe.exec`.",
       "concepts": [
         "probes",
         "observability",
@@ -649,7 +649,7 @@
       "id": "19",
       "namespace": "mist",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\n1. Create a Deployment named `web` in namespace `mist` with image `nginx:1.25` and 2 replicas.\n2. Expose it via a ClusterIP Service named `web` on port `80`.\n3. Create a NetworkPolicy named `web-policy` that only allows ingress traffic to this Deployment from Pods with label `access=granted`.\n\nHint: use `kubectl create deployment`, `kubectl expose`, and create a NetworkPolicy YAML.",
+      "question": "1. Create a Deployment named `web` in namespace `mist` with image `nginx:1.25` and 2 replicas.\n2. Expose it via a ClusterIP Service named `web` on port `80`.\n3. Create a NetworkPolicy named `web-policy` that only allows ingress traffic to this Deployment from Pods with label `access=granted`.\n\nHint: use `kubectl create deployment`, `kubectl expose`, and create a NetworkPolicy YAML.",
       "concepts": [
         "services",
         "networkpolicy",
@@ -697,7 +697,7 @@
       "id": "20",
       "namespace": "alpine",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\n1. Create a PersistentVolume named `myvolume` with:\n   - Capacity: `10Gi`\n   - Access modes: `ReadWriteOnce`, `ReadWriteMany`\n   - Storage class: `normal`\n   - Host path: `/etc/foo`\n\n2. Create a PersistentVolumeClaim named `mypvc` in namespace `alpine` with:\n   - Request: `4Gi`\n   - Access mode: `ReadWriteOnce`\n   - Storage class: `normal`\n\n3. Create a Pod named `pv-pod` in namespace `alpine` with image `busybox:1.36` that uses the PVC and mounts it at `/etc/foo`.\n\nHint: PersistentVolumes are cluster-scoped (no namespace).",
+      "question": "1. Create a PersistentVolume named `myvolume` with:\n   - Capacity: `10Gi`\n   - Access modes: `ReadWriteOnce`, `ReadWriteMany`\n   - Storage class: `normal`\n   - Host path: `/etc/foo`\n\n2. Create a PersistentVolumeClaim named `mypvc` in namespace `alpine` with:\n   - Request: `4Gi`\n   - Access mode: `ReadWriteOnce`\n   - Storage class: `normal`\n\n3. Create a Pod named `pv-pod` in namespace `alpine` with image `busybox:1.36` that uses the PVC and mounts it at `/etc/foo`.\n\nHint: PersistentVolumes are cluster-scoped (no namespace).",
       "concepts": [
         "persistentvolumes",
         "storage",

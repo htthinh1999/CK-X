@@ -24,6 +24,10 @@ CLUSTER_NAME=${2:-cluster}
 INDEX=${3:-0}            # Cluster index -> API port offset
 API_PORT=$((6443 + INDEX))
 KUBECONFIG_FILE=/home/candidate/.kube/kubeconfig
+# Per-cluster kubeconfig holding ONLY this cluster's context. Multi-cluster
+# exams point each server's KUBECONFIG here so the student works with a single
+# default context (one host == one cluster == one context, no `use-context`).
+PER_CLUSTER_FILE=/home/candidate/.kube/kubeconfig-$CLUSTER_NAME
 
 # Check if k3d is installed, if not install it
 if ! command -v k3d &> /dev/null; then
@@ -114,6 +118,16 @@ k3d kubeconfig get --all > "$KUBECONFIG_FILE"
 # Point every server URL at the shared service name (keep each cluster's port)
 sed -i 's|server: https://127\.0\.0\.1:\([0-9]*\)|server: https://k8s-api-server:\1|' "$KUBECONFIG_FILE"
 sed -i 's|server: https://0\.0\.0\.0:\([0-9]*\)|server: https://k8s-api-server:\1|' "$KUBECONFIG_FILE"
+
+# ===============================================================================
+#   Write this cluster's DEDICATED kubeconfig (single context, already selected
+#   as current-context by k3d). Servers bound to this cluster export KUBECONFIG
+#   to this file, so the student gets exactly one context and never switches.
+# ===============================================================================
+k3d kubeconfig get "$CLUSTER_NAME" > "$PER_CLUSTER_FILE"
+sed -i 's|server: https://127\.0\.0\.1:\([0-9]*\)|server: https://k8s-api-server:\1|' "$PER_CLUSTER_FILE"
+sed -i 's|server: https://0\.0\.0\.0:\([0-9]*\)|server: https://k8s-api-server:\1|' "$PER_CLUSTER_FILE"
+echo "$(date '+%Y-%m-%d %H:%M:%S') | Per-cluster kubeconfig written: $PER_CLUSTER_FILE"
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') | Kubeconfig updated: $KUBECONFIG_FILE"
 echo "Kubeconfig contexts:"

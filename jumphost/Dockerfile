@@ -88,7 +88,20 @@ RUN mkdir -p /tmp/exam-env
 EXPOSE 22
 
 RUN echo "export TERM=xterm" >> /home/candidate/.bashrc
-RUN echo "export KUBECONFIG=/home/candidate/.kube/kubeconfig" >> /home/candidate/.bashrc
+# Default KUBECONFIG to this host's own cluster for multi-cluster exams:
+# the facilitator writes /home/candidate/.exam-cluster with the cluster name,
+# and this host uses kubeconfig-<cluster> (a single, already-selected context).
+# When no marker is present (single-cluster labs) it uses the shared kubeconfig.
+RUN printf '%s\n' \
+    '__ck_marker=/home/candidate/.exam-cluster' \
+    'if [ -r "$__ck_marker" ]; then __ck_cluster="$(cat "$__ck_marker" 2>/dev/null)"; fi' \
+    'if [ -n "$__ck_cluster" ] && [ -f "/home/candidate/.kube/kubeconfig-$__ck_cluster" ]; then' \
+    '  export KUBECONFIG="/home/candidate/.kube/kubeconfig-$__ck_cluster"' \
+    'else' \
+    '  export KUBECONFIG=/home/candidate/.kube/kubeconfig' \
+    'fi' \
+    'unset __ck_marker __ck_cluster' \
+    >> /home/candidate/.bashrc
 RUN echo "PS1='\[\e[32m\]\u@\h:\w\$ \[\e[0m\]'" >> /home/candidate/.bashrc
 
 #set kubectl autocompletion

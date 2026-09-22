@@ -4,7 +4,7 @@
             "id": "1",
             "namespace": "dev",
             "machineHostname": "ckad9999",
-            "question": "> Server: `ckad9999` · cluster `dev`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-dev` before solving.\n\nIn namespace `dev`, create a Pod named `sidecar-pod` with two containers sharing an `emptyDir` volume named `shared`:\n- container `main` (image `nginx:1.25`) mounting `shared` at `/usr/share/nginx/html`\n- container `sidecar` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"sleep 3600\"]`) mounting `shared` at `/work`",
+            "question": "In namespace `dev`, create a Pod named `sidecar-pod` with two containers sharing an `emptyDir` volume named `shared`:\n- container `main` (image `nginx:1.25`) mounting `shared` at `/usr/share/nginx/html`\n- container `sidecar` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"sleep 3600\"]`) mounting `shared` at `/work`",
             "concepts": ["multi-container", "pods", "volumes", "multi-cluster"],
             "verification": [
                 { "id": "1", "description": "Pod sidecar-pod has two containers", "verificationScriptFile": "q1_s1_validate_containers.sh", "expectedOutput": "0", "weightage": 2 },
@@ -15,7 +15,7 @@
             "id": "2",
             "namespace": "dev",
             "machineHostname": "ckad9999",
-            "question": "> Server: `ckad9999` · cluster `dev`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-dev` before solving.\n\nIn namespace `dev`, create a Pod named `limited` (image `nginx:1.25`) whose container sets resource `requests` of cpu `100m` / memory `64Mi` and `limits` of cpu `200m` / memory `128Mi`.",
+            "question": "In namespace `dev`, create a Pod named `limited` (image `nginx:1.25`) whose container sets resource `requests` of cpu `100m` / memory `64Mi` and `limits` of cpu `200m` / memory `128Mi`.",
             "concepts": ["resources", "requests", "limits"],
             "verification": [
                 { "id": "1", "description": "requests cpu=100m memory=64Mi", "verificationScriptFile": "q2_s1_validate_requests.sh", "expectedOutput": "0", "weightage": 2 },
@@ -26,7 +26,7 @@
             "id": "3",
             "namespace": "dev",
             "machineHostname": "ckad9999",
-            "question": "> Server: `ckad9999` · cluster `dev`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-dev` before solving.\n\nIn namespace `dev`, create a ConfigMap named `feature-flags` with keys `DARK_MODE=true` and `BETA=false`. Then create a Deployment named `flags-app` (image `nginx:1.25`) that mounts the `feature-flags` ConfigMap as a volume at `/etc/flags`.",
+            "question": "In namespace `dev`, create a ConfigMap named `feature-flags` with keys `DARK_MODE=true` and `BETA=false`. Then create a Deployment named `flags-app` (image `nginx:1.25`) that mounts the `feature-flags` ConfigMap as a volume at `/etc/flags`.",
             "concepts": ["configmaps", "volumes", "deployments"],
             "verification": [
                 { "id": "1", "description": "ConfigMap feature-flags has DARK_MODE=true, BETA=false", "verificationScriptFile": "q3_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 1 },
@@ -37,7 +37,7 @@
             "id": "4",
             "namespace": "dev",
             "machineHostname": "ckad9999",
-            "question": "> Server: `ckad9999` · cluster `dev`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-dev` before solving.\n\nIn namespace `dev`, create a Pod named `probed` (image `nginx:1.25`) with both a `livenessProbe` and a `readinessProbe`, each using an HTTP GET on path `/` and port `80`.",
+            "question": "In namespace `dev`, create a Pod named `probed` (image `nginx:1.25`) with both a `livenessProbe` and a `readinessProbe`, each using an HTTP GET on path `/` and port `80`.",
             "concepts": ["probes", "liveness", "readiness"],
             "verification": [
                 { "id": "1", "description": "livenessProbe httpGet is set", "verificationScriptFile": "q4_s1_validate_liveness.sh", "expectedOutput": "0", "weightage": 2 },
@@ -48,7 +48,7 @@
             "id": "5",
             "namespace": "staging",
             "machineHostname": "ckad9988",
-            "question": "> Server: `ckad9988` · cluster `staging`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-staging` before solving.\n\nIn namespace `staging`, create a Job named `batch` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"echo done\"]`) with `completions: 3`, `parallelism: 2` and `backoffLimit: 4`.",
+            "question": "In namespace `staging`, create a Job named `batch` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"echo done\"]`) with `completions: 3`, `parallelism: 2` and `backoffLimit: 4`.",
             "concepts": ["jobs", "parallelism"],
             "verification": [
                 { "id": "1", "description": "completions is 3", "verificationScriptFile": "q5_s1_validate_completions.sh", "expectedOutput": "0", "weightage": 2 },
@@ -60,7 +60,7 @@
             "id": "6",
             "namespace": "staging",
             "machineHostname": "ckad9988",
-            "question": "> Server: `ckad9988` · cluster `staging`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-staging` before solving.\n\nIn namespace `staging`, create a Pod named `secured` (image `nginx:1.25`) that runs as user ID `1000` and whose container sets `allowPrivilegeEscalation: false` in its securityContext.",
+            "question": "In namespace `staging`, create a Pod named `secured` (image `nginx:1.25`) that runs as user ID `1000` and whose container sets `allowPrivilegeEscalation: false` in its securityContext.",
             "concepts": ["securitycontext", "security"],
             "verification": [
                 { "id": "1", "description": "runAsUser is 1000", "verificationScriptFile": "q6_s1_validate_runasuser.sh", "expectedOutput": "0", "weightage": 2 },
@@ -71,7 +71,7 @@
             "id": "7",
             "namespace": "staging",
             "machineHostname": "ckad9988",
-            "question": "> Server: `ckad9988` · cluster `staging`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-staging` before solving.\n\nThe Deployment `rollme` in namespace `staging` currently runs `nginx:1.24`. Perform a rolling update to `nginx:1.25` and make sure the rollout completes (all pods ready).",
+            "question": "The Deployment `rollme` in namespace `staging` currently runs `nginx:1.24`. Perform a rolling update to `nginx:1.25` and make sure the rollout completes (all pods ready).",
             "concepts": ["deployments", "rollout", "images"],
             "verification": [
                 { "id": "1", "description": "rollme uses nginx:1.25", "verificationScriptFile": "q7_s1_validate_image.sh", "expectedOutput": "0", "weightage": 2 },
@@ -82,7 +82,7 @@
             "id": "8",
             "namespace": "staging",
             "machineHostname": "ckad9988",
-            "question": "> Server: `ckad9988` · cluster `staging`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-staging` before solving.\n\nIn namespace `staging`, create a Deployment named `store` (image `nginx:1.25`, `2` replicas, pod label `app=store`) and expose it with a `ClusterIP` Service named `store-svc` on port `80` selecting `app=store`.",
+            "question": "In namespace `staging`, create a Deployment named `store` (image `nginx:1.25`, `2` replicas, pod label `app=store`) and expose it with a `ClusterIP` Service named `store-svc` on port `80` selecting `app=store`.",
             "concepts": ["deployments", "services", "clusterip"],
             "verification": [
                 { "id": "1", "description": "Deployment store has 2 replicas", "verificationScriptFile": "q8_s1_validate_deploy.sh", "expectedOutput": "0", "weightage": 2 },
@@ -94,7 +94,7 @@
             "id": "9",
             "namespace": "prod",
             "machineHostname": "ckad9977",
-            "question": "> Server: `ckad9977` · cluster `prod`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-prod` before solving.\n\nIn namespace `prod`, create a Secret named `app-secret` of type `Opaque` with keys `api-key=abc123` and `token=xyz789`. Then create a Pod named `secret-consumer` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"sleep 3600\"]`) that mounts the Secret as a volume at `/etc/secret`.",
+            "question": "In namespace `prod`, create a Secret named `app-secret` of type `Opaque` with keys `api-key=abc123` and `token=xyz789`. Then create a Pod named `secret-consumer` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"sleep 3600\"]`) that mounts the Secret as a volume at `/etc/secret`.",
             "concepts": ["secrets", "volumes", "pods", "multi-cluster"],
             "verification": [
                 { "id": "1", "description": "Secret app-secret has api-key and token", "verificationScriptFile": "q9_s1_validate_secret.sh", "expectedOutput": "0", "weightage": 2 },
@@ -105,7 +105,7 @@
             "id": "10",
             "namespace": "prod",
             "machineHostname": "ckad9977",
-            "question": "> Server: `ckad9977` · cluster `prod`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-prod` before solving.\n\nA Service `shop-svc` (port `80`) already exists in namespace `prod`. Create an Ingress named `shop-ing` that routes host `shop.local`, path `/`, to Service `shop-svc` on port `80`.",
+            "question": "A Service `shop-svc` (port `80`) already exists in namespace `prod`. Create an Ingress named `shop-ing` that routes host `shop.local`, path `/`, to Service `shop-svc` on port `80`.",
             "concepts": ["ingress", "services", "networking"],
             "verification": [
                 { "id": "1", "description": "Ingress shop-ing host is shop.local", "verificationScriptFile": "q10_s1_validate_host.sh", "expectedOutput": "0", "weightage": 2 },
@@ -116,7 +116,7 @@
             "id": "11",
             "namespace": "prod",
             "machineHostname": "ckad9977",
-            "question": "> Server: `ckad9977` · cluster `prod`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-prod` before solving.\n\nIn namespace `prod`, create a CronJob named `backup` that runs on schedule `0 */6 * * *`, uses image `busybox:1.36` with command `[\"sh\",\"-c\",\"echo backup\"]`, and whose pod `restartPolicy` is `OnFailure`.",
+            "question": "In namespace `prod`, create a CronJob named `backup` that runs on schedule `0 */6 * * *`, uses image `busybox:1.36` with command `[\"sh\",\"-c\",\"echo backup\"]`, and whose pod `restartPolicy` is `OnFailure`.",
             "concepts": ["cronjobs", "jobs"],
             "verification": [
                 { "id": "1", "description": "CronJob backup schedule is 0 */6 * * *", "verificationScriptFile": "q11_s1_validate_schedule.sh", "expectedOutput": "0", "weightage": 2 },
@@ -127,7 +127,7 @@
             "id": "12",
             "namespace": "prod",
             "machineHostname": "ckad9977",
-            "question": "> Server: `ckad9977` · cluster `prod`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-prod` before solving.\n\nIn namespace `prod`, create a NetworkPolicy named `allow-web` that selects pods with label `app=web` and allows ingress traffic ONLY from pods with label `app=client`.",
+            "question": "In namespace `prod`, create a NetworkPolicy named `allow-web` that selects pods with label `app=web` and allows ingress traffic ONLY from pods with label `app=client`.",
             "concepts": ["networkpolicy", "security"],
             "verification": [
                 { "id": "1", "description": "NetworkPolicy allow-web selects app=web", "verificationScriptFile": "q12_s1_validate_podselector.sh", "expectedOutput": "0", "weightage": 2 },

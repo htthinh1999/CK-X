@@ -46,10 +46,11 @@ if [ -f "/tmp/k3d-config.yaml" ]; then
     echo "K3d config file deleted."
 fi
 
-# Delete kubeconfig file if present
-if [ -f "/home/candidate/.kube/kubeconfig" ]; then
-    rm -f /home/candidate/.kube/kubeconfig
-    echo "Kubeconfig file deleted."
+# Delete kubeconfig files if present (the merged one and every per-cluster
+# kubeconfig-<name> written for multi-cluster exams)
+if ls /home/candidate/.kube/kubeconfig* >/dev/null 2>&1; then
+    rm -f /home/candidate/.kube/kubeconfig*
+    echo "Kubeconfig file(s) deleted."
 fi
 
 echo "Cleanup completed."

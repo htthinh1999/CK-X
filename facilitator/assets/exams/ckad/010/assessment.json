@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "harvest",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nWork in namespace `harvest`.\n\n1. Create a Pod named `web` with image `nginx:1.25` in namespace `harvest`, exposing port `80`.\n2. Create a ClusterIP Service named `web` that exposes the Pod on port `80`.\n3. Verify the Service has endpoints.\n\nHint: use `kubectl run --expose` or create the resources separately.",
+      "question": "Work in namespace `harvest`.\n\n1. Create a Pod named `web` with image `nginx:1.25` in namespace `harvest`, exposing port `80`.\n2. Create a ClusterIP Service named `web` that exposes the Pod on port `80`.\n3. Verify the Service has endpoints.\n\nHint: use `kubectl run --expose` or create the resources separately.",
       "concepts": [
         "services",
         "pods",
@@ -38,7 +38,7 @@
       "id": "2",
       "namespace": "grain",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA ClusterIP Service `app-svc` already exists in namespace `grain`.\n\nConvert this Service to type `NodePort`.\n\nHint: use `kubectl edit` or `kubectl patch`.",
+      "question": "A ClusterIP Service `app-svc` already exists in namespace `grain`.\n\nConvert this Service to type `NodePort`.\n\nHint: use `kubectl edit` or `kubectl patch`.",
       "concepts": [
         "services",
         "nodeport"
@@ -64,7 +64,7 @@
       "id": "3",
       "namespace": "rice",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nWork in namespace `rice`.\n\n1. Create a Deployment named `backend` in namespace `rice` with image `nginx:1.25` and `3` replicas, exposing port `8080`.\n2. Create a Service named `backend` that exposes the Deployment on port `6262` targeting port `8080`.\n\nHint: use `kubectl create deployment` and `kubectl expose`.",
+      "question": "Work in namespace `rice`.\n\n1. Create a Deployment named `backend` in namespace `rice` with image `nginx:1.25` and `3` replicas, exposing port `8080`.\n2. Create a Service named `backend` that exposes the Deployment on port `6262` targeting port `8080`.\n\nHint: use `kubectl create deployment` and `kubectl expose`.",
       "concepts": [
         "deployments",
         "services"
@@ -111,7 +111,7 @@
       "id": "4",
       "namespace": "field",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nWork in namespace `field`.\n\nCreate a Pod named `ready-pod` in namespace `field` with image `nginx:1.25` that includes:\n- Container port: `80`\n- HTTP readiness probe on path `/` on port `80`\n\nHint: use `spec.containers[].readinessProbe.httpGet`.",
+      "question": "Work in namespace `field`.\n\nCreate a Pod named `ready-pod` in namespace `field` with image `nginx:1.25` that includes:\n- Container port: `80`\n- HTTP readiness probe on path `/` on port `80`\n\nHint: use `spec.containers[].readinessProbe.httpGet`.",
       "concepts": [
         "probes",
         "readiness"
@@ -144,7 +144,7 @@
       "id": "5",
       "namespace": "shrine",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nWork in namespace `shrine`.\n\nCreate a Pod named `live-pod` in namespace `shrine` with image `nginx:1.25` that includes:\n- Liveness probe that executes the command `ls`\n- Initial delay: `5` seconds\n- Period: `10` seconds\n\nHint: use `spec.containers[].livenessProbe.exec`.",
+      "question": "Work in namespace `shrine`.\n\nCreate a Pod named `live-pod` in namespace `shrine` with image `nginx:1.25` that includes:\n- Liveness probe that executes the command `ls`\n- Initial delay: `5` seconds\n- Period: `10` seconds\n\nHint: use `spec.containers[].livenessProbe.exec`.",
       "concepts": [
         "probes",
         "liveness"
@@ -184,7 +184,7 @@
       "id": "6",
       "namespace": "blessing",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nWork in namespace `blessing`.\n\nCreate a LimitRange named `pod-limits` in namespace `blessing` that limits Pod memory to:\n- Maximum: `500Mi`\n- Minimum: `100Mi`\n\nHint: use `kind: LimitRange` with `spec.limits` of `type: Pod`.",
+      "question": "Work in namespace `blessing`.\n\nCreate a LimitRange named `pod-limits` in namespace `blessing` that limits Pod memory to:\n- Maximum: `500Mi`\n- Minimum: `100Mi`\n\nHint: use `kind: LimitRange` with `spec.limits` of `type: Pod`.",
       "concepts": [
         "limitrange",
         "resources"
@@ -217,7 +217,7 @@
       "id": "7",
       "namespace": "fortune",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nWork in namespace `fortune`.\n\nCreate a ResourceQuota named `compute-quota` in namespace `fortune` with:\n- Hard requests: `cpu=1`, `memory=1Gi`\n- Hard limits: `cpu=2`, `memory=2Gi`\n\nHint: use `requests.cpu`, `requests.memory`, `limits.cpu`, `limits.memory`.",
+      "question": "Work in namespace `fortune`.\n\nCreate a ResourceQuota named `compute-quota` in namespace `fortune` with:\n- Hard requests: `cpu=1`, `memory=1Gi`\n- Hard limits: `cpu=2`, `memory=2Gi`\n\nHint: use `requests.cpu`, `requests.memory`, `limits.cpu`, `limits.memory`.",
       "concepts": [
         "resourcequota",
         "resources"
@@ -264,7 +264,7 @@
       "id": "8",
       "namespace": "fortune",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nNamespace `fortune` has a ResourceQuota.\n\nCreate a Pod named `quota-pod` in namespace `fortune` with:\n- Image: `nginx:1.25`\n- Resource requests: `cpu=0.5`, `memory=512Mi`\n- Resource limits: `cpu=1`, `memory=1Gi`\n\nHint: the ResourceQuota requires Pods to specify requests and limits.",
+      "question": "Namespace `fortune` has a ResourceQuota.\n\nCreate a Pod named `quota-pod` in namespace `fortune` with:\n- Image: `nginx:1.25`\n- Resource requests: `cpu=0.5`, `memory=512Mi`\n- Resource limits: `cpu=1`, `memory=1Gi`\n\nHint: the ResourceQuota requires Pods to specify requests and limits.",
       "concepts": [
         "pods",
         "resources",
@@ -298,7 +298,7 @@
       "id": "9",
       "namespace": "golden",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nWork in namespace `golden`.\n\nCreate a Pod named `cap-pod` in namespace `golden` with image `nginx:1.25` that adds the capabilities:\n- `NET_ADMIN`\n- `SYS_TIME`\n\nHint: use `securityContext.capabilities.add` at the container level.",
+      "question": "Work in namespace `golden`.\n\nCreate a Pod named `cap-pod` in namespace `golden` with image `nginx:1.25` that adds the capabilities:\n- `NET_ADMIN`\n- `SYS_TIME`\n\nHint: use `securityContext.capabilities.add` at the container level.",
       "concepts": [
         "securitycontext",
         "capabilities"
@@ -331,7 +331,7 @@
       "id": "10",
       "namespace": "bounty",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nWork in namespace `bounty`.\n\nCreate a Pod named `shared-pod` in namespace `bounty` with two containers:\n\nContainer 1:\n- Name: `writer`\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Mount emptyDir volume at `/data`\n\nContainer 2:\n- Name: `reader`\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Mount same emptyDir volume at `/data`\n\nBoth containers must share the same `emptyDir` volume named `shared-data`.\n\nHint: use `spec.volumes` and `volumeMounts` in each container.",
+      "question": "Work in namespace `bounty`.\n\nCreate a Pod named `shared-pod` in namespace `bounty` with two containers:\n\nContainer 1:\n- Name: `writer`\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Mount emptyDir volume at `/data`\n\nContainer 2:\n- Name: `reader`\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Mount same emptyDir volume at `/data`\n\nBoth containers must share the same `emptyDir` volume named `shared-data`.\n\nHint: use `spec.volumes` and `volumeMounts` in each container.",
       "concepts": [
         "multi-container",
         "volumes",
@@ -365,7 +365,7 @@
       "id": "11",
       "namespace": "prosperity",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nWork in namespace `prosperity`.\n\n1. Create a Pod named `annotated-pod` with image `nginx:1.25` in namespace `prosperity`.\n2. Add the annotation `owner=marketing` to the Pod.\n\nHint: use `kubectl annotate` or add `metadata.annotations` in YAML.",
+      "question": "Work in namespace `prosperity`.\n\n1. Create a Pod named `annotated-pod` with image `nginx:1.25` in namespace `prosperity`.\n2. Add the annotation `owner=marketing` to the Pod.\n\nHint: use `kubectl annotate` or add `metadata.annotations` in YAML.",
       "concepts": [
         "annotations",
         "pods"
@@ -391,7 +391,7 @@
       "id": "12",
       "namespace": "harvest",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nWork in namespace `harvest`.\n\n1. Create 3 Pods in namespace `harvest`: `pod1`, `pod2`, `pod3` all with image `nginx:1.25`.\n2. Label `pod1` and `pod2` with `env=prod`.\n3. Label `pod3` with `env=dev`.\n4. List all Pods with label `env=prod` and save the output to `/tmp/exam/course/12/pods.txt`.\n\nHint: use `kubectl get pods -l env=prod`.",
+      "question": "Work in namespace `harvest`.\n\n1. Create 3 Pods in namespace `harvest`: `pod1`, `pod2`, `pod3` all with image `nginx:1.25`.\n2. Label `pod1` and `pod2` with `env=prod`.\n3. Label `pod3` with `env=dev`.\n4. List all Pods with label `env=prod` and save the output to `/tmp/exam/course/12/pods.txt`.\n\nHint: use `kubectl get pods -l env=prod`.",
       "concepts": [
         "labels",
         "selectors",
@@ -425,7 +425,7 @@
       "id": "13",
       "namespace": "default",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nAdd the Bitnami Helm repository to your Helm configuration:\n- Name: `bitnami`\n- URL: `https://charts.bitnami.com/bitnami`\n\nHint: use `helm repo add`.",
+      "question": "Add the Bitnami Helm repository to your Helm configuration:\n- Name: `bitnami`\n- URL: `https://charts.bitnami.com/bitnami`\n\nHint: use `helm repo add`.",
       "concepts": [
         "helm",
         "repositories"
@@ -444,7 +444,7 @@
       "id": "14",
       "namespace": "default",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nGet the values of the `bitnami/nginx` Helm chart and save them to `/tmp/exam/course/14/values.txt`.\n\nOnly save the first 50 lines.\n\nHint: use `helm show values`.",
+      "question": "Get the values of the `bitnami/nginx` Helm chart and save them to `/tmp/exam/course/14/values.txt`.\n\nOnly save the first 50 lines.\n\nHint: use `helm show values`.",
       "concepts": [
         "helm",
         "values"
@@ -463,7 +463,7 @@
       "id": "15",
       "namespace": "default",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nList all Helm releases across all namespaces and save the output to `/tmp/exam/course/15/releases.txt`.\n\nHint: use `helm list -A`.",
+      "question": "List all Helm releases across all namespaces and save the output to `/tmp/exam/course/15/releases.txt`.\n\nHint: use `helm list -A`.",
       "concepts": [
         "helm",
         "releases"
@@ -482,7 +482,7 @@
       "id": "16",
       "namespace": "grain",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nSet up a canary deployment in namespace `grain`:\n\n1. Create Deployment `app-v1` with image `nginx:1.18.0`, `3` replicas, labels `app=myapp` and `version=v1`.\n2. Create Deployment `app-v2` with image `nginx:1.19.0`, `1` replica, labels `app=myapp` and `version=v2`.\n3. Create a Service `app` that selects Pods with label `app=myapp` (both versions).\n\nThis achieves a 75%-25% traffic split.\n\nHint: the Service selector should only match on `app=myapp`, not version.",
+      "question": "Set up a canary deployment in namespace `grain`:\n\n1. Create Deployment `app-v1` with image `nginx:1.18.0`, `3` replicas, labels `app=myapp` and `version=v1`.\n2. Create Deployment `app-v2` with image `nginx:1.19.0`, `1` replica, labels `app=myapp` and `version=v2`.\n3. Create a Service `app` that selects Pods with label `app=myapp` (both versions).\n\nThis achieves a 75%-25% traffic split.\n\nHint: the Service selector should only match on `app=myapp`, not version.",
       "concepts": [
         "deployments",
         "canary",
@@ -537,7 +537,7 @@
       "id": "17",
       "namespace": "rice",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nWork in namespace `rice`.\n\nCreate a Pod named `data-pod` in namespace `rice` with:\n- Two containers: `producer` and `consumer`\n- Both use image `busybox:1.36` with command `sleep 3600`\n- Both mount an emptyDir volume at `/shared`\n- Volume name: `data-volume`\n\nHint: use `spec.volumes` with `emptyDir: {}`.",
+      "question": "Work in namespace `rice`.\n\nCreate a Pod named `data-pod` in namespace `rice` with:\n- Two containers: `producer` and `consumer`\n- Both use image `busybox:1.36` with command `sleep 3600`\n- Both mount an emptyDir volume at `/shared`\n- Volume name: `data-volume`\n\nHint: use `spec.volumes` with `emptyDir: {}`.",
       "concepts": [
         "multi-container",
         "volumes",
@@ -571,7 +571,7 @@
       "id": "18",
       "namespace": "field",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nA Service named `web-svc` already exists in namespace `field`.\n\nFrom a temporary `busybox:1.36` Pod, resolve the DNS name of this Service and save the IP to `/tmp/exam/course/18/dns.txt`.\n\nHint: use `nslookup web-svc.field.svc.cluster.local`.",
+      "question": "A Service named `web-svc` already exists in namespace `field`.\n\nFrom a temporary `busybox:1.36` Pod, resolve the DNS name of this Service and save the IP to `/tmp/exam/course/18/dns.txt`.\n\nHint: use `nslookup web-svc.field.svc.cluster.local`.",
       "concepts": [
         "dns",
         "services",
@@ -591,7 +591,7 @@
       "id": "19",
       "namespace": "shrine",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nWork in namespace `shrine`.\n\nCreate a NetworkPolicy named `db-policy` in namespace `shrine` that:\n- Applies to Pods with label `app=db`\n- Only allows ingress traffic from Pods with label `access=true`\n\nHint: use `spec.podSelector` and `spec.ingress.from.podSelector`.",
+      "question": "Work in namespace `shrine`.\n\nCreate a NetworkPolicy named `db-policy` in namespace `shrine` that:\n- Applies to Pods with label `app=db`\n- Only allows ingress traffic from Pods with label `access=true`\n\nHint: use `spec.podSelector` and `spec.ingress.from.podSelector`.",
       "concepts": [
         "networkpolicy",
         "networking"
@@ -624,7 +624,7 @@
       "id": "20",
       "namespace": "blessing",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nWork in namespace `blessing`.\n\n1. Create a ServiceAccount named `token-sa` in namespace `blessing`.\n2. Generate an API token for this ServiceAccount and save it to `/tmp/exam/course/20/token.txt`.\n\nHint: use `kubectl create token`.",
+      "question": "Work in namespace `blessing`.\n\n1. Create a ServiceAccount named `token-sa` in namespace `blessing`.\n2. Generate an API token for this ServiceAccount and save it to `/tmp/exam/course/20/token.txt`.\n\nHint: use `kubectl create token`.",
       "concepts": [
         "serviceaccount",
         "rbac",

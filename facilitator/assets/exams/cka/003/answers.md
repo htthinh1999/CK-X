@@ -1,19 +1,17 @@
 # CKA Multi-Cluster Practice Lab — Answers
 
-This lab spans **two clusters**. Connect to the instance named in each question
-and select the matching context:
+This lab spans **two clusters**, one per server. Each server's cluster is already
+the default (and only) context — just `ssh` to the instance named in the question
+and work there. There is no context to switch:
 
-- `cluster1` → `ssh ckad9999`, then `kubectl config use-context k3d-cluster1`
-- `cluster2` → `ssh ckad9988`, then `kubectl config use-context k3d-cluster2`
-
-`kubectl config get-contexts` lists every context available from any server.
+- `cluster1` → `ssh ckad9999`
+- `cluster2` → `ssh ckad9988`
 
 ---
 
 ## Question 1 — Deployment `web` (cluster1 / alpha)
 
 ```bash
-kubectl config use-context k3d-cluster1
 kubectl -n alpha create deployment web --image=nginx:1.25 --replicas=3
 kubectl -n alpha rollout status deployment/web
 ```
@@ -92,7 +90,6 @@ kubectl -n alpha rollout status deployment/legacy
 ## Question 8 — PVC + Pod mount (cluster2 / beta)
 
 ```bash
-kubectl config use-context k3d-cluster2
 cat <<'YAML' | kubectl apply -f -
 apiVersion: v1
 kind: PersistentVolumeClaim

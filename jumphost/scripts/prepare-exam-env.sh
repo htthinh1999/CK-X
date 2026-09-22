@@ -20,6 +20,11 @@ echo "Exam ID: $EXAM_ID"
 echo "Number of nodes: $NUMBER_OF_NODES"
 echo "Cluster spec: ${CLUSTER_SPEC:-<single>}"
 
+# Clear any stale per-host cluster marker from a previous (multi-cluster) exam so
+# this host falls back to the shared kubeconfig. For multi-cluster exams the
+# facilitator re-writes the correct marker on each server after clusters are up.
+rm -f /home/candidate/.exam-cluster
+
 #check docker is running
 if ! docker info > /dev/null 2>&1; then
   log "Docker is not running"

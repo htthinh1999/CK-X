@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "dev",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn this task, you need to set up a basic web application deployment. \n\nCreate a deployment called `nginx-deployment` in the namespace `dev` with `3` replicas using the image `nginx:latest`. \n\nEnsure that the namespace exists before creating the deployment. The deployment should maintain exactly 3 pods running at all times, and all pods should be using the specified nginx image version.",
+      "question": "In this task, you need to set up a basic web application deployment. \n\nCreate a deployment called `nginx-deployment` in the namespace `dev` with `3` replicas using the image `nginx:latest`. \n\nEnsure that the namespace exists before creating the deployment. The deployment should maintain exactly 3 pods running at all times, and all pods should be using the specified nginx image version.",
       "concepts": [
         "deployments",
         "namespaces",
@@ -45,7 +45,7 @@
       "id": "2",
       "namespace": "storage-test",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nFor this storage-related task, you need to provision persistent storage resources. \n\nCreate a PersistentVolume named `pv-storage` with exactly `1Gi` capacity. Configure it with access mode `ReadWriteOnce` to allow read-write access by a single node. \n\nUse `hostPath` type pointing to the directory `/mnt/data` on the node. \n\nSet the reclaim policy to `Retain` so that the storage resource is not automatically deleted when the PV is released. \n\nThis PV will be used by applications requiring persistent storage in the cluster.",
+      "question": "For this storage-related task, you need to provision persistent storage resources. \n\nCreate a PersistentVolume named `pv-storage` with exactly `1Gi` capacity. Configure it with access mode `ReadWriteOnce` to allow read-write access by a single node. \n\nUse `hostPath` type pointing to the directory `/mnt/data` on the node. \n\nSet the reclaim policy to `Retain` so that the storage resource is not automatically deleted when the PV is released. \n\nThis PV will be used by applications requiring persistent storage in the cluster.",
       "concepts": [
         "persistent-volumes",
         "storage",
@@ -86,7 +86,7 @@
       "id": "3",
       "namespace": "storage-test",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nAs part of optimizing storage resources in the cluster, create a StorageClass named `fast-storage` that will dynamically provision storage resources. \n\nUse the provisioner `kubernetes.io/no-provisioner` for this local storage class. \n\nSet the volumeBindingMode to `WaitForFirstConsumer` to delay volume binding until a pod using the PVC is created. \n\nThis storage class will be used for applications that require optimized local storage performance.",
+      "question": "As part of optimizing storage resources in the cluster, create a StorageClass named `fast-storage` that will dynamically provision storage resources. \n\nUse the provisioner `kubernetes.io/no-provisioner` for this local storage class. \n\nSet the volumeBindingMode to `WaitForFirstConsumer` to delay volume binding until a pod using the PVC is created. \n\nThis storage class will be used for applications that require optimized local storage performance.",
       "concepts": [
         "storage-class",
         "provisioners",
@@ -120,7 +120,7 @@
       "id": "4",
       "namespace": "storage-test",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nAn application team needs storage for their database. \n\nCreate a PersistentVolumeClaim named `pvc-app` in the `storage-test` namespace that will request storage from the previously created StorageClass. \n\nThe PVC should request exactly 500Mi of storage capacity and use the `ReadWriteOnce` access mode to ensure data consistency. \n\nMake sure to specify the `fast-storage` StorageClass that you created earlier as the storage class for this claim. \n\nThis PVC will be used by a database application that requires persistent storage.",
+      "question": "An application team needs storage for their database. \n\nCreate a PersistentVolumeClaim named `pvc-app` in the `storage-test` namespace that will request storage from the previously created StorageClass. \n\nThe PVC should request exactly 500Mi of storage capacity and use the `ReadWriteOnce` access mode to ensure data consistency. \n\nMake sure to specify the `fast-storage` StorageClass that you created earlier as the storage class for this claim. \n\nThis PVC will be used by a database application that requires persistent storage.",
       "concepts": [
         "persistent-volume-claims",
         "storage-class",
@@ -161,7 +161,7 @@
       "id": "5",
       "namespace": "troubleshooting",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nThe development team has reported an issue with their application deployment. \n\nThe deployment `broken-app` in namespace `troubleshooting` is consistently failing to start and maintain running pods. \n\nYour task is to investigate this deployment, identify the root cause of the failure, and implement the necessary fixes to make the deployment operational. \n\nCheck for issues such as incorrect container image references, resource constraints, configuration problems, or any other factors preventing successful deployment. \n\nDocument your findings and the changes you make to fix the issue.",
+      "question": "The development team has reported an issue with their application deployment. \n\nThe deployment `broken-app` in namespace `troubleshooting` is consistently failing to start and maintain running pods. \n\nYour task is to investigate this deployment, identify the root cause of the failure, and implement the necessary fixes to make the deployment operational. \n\nCheck for issues such as incorrect container image references, resource constraints, configuration problems, or any other factors preventing successful deployment. \n\nDocument your findings and the changes you make to fix the issue.",
       "concepts": [
         "deployments",
         "troubleshooting",
@@ -188,7 +188,7 @@
       "id": "6",
       "namespace": "troubleshooting",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nThe DevOps team needs a specialized pod to help with monitoring and logging. \n\nCreate a multi-container pod named `sidecar-pod` in the `troubleshooting` namespace with the following specifications: \n\n1. Main container: \n   - Image: `nginx`\n   - Container name: `nginx` \n   - Purpose: Serve web content \n\n2. Sidecar container: \n   - Image: `busybox`\n   - Container name: `sidecar` \n   - Command: [`sh`, `-c`, `while true; do date >> /var/my-log/date.log; sleep 10; done`] \n\n3. Shared volume configuration: \n   - Volume name: `log-volume` \n   - Mount path: `/var/my-log` in both containers \n\nThis demonstrates the sidecar container pattern for extending application functionality.",
+      "question": "The DevOps team needs a specialized pod to help with monitoring and logging. \n\nCreate a multi-container pod named `sidecar-pod` in the `troubleshooting` namespace with the following specifications: \n\n1. Main container: \n   - Image: `nginx`\n   - Container name: `nginx` \n   - Purpose: Serve web content \n\n2. Sidecar container: \n   - Image: `busybox`\n   - Container name: `sidecar` \n   - Command: [`sh`, `-c`, `while true; do date >> /var/my-log/date.log; sleep 10; done`] \n\n3. Shared volume configuration: \n   - Volume name: `log-volume` \n   - Mount path: `/var/my-log` in both containers \n\nThis demonstrates the sidecar container pattern for extending application functionality.",
       "concepts": [
         "pods",
         "multi-container",
@@ -216,7 +216,7 @@
       "id": "7",
       "namespace": "troubleshooting",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nUsers are reporting connectivity issues with an application. \n\nThe Service `web-service` in namespace `troubleshooting` is supposed to route traffic to backend pods, but it is not functioning correctly. \n\nInvestigate this service and identify what is preventing proper traffic routing. Possible issues could include: \n\n- Mismatched selectors between service and pods \n- Incorrect port configurations \n- Problems with the underlying pods \n\nAfter identifying the issue, implement the necessary fixes to ensure the service correctly routes traffic to the appropriate pods. \n\nVerify your fix by ensuring that service endpoints are properly populated and traffic is forwarded as expected.",
+      "question": "Users are reporting connectivity issues with an application. \n\nThe Service `web-service` in namespace `troubleshooting` is supposed to route traffic to backend pods, but it is not functioning correctly. \n\nInvestigate this service and identify what is preventing proper traffic routing. Possible issues could include: \n\n- Mismatched selectors between service and pods \n- Incorrect port configurations \n- Problems with the underlying pods \n\nAfter identifying the issue, implement the necessary fixes to ensure the service correctly routes traffic to the appropriate pods. \n\nVerify your fix by ensuring that service endpoints are properly populated and traffic is forwarded as expected.",
       "concepts": [
         "services",
         "selectors",
@@ -244,7 +244,7 @@
       "id": "8",
       "namespace": "troubleshooting",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nThe operations team has reported performance degradation in the cluster. \n\nPod `logging-pod` in namespace `troubleshooting` is consuming excessive CPU resources, affecting other workloads in the cluster. \n\nYour task is to: \n\n1. Identify which container within the pod is causing the high CPU usage \n\n2. Configure appropriate CPU limits `100m` and memory limits `50Mi` for that container to prevent resource abuse while ensuring the application can still function \n\n3. Implement your solution by modifying the pod specification with the necessary resource constraints \n\nEnsure that the pod continues to run successfully after your changes, but with its CPU usage kept within reasonable bounds as defined by the limits you set.",
+      "question": "The operations team has reported performance degradation in the cluster. \n\nPod `logging-pod` in namespace `troubleshooting` is consuming excessive CPU resources, affecting other workloads in the cluster. \n\nYour task is to: \n\n1. Identify which container within the pod is causing the high CPU usage \n\n2. Configure appropriate CPU limits `100m` and memory limits `50Mi` for that container to prevent resource abuse while ensuring the application can still function \n\n3. Implement your solution by modifying the pod specification with the necessary resource constraints \n\nEnsure that the pod continues to run successfully after your changes, but with its CPU usage kept within reasonable bounds as defined by the limits you set.",
       "concepts": [
         "resource-limits",
         "resource-requests",
@@ -272,7 +272,7 @@
       "id": "9",
       "namespace": "workloads",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA development team needs environment-specific configuration for their application. \n\nFirst, create a ConfigMap named `app-config` in namespace `workloads` containing exactly two key-value pairs: `APP_ENV=production` and `LOG_LEVEL=info`. \n\nNext, create a Pod named `config-pod` using the `nginx` image that consumes these configurations as environment variables. \n\nThe pod should be resource-efficient but have guaranteed resources, so configure it with a CPU request of `100m`, a CPU limit of `200m`, a memory request of `128Mi`, and a memory limit of `256Mi`.",
+      "question": "A development team needs environment-specific configuration for their application. \n\nFirst, create a ConfigMap named `app-config` in namespace `workloads` containing exactly two key-value pairs: `APP_ENV=production` and `LOG_LEVEL=info`. \n\nNext, create a Pod named `config-pod` using the `nginx` image that consumes these configurations as environment variables. \n\nThe pod should be resource-efficient but have guaranteed resources, so configure it with a CPU request of `100m`, a CPU limit of `200m`, a memory request of `128Mi`, and a memory limit of `256Mi`.",
       "concepts": [
         "configmaps",
         "pods",
@@ -314,7 +314,7 @@
       "id": "10",
       "namespace": "workloads",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nThe database team needs to securely deploy a MySQL instance with proper credential management. \n\nCreate a Secret named `db-credentials` in namespace `workloads` containing three sensitive values: `username=admin`, `random=true` and `password=securepass`. \n\nThen create a Pod named `secure-pod` using the `mysql:9.5.0` image that uses these credentials. \n\nConfigure the pod to access the Secret values as environment variables named `DB_USER`, `MYSQL_RANDOM_ROOT_PASSWORD` and `DB_PASSWORD` respectively. \n\nThis pattern demonstrates secure handling of sensitive information in Kubernetes without hardcoding credentials in the pod specification. Ensure the MySQL container is properly configured to use these environment variables for authentication.",
+      "question": "The database team needs to securely deploy a MySQL instance with proper credential management. \n\nCreate a Secret named `db-credentials` in namespace `workloads` containing three sensitive values: `username=admin`, `random=true` and `password=securepass`. \n\nThen create a Pod named `secure-pod` using the `mysql:9.5.0` image that uses these credentials. \n\nConfigure the pod to access the Secret values as environment variables named `DB_USER`, `MYSQL_RANDOM_ROOT_PASSWORD` and `DB_PASSWORD` respectively. \n\nThis pattern demonstrates secure handling of sensitive information in Kubernetes without hardcoding credentials in the pod specification. Ensure the MySQL container is properly configured to use these environment variables for authentication.",
       "concepts": [
         "secrets",
         "pods",
@@ -349,7 +349,7 @@
       "id": "11",
       "namespace": "workloads",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nThe system administration team needs an automated solution for log file cleanup. \n\nCreate a CronJob named `log-cleaner` in namespace `workloads` that will automatically manage log files based on age. \n\nConfigure it to run precisely every hour (using a standard cron expression) and use the `busybox` image. The job should execute the command `find /var/log -type f -name \"*.log\" -mtime +7 -delete` to remove log files older than 7 days. \n\nTo prevent resource contention, set the concurrency policy to `Forbid` so that new job executions are skipped if a previous execution is still running. \n\nFor job history management, configure the job to keep exactly `3` successful job completions and `1` failed job in its history.",
+      "question": "The system administration team needs an automated solution for log file cleanup. \n\nCreate a CronJob named `log-cleaner` in namespace `workloads` that will automatically manage log files based on age. \n\nConfigure it to run precisely every hour (using a standard cron expression) and use the `busybox` image. The job should execute the command `find /var/log -type f -name \"*.log\" -mtime +7 -delete` to remove log files older than 7 days. \n\nTo prevent resource contention, set the concurrency policy to `Forbid` so that new job executions are skipped if a previous execution is still running. \n\nFor job history management, configure the job to keep exactly `3` successful job completions and `1` failed job in its history.",
       "concepts": [
         "cronjobs",
         "jobs",
@@ -391,7 +391,7 @@
       "id": "12",
       "namespace": "workloads",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nTo ensure application reliability, the team needs to implement health checking for a critical service. \n\nCreate a Pod named `health-pod` in namespace `workloads` using the `emilevauge/whoami` image with the following health monitoring configuration: \n\n1) A liveness probe that performs an HTTP GET request to the path `/healthz` on port `80` every `15` seconds to determine if the container is alive. If this check fails, Kubernetes will restart the container. \n\n2) A readiness probe that checks if the container is ready to serve traffic by testing if port `80` is open and accepting connections every 10 seconds. \n\nConfigure appropriate initial delay, timeout, and failure threshold values based on best practices.",
+      "question": "To ensure application reliability, the team needs to implement health checking for a critical service. \n\nCreate a Pod named `health-pod` in namespace `workloads` using the `emilevauge/whoami` image with the following health monitoring configuration: \n\n1) A liveness probe that performs an HTTP GET request to the path `/healthz` on port `80` every `15` seconds to determine if the container is alive. If this check fails, Kubernetes will restart the container. \n\n2) A readiness probe that checks if the container is ready to serve traffic by testing if port `80` is open and accepting connections every 10 seconds. \n\nConfigure appropriate initial delay, timeout, and failure threshold values based on best practices.",
       "concepts": [
         "pods",
         "probes",
@@ -427,7 +427,7 @@
       "id": "13",
       "namespace": "cluster-admin",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn the `cluster-admin` namespace, implement proper access control and security segmentation in the cluster by configuring RBAC resources. \n\nFirst, create a `ClusterRole` named `pod-reader` that defines a set of permissions for pod operations. This role should specifically allow three operations on pods: `get` (view individual pods), `watch` (receive notifications about pod changes), and `list` (view collections of pods). \n\nNext, create a `ClusterRoleBinding` named `read-pods` that associates this role with the user `jane` in the namespace `cluster-admin`. \n\nThis binding will grant user `Jane` read-only access to pod resources across all namespaces in the cluster, following the principle of least privilege while allowing her to perform her monitoring duties.",
+      "question": "In the `cluster-admin` namespace, implement proper access control and security segmentation in the cluster by configuring RBAC resources. \n\nFirst, create a `ClusterRole` named `pod-reader` that defines a set of permissions for pod operations. This role should specifically allow three operations on pods: `get` (view individual pods), `watch` (receive notifications about pod changes), and `list` (view collections of pods). \n\nNext, create a `ClusterRoleBinding` named `read-pods` that associates this role with the user `jane` in the namespace `cluster-admin`. \n\nThis binding will grant user `Jane` read-only access to pod resources across all namespaces in the cluster, following the principle of least privilege while allowing her to perform her monitoring duties.",
       "concepts": [
         "rbac",
         "cluster-role",
@@ -455,7 +455,7 @@
       "id": "14",
       "namespace": "cluster-admin",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nDeploy the Bitnami Nginx chart in the `web` namespace using Helm. \n\nFirst, add the Bitnami repository (`https://charts.bitnami.com/bitnami`) if not already present. \n\nThen, deploy the `Bitnami` `nginx` chart with exactly `2` replicas to ensure high availability. \n\nVerify the deployment is successful by checking that pods are running and the service is correctly configured.",
+      "question": "Deploy the Bitnami Nginx chart in the `web` namespace using Helm. \n\nFirst, add the Bitnami repository (`https://charts.bitnami.com/bitnami`) if not already present. \n\nThen, deploy the `Bitnami` `nginx` chart with exactly `2` replicas to ensure high availability. \n\nVerify the deployment is successful by checking that pods are running and the service is correctly configured.",
       "concepts": [
         "helm",
         "package-management",
@@ -483,7 +483,7 @@
       "id": "15",
       "namespace": "cluster-admin",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nTo support a custom backup solution, you need to extend the Kubernetes API. \n\nCreate a CustomResourceDefinition (CRD) named `backups.data.example.com` that defines a new resource type `Backup` in API group `data.example.com` with version `v1alpha1`. \n\nThis custom resource should include a schema that validates two required fields: `spec.source` (a string representing the source data location) and `spec.destination` (a string representing where backups should be stored). \n\nConfigure appropriate additional fields like shortNames, scope, and descriptions to make this CRD user-friendly.",
+      "question": "To support a custom backup solution, you need to extend the Kubernetes API. \n\nCreate a CustomResourceDefinition (CRD) named `backups.data.example.com` that defines a new resource type `Backup` in API group `data.example.com` with version `v1alpha1`. \n\nThis custom resource should include a schema that validates two required fields: `spec.source` (a string representing the source data location) and `spec.destination` (a string representing where backups should be stored). \n\nConfigure appropriate additional fields like shortNames, scope, and descriptions to make this CRD user-friendly.",
       "concepts": [
         "custom-resource-definitions",
         "api-extensions",
@@ -511,7 +511,7 @@
       "id": "16",
       "namespace": "networking",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nTo enhance security through network segmentation, implement a network policy for a web application. \n\nCreate a NetworkPolicy named `allow-traffic` in namespace `networking` that allows incoming traffic only from pods with the label `tier=frontend` to pods with the label `app=web` on TCP port `80`. \n\nAll other incoming traffic to these pods should be denied. \n\nThis implements the principle of least privilege at the network level, ensuring that the web application can only be accessed by authorized frontend components.",
+      "question": "To enhance security through network segmentation, implement a network policy for a web application. \n\nCreate a NetworkPolicy named `allow-traffic` in namespace `networking` that allows incoming traffic only from pods with the label `tier=frontend` to pods with the label `app=web` on TCP port `80`. \n\nAll other incoming traffic to these pods should be denied. \n\nThis implements the principle of least privilege at the network level, ensuring that the web application can only be accessed by authorized frontend components.",
       "concepts": [
         "network-policies",
         "pod-security",
@@ -546,7 +546,7 @@
       "id": "17",
       "namespace": "networking",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nThe microservices architecture requires internal service communication. \n\nCreate a ClusterIP service named `internal-app` in namespace `networking` to enable this communication pattern. \n\nConfigure the service to route traffic to pods with the label `app=backend`. The service should accept connections on port `80` and forward them to port `8080` on the backend pods. \n\nClusterIP is the appropriate service type because this communication is entirely internal to the cluster and doesn`t need external exposure. \n\nEnsure the selector exactly matches the pod labels and the port configuration correctly maps the service port to the target port on the pods.",
+      "question": "The microservices architecture requires internal service communication. \n\nCreate a ClusterIP service named `internal-app` in namespace `networking` to enable this communication pattern. \n\nConfigure the service to route traffic to pods with the label `app=backend`. The service should accept connections on port `80` and forward them to port `8080` on the backend pods. \n\nClusterIP is the appropriate service type because this communication is entirely internal to the cluster and doesn`t need external exposure. \n\nEnsure the selector exactly matches the pod labels and the port configuration correctly maps the service port to the target port on the pods.",
       "concepts": [
         "services",
         "clusterip",
@@ -581,7 +581,7 @@
       "id": "18",
       "namespace": "networking",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nA public-facing web application needs to be exposed to external users. \n\nCreate a NodePort service named `public-web` in namespace `networking` that will expose the `web-frontend` deployment to external users. \n\nConfigure the service to accept external traffic on port `80` and forward it to port `8080` on the deployment's pods. Set the NodePort to `30080`. \n\nUsing a `NodePort` service will expose the application on a static port on each node in the cluster, making it accessible via any node`s IP address. \n\nEnsure the service selector correctly targets the `web-frontend` deployment pods and that the port configuration is appropriate for a web application. \n\nThis setup will enable external users to access the web application through `<node-ip>:30080`.",
+      "question": "A public-facing web application needs to be exposed to external users. \n\nCreate a NodePort service named `public-web` in namespace `networking` that will expose the `web-frontend` deployment to external users. \n\nConfigure the service to accept external traffic on port `80` and forward it to port `8080` on the deployment's pods. Set the NodePort to `30080`. \n\nUsing a `NodePort` service will expose the application on a static port on each node in the cluster, making it accessible via any node`s IP address. \n\nEnsure the service selector correctly targets the `web-frontend` deployment pods and that the port configuration is appropriate for a web application. \n\nThis setup will enable external users to access the web application through `<node-ip>:30080`.",
       "concepts": [
         "services",
         "nodeport",
@@ -616,7 +616,7 @@
       "id": "19",
       "namespace": "networking",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nThe API team needs to implement host-based routing for their services. \n\nCreate an Ingress resource named `api-ingress` in namespace `networking` that implements the following routing rule: \n\n- All HTTP traffic for the hostname `api.example.com` should be directed to the service `api-service` on port `80`. \n\nThis Ingress will utilize the cluster's ingress controller to provide more sophisticated HTTP routing than is possible with Services alone. \n\nMake sure to properly configure the host field with the exact domain name and set up the correct backend service reference.",
+      "question": "The API team needs to implement host-based routing for their services. \n\nCreate an Ingress resource named `api-ingress` in namespace `networking` that implements the following routing rule: \n\n- All HTTP traffic for the hostname `api.example.com` should be directed to the service `api-service` on port `80`. \n\nThis Ingress will utilize the cluster's ingress controller to provide more sophisticated HTTP routing than is possible with Services alone. \n\nMake sure to properly configure the host field with the exact domain name and set up the correct backend service reference.",
       "concepts": [
         "ingress",
         "networking",
@@ -651,7 +651,7 @@
       "id": "20",
       "namespace": "networking",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a simple batch processing task to demonstrate the Job resource type. \n\nCreate a Kubernetes Job named `hello-job` in the `networking` namespace that runs a pod with the `busybox` image. \n\nThe job should execute a single command that prints 'Hello from Kubernetes job!' to standard output, and then completes successfully. \n\nConfigure the job to: \n\n1. Run only once and not be restarted after completion \n2. Have a deadline of 30 seconds (the job will be terminated if it doesn't complete within this time) \n3. Use `Never` as the restart policy for the pod \n\nThis job demonstrates the basic pattern for one-time task execution in Kubernetes.",
+      "question": "Create a simple batch processing task to demonstrate the Job resource type. \n\nCreate a Kubernetes Job named `hello-job` in the `networking` namespace that runs a pod with the `busybox` image. \n\nThe job should execute a single command that prints 'Hello from Kubernetes job!' to standard output, and then completes successfully. \n\nConfigure the job to: \n\n1. Run only once and not be restarted after completion \n2. Have a deadline of 30 seconds (the job will be terminated if it doesn't complete within this time) \n3. Use `Never` as the restart policy for the pod \n\nThis job demonstrates the basic pattern for one-time task execution in Kubernetes.",
       "concepts": [
         "jobs",
         "batch-processing",
@@ -686,7 +686,7 @@
       "id": "21",
       "namespace": "docker-oci",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nFor improved container image distribution and portability, you need to work with the Open Container Initiative (OCI) format. \n\nComplete the following steps: \n\n1. Pull the `nginx:latest` image from Docker Hub using the `docker pull` command \n\n2. Create a directory at `/root/oci-images` if it doesn`t already exist \n\n3. Using the appropriate docker commands, export the nginx image in OCI format and store it in this directory \n\nThis will help standardize the container image format and improve portability across different container runtimes.",
+      "question": "For improved container image distribution and portability, you need to work with the Open Container Initiative (OCI) format. \n\nComplete the following steps: \n\n1. Pull the `nginx:latest` image from Docker Hub using the `docker pull` command \n\n2. Create a directory at `/root/oci-images` if it doesn`t already exist \n\n3. Using the appropriate docker commands, export the nginx image in OCI format and store it in this directory \n\nThis will help standardize the container image format and improve portability across different container runtimes.",
       "concepts": [
         "containers",
         "images",

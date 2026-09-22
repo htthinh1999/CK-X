@@ -15,28 +15,31 @@ const remoteDesktopService = require('./remoteDesktopService');
 const MetricService = require('./metricService');
 
 /**
- * Resolve which SSH server a question runs on and which kube-context it targets.
+ * Resolve which SSH server a question runs on and which cluster it targets.
  *
  * Backward compatible: when the lab config declares no `servers`, this returns
- * { host: undefined, context: undefined } so everything runs on the default
- * jumphost (config.ssh.host) with the kubeconfig's default context — exactly
- * as before. When `servers` is declared, the question's `machineHostname` picks
- * the server (falling back to the first), and the server's `cluster` maps to the
- * k3d context `k3d-<cluster>`.
+ * { host: undefined, cluster: undefined } so everything runs on the default
+ * jumphost (config.ssh.host) with the shared kubeconfig — exactly as before.
+ * When `servers` is declared, the question's `machineHostname` picks the server
+ * (falling back to the first), and the server's `cluster` names the k3d cluster
+ * whose dedicated kubeconfig file (`kubeconfig-<cluster>`) that server uses.
+ *
+ * One host == one cluster == one context: each server has exactly one cluster,
+ * so the student just `ssh <server>` and works with the default context — no
+ * `kubectl config use-context` needed.
  *
  * @param {Object} question - question object (has machineHostname)
  * @param {Object} examConfig - the lab config.json (may contain `servers`)
- * @returns {{host: (string|undefined), context: (string|undefined)}}
+ * @returns {{host: (string|undefined), cluster: (string|undefined)}}
  */
 function resolveTarget(question, examConfig) {
   const servers = examConfig && Array.isArray(examConfig.servers) ? examConfig.servers : [];
   if (servers.length === 0) {
-    return { host: undefined, context: undefined };
+    return { host: undefined, cluster: undefined };
   }
   const name = question && question.machineHostname;
   const server = servers.find((s) => s.name === name) || servers[0];
-  const context = server && server.cluster ? `k3d-${server.cluster}` : undefined;
-  return { host: server ? server.name : undefined, context };
+  return { host: server ? server.name : undefined, cluster: server ? server.cluster : undefined };
 }
 
 /**
@@ -50,19 +53,19 @@ function buildClusterSpec(examConfig) {
 }
 
 /**
- * Shell prefix that exports KUBECONFIG and, for multi-cluster labs, points this
- * invocation at the question's cluster. It sets the current-context with
- * `kubectl config use-context` (so plain `kubectl`/`helm` calls in existing
- * scripts hit the right cluster with no per-script changes) AND exports
- * KUBE_CONTEXT (for scripts that pass `--context=$KUBE_CONTEXT` explicitly).
- * With no context (single-cluster labs) the behaviour is unchanged.
+ * Shell prefix that exports KUBECONFIG for a setup/validation invocation.
+ *
+ * For multi-cluster labs it points at the target cluster's dedicated kubeconfig
+ * file (`kubeconfig-<cluster>`), which contains only that cluster's context and
+ * already has it selected as current-context — so plain `kubectl`/`helm` in the
+ * scripts hit the right cluster with no `use-context` and no per-script changes.
+ * With no cluster (single-cluster labs) it uses the shared kubeconfig, unchanged.
  */
-function envPrefix(context) {
-  let p = 'export KUBECONFIG=/home/candidate/.kube/kubeconfig';
-  if (context) {
-    p += ` && kubectl config use-context ${context} >/dev/null 2>&1; export KUBE_CONTEXT=${context}`;
+function envPrefix(cluster) {
+  if (cluster) {
+    return `export KUBECONFIG=/home/candidate/.kube/kubeconfig-${cluster}`;
   }
-  return p;
+  return 'export KUBECONFIG=/home/candidate/.kube/kubeconfig';
 }
 
 /**
@@ -124,13 +127,29 @@ async function setupExamEnvironment(examId, nodeCount = 1, examConfig = {}, ques
     
     // Multi-server exams: run each question's setup script on its target server
     // with the right kube-context. Single-server labs already ran their setup
-    // inside prepare-exam-env, so this loop is skipped when no servers are declared.
+    // inside prepare-exam-env, so this block is skipped when no servers are declared.
     if (Array.isArray(examConfig.servers) && examConfig.servers.length > 0) {
+      // Write a per-host marker so each server's interactive shell defaults its
+      // KUBECONFIG to that host's own cluster (student just `ssh <server>` and
+      // works with the single default context — no `use-context` switching).
+      for (const server of examConfig.servers) {
+        if (!server || !server.name) continue;
+        const markerCmd = server.cluster
+          ? `echo ${server.cluster} > /home/candidate/.exam-cluster`
+          : 'rm -f /home/candidate/.exam-cluster';
+        try {
+          await sshService.executeCommand(markerCmd, server.name);
+          logger.info(`Set cluster marker '${server.cluster || '(none)'}' on ${server.name}`);
+        } catch (e) {
+          logger.error(`Failed to set cluster marker on ${server.name}`, { error: e.message });
+        }
+      }
+
       logger.info(`Running per-server setup for ${questions.length} questions`);
       for (const question of questions) {
         const target = resolveTarget(question, examConfig);
         const scriptPath = `/tmp/exam-assets/scripts/setup/q${question.id}_setup.sh`;
-        const cmd = `${envPrefix(target.context)} && [ -f ${scriptPath} ] && ${scriptPath} || true`;
+        const cmd = `${envPrefix(target.cluster)} && [ -f ${scriptPath} ] && ${scriptPath} || true`;
         try {
           const r = await sshService.executeCommand(cmd, target.host);
           logger.info(`Setup for question ${question.id} on ${target.host || 'jumphost'} exit=${r.exitCode}`);
@@ -287,10 +306,10 @@ async function evaluateExamOnJumphost(examId, questions, examConfig = {}) {
       logger.info(`Namespace: ${question.namespace}`);
       logger.info(`Question: ${question.question}`);
       logger.info(`Concepts: ${question.concepts ? question.concepts.join(', ') : 'None'}`);
-      // Resolve which server + kube-context this question is evaluated on
-      // (defaults to the jumphost with no explicit context for single-server labs).
+      // Resolve which server + cluster this question is evaluated on
+      // (defaults to the jumphost with the shared kubeconfig for single-server labs).
       const target = resolveTarget(question, examConfig);
-      logger.info(`Question ${question.id} evaluated on server '${target.host || 'jumphost'}'${target.context ? ` (context ${target.context})` : ''}`);
+      logger.info(`Question ${question.id} evaluated on server '${target.host || 'jumphost'}'${target.cluster ? ` (cluster ${target.cluster})` : ''}`);
 
       // Process verification steps for the question
       for (const verification of question.verification) {
@@ -303,9 +322,9 @@ async function evaluateExamOnJumphost(examId, questions, examConfig = {}) {
           // The script is located on the jumphost at the specified path
           const scriptPath = `/tmp/exam-assets/scripts/validation/${verificationScript}`;
 
-          // Export KUBECONFIG (and KUBE_CONTEXT for multi-cluster labs) and run
-          // the script on this question's target server.
-          const commandWithKubeconfig = `${envPrefix(target.context)} && ${scriptPath}`;
+          // Export KUBECONFIG (the target cluster's dedicated file for
+          // multi-cluster labs) and run the script on this question's server.
+          const commandWithKubeconfig = `${envPrefix(target.cluster)} && ${scriptPath}`;
 
           logger.info(`Executing verification script: ${scriptPath} on ${target.host || 'jumphost'}`);
           const result = await sshService.executeCommand(commandWithKubeconfig, target.host);

@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "grove",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod with image `nginx:1.25` called `nginx` in namespace `grove` and expose its port `80`.\n\nThe `--expose` flag should create both the Pod and a ClusterIP Service named `nginx` on port `80`.\n\nHint: use `kubectl run` with the `--port` and `--expose` flags.",
+      "question": "Create a Pod with image `nginx:1.25` called `nginx` in namespace `grove` and expose its port `80`.\n\nThe `--expose` flag should create both the Pod and a ClusterIP Service named `nginx` on port `80`.\n\nHint: use `kubectl run` with the `--port` and `--expose` flags.",
       "concepts": [
         "pods",
         "services"
@@ -44,7 +44,7 @@
       "id": "2",
       "namespace": "thicket",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nPerform the following in namespace `thicket`:\n\n1. Create a Pod named `web` with image `nginx:1.25`.\n2. Get the Pod's IP address and save it to `/tmp/exam/course/2/pod-ip.txt`.\n3. Verify connectivity by running a temporary `busybox:1.36` Pod that wgets the IP.\n\nHint: use `kubectl get pod -o wide` or `-o jsonpath` to get the IP.",
+      "question": "Perform the following in namespace `thicket`:\n\n1. Create a Pod named `web` with image `nginx:1.25`.\n2. Get the Pod's IP address and save it to `/tmp/exam/course/2/pod-ip.txt`.\n3. Verify connectivity by running a temporary `busybox:1.36` Pod that wgets the IP.\n\nHint: use `kubectl get pod -o wide` or `-o jsonpath` to get the IP.",
       "concepts": [
         "pods",
         "services-networking"
@@ -77,7 +77,7 @@
       "id": "3",
       "namespace": "glade",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `logger` in namespace `glade` with image `busybox:1.36` that runs the command:\n\n`i=0; while true; do echo \"$i: $(date)\"; i=$((i+1)); sleep 1; done`\n\nAfter the Pod is running, save the first 10 lines of its logs to `/tmp/exam/course/3/logs.txt`.\n\nHint: use `kubectl logs` to get Pod logs.",
+      "question": "Create a Pod named `logger` in namespace `glade` with image `busybox:1.36` that runs the command:\n\n`i=0; while true; do echo \"$i: $(date)\"; i=$((i+1)); sleep 1; done`\n\nAfter the Pod is running, save the first 10 lines of its logs to `/tmp/exam/course/3/logs.txt`.\n\nHint: use `kubectl logs` to get Pod logs.",
       "concepts": [
         "pods",
         "observability",
@@ -111,7 +111,7 @@
       "id": "4",
       "namespace": "meadow",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `debug-pod` in namespace `meadow` with image `busybox:1.36` that runs the command `ls /notexist`.\n\n1. Get the Pod's logs and save them to `/tmp/exam/course/4/error.txt`.\n2. The file should contain the error message.\n\nHint: use `kubectl logs` to see the error output.",
+      "question": "Create a Pod named `debug-pod` in namespace `meadow` with image `busybox:1.36` that runs the command `ls /notexist`.\n\n1. Get the Pod's logs and save them to `/tmp/exam/course/4/error.txt`.\n2. The file should contain the error message.\n\nHint: use `kubectl logs` to see the error output.",
       "concepts": [
         "pods",
         "observability",
@@ -152,7 +152,7 @@
       "id": "5",
       "namespace": "fern",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `gpu-pod` in namespace `fern` with image `nginx:1.25` that will be scheduled on a Node with the label `accelerator=nvidia`. Use `nodeSelector` to achieve this.\n\nNote: the Pod may remain `Pending` if no node has this label - that is expected.\n\nHint: use `spec.nodeSelector` in the Pod YAML.",
+      "question": "Create a Pod named `gpu-pod` in namespace `fern` with image `nginx:1.25` that will be scheduled on a Node with the label `accelerator=nvidia`. Use `nodeSelector` to achieve this.\n\nNote: the Pod may remain `Pending` if no node has this label - that is expected.\n\nHint: use `spec.nodeSelector` in the Pod YAML.",
       "concepts": [
         "pods",
         "scheduling",
@@ -179,7 +179,7 @@
       "id": "6",
       "namespace": "moss",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `tolerate-pod` in namespace `moss` with image `nginx:1.25` that tolerates the taint `tier=frontend:NoSchedule`.\n\nThe Pod should have a toleration with:\n- key: `tier`\n- value: `frontend`\n- effect: `NoSchedule`\n- operator: `Equal`\n\nHint: use `spec.tolerations` in the Pod YAML.",
+      "question": "Create a Pod named `tolerate-pod` in namespace `moss` with image `nginx:1.25` that tolerates the taint `tier=frontend:NoSchedule`.\n\nThe Pod should have a toleration with:\n- key: `tier`\n- value: `frontend`\n- effect: `NoSchedule`\n- operator: `Equal`\n\nHint: use `spec.tolerations` in the Pod YAML.",
       "concepts": [
         "pods",
         "scheduling",
@@ -220,7 +220,7 @@
       "id": "7",
       "namespace": "root",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Deployment named `app-deploy` in namespace `root` with:\n- Image: `nginx:1.18.0`\n- Replicas: `3`\n- Container port: `80`\n- Label: `app=app-deploy`\n\nDo NOT create a Service.\n\nHint: use the `kubectl create deployment` command.",
+      "question": "Create a Deployment named `app-deploy` in namespace `root` with:\n- Image: `nginx:1.18.0`\n- Replicas: `3`\n- Container port: `80`\n- Label: `app=app-deploy`\n\nDo NOT create a Service.\n\nHint: use the `kubectl create deployment` command.",
       "concepts": [
         "deployments",
         "application-design"
@@ -260,7 +260,7 @@
       "id": "8",
       "namespace": "root",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nThe Deployment `app-deploy` from Question 7 exists in namespace `root`.\n\nScale the Deployment to `5` replicas.\n\nHint: use the `kubectl scale` command.",
+      "question": "The Deployment `app-deploy` from Question 7 exists in namespace `root`.\n\nScale the Deployment to `5` replicas.\n\nHint: use the `kubectl scale` command.",
       "concepts": [
         "deployments",
         "scaling"
@@ -286,7 +286,7 @@
       "id": "9",
       "namespace": "root",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a HorizontalPodAutoscaler for Deployment `app-deploy` in namespace `root` with:\n- Minimum replicas: `5`\n- Maximum replicas: `10`\n- Target CPU utilization: `80%`\n\nHint: use the `kubectl autoscale deployment` command.\n\nNote: the HPA needs metrics-server to read CPU usage; scoring checks the HPA spec only.",
+      "question": "Create a HorizontalPodAutoscaler for Deployment `app-deploy` in namespace `root` with:\n- Minimum replicas: `5`\n- Maximum replicas: `10`\n- Target CPU utilization: `80%`\n\nHint: use the `kubectl autoscale deployment` command.\n\nNote: the HPA needs metrics-server to read CPU usage; scoring checks the HPA spec only.",
       "concepts": [
         "autoscaling",
         "hpa",
@@ -327,7 +327,7 @@
       "id": "10",
       "namespace": "bark",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Deployment `pause-deploy` exists in namespace `bark` with image `nginx:1.18.0`.\n\n1. Pause the rollout of the Deployment.\n2. Update the image to `nginx:1.19.0`.\n3. Verify that no new rollout started (check rollout history).\n4. Resume the rollout.\n5. Verify the image was updated to `nginx:1.19.0`.\n\nHint: use `kubectl rollout pause` and `kubectl rollout resume`.",
+      "question": "A Deployment `pause-deploy` exists in namespace `bark` with image `nginx:1.18.0`.\n\n1. Pause the rollout of the Deployment.\n2. Update the image to `nginx:1.19.0`.\n3. Verify that no new rollout started (check rollout history).\n4. Resume the rollout.\n5. Verify the image was updated to `nginx:1.19.0`.\n\nHint: use `kubectl rollout pause` and `kubectl rollout resume`.",
       "concepts": [
         "deployments",
         "rollout"
@@ -353,7 +353,7 @@
       "id": "11",
       "namespace": "canopy",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Job named `parallel-job` in namespace `canopy` that:\n- Uses image `busybox:1.36`\n- Runs the command: `echo hello; sleep 5; echo world`\n- Runs `5` Pods in parallel (parallelism)\n\nHint: use the `spec.parallelism` field.",
+      "question": "Create a Job named `parallel-job` in namespace `canopy` that:\n- Uses image `busybox:1.36`\n- Runs the command: `echo hello; sleep 5; echo world`\n- Runs `5` Pods in parallel (parallelism)\n\nHint: use the `spec.parallelism` field.",
       "concepts": [
         "jobs",
         "batch"
@@ -379,7 +379,7 @@
       "id": "12",
       "namespace": "hollow",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Job named `deadline-job` in namespace `hollow` that:\n- Uses image `busybox:1.36`\n- Runs the command: `while true; do echo hello; sleep 10; done`\n- Should be automatically terminated if it takes more than `30` seconds\n\nHint: use the `spec.activeDeadlineSeconds` field.",
+      "question": "Create a Job named `deadline-job` in namespace `hollow` that:\n- Uses image `busybox:1.36`\n- Runs the command: `while true; do echo hello; sleep 10; done`\n- Should be automatically terminated if it takes more than `30` seconds\n\nHint: use the `spec.activeDeadlineSeconds` field.",
       "concepts": [
         "jobs",
         "batch"
@@ -405,7 +405,7 @@
       "id": "13",
       "namespace": "grove",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a CronJob named `deadline-cron` in namespace `grove` that:\n- Uses image `busybox:1.36`\n- Runs every minute (`* * * * *`)\n- Executes: `date; echo Hello from CronJob`\n- Should be terminated if it takes more than `17` seconds to start after its scheduled time\n\nHint: use the `spec.startingDeadlineSeconds` field.",
+      "question": "Create a CronJob named `deadline-cron` in namespace `grove` that:\n- Uses image `busybox:1.36`\n- Runs every minute (`* * * * *`)\n- Executes: `date; echo Hello from CronJob`\n- Should be terminated if it takes more than `17` seconds to start after its scheduled time\n\nHint: use the `spec.startingDeadlineSeconds` field.",
       "concepts": [
         "cronjobs",
         "batch"
@@ -431,7 +431,7 @@
       "id": "14",
       "namespace": "thicket",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nPerform the following in namespace `thicket`:\n\n1. Create a CronJob named `source-cron` with image `busybox:1.36`, schedule `*/5 * * * *`, command `echo \"source job\"`.\n2. Create a Job named `manual-job` from this CronJob.\n\nHint: use `kubectl create job --from=cronjob/NAME`.",
+      "question": "Perform the following in namespace `thicket`:\n\n1. Create a CronJob named `source-cron` with image `busybox:1.36`, schedule `*/5 * * * *`, command `echo \"source job\"`.\n2. Create a Job named `manual-job` from this CronJob.\n\nHint: use `kubectl create job --from=cronjob/NAME`.",
       "concepts": [
         "cronjobs",
         "jobs"
@@ -457,7 +457,7 @@
       "id": "15",
       "namespace": "glade",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nPerform the following:\n\n1. Create a file `/tmp/exam/course/15/config.txt` with content:\n\n`foo3=lili`\n`foo4=lele`\n\n2. Create a ConfigMap named `file-config` in namespace `glade` from this file.\n\nHint: use `kubectl create configmap --from-file`.",
+      "question": "Perform the following:\n\n1. Create a file `/tmp/exam/course/15/config.txt` with content:\n\n`foo3=lili`\n`foo4=lele`\n\n2. Create a ConfigMap named `file-config` in namespace `glade` from this file.\n\nHint: use `kubectl create configmap --from-file`.",
       "concepts": [
         "configmaps",
         "configuration"
@@ -490,7 +490,7 @@
       "id": "16",
       "namespace": "meadow",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nPerform the following in namespace `meadow`:\n\n1. Create a ConfigMap named `env-config` with values `var6=val6` and `var7=val7`.\n2. Create a Pod named `env-pod` with image `nginx:1.25` that loads ALL keys from this ConfigMap as environment variables (use `envFrom`).\n\nHint: use `envFrom.configMapRef` in the Pod spec.",
+      "question": "Perform the following in namespace `meadow`:\n\n1. Create a ConfigMap named `env-config` with values `var6=val6` and `var7=val7`.\n2. Create a Pod named `env-pod` with image `nginx:1.25` that loads ALL keys from this ConfigMap as environment variables (use `envFrom`).\n\nHint: use `envFrom.configMapRef` in the Pod spec.",
       "concepts": [
         "configmaps",
         "pods",
@@ -524,7 +524,7 @@
       "id": "17",
       "namespace": "fern",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nPerform the following:\n\n1. Create a file `/tmp/exam/course/17/username` with content `admin`.\n2. Create a Secret named `file-secret` in namespace `fern` from this file.\n\nHint: use `kubectl create secret generic --from-file`.",
+      "question": "Perform the following:\n\n1. Create a file `/tmp/exam/course/17/username` with content `admin`.\n2. Create a Secret named `file-secret` in namespace `fern` from this file.\n\nHint: use `kubectl create secret generic --from-file`.",
       "concepts": [
         "secrets",
         "configuration"
@@ -557,7 +557,7 @@
       "id": "18",
       "namespace": "moss",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nPerform the following in namespace `moss`:\n\n1. Create a Secret named `api-secret` with key `API_KEY=LmLHbYhsgWZwNifiqaRorH8T`.\n2. Create a Pod named `api-pod` with image `nginx:1.25` that loads this key into an environment variable called `API_KEY`.\n\nHint: use `env.valueFrom.secretKeyRef` in the Pod spec.",
+      "question": "Perform the following in namespace `moss`:\n\n1. Create a Secret named `api-secret` with key `API_KEY=LmLHbYhsgWZwNifiqaRorH8T`.\n2. Create a Pod named `api-pod` with image `nginx:1.25` that loads this key into an environment variable called `API_KEY`.\n\nHint: use `env.valueFrom.secretKeyRef` in the Pod spec.",
       "concepts": [
         "secrets",
         "pods",
@@ -591,7 +591,7 @@
       "id": "19",
       "namespace": "root",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nPerform the following in namespace `root`:\n\n1. Create a ServiceAccount named `app-sa`.\n2. Create a Pod named `sa-pod` with image `nginx:1.25` that uses this ServiceAccount.\n\nHint: use `spec.serviceAccountName` in the Pod spec.",
+      "question": "Perform the following in namespace `root`:\n\n1. Create a ServiceAccount named `app-sa`.\n2. Create a Pod named `sa-pod` with image `nginx:1.25` that uses this ServiceAccount.\n\nHint: use `spec.serviceAccountName` in the Pod spec.",
       "concepts": [
         "serviceaccounts",
         "pods",
@@ -625,7 +625,7 @@
       "id": "20",
       "namespace": "bark",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nPerform the following in namespace `bark`:\n\n1. Create a Pod named `copy-pod` with image `busybox:1.36` and command `sleep 3600`.\n2. Copy `/etc/passwd` from the Pod to `/tmp/exam/course/20/passwd`.\n\nHint: use the `kubectl cp` command.",
+      "question": "Perform the following in namespace `bark`:\n\n1. Create a Pod named `copy-pod` with image `busybox:1.36` and command `sleep 3600`.\n2. Copy `/etc/passwd` from the Pod to `/tmp/exam/course/20/passwd`.\n\nHint: use the `kubectl cp` command.",
       "concepts": [
         "pods",
         "observability",

@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "default",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Dockerfile in `/tmp/exam/course/1/` that fulfills the following requirements:\n\n- Use `nginx:1.23-alpine` as the base image.\n- Add a `HEALTHCHECK` instruction that tests if the web server is responding.\n- The check should run the command `curl -f http://localhost/ || exit 1`.\n- Set the interval to `10s`, timeout to `3s`, and retries to `3`.\n- You do NOT need to build the image.",
+      "question": "Create a Dockerfile in `/tmp/exam/course/1/` that fulfills the following requirements:\n\n- Use `nginx:1.23-alpine` as the base image.\n- Add a `HEALTHCHECK` instruction that tests if the web server is responding.\n- The check should run the command `curl -f http://localhost/ || exit 1`.\n- Set the interval to `10s`, timeout to `3s`, and retries to `3`.\n- You do NOT need to build the image.",
       "concepts": [
         "docker",
         "healthcheck",
@@ -45,7 +45,7 @@
       "id": "2",
       "namespace": "thunder",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `thunder-logger` in the `thunder` namespace.\n\n- The main container should be named `app-container`, using the `busybox` image, and run the command: `sh -c 'while true; do echo \"INFO: Processing request\"; sleep 2; echo \"ERROR: Connection timeout\"; sleep 3; done > /var/log/app.log'`\n- Mount an `emptyDir` volume at `/var/log` for the main container.\n- Add a sidecar container named `error-tailer`, using the `busybox` image.\n- The sidecar should mount the same volume and run a command to tail the log file but ONLY output lines containing `ERROR` (e.g. `sh -c 'tail -f /var/log/app.log | grep ERROR'`).",
+      "question": "Create a Pod named `thunder-logger` in the `thunder` namespace.\n\n- The main container should be named `app-container`, using the `busybox` image, and run the command: `sh -c 'while true; do echo \"INFO: Processing request\"; sleep 2; echo \"ERROR: Connection timeout\"; sleep 3; done > /var/log/app.log'`\n- Mount an `emptyDir` volume at `/var/log` for the main container.\n- Add a sidecar container named `error-tailer`, using the `busybox` image.\n- The sidecar should mount the same volume and run a command to tail the log file but ONLY output lines containing `ERROR` (e.g. `sh -c 'tail -f /var/log/app.log | grep ERROR'`).",
       "concepts": [
         "pods",
         "sidecar",
@@ -86,7 +86,7 @@
       "id": "3",
       "namespace": "bolt",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a CronJob named `lightning-strike` in the `bolt` namespace.\n\n- It should run every 5 minutes (`*/5 * * * *`).\n- The job should use the `busybox` image and run the command `echo \"Strike!\"`.\n- Configure `startingDeadlineSeconds` to `15` seconds.\n- Configure `successfulJobsHistoryLimit` to `2`.",
+      "question": "Create a CronJob named `lightning-strike` in the `bolt` namespace.\n\n- It should run every 5 minutes (`*/5 * * * *`).\n- The job should use the `busybox` image and run the command `echo \"Strike!\"`.\n- Configure `startingDeadlineSeconds` to `15` seconds.\n- Configure `successfulJobsHistoryLimit` to `2`.",
       "concepts": [
         "cronjobs",
         "jobs",
@@ -127,7 +127,7 @@
       "id": "4",
       "namespace": "storm",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Service named `database-svc` will be created in the `storm` namespace in the future.\nCreate a Pod named `app-with-wait` in the `storm` namespace:\n\n- Main container: name `main-app`, image `nginx:alpine`.\n- Init container: name `wait-for-db`, image `busybox`.\n- The init container should run a command that repeatedly checks if `database-svc` is resolvable or reachable (e.g. using `nslookup database-svc` or `wget -qO- http://database-svc`), looping until it succeeds before the main container starts. Use a simple shell loop with a sleep.",
+      "question": "A Service named `database-svc` will be created in the `storm` namespace in the future.\nCreate a Pod named `app-with-wait` in the `storm` namespace:\n\n- Main container: name `main-app`, image `nginx:alpine`.\n- Init container: name `wait-for-db`, image `busybox`.\n- The init container should run a command that repeatedly checks if `database-svc` is resolvable or reachable (e.g. using `nslookup database-svc` or `wget -qO- http://database-svc`), looping until it succeeds before the main container starts. Use a simple shell loop with a sleep.",
       "concepts": [
         "pods",
         "init-containers"
@@ -160,7 +160,7 @@
       "id": "5",
       "namespace": "surge",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA helm chart is located at `/tmp/exam/course/5/chart`.\nRender the helm templates using the release name `thunder-web` and namespace `surge`.\nOverride the following values:\n\n- `replicaCount` to `3`\n- `image.tag` to `latest`\n\nSave the rendered output to `/tmp/exam/course/5/output.yaml`.\nDo NOT install the helm chart.",
+      "question": "A helm chart is located at `/tmp/exam/course/5/chart`.\nRender the helm templates using the release name `thunder-web` and namespace `surge`.\nOverride the following values:\n\n- `replicaCount` to `3`\n- `image.tag` to `latest`\n\nSave the rendered output to `/tmp/exam/course/5/output.yaml`.\nDo NOT install the helm chart.",
       "concepts": [
         "helm",
         "templating"
@@ -193,7 +193,7 @@
       "id": "6",
       "namespace": "voltage",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nThere is a Deployment named `api-gateway` in the `voltage` namespace that has been updated a few times, and the current version is broken.\nRoll back the Deployment to revision `1`.\nEnsure the Deployment is successfully rolled back and running (revision 1 used image `nginx:1.23`).",
+      "question": "There is a Deployment named `api-gateway` in the `voltage` namespace that has been updated a few times, and the current version is broken.\nRoll back the Deployment to revision `1`.\nEnsure the Deployment is successfully rolled back and running (revision 1 used image `nginx:1.23`).",
       "concepts": [
         "deployments",
         "rollback",
@@ -220,7 +220,7 @@
       "id": "7",
       "namespace": "spark",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn the `spark` namespace, a Service named `backend-svc` exists, routing traffic to a Deployment named `backend-v1` (with 4 replicas).\nYou need to introduce a canary version:\n\n- Create a new Deployment named `backend-v2` in the `spark` namespace with `1` replica, using the `nginx:1.23` image.\n- Ensure the `backend-svc` distributes traffic to BOTH `backend-v1` and `backend-v2` (Hint: check the labels of the existing service and deployment — the pod template label `app` must be `backend`).\n- The traffic split should essentially be 4:1 (since v1 has 4 replicas and v2 has 1).",
+      "question": "In the `spark` namespace, a Service named `backend-svc` exists, routing traffic to a Deployment named `backend-v1` (with 4 replicas).\nYou need to introduce a canary version:\n\n- Create a new Deployment named `backend-v2` in the `spark` namespace with `1` replica, using the `nginx:1.23` image.\n- Ensure the `backend-svc` distributes traffic to BOTH `backend-v1` and `backend-v2` (Hint: check the labels of the existing service and deployment — the pod template label `app` must be `backend`).\n- The traffic split should essentially be 4:1 (since v1 has 4 replicas and v2 has 1).",
       "concepts": [
         "deployments",
         "canary",
@@ -261,7 +261,7 @@
       "id": "8",
       "namespace": "charge",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn `/tmp/exam/course/8/`, there is a base deployment file `deployment.yaml`.\nCreate a `kustomization.yaml` file in the same directory.\nConfigure it to include `deployment.yaml` as a resource.\nAdd a strategic merge patch (either inline or as a separate file) that adds the environment variable `APP_ENV=production` to the `worker` container of the deployment.\nApply the kustomization to the `charge` namespace using `kubectl apply -k`.",
+      "question": "In `/tmp/exam/course/8/`, there is a base deployment file `deployment.yaml`.\nCreate a `kustomization.yaml` file in the same directory.\nConfigure it to include `deployment.yaml` as a resource.\nAdd a strategic merge patch (either inline or as a separate file) that adds the environment variable `APP_ENV=production` to the `worker` container of the deployment.\nApply the kustomization to the `charge` namespace using `kubectl apply -k`.",
       "concepts": [
         "kustomize",
         "deployments",
@@ -288,7 +288,7 @@
       "id": "9",
       "namespace": "flash",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Pod named `data-processor` in the `flash` namespace is stuck in a `CrashLoopBackOff`.\nFind the cause and fix it. The pod should be running successfully.\n(Hint: The application container exits with an error — inspect the command/args or probe configuration and correct it so the pod stays Running.)",
+      "question": "A Pod named `data-processor` in the `flash` namespace is stuck in a `CrashLoopBackOff`.\nFind the cause and fix it. The pod should be running successfully.\n(Hint: The application container exits with an error — inspect the command/args or probe configuration and correct it so the pod stays Running.)",
       "concepts": [
         "troubleshooting",
         "pods",
@@ -308,7 +308,7 @@
       "id": "10",
       "namespace": "strike",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nList all events in the `strike` namespace, sorted by their creation timestamp (oldest first).\nSave the output (which should include at least the time, type, reason, and object name) to `/tmp/exam/course/10/events.txt`.",
+      "question": "List all events in the `strike` namespace, sorted by their creation timestamp (oldest first).\nSave the output (which should include at least the time, type, reason, and object name) to `/tmp/exam/course/10/events.txt`.",
       "concepts": [
         "events",
         "observability",
@@ -335,7 +335,7 @@
       "id": "11",
       "namespace": "plasma",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `complex-app` in the `plasma` namespace using the `nginx:alpine` image.\nConfigure all three probe types for the container on port `80`:\n\n- Startup Probe: HTTP GET on `/`, wait for up to 30 seconds (e.g. failureThreshold: 30, periodSeconds: 1).\n- Liveness Probe: TCP Socket on port `80`, periodSeconds 10.\n- Readiness Probe: HTTP GET on `/`, periodSeconds 5, initialDelaySeconds 5.",
+      "question": "Create a Pod named `complex-app` in the `plasma` namespace using the `nginx:alpine` image.\nConfigure all three probe types for the container on port `80`:\n\n- Startup Probe: HTTP GET on `/`, wait for up to 30 seconds (e.g. failureThreshold: 30, periodSeconds: 1).\n- Liveness Probe: TCP Socket on port `80`, periodSeconds 10.\n- Readiness Probe: HTTP GET on `/`, periodSeconds 5, initialDelaySeconds 5.",
       "concepts": [
         "probes",
         "pods",
@@ -376,7 +376,7 @@
       "id": "12",
       "namespace": "thunder",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `env-info` in the `thunder` namespace using the `busybox` image.\nIt should run the command `sleep 3600`.\nUse the Downward API to inject the following environment variables:\n\n- `POD_NAME`: the name of the pod (`metadata.name`)\n- `POD_NAMESPACE`: the namespace of the pod (`metadata.namespace`)",
+      "question": "Create a Pod named `env-info` in the `thunder` namespace using the `busybox` image.\nIt should run the command `sleep 3600`.\nUse the Downward API to inject the following environment variables:\n\n- `POD_NAME`: the name of the pod (`metadata.name`)\n- `POD_NAMESPACE`: the namespace of the pod (`metadata.namespace`)",
       "concepts": [
         "downward-api",
         "pods",
@@ -410,7 +410,7 @@
       "id": "13",
       "namespace": "bolt",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `secure-net` in the `bolt` namespace using the `alpine` image, running `sleep 1d`.\nConfigure the container's `securityContext` to:\n\n- Drop `ALL` capabilities.\n- Add the `NET_ADMIN` capability.",
+      "question": "Create a Pod named `secure-net` in the `bolt` namespace using the `alpine` image, running `sleep 1d`.\nConfigure the container's `securityContext` to:\n\n- Drop `ALL` capabilities.\n- Add the `NET_ADMIN` capability.",
       "concepts": [
         "securitycontext",
         "capabilities",
@@ -444,7 +444,7 @@
       "id": "14",
       "namespace": "storm",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a YAML manifest for a Secret named `db-credentials` in the `storm` namespace.\nUse the `stringData` field to define the following key-value pairs (do not use base64 encoding in the manifest):\n\n- `username`: `admin`\n- `password`: `supersecret123`\n\nApply the YAML file to create the Secret.",
+      "question": "Create a YAML manifest for a Secret named `db-credentials` in the `storm` namespace.\nUse the `stringData` field to define the following key-value pairs (do not use base64 encoding in the manifest):\n\n- `username`: `admin`\n- `password`: `supersecret123`\n\nApply the YAML file to create the Secret.",
       "concepts": [
         "secrets",
         "configuration"
@@ -477,7 +477,7 @@
       "id": "15",
       "namespace": "voltage",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a ConfigMap named `app-args` in the `voltage` namespace with a key `mode` and value `verbose`.\nCreate a Pod named `arg-reader` in the `voltage` namespace using the `busybox` image.\nThe pod should run the command `echo` and its argument should be derived from the ConfigMap `app-args` (key `mode`), so the pod essentially runs `echo verbose`.\nUse environment variables mapped from the ConfigMap to pass it to the `args` field.",
+      "question": "Create a ConfigMap named `app-args` in the `voltage` namespace with a key `mode` and value `verbose`.\nCreate a Pod named `arg-reader` in the `voltage` namespace using the `busybox` image.\nThe pod should run the command `echo` and its argument should be derived from the ConfigMap `app-args` (key `mode`), so the pod essentially runs `echo verbose`.\nUse environment variables mapped from the ConfigMap to pass it to the `args` field.",
       "concepts": [
         "configmaps",
         "pods",
@@ -511,7 +511,7 @@
       "id": "16",
       "namespace": "spark",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a ClusterRole named `secret-reader` that can `get`, `watch`, and `list` resources of type `secrets`.\nCreate a ClusterRoleBinding named `secret-reader-binding` to bind the `secret-reader` ClusterRole to a ServiceAccount named `app-sa` in the `spark` namespace. (You may need to create the ServiceAccount if it doesn't exist.)",
+      "question": "Create a ClusterRole named `secret-reader` that can `get`, `watch`, and `list` resources of type `secrets`.\nCreate a ClusterRoleBinding named `secret-reader-binding` to bind the `secret-reader` ClusterRole to a ServiceAccount named `app-sa` in the `spark` namespace. (You may need to create the ServiceAccount if it doesn't exist.)",
       "concepts": [
         "rbac",
         "clusterrole",
@@ -552,7 +552,7 @@
       "id": "17",
       "namespace": "charge",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a NetworkPolicy named `strict-ingress` in the `charge` namespace.\nIt should apply to pods with the label `role=db` in the `charge` namespace.\nAllow ingress traffic on TCP port `3306` ONLY if the traffic comes from:\n\n- Pods with the label `role=api` AND\n- The pods must be in a namespace with the label `env=prod`.\n\n(Ensure you use the correct syntax for AND logic in `from` rules — a single `from` element containing both a `namespaceSelector` and a `podSelector`.)",
+      "question": "Create a NetworkPolicy named `strict-ingress` in the `charge` namespace.\nIt should apply to pods with the label `role=db` in the `charge` namespace.\nAllow ingress traffic on TCP port `3306` ONLY if the traffic comes from:\n\n- Pods with the label `role=api` AND\n- The pods must be in a namespace with the label `env=prod`.\n\n(Ensure you use the correct syntax for AND logic in `from` rules — a single `from` element containing both a `namespaceSelector` and a `podSelector`.)",
       "concepts": [
         "networkpolicy",
         "networking",
@@ -586,7 +586,7 @@
       "id": "18",
       "namespace": "surge",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate an Ingress named `default-ing` in the `surge` namespace.\nConfigure it with a `defaultBackend` that routes all unmatched traffic to a service named `fallback-svc` on port `8080`.\nThere should be NO host or path rules defined.",
+      "question": "Create an Ingress named `default-ing` in the `surge` namespace.\nConfigure it with a `defaultBackend` that routes all unmatched traffic to a service named `fallback-svc` on port `8080`.\nThere should be NO host or path rules defined.",
       "concepts": [
         "ingress",
         "networking"
@@ -612,7 +612,7 @@
       "id": "19",
       "namespace": "flash",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Service named `sticky-svc` in the `flash` namespace that exposes port `80` and targets TCP port `8080`.\nThe selector should be `app=sticky`.\nConfigure the service to use `ClientIP` session affinity.\nSet the session affinity timeout to `10800` seconds (3 hours).",
+      "question": "Create a Service named `sticky-svc` in the `flash` namespace that exposes port `80` and targets TCP port `8080`.\nThe selector should be `app=sticky`.\nConfigure the service to use `ClientIP` session affinity.\nSet the session affinity timeout to `10800` seconds (3 hours).",
       "concepts": [
         "services",
         "networking",
@@ -646,7 +646,7 @@
       "id": "20",
       "namespace": "strike",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nThere is a Pod named `hidden-api` running in the `strike` namespace, listening on port `8080`.\nUse port-forwarding to forward local port `9090` to the pod's port `8080`.\nWhile the port-forward is running, use `curl` to fetch `http://localhost:9090/status`.\nSave the exact response body to `/tmp/exam/course/20/response.txt`.\n(Ensure you kill the port-forward process after obtaining the response.)",
+      "question": "There is a Pod named `hidden-api` running in the `strike` namespace, listening on port `8080`.\nUse port-forwarding to forward local port `9090` to the pod's port `8080`.\nWhile the port-forward is running, use `curl` to fetch `http://localhost:9090/status`.\nSave the exact response body to `/tmp/exam/course/20/response.txt`.\n(Ensure you kill the port-forward process after obtaining the response.)",
       "concepts": [
         "port-forward",
         "networking",

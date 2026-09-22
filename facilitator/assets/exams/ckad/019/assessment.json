@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "fortress",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `entry-override` in the `fortress` namespace using the `nginx:alpine` image.\nThe image normally starts nginx. You must override both the entrypoint and the command so the Pod runs `sleep` for `3600` seconds.\n\n- Command (entrypoint override): `[\"sleep\"]`\n- Args (CMD override): `[\"3600\"]`\n\nSave the manifest to `/tmp/exam/course/1/pod.yaml`.",
+      "question": "Create a Pod named `entry-override` in the `fortress` namespace using the `nginx:alpine` image.\nThe image normally starts nginx. You must override both the entrypoint and the command so the Pod runs `sleep` for `3600` seconds.\n\n- Command (entrypoint override): `[\"sleep\"]`\n- Args (CMD override): `[\"3600\"]`\n\nSave the manifest to `/tmp/exam/course/1/pod.yaml`.",
       "concepts": [
         "pods",
         "command-args"
@@ -44,7 +44,7 @@
       "id": "2",
       "namespace": "fortress",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a ConfigMap named `init-script-cm` in the `fortress` namespace with a single key `setup.sh` containing:\n\n```\n#!/bin/sh\necho \"Initialization successful!\" > /work-dir/index.html\n```\n\nThen create a Pod named `web-setup` using the `nginx:alpine` image. Add an init container named `init-setup` using the `busybox:1.36` image. The init container must:\n\n1. Mount the ConfigMap `init-script-cm` at `/scripts`\n2. Mount an emptyDir volume named `work-vol` at `/work-dir`\n3. Execute `sh /scripts/setup.sh`\n\nThe main `web-setup` container must mount the same `work-vol` at `/usr/share/nginx/html`.\nSave the Pod manifest to `/tmp/exam/course/2/init-pod.yaml`.",
+      "question": "Create a ConfigMap named `init-script-cm` in the `fortress` namespace with a single key `setup.sh` containing:\n\n```\n#!/bin/sh\necho \"Initialization successful!\" > /work-dir/index.html\n```\n\nThen create a Pod named `web-setup` using the `nginx:alpine` image. Add an init container named `init-setup` using the `busybox:1.36` image. The init container must:\n\n1. Mount the ConfigMap `init-script-cm` at `/scripts`\n2. Mount an emptyDir volume named `work-vol` at `/work-dir`\n3. Execute `sh /scripts/setup.sh`\n\nThe main `web-setup` container must mount the same `work-vol` at `/usr/share/nginx/html`.\nSave the Pod manifest to `/tmp/exam/course/2/init-pod.yaml`.",
       "concepts": [
         "configmap",
         "init-containers",
@@ -85,7 +85,7 @@
       "id": "3",
       "namespace": "siege",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a CronJob named `siege-report` in the `siege` namespace.\n\n- It runs a container using the `busybox:1.36` image.\n- Command: `/bin/sh, -c, date; echo Hello from siege`.\n- It runs every hour on the half hour (e.g. 00:30, 01:30) -> schedule `30 * * * *`.\n- It must be scheduled in the `Asia/Tokyo` timezone (requires Kubernetes 1.27+).\n\nSave the CronJob manifest to `/tmp/exam/course/3/cronjob.yaml`.",
+      "question": "Create a CronJob named `siege-report` in the `siege` namespace.\n\n- It runs a container using the `busybox:1.36` image.\n- Command: `/bin/sh, -c, date; echo Hello from siege`.\n- It runs every hour on the half hour (e.g. 00:30, 01:30) -> schedule `30 * * * *`.\n- It must be scheduled in the `Asia/Tokyo` timezone (requires Kubernetes 1.27+).\n\nSave the CronJob manifest to `/tmp/exam/course/3/cronjob.yaml`.",
       "concepts": [
         "cronjob",
         "scheduling",
@@ -119,7 +119,7 @@
       "id": "4",
       "namespace": "bastion",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a multi-container Pod named `process-monitor` in the `bastion` namespace. The Pod must share the PID namespace between all containers.\n\n- Container 1: `nginx-app` using `nginx:alpine`.\n- Container 2: `monitor-app` using `busybox:1.36`.\n\nThe `monitor-app` container runs a continuous loop listing processes every 5 seconds:\n`[\"/bin/sh\", \"-c\", \"while true; do ps -ef; sleep 5; done\"]`\n\nEnsure `shareProcessNamespace: true` is set at the Pod level.\nSave the manifest to `/tmp/exam/course/4/shared-pid.yaml`.",
+      "question": "Create a multi-container Pod named `process-monitor` in the `bastion` namespace. The Pod must share the PID namespace between all containers.\n\n- Container 1: `nginx-app` using `nginx:alpine`.\n- Container 2: `monitor-app` using `busybox:1.36`.\n\nThe `monitor-app` container runs a continuous loop listing processes every 5 seconds:\n`[\"/bin/sh\", \"-c\", \"while true; do ps -ef; sleep 5; done\"]`\n\nEnsure `shareProcessNamespace: true` is set at the Pod level.\nSave the manifest to `/tmp/exam/course/4/shared-pid.yaml`.",
       "concepts": [
         "pods",
         "shareProcessNamespace",
@@ -153,7 +153,7 @@
       "id": "5",
       "namespace": "garrison",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Helm release named `battle-web` exists in the `garrison` namespace.\nUpgrade it using the chart located at `/tmp/exam/course/5/battle-chart/`.\n\nThe upgrade must be ATOMIC (roll back automatically on failure) and have a timeout of `1m`.\nSet the chart value `replicaCount` to `3` during the upgrade.\n\nNote: your task is purely to execute the Helm upgrade command with the correct flags.",
+      "question": "A Helm release named `battle-web` exists in the `garrison` namespace.\nUpgrade it using the chart located at `/tmp/exam/course/5/battle-chart/`.\n\nThe upgrade must be ATOMIC (roll back automatically on failure) and have a timeout of `1m`.\nSet the chart value `replicaCount` to `3` during the upgrade.\n\nNote: your task is purely to execute the Helm upgrade command with the correct flags.",
       "concepts": [
         "helm",
         "upgrade",
@@ -180,7 +180,7 @@
       "id": "6",
       "namespace": "citadel",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Deployment named `citadel-guard` in the `citadel` namespace.\n\n- Replicas: `4`\n- Image: `nginx:1.24.0-alpine`\n- Labels: `app=guard`\n\nConfigure the deployment so that if it takes more than `15` seconds to roll out it is considered failed (`progressDeadlineSeconds`).\nSave the manifest to `/tmp/exam/course/6/deploy.yaml` and apply it.",
+      "question": "Create a Deployment named `citadel-guard` in the `citadel` namespace.\n\n- Replicas: `4`\n- Image: `nginx:1.24.0-alpine`\n- Labels: `app=guard`\n\nConfigure the deployment so that if it takes more than `15` seconds to roll out it is considered failed (`progressDeadlineSeconds`).\nSave the manifest to `/tmp/exam/course/6/deploy.yaml` and apply it.",
       "concepts": [
         "deployments",
         "progressDeadlineSeconds"
@@ -206,7 +206,7 @@
       "id": "7",
       "namespace": "rampart",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn the `rampart` namespace there is a deployment named `api-server-blue` and a service named `api-svc`. Currently `api-svc` routes traffic to the `api-server-blue` pods.\n\n1. Create a new deployment named `api-server-green` with image `nginx:1.25.0-alpine` and labels `app: api-server-green`. Set replicas to 2.\n2. Update the `api-svc` Service to route traffic to the `api-server-green` pods instead of blue.\n3. Do NOT delete the `api-server-blue` deployment.",
+      "question": "In the `rampart` namespace there is a deployment named `api-server-blue` and a service named `api-svc`. Currently `api-svc` routes traffic to the `api-server-blue` pods.\n\n1. Create a new deployment named `api-server-green` with image `nginx:1.25.0-alpine` and labels `app: api-server-green`. Set replicas to 2.\n2. Update the `api-svc` Service to route traffic to the `api-server-green` pods instead of blue.\n3. Do NOT delete the `api-server-blue` deployment.",
       "concepts": [
         "deployments",
         "services",
@@ -233,7 +233,7 @@
       "id": "8",
       "namespace": "vanguard",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA base kustomization structure exists at `/tmp/exam/course/8/`.\nModify the `kustomization.yaml` file in this directory to apply two transformations to the base resources:\n\n1. Override the `nginx` image to `nginx:1.23.0-alpine`.\n2. Apply a patch to scale the `vanguard-web` deployment to `5` replicas.\n\nApply the customized manifests to the `vanguard` namespace.\nSave your built manifests to `/tmp/exam/course/8/kustomize-output.yaml`.",
+      "question": "A base kustomization structure exists at `/tmp/exam/course/8/`.\nModify the `kustomization.yaml` file in this directory to apply two transformations to the base resources:\n\n1. Override the `nginx` image to `nginx:1.23.0-alpine`.\n2. Apply a patch to scale the `vanguard-web` deployment to `5` replicas.\n\nApply the customized manifests to the `vanguard` namespace.\nSave your built manifests to `/tmp/exam/course/8/kustomize-output.yaml`.",
       "concepts": [
         "kustomize",
         "deployments"
@@ -266,7 +266,7 @@
       "id": "9",
       "namespace": "sentinel",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Pod named `data-processor` in the `sentinel` namespace is crashing (it is being OOMKilled).\nModify the Pod (you may need to delete and recreate it) to increase its memory limit to `256Mi`. Keep the requests at `64Mi`.\nEnsure the Pod reaches the `Running` state.",
+      "question": "A Pod named `data-processor` in the `sentinel` namespace is crashing (it is being OOMKilled).\nModify the Pod (you may need to delete and recreate it) to increase its memory limit to `256Mi`. Keep the requests at `64Mi`.\nEnsure the Pod reaches the `Running` state.",
       "concepts": [
         "troubleshooting",
         "resources",
@@ -293,7 +293,7 @@
       "id": "10",
       "namespace": "outpost",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nThe Pod `secure-app` in the `outpost` namespace contains a distroless container that lacks a shell. You need to inspect its filesystem.\nAdd an ephemeral container to `secure-app` using the `busybox:1.36` image, named `debugger`.\nEnsure the ephemeral container stays running so the scoring script can detect it (e.g. `--command -- sh -c \"sleep 3600\"`).",
+      "question": "The Pod `secure-app` in the `outpost` namespace contains a distroless container that lacks a shell. You need to inspect its filesystem.\nAdd an ephemeral container to `secure-app` using the `busybox:1.36` image, named `debugger`.\nEnsure the ephemeral container stays running so the scoring script can detect it (e.g. `--command -- sh -c \"sleep 3600\"`).",
       "concepts": [
         "ephemeral-containers",
         "debugging"
@@ -319,7 +319,7 @@
       "id": "11",
       "namespace": "armory",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Deployment named `weapon-smith` in the `armory` namespace is failing to scale up its pods due to a `ResourceQuota` named `armory-quota`.\nTroubleshoot and adjust the `weapon-smith` deployment so its pods fit within the quota.\n\nRequirements for `weapon-smith` pods:\n\n- They must request exactly `100m` CPU and `128Mi` memory.\n- You cannot modify or delete the `armory-quota` ResourceQuota.\n\nScale the deployment to `3` replicas if it is not already.",
+      "question": "A Deployment named `weapon-smith` in the `armory` namespace is failing to scale up its pods due to a `ResourceQuota` named `armory-quota`.\nTroubleshoot and adjust the `weapon-smith` deployment so its pods fit within the quota.\n\nRequirements for `weapon-smith` pods:\n\n- They must request exactly `100m` CPU and `128Mi` memory.\n- You cannot modify or delete the `armory-quota` ResourceQuota.\n\nScale the deployment to `3` replicas if it is not already.",
       "concepts": [
         "troubleshooting",
         "resourcequota",
@@ -346,7 +346,7 @@
       "id": "12",
       "namespace": "fortress",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `resource-aware` in the `fortress` namespace using the `busybox:1.36` image, running `sleep 3600`.\nConfigure the container with:\n\n- CPU Request: `200m`\n- Memory Limit: `256Mi`\n\nExpose the CPU request and Memory limit as environment variables via the Downward API:\n\n- `MY_CPU_REQUEST` reflects the CPU requests.\n- `MY_MEM_LIMIT` reflects the Memory limits.\n\nSave the manifest to `/tmp/exam/course/12/downward.yaml`.",
+      "question": "Create a Pod named `resource-aware` in the `fortress` namespace using the `busybox:1.36` image, running `sleep 3600`.\nConfigure the container with:\n\n- CPU Request: `200m`\n- Memory Limit: `256Mi`\n\nExpose the CPU request and Memory limit as environment variables via the Downward API:\n\n- `MY_CPU_REQUEST` reflects the CPU requests.\n- `MY_MEM_LIMIT` reflects the Memory limits.\n\nSave the manifest to `/tmp/exam/course/12/downward.yaml`.",
       "concepts": [
         "pods",
         "downward-api",
@@ -380,7 +380,7 @@
       "id": "13",
       "namespace": "siege",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\n1. Create a ServiceAccount named `stealth-sa` in the `siege` namespace.\n2. Create a Pod named `stealth-pod` in the same namespace using the `nginx:alpine` image and the `stealth-sa` ServiceAccount.\n3. The pod MUST NOT automount the ServiceAccount token (`automountServiceAccountToken: false`).\n4. Instead, manually mount the ServiceAccount token (projected volume) to `/var/run/secrets/custom-token`.\n\nSave the manifest to `/tmp/exam/course/13/sa-pod.yaml`.",
+      "question": "1. Create a ServiceAccount named `stealth-sa` in the `siege` namespace.\n2. Create a Pod named `stealth-pod` in the same namespace using the `nginx:alpine` image and the `stealth-sa` ServiceAccount.\n3. The pod MUST NOT automount the ServiceAccount token (`automountServiceAccountToken: false`).\n4. Instead, manually mount the ServiceAccount token (projected volume) to `/var/run/secrets/custom-token`.\n\nSave the manifest to `/tmp/exam/course/13/sa-pod.yaml`.",
       "concepts": [
         "serviceaccount",
         "projected-volume",
@@ -421,7 +421,7 @@
       "id": "14",
       "namespace": "bastion",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `secure-workload` in the `bastion` namespace using the `nginx:alpine` image.\nConfigure the Pod's SecurityContext to use the `RuntimeDefault` seccomp profile.\nEnsure the container runs as a non-root user (e.g. `runAsUser: 1000` and `runAsNonRoot: true`).\nSave the manifest to `/tmp/exam/course/14/seccomp.yaml`.",
+      "question": "Create a Pod named `secure-workload` in the `bastion` namespace using the `nginx:alpine` image.\nConfigure the Pod's SecurityContext to use the `RuntimeDefault` seccomp profile.\nEnsure the container runs as a non-root user (e.g. `runAsUser: 1000` and `runAsNonRoot: true`).\nSave the manifest to `/tmp/exam/course/14/seccomp.yaml`.",
       "concepts": [
         "securitycontext",
         "seccomp"
@@ -454,7 +454,7 @@
       "id": "15",
       "namespace": "citadel",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\n1. Create a Secret named `db-credentials` in the `citadel` namespace with two keys: `username` (value `admin`) and `password` (value `hachiman_rocks`).\n2. Create a Pod named `db-consumer` using the `alpine:3.18` image running `sleep 3600`.\n3. Mount the `db-credentials` secret as a volume at `/etc/db-creds/`.\n4. ONLY the `password` key should be mounted as a file named `db-pass.txt` inside `/etc/db-creds/`. The `username` key must NOT be present as a file.\n\nSave the manifest to `/tmp/exam/course/15/multi-secret.yaml`.",
+      "question": "1. Create a Secret named `db-credentials` in the `citadel` namespace with two keys: `username` (value `admin`) and `password` (value `hachiman_rocks`).\n2. Create a Pod named `db-consumer` using the `alpine:3.18` image running `sleep 3600`.\n3. Mount the `db-credentials` secret as a volume at `/etc/db-creds/`.\n4. ONLY the `password` key should be mounted as a file named `db-pass.txt` inside `/etc/db-creds/`. The `username` key must NOT be present as a file.\n\nSave the manifest to `/tmp/exam/course/15/multi-secret.yaml`.",
       "concepts": [
         "secrets",
         "volumes"
@@ -487,7 +487,7 @@
       "id": "16",
       "namespace": "rampart",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a LimitRange named `rampart-limits` in the `rampart` namespace enforcing these defaults for all new Pods:\n\n- Default Limit: `Memory 512Mi`, `CPU 500m`\n- Default Request: `Memory 256Mi`, `CPU 200m`\n\nAfter creating the LimitRange, create a Pod named `default-pod` using the `nginx:alpine` image with NO explicit resource requests/limits, letting it inherit the defaults.\nSave the LimitRange and Pod manifests to `/tmp/exam/course/16/limit-range.yaml`.",
+      "question": "Create a LimitRange named `rampart-limits` in the `rampart` namespace enforcing these defaults for all new Pods:\n\n- Default Limit: `Memory 512Mi`, `CPU 500m`\n- Default Request: `Memory 256Mi`, `CPU 200m`\n\nAfter creating the LimitRange, create a Pod named `default-pod` using the `nginx:alpine` image with NO explicit resource requests/limits, letting it inherit the defaults.\nSave the LimitRange and Pod manifests to `/tmp/exam/course/16/limit-range.yaml`.",
       "concepts": [
         "limitrange",
         "resources"
@@ -513,7 +513,7 @@
       "id": "17",
       "namespace": "vanguard",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a NetworkPolicy named `protect-db` in the `vanguard` namespace.\nIt applies to pods with the label `role=db`.\nAllow INGRESS traffic on TCP port `5432` from:\n\n1. Pods in the `vanguard` namespace with the label `role=backend`\n2. ANY pod in the `bastion` namespace (which has label `kubernetes.io/metadata.name=bastion`).\n\nDeny all other ingress traffic to pods with `role=db`.\nSave the manifest to `/tmp/exam/course/17/netpol.yaml`.",
+      "question": "Create a NetworkPolicy named `protect-db` in the `vanguard` namespace.\nIt applies to pods with the label `role=db`.\nAllow INGRESS traffic on TCP port `5432` from:\n\n1. Pods in the `vanguard` namespace with the label `role=backend`\n2. ANY pod in the `bastion` namespace (which has label `kubernetes.io/metadata.name=bastion`).\n\nDeny all other ingress traffic to pods with `role=db`.\nSave the manifest to `/tmp/exam/course/17/netpol.yaml`.",
       "concepts": [
         "networkpolicy",
         "ingress"
@@ -546,7 +546,7 @@
       "id": "18",
       "namespace": "sentinel",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nAn Ingress named `main-ingress` exists in the `sentinel` namespace, routing `sentinel.dojo.com` to `main-svc`.\nCreate a new Ingress named `canary-ingress` in the `sentinel` namespace.\nConfigure it as a canary release routing 20% of traffic to a service named `canary-svc` (you don't need to create it) on port 80, triggering on the same host `sentinel.dojo.com`.\nAdd the necessary NGINX ingress canary annotations.\nSave the manifest to `/tmp/exam/course/18/ingress.yaml`.",
+      "question": "An Ingress named `main-ingress` exists in the `sentinel` namespace, routing `sentinel.dojo.com` to `main-svc`.\nCreate a new Ingress named `canary-ingress` in the `sentinel` namespace.\nConfigure it as a canary release routing 20% of traffic to a service named `canary-svc` (you don't need to create it) on port 80, triggering on the same host `sentinel.dojo.com`.\nAdd the necessary NGINX ingress canary annotations.\nSave the manifest to `/tmp/exam/course/18/ingress.yaml`.",
       "concepts": [
         "ingress",
         "canary"
@@ -572,7 +572,7 @@
       "id": "19",
       "namespace": "outpost",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Service named `external-db` in the `outpost` namespace.\nIt must NOT use a label selector. Configure it to expose TCP port `3306`.\nManually create an Endpoints object named `external-db` that maps to IP address `10.50.50.50` on port `3306`.\nSave the manifests to `/tmp/exam/course/19/manual-svc.yaml`.",
+      "question": "Create a Service named `external-db` in the `outpost` namespace.\nIt must NOT use a label selector. Configure it to expose TCP port `3306`.\nManually create an Endpoints object named `external-db` that maps to IP address `10.50.50.50` on port `3306`.\nSave the manifests to `/tmp/exam/course/19/manual-svc.yaml`.",
       "concepts": [
         "services",
         "endpoints"
@@ -605,7 +605,7 @@
       "id": "20",
       "namespace": "default",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nInvestigate the `coredns` ConfigMap in the `kube-system` namespace. You need to add a custom DNS rewrite rule.\nModify the `coredns` ConfigMap so any DNS query for `hachiman.local` is rewritten to `hachiman.garrison.svc.cluster.local`.\n(Hint: use the `rewrite name exact hachiman.local hachiman.garrison.svc.cluster.local` plugin inside the Corefile block.)\nSave a copy of the modified ConfigMap to `/tmp/exam/course/20/coredns.yaml`.\nYou DO NOT need to restart the CoreDNS pods.",
+      "question": "Investigate the `coredns` ConfigMap in the `kube-system` namespace. You need to add a custom DNS rewrite rule.\nModify the `coredns` ConfigMap so any DNS query for `hachiman.local` is rewritten to `hachiman.garrison.svc.cluster.local`.\n(Hint: use the `rewrite name exact hachiman.local hachiman.garrison.svc.cluster.local` plugin inside the Corefile block.)\nSave a copy of the modified ConfigMap to `/tmp/exam/course/20/coredns.yaml`.\nYou DO NOT need to restart the CoreDNS pods.",
       "concepts": [
         "coredns",
         "dns",

@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "default",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nUse `kubectl explain` to explore the Kubernetes API documentation.\n\n1. Find the full path to document the `containers` field under Pod spec.\n2. Save the complete documentation output for `pod.spec.containers.resources` to `/tmp/exam/course/1/pod-spec-fields.txt`.\n\nThe output should show all available sub-fields and their descriptions.",
+      "question": "Use `kubectl explain` to explore the Kubernetes API documentation.\n\n1. Find the full path to document the `containers` field under Pod spec.\n2. Save the complete documentation output for `pod.spec.containers.resources` to `/tmp/exam/course/1/pod-spec-fields.txt`.\n\nThe output should show all available sub-fields and their descriptions.",
       "concepts": [
         "kubectl",
         "api-docs"
@@ -30,7 +30,7 @@
       "id": "2",
       "namespace": "tiger",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Deployment named `spread-pods` in namespace `tiger` with:\n\n- Image: `nginx:1.21`\n- Replicas: `3`\n- Container name: `web`\n- Labels: `app: spread-pods`\n\nConfigure `requiredDuringSchedulingIgnoredDuringExecution` pod anti-affinity to ensure:\n\n- Pods are scheduled on different nodes (topology key: `kubernetes.io/hostname`)\n- Anti-affinity matches pods with label `app: spread-pods`\n\nNote: If the cluster has fewer nodes than replicas, some pods may remain Pending. This is expected behavior.",
+      "question": "Create a Deployment named `spread-pods` in namespace `tiger` with:\n\n- Image: `nginx:1.21`\n- Replicas: `3`\n- Container name: `web`\n- Labels: `app: spread-pods`\n\nConfigure `requiredDuringSchedulingIgnoredDuringExecution` pod anti-affinity to ensure:\n\n- Pods are scheduled on different nodes (topology key: `kubernetes.io/hostname`)\n- Anti-affinity matches pods with label `app: spread-pods`\n\nNote: If the cluster has fewer nodes than replicas, some pods may remain Pending. This is expected behavior.",
       "concepts": [
         "deployments",
         "affinity",
@@ -92,7 +92,7 @@
       "id": "3",
       "namespace": "stripe",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Deployment named `stable-blue` already exists in namespace `stripe` with its corresponding Service `web-service`.\n\nImplement a Blue-Green deployment switch:\n\n1. Create a new Deployment named `stable-green`:\n- Image: `nginx:1.22`\n- Replicas: `3`\n- Labels: `app: web-app`, `version: green`\n\n2. Update the Service `web-service` to route all traffic to the green deployment by changing the selector to match `version: green`.\n\n3. Verify the switch is complete by ensuring green pods receive traffic.\n\nNote: Blue-Green differs from Canary - it's a complete switch, not gradual.",
+      "question": "A Deployment named `stable-blue` already exists in namespace `stripe` with its corresponding Service `web-service`.\n\nImplement a Blue-Green deployment switch:\n\n1. Create a new Deployment named `stable-green`:\n- Image: `nginx:1.22`\n- Replicas: `3`\n- Labels: `app: web-app`, `version: green`\n\n2. Update the Service `web-service` to route all traffic to the green deployment by changing the selector to match `version: green`.\n\n3. Verify the switch is complete by ensuring green pods receive traffic.\n\nNote: Blue-Green differs from Canary - it's a complete switch, not gradual.",
       "concepts": [
         "deployments",
         "services",
@@ -154,7 +154,7 @@
       "id": "4",
       "namespace": "prowl",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA CronJob named `data-sync` exists in namespace `prowl`. Modify it with the following settings:\n\n- `suspend`: `true` (pause the CronJob)\n- `startingDeadlineSeconds`: `200`\n- `concurrencyPolicy`: `Forbid`\n\nAfter making changes, resume the CronJob by setting `suspend: false`.\n\nThe CronJob should now never run concurrent jobs, have a 200-second deadline window, and be actively scheduling.",
+      "question": "A CronJob named `data-sync` exists in namespace `prowl`. Modify it with the following settings:\n\n- `suspend`: `true` (pause the CronJob)\n- `startingDeadlineSeconds`: `200`\n- `concurrencyPolicy`: `Forbid`\n\nAfter making changes, resume the CronJob by setting `suspend: false`.\n\nThe CronJob should now never run concurrent jobs, have a 200-second deadline window, and be actively scheduling.",
       "concepts": [
         "cronjobs",
         "jobs"
@@ -208,7 +208,7 @@
       "id": "5",
       "namespace": "hunt",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a ConfigMap named `locked-config` in namespace `hunt` that:\n\n1. Contains the following data:\n- `DB_HOST`: `postgres.hunt.svc`\n- `DB_PORT`: `5432`\n- `LOG_LEVEL`: `info`\n\n2. Is immutable (cannot be modified after creation).\n\nHint: Use the `immutable: true` field.",
+      "question": "Create a ConfigMap named `locked-config` in namespace `hunt` that:\n\n1. Contains the following data:\n- `DB_HOST`: `postgres.hunt.svc`\n- `DB_PORT`: `5432`\n- `LOG_LEVEL`: `info`\n\n2. Is immutable (cannot be modified after creation).\n\nHint: Use the `immutable: true` field.",
       "concepts": [
         "configmaps",
         "immutable"
@@ -248,7 +248,7 @@
       "id": "6",
       "namespace": "hunt",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA ServiceAccount `hunt-sa` and ConfigMap `app-config` already exist in namespace `hunt`.\n\nCreate a Pod named `config-aggregator` that uses a projected volume combining:\n\n1. A ServiceAccount token with 1 hour expiration (3600 seconds)\n2. The existing ConfigMap `app-config`\n\nSpecs:\n- Image: `busybox:1.36`\n- Command: `[\"sleep\", \"3600\"]`\n- Container name: `aggregator`\n- Volume name: `combined-config`\n- Mount path: `/etc/config`\n\nThe projected volume should expose both the token and ConfigMap at the same mount path.",
+      "question": "A ServiceAccount `hunt-sa` and ConfigMap `app-config` already exist in namespace `hunt`.\n\nCreate a Pod named `config-aggregator` that uses a projected volume combining:\n\n1. A ServiceAccount token with 1 hour expiration (3600 seconds)\n2. The existing ConfigMap `app-config`\n\nSpecs:\n- Image: `busybox:1.36`\n- Command: `[\"sleep\", \"3600\"]`\n- Container name: `aggregator`\n- Volume name: `combined-config`\n- Mount path: `/etc/config`\n\nThe projected volume should expose both the token and ConfigMap at the same mount path.",
       "concepts": [
         "volumes",
         "projected",
@@ -303,7 +303,7 @@
       "id": "7",
       "namespace": "jungle",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Deployment named `critical-app` with 5 replicas exists in namespace `jungle`.\n\nCreate a PodDisruptionBudget named `critical-pdb` that:\n\n1. Targets pods with label `app: critical-app`\n2. Ensures at least 3 pods are always available during voluntary disruptions\n3. Uses `minAvailable: 3`\n\nVerify the PDB is correctly applied with `kubectl get pdb`.",
+      "question": "A Deployment named `critical-app` with 5 replicas exists in namespace `jungle`.\n\nCreate a PodDisruptionBudget named `critical-pdb` that:\n\n1. Targets pods with label `app: critical-app`\n2. Ensures at least 3 pods are always available during voluntary disruptions\n3. Uses `minAvailable: 3`\n\nVerify the PDB is correctly applied with `kubectl get pdb`.",
       "concepts": [
         "pdb",
         "availability"
@@ -357,7 +357,7 @@
       "id": "8",
       "namespace": "fang",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate an ExternalName Service named `external-api` in namespace `fang` that:\n\n1. Type: `ExternalName`\n2. Points to external hostname: `api.external-service.com`\n\nThis allows pods to access the external service using the internal DNS name `external-api.fang.svc.cluster.local`.",
+      "question": "Create an ExternalName Service named `external-api` in namespace `fang` that:\n\n1. Type: `ExternalName`\n2. Points to external hostname: `api.external-service.com`\n\nThis allows pods to access the external service using the internal DNS name `external-api.fang.svc.cluster.local`.",
       "concepts": [
         "services",
         "dns",
@@ -398,7 +398,7 @@
       "id": "9",
       "namespace": "pounce",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a LimitRange named `container-limits` in namespace `pounce` that sets:\n\nDefault limits for containers:\n- CPU: default `500m`, default request `100m`\n- Memory: default `256Mi`, default request `64Mi`\n\nMin/Max constraints:\n- CPU: min `50m`, max `1`\n- Memory: min `32Mi`, max `512Mi`",
+      "question": "Create a LimitRange named `container-limits` in namespace `pounce` that sets:\n\nDefault limits for containers:\n- CPU: default `500m`, default request `100m`\n- Memory: default `256Mi`, default request `64Mi`\n\nMin/Max constraints:\n- CPU: min `50m`, max `1`\n- Memory: min `32Mi`, max `512Mi`",
       "concepts": [
         "limitrange",
         "resources"
@@ -445,7 +445,7 @@
       "id": "10",
       "namespace": "stalker",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `secure-pod` in namespace `stalker` with comprehensive security settings:\n\n- Image: `nginx:1.21`\n- Container name: `secure-nginx`\n\nPod-level security context:\n- `runAsUser`: `1000`\n- `runAsGroup`: `3000`\n- `fsGroup`: `2000`\n\nContainer-level security context:\n- `readOnlyRootFilesystem`: `true`\n- `allowPrivilegeEscalation`: `false`\n\nAdd `emptyDir` volumes to allow nginx to run with a read-only root filesystem. Mount writable volumes at `/tmp`, `/var/cache/nginx`, `/var/run`, and `/etc/nginx/conf.d`.",
+      "question": "Create a Pod named `secure-pod` in namespace `stalker` with comprehensive security settings:\n\n- Image: `nginx:1.21`\n- Container name: `secure-nginx`\n\nPod-level security context:\n- `runAsUser`: `1000`\n- `runAsGroup`: `3000`\n- `fsGroup`: `2000`\n\nContainer-level security context:\n- `readOnlyRootFilesystem`: `true`\n- `allowPrivilegeEscalation`: `false`\n\nAdd `emptyDir` volumes to allow nginx to run with a read-only root filesystem. Mount writable volumes at `/tmp`, `/var/cache/nginx`, `/var/run`, and `/etc/nginx/conf.d`.",
       "concepts": [
         "securitycontext",
         "pods",
@@ -514,7 +514,7 @@
       "id": "11",
       "namespace": "pounce",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Deployment named `rolling-app` exists in namespace `pounce`.\n\n1. Pause the deployment rollout.\n2. Update the image to `nginx:1.22`.\n3. Set `revisionHistoryLimit` to `5`.\n4. Resume the rollout.\n\nVerify the rollout completes successfully with `kubectl rollout status`.",
+      "question": "A Deployment named `rolling-app` exists in namespace `pounce`.\n\n1. Pause the deployment rollout.\n2. Update the image to `nginx:1.22`.\n3. Set `revisionHistoryLimit` to `5`.\n4. Resume the rollout.\n\nVerify the rollout completes successfully with `kubectl rollout status`.",
       "concepts": [
         "deployments",
         "rollout"
@@ -561,7 +561,7 @@
       "id": "12",
       "namespace": "stalker",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Pod named `config-pod` exists in namespace `stalker` running nginx with a custom configuration.\n\n1. Use `kubectl exec` to read the content of `/etc/nginx/conf.d/custom.conf` inside the container.\n2. Save the configuration content to `/tmp/exam/course/12/nginx-config.txt`.\n3. Verify nginx is listening on port `8080` by running `curl localhost:8080` inside the container.",
+      "question": "A Pod named `config-pod` exists in namespace `stalker` running nginx with a custom configuration.\n\n1. Use `kubectl exec` to read the content of `/etc/nginx/conf.d/custom.conf` inside the container.\n2. Save the configuration content to `/tmp/exam/course/12/nginx-config.txt`.\n3. Verify nginx is listening on port `8080` by running `curl localhost:8080` inside the container.",
       "concepts": [
         "kubectl",
         "troubleshooting",
@@ -602,7 +602,7 @@
       "id": "13",
       "namespace": "jungle",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nUse `kubectl top` to analyze resource usage:\n\n1. Get the CPU and memory usage of all pods in namespace `jungle`.\n2. Save the output to `/tmp/exam/course/13/pod-resources.txt`.\n3. Identify the pod consuming the most CPU and write its name to `/tmp/exam/course/13/top-cpu-pod.txt`.\n\nNote: `kubectl top` needs metrics-server. Without it the command returns an error; scoring does not depend on live metrics, only that the output files exist and have content.",
+      "question": "Use `kubectl top` to analyze resource usage:\n\n1. Get the CPU and memory usage of all pods in namespace `jungle`.\n2. Save the output to `/tmp/exam/course/13/pod-resources.txt`.\n3. Identify the pod consuming the most CPU and write its name to `/tmp/exam/course/13/top-cpu-pod.txt`.\n\nNote: `kubectl top` needs metrics-server. Without it the command returns an error; scoring does not depend on live metrics, only that the output files exist and have content.",
       "concepts": [
         "kubectl",
         "metrics",
@@ -636,7 +636,7 @@
       "id": "14",
       "namespace": "claw",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `metadata-pod` in namespace `claw` that exposes pod metadata as environment variables:\n\n- `POD_NAME` from `metadata.name`\n- `POD_NAMESPACE` from `metadata.namespace`\n- `POD_IP` from `status.podIP`\n- `NODE_NAME` from `spec.nodeName`\n\nSpecs:\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"env | grep POD && env | grep NODE && sleep 3600\"]`\n- Container name: `info`",
+      "question": "Create a Pod named `metadata-pod` in namespace `claw` that exposes pod metadata as environment variables:\n\n- `POD_NAME` from `metadata.name`\n- `POD_NAMESPACE` from `metadata.namespace`\n- `POD_IP` from `status.podIP`\n- `NODE_NAME` from `spec.nodeName`\n\nSpecs:\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"env | grep POD && env | grep NODE && sleep 3600\"]`\n- Container name: `info`",
       "concepts": [
         "downward-api",
         "pods",
@@ -691,7 +691,7 @@
       "id": "15",
       "namespace": "stripe",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Job named `cleanup-job` in namespace `stripe` that:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"echo 'Cleanup complete' && sleep 5\"]`\n- Container name: `cleanup`\n- `ttlSecondsAfterFinished`: `60`\n- `backoffLimit`: `2`\n\nThe Job should automatically delete itself 60 seconds after completion.",
+      "question": "Create a Job named `cleanup-job` in namespace `stripe` that:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"echo 'Cleanup complete' && sleep 5\"]`\n- Container name: `cleanup`\n- `ttlSecondsAfterFinished`: `60`\n- `backoffLimit`: `2`\n\nThe Job should automatically delete itself 60 seconds after completion.",
       "concepts": [
         "jobs",
         "ttl"
@@ -738,7 +738,7 @@
       "id": "16",
       "namespace": "predator",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `hardened-pod` in namespace `predator` with security hardening:\n\n- Image: `nginx:1.21`\n- Container name: `secure-app`\n\nSecurity Context:\n- Drop ALL capabilities\n- Add only: `NET_BIND_SERVICE`\n- Set `runAsNonRoot: true`\n- Set `runAsUser: 101` (nginx user)\n\nAdd `emptyDir` volumes at `/var/cache/nginx`, `/var/run`, and `/etc/nginx/conf.d` so nginx can start as a non-root user.",
+      "question": "Create a Pod named `hardened-pod` in namespace `predator` with security hardening:\n\n- Image: `nginx:1.21`\n- Container name: `secure-app`\n\nSecurity Context:\n- Drop ALL capabilities\n- Add only: `NET_BIND_SERVICE`\n- Set `runAsNonRoot: true`\n- Set `runAsUser: 101` (nginx user)\n\nAdd `emptyDir` volumes at `/var/cache/nginx`, `/var/run`, and `/etc/nginx/conf.d` so nginx can start as a non-root user.",
       "concepts": [
         "securitycontext",
         "capabilities",
@@ -800,7 +800,7 @@
       "id": "17",
       "namespace": "claw",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nA Service named `backend-svc` exists in namespace `claw` fronting a Deployment with 3 replicas.\n\nModify the Service to enable session affinity:\n\n1. Set `sessionAffinity: ClientIP`\n2. Configure `sessionAffinityConfig.clientIP.timeoutSeconds: 3600`\n\nThis ensures requests from the same client IP are routed to the same pod for 1 hour.",
+      "question": "A Service named `backend-svc` exists in namespace `claw` fronting a Deployment with 3 replicas.\n\nModify the Service to enable session affinity:\n\n1. Set `sessionAffinity: ClientIP`\n2. Configure `sessionAffinityConfig.clientIP.timeoutSeconds: 3600`\n\nThis ensures requests from the same client IP are routed to the same pod for 1 hour.",
       "concepts": [
         "services",
         "session-affinity",
@@ -848,7 +848,7 @@
       "id": "18",
       "namespace": "fang",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nA Deployment named `safe-deploy` exists in namespace `fang`.\n\nConfigure it for safe rollouts:\n\n- `minReadySeconds`: `30`\n- `progressDeadlineSeconds`: `120`\n\nUpdate the image to `nginx:1.22` and verify the rollout respects the minReadySeconds delay.",
+      "question": "A Deployment named `safe-deploy` exists in namespace `fang`.\n\nConfigure it for safe rollouts:\n\n- `minReadySeconds`: `30`\n- `progressDeadlineSeconds`: `120`\n\nUpdate the image to `nginx:1.22` and verify the rollout respects the minReadySeconds delay.",
       "concepts": [
         "deployments",
         "rollout"
@@ -895,7 +895,7 @@
       "id": "19",
       "namespace": "tiger",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `graceful-pod` in namespace `tiger` with a graceful shutdown mechanism:\n\n- Image: `nginx:1.21`\n- Container name: `main`\n\nAdd a `preStop` lifecycle hook that:\n- Executes: `/bin/sh -c \"nginx -s quit && sleep 5\"`\n- Allows nginx to finish handling requests before termination\n\nAlso set `terminationGracePeriodSeconds: 30` at pod level.",
+      "question": "Create a Pod named `graceful-pod` in namespace `tiger` with a graceful shutdown mechanism:\n\n- Image: `nginx:1.21`\n- Container name: `main`\n\nAdd a `preStop` lifecycle hook that:\n- Executes: `/bin/sh -c \"nginx -s quit && sleep 5\"`\n- Allows nginx to finish handling requests before termination\n\nAlso set `terminationGracePeriodSeconds: 30` at pod level.",
       "concepts": [
         "lifecycle",
         "pods",
@@ -943,7 +943,7 @@
       "id": "20",
       "namespace": "predator",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nImplement a default deny network security model in namespace `predator`:\n\n1. Create NetworkPolicy `default-deny-all` that:\n- Applies to all pods in the namespace\n- Denies all ingress and egress traffic by default\n\n2. Create NetworkPolicy `allow-frontend-to-api` that:\n- Applies to pods with label `tier: backend`\n- Allows ingress from pods with label `tier: frontend` on port `80`\n- Allows egress to DNS (port `53` UDP/TCP)\n\nTest by verifying frontend pods can reach backend pods, but not external services.",
+      "question": "Implement a default deny network security model in namespace `predator`:\n\n1. Create NetworkPolicy `default-deny-all` that:\n- Applies to all pods in the namespace\n- Denies all ingress and egress traffic by default\n\n2. Create NetworkPolicy `allow-frontend-to-api` that:\n- Applies to pods with label `tier: backend`\n- Allows ingress from pods with label `tier: frontend` on port `80`\n- Allows egress to DNS (port `53` UDP/TCP)\n\nTest by verifying frontend pods can reach backend pods, but not external services.",
       "concepts": [
         "networkpolicy",
         "networking",

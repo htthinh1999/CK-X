@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "zeus",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `titan-alpha` in namespace `zeus` with the following specifications:\n\n- Image: `nginx:1.21`\n- Add a label `app=titan`\n- Configure pod anti-affinity to prefer not scheduling on nodes that already have pods with label `app=titan`\n\nThe anti-affinity should use `preferredDuringSchedulingIgnoredDuringExecution` with weight `100` and topology key `kubernetes.io/hostname`.",
+      "question": "Create a Pod named `titan-alpha` in namespace `zeus` with the following specifications:\n\n- Image: `nginx:1.21`\n- Add a label `app=titan`\n- Configure pod anti-affinity to prefer not scheduling on nodes that already have pods with label `app=titan`\n\nThe anti-affinity should use `preferredDuringSchedulingIgnoredDuringExecution` with weight `100` and topology key `kubernetes.io/hostname`.",
       "concepts": [
         "pods",
         "affinity",
@@ -45,7 +45,7 @@
       "id": "2",
       "namespace": "athena",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn namespace `athena`:\n\n1. Create a ConfigMap named `app-config` with:\n- A literal key `LOG_LEVEL=debug`\n- A literal key `MAX_CONNECTIONS=100`\n\n2. Create a Pod named `config-reader` using image `busybox:1.36` that:\n- Mounts the ConfigMap as a volume at `/etc/config`\n- Runs command `sleep 3600`\n- Container name: `reader`",
+      "question": "In namespace `athena`:\n\n1. Create a ConfigMap named `app-config` with:\n- A literal key `LOG_LEVEL=debug`\n- A literal key `MAX_CONNECTIONS=100`\n\n2. Create a Pod named `config-reader` using image `busybox:1.36` that:\n- Mounts the ConfigMap as a volume at `/etc/config`\n- Runs command `sleep 3600`\n- Container name: `reader`",
       "concepts": [
         "configmaps",
         "volumes",
@@ -93,7 +93,7 @@
       "id": "3",
       "namespace": "hermes",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Service of type `ExternalName` in namespace `hermes`:\n\n- Name: `external-api`\n- External name: `api.external-service.com`\n\nThis service should allow pods in the namespace to access the external API using the internal DNS name `external-api.hermes.svc.cluster.local`.",
+      "question": "Create a Service of type `ExternalName` in namespace `hermes`:\n\n- Name: `external-api`\n- External name: `api.external-service.com`\n\nThis service should allow pods in the namespace to access the external API using the internal DNS name `external-api.hermes.svc.cluster.local`.",
       "concepts": [
         "services",
         "networking",
@@ -127,7 +127,7 @@
       "id": "4",
       "namespace": "apollo",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn namespace `apollo`:\n\n1. Create a LimitRange named `resource-limits` with the following constraints for containers:\n- Default CPU limit: `500m`\n- Default memory limit: `256Mi`\n- Default CPU request: `100m`\n- Default memory request: `64Mi`\n\n2. Create a Pod named `limited-pod` with image `nginx:1.21` (without specifying any resource requests/limits) to verify the defaults are applied.\n- Container name: `app`",
+      "question": "In namespace `apollo`:\n\n1. Create a LimitRange named `resource-limits` with the following constraints for containers:\n- Default CPU limit: `500m`\n- Default memory limit: `256Mi`\n- Default CPU request: `100m`\n- Default memory request: `64Mi`\n\n2. Create a Pod named `limited-pod` with image `nginx:1.21` (without specifying any resource requests/limits) to verify the defaults are applied.\n- Container name: `app`",
       "concepts": [
         "limitrange",
         "resources",
@@ -168,7 +168,7 @@
       "id": "5",
       "namespace": "hades",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `secure-app` in namespace `hades` with:\n\n- Image: `nginx:1.21`\n- Container name: `nginx`\n- Read-only root filesystem enabled\n- A writable emptyDir volume mounted at `/tmp`\n- A writable emptyDir volume mounted at `/var/cache/nginx`\n- A writable emptyDir volume mounted at `/var/run`\n\nThe pod should be able to run nginx successfully despite the read-only root filesystem.",
+      "question": "Create a Pod named `secure-app` in namespace `hades` with:\n\n- Image: `nginx:1.21`\n- Container name: `nginx`\n- Read-only root filesystem enabled\n- A writable emptyDir volume mounted at `/tmp`\n- A writable emptyDir volume mounted at `/var/cache/nginx`\n- A writable emptyDir volume mounted at `/var/run`\n\nThe pod should be able to run nginx successfully despite the read-only root filesystem.",
       "concepts": [
         "securitycontext",
         "volumes",
@@ -202,7 +202,7 @@
       "id": "6",
       "namespace": "poseidon",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `multi-init` in namespace `poseidon` with:\n\n- Main container: `app` using image `nginx:1.21`\n- Init container 1: `init-config` using image `busybox:1.36` that creates file `/work/config.txt` with content `initialized`\n- Init container 2: `init-permissions` using image `busybox:1.36` that runs `chmod 644 /work/config.txt`\n\nAll containers should share an emptyDir volume named `workdir` mounted at `/work`.",
+      "question": "Create a Pod named `multi-init` in namespace `poseidon` with:\n\n- Main container: `app` using image `nginx:1.21`\n- Init container 1: `init-config` using image `busybox:1.36` that creates file `/work/config.txt` with content `initialized`\n- Init container 2: `init-permissions` using image `busybox:1.36` that runs `chmod 644 /work/config.txt`\n\nAll containers should share an emptyDir volume named `workdir` mounted at `/work`.",
       "concepts": [
         "initcontainers",
         "volumes",
@@ -243,7 +243,7 @@
       "id": "7",
       "namespace": "ares",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Deployment named `battle-app` exists in namespace `ares` with 3 replicas using image `nginx:1.20`.\n\n1. Update the image to `nginx:1.21`\n2. Immediately pause the rollout after starting the update\n3. Save the rollout status to `/tmp/exam/course/7/rollout-status.txt`\n\nHint: Use `kubectl rollout pause` and `kubectl rollout status`.",
+      "question": "A Deployment named `battle-app` exists in namespace `ares` with 3 replicas using image `nginx:1.20`.\n\n1. Update the image to `nginx:1.21`\n2. Immediately pause the rollout after starting the update\n3. Save the rollout status to `/tmp/exam/course/7/rollout-status.txt`\n\nHint: Use `kubectl rollout pause` and `kubectl rollout status`.",
       "concepts": [
         "deployments",
         "rollout"
@@ -276,7 +276,7 @@
       "id": "8",
       "namespace": "olympus",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `ambassador-pod` in namespace `olympus` with an ambassador pattern:\n\n- Main container `app`: image `nginx:1.21`, exposes port 80\n- Sidecar container `proxy`: image `envoyproxy/envoy:v1.28-latest`\n- Add environment variable `ENVOY_UID=0` to the proxy container\n\nBoth containers should be in the same Pod to share the network namespace.",
+      "question": "Create a Pod named `ambassador-pod` in namespace `olympus` with an ambassador pattern:\n\n- Main container `app`: image `nginx:1.21`, exposes port 80\n- Sidecar container `proxy`: image `envoyproxy/envoy:v1.28-latest`\n- Add environment variable `ENVOY_UID=0` to the proxy container\n\nBoth containers should be in the same Pod to share the network namespace.",
       "concepts": [
         "multi-container",
         "sidecar",
@@ -317,7 +317,7 @@
       "id": "9",
       "namespace": "artemis",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Job named `retry-job` in namespace `artemis` with:\n\n- Image: `busybox:1.36`\n- Command: `sh -c \"exit 1\"` (simulates failure)\n- Backoff limit: `3`\n- Restart policy: `Never`\n\nThe job should attempt to run 3 times before being marked as failed.",
+      "question": "Create a Job named `retry-job` in namespace `artemis` with:\n\n- Image: `busybox:1.36`\n- Command: `sh -c \"exit 1\"` (simulates failure)\n- Backoff limit: `3`\n- Restart policy: `Never`\n\nThe job should attempt to run 3 times before being marked as failed.",
       "concepts": [
         "jobs",
         "batch"
@@ -350,7 +350,7 @@
       "id": "10",
       "namespace": "hera",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `hera`:\n\n1. Create a docker-registry Secret named `registry-creds` with:\n- Docker server: `docker.io`\n- Username: `myuser`\n- Password: `mypassword`\n- Email: `user@example.com`\n\n2. Create a Pod named `private-app` with image `nginx:1.21` that uses this secret as an `imagePullSecret`.\n- Container name: `app`",
+      "question": "In namespace `hera`:\n\n1. Create a docker-registry Secret named `registry-creds` with:\n- Docker server: `docker.io`\n- Username: `myuser`\n- Password: `mypassword`\n- Email: `user@example.com`\n\n2. Create a Pod named `private-app` with image `nginx:1.21` that uses this secret as an `imagePullSecret`.\n- Container name: `app`",
       "concepts": [
         "secrets",
         "pods",
@@ -391,7 +391,7 @@
       "id": "11",
       "namespace": "zeus",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `adapter-pod` in namespace `zeus` implementing the adapter pattern:\n\n- Main container `app`: image `busybox:1.36`, command `sh -c \"while true; do echo $(date): log message >> /var/log/app.log; sleep 5; done\"`\n- Adapter container `log-adapter`: image `busybox:1.36`, command `sh -c \"tail -f /var/log/app.log | sed 's/^/[ADAPTED] /'\"`\n\nBoth containers share an emptyDir volume named `logs` mounted at `/var/log`.",
+      "question": "Create a Pod named `adapter-pod` in namespace `zeus` implementing the adapter pattern:\n\n- Main container `app`: image `busybox:1.36`, command `sh -c \"while true; do echo $(date): log message >> /var/log/app.log; sleep 5; done\"`\n- Adapter container `log-adapter`: image `busybox:1.36`, command `sh -c \"tail -f /var/log/app.log | sed 's/^/[ADAPTED] /'\"`\n\nBoth containers share an emptyDir volume named `logs` mounted at `/var/log`.",
       "concepts": [
         "multi-container",
         "adapter",
@@ -425,7 +425,7 @@
       "id": "12",
       "namespace": "athena",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a NetworkPolicy named `egress-policy` in namespace `athena` that:\n\n- Applies to pods with label `app=restricted`\n- Allows egress traffic only to:\n  - Pods with label `app=database` on port 5432\n  - External IP block `10.0.0.0/8` on port 443\n\nDeny all other egress traffic.",
+      "question": "Create a NetworkPolicy named `egress-policy` in namespace `athena` that:\n\n- Applies to pods with label `app=restricted`\n- Allows egress traffic only to:\n  - Pods with label `app=database` on port 5432\n  - External IP block `10.0.0.0/8` on port 443\n\nDeny all other egress traffic.",
       "concepts": [
         "networkpolicy",
         "networking",
@@ -459,7 +459,7 @@
       "id": "13",
       "namespace": "hermes",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `hermes`:\n\n1. Create a ServiceAccount named `deployment-manager`\n2. Create a Role named `deploy-role` that allows:\n- `get`, `list`, `watch`, `create`, `update`, `delete` on Deployments\n- `get`, `list` on Pods\n3. Create a RoleBinding named `deploy-binding` to bind the role to the service account",
+      "question": "In namespace `hermes`:\n\n1. Create a ServiceAccount named `deployment-manager`\n2. Create a Role named `deploy-role` that allows:\n- `get`, `list`, `watch`, `create`, `update`, `delete` on Deployments\n- `get`, `list` on Pods\n3. Create a RoleBinding named `deploy-binding` to bind the role to the service account",
       "concepts": [
         "rbac",
         "security",
@@ -493,7 +493,7 @@
       "id": "14",
       "namespace": "apollo",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Deployment named `rolling-app` in namespace `apollo` with:\n\n- Image: `nginx:1.21`\n- Replicas: `4`\n- Container name: `web`\n- Rolling update strategy with:\n  - Max surge: `25%`\n  - Max unavailable: `1`\n- Add label `version=v1` to pod template",
+      "question": "Create a Deployment named `rolling-app` in namespace `apollo` with:\n\n- Image: `nginx:1.21`\n- Replicas: `4`\n- Container name: `web`\n- Rolling update strategy with:\n  - Max surge: `25%`\n  - Max unavailable: `1`\n- Add label `version=v1` to pod template",
       "concepts": [
         "deployments",
         "rollingupdate"
@@ -540,7 +540,7 @@
       "id": "15",
       "namespace": "poseidon",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate an Ingress named `path-ingress` in namespace `poseidon` that:\n\n- Routes `/api` to service `api-svc` on port 8080\n- Routes `/web` to service `web-svc` on port 80\n- Uses pathType `Prefix` for both paths\n\nNote: Pre-existing services `api-svc` and `web-svc` are already created.",
+      "question": "Create an Ingress named `path-ingress` in namespace `poseidon` that:\n\n- Routes `/api` to service `api-svc` on port 8080\n- Routes `/web` to service `web-svc` on port 80\n- Uses pathType `Prefix` for both paths\n\nNote: Pre-existing services `api-svc` and `web-svc` are already created.",
       "concepts": [
         "ingress",
         "networking"
@@ -573,7 +573,7 @@
       "id": "16",
       "namespace": "hades",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `token-pod` in namespace `hades` with:\n\n- Image: `nginx:1.21`\n- Container name: `app`\n- A projected volume named `token-volume` containing:\n  - ServiceAccount token with audience `api` and expiration `3600` seconds\n  - Mounted at `/var/run/secrets/tokens`",
+      "question": "Create a Pod named `token-pod` in namespace `hades` with:\n\n- Image: `nginx:1.21`\n- Container name: `app`\n- A projected volume named `token-volume` containing:\n  - ServiceAccount token with audience `api` and expiration `3600` seconds\n  - Mounted at `/var/run/secrets/tokens`",
       "concepts": [
         "volumes",
         "serviceaccounts",
@@ -607,7 +607,7 @@
       "id": "17",
       "namespace": "ares",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a CronJob named `scheduled-task` in namespace `ares` with:\n\n- Schedule: `*/5 * * * *` (every 5 minutes)\n- Image: `busybox:1.36`\n- Command: `echo \"Task executed at $(date)\"`\n- Concurrency policy: `Forbid`\n- Successful jobs history limit: `3`\n- Failed jobs history limit: `1`",
+      "question": "Create a CronJob named `scheduled-task` in namespace `ares` with:\n\n- Schedule: `*/5 * * * *` (every 5 minutes)\n- Image: `busybox:1.36`\n- Command: `echo \"Task executed at $(date)\"`\n- Concurrency policy: `Forbid`\n- Successful jobs history limit: `3`\n- Failed jobs history limit: `1`",
       "concepts": [
         "cronjobs",
         "batch",
@@ -648,7 +648,7 @@
       "id": "18",
       "namespace": "hera",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a PodDisruptionBudget named `app-pdb` in namespace `hera` that:\n\n- Selects pods with label `app=critical`\n- Ensures at least `2` pods are always available during voluntary disruptions",
+      "question": "Create a PodDisruptionBudget named `app-pdb` in namespace `hera` that:\n\n- Selects pods with label `app=critical`\n- Ensures at least `2` pods are always available during voluntary disruptions",
       "concepts": [
         "poddisruptionbudget",
         "availability"
@@ -681,7 +681,7 @@
       "id": "19",
       "namespace": "olympus",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Deployment named `annotated-app` in namespace `olympus` with:\n\n- Image: `nginx:1.21`\n- Replicas: `2`\n- Container name: `web`\n- Add annotation `kubernetes.io/change-cause: \"Initial deployment\"` to the deployment\n- Add annotation `prometheus.io/scrape: \"true\"` to the pod template",
+      "question": "Create a Deployment named `annotated-app` in namespace `olympus` with:\n\n- Image: `nginx:1.21`\n- Replicas: `2`\n- Container name: `web`\n- Add annotation `kubernetes.io/change-cause: \"Initial deployment\"` to the deployment\n- Add annotation `prometheus.io/scrape: \"true\"` to the pod template",
       "concepts": [
         "deployments",
         "annotations"
@@ -721,7 +721,7 @@
       "id": "20",
       "namespace": "artemis",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `shared-pid` in namespace `artemis` with:\n\n- Enable `shareProcessNamespace: true`\n- Container 1 `app`: image `nginx:1.21`\n- Container 2 `debug`: image `busybox:1.36`, command `sleep 3600`\n\nThe debug container should be able to see processes from the app container using `ps aux`.",
+      "question": "Create a Pod named `shared-pid` in namespace `artemis` with:\n\n- Enable `shareProcessNamespace: true`\n- Container 1 `app`: image `nginx:1.21`\n- Container 2 `debug`: image `busybox:1.36`, command `sleep 3600`\n\nThe debug container should be able to see processes from the app container using `ps aux`.",
       "concepts": [
         "multi-container",
         "pods",

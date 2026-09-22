@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "default",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nDirectory `/tmp/exam/course/1/image/` contains a `Dockerfile` and an `index.html` file.\n\n1. Build a container image using Docker named `solar-app:1.0`, using `/tmp/exam/course/1/image/` as the build context.\n2. Save the image as a tarball to `/tmp/exam/course/1/solar-app.tar`.\n\nHint: use `docker build -t <name>:<tag> <context>` and `docker save -o <file> <image>`.",
+      "question": "Directory `/tmp/exam/course/1/image/` contains a `Dockerfile` and an `index.html` file.\n\n1. Build a container image using Docker named `solar-app:1.0`, using `/tmp/exam/course/1/image/` as the build context.\n2. Save the image as a tarball to `/tmp/exam/course/1/solar-app.tar`.\n\nHint: use `docker build -t <name>:<tag> <context>` and `docker save -o <file> <image>`.",
       "concepts": [
         "container-images",
         "docker",
@@ -31,7 +31,7 @@
       "id": "2",
       "namespace": "solar",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Deployment named `frontend-app` in namespace `solar` with:\n- Replicas: `3`\n- Pod labels: `app=frontend`, `tier=web`\n- Container name: `web`\n- Image: `nginx:1.25`\n- Container port: `80`\n- Deployment annotation: `kubernetes.io/change-cause: \"initial deployment\"`",
+      "question": "Create a Deployment named `frontend-app` in namespace `solar` with:\n- Replicas: `3`\n- Pod labels: `app=frontend`, `tier=web`\n- Container name: `web`\n- Image: `nginx:1.25`\n- Container port: `80`\n- Deployment annotation: `kubernetes.io/change-cause: \"initial deployment\"`",
       "concepts": [
         "deployments",
         "labels",
@@ -72,7 +72,7 @@
       "id": "3",
       "namespace": "corona",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `web-with-sidecar` in namespace `corona` with a main container and a sidecar that ships logs:\n\n1. Main container named `app`: image `nginx:1.25`, mount the shared volume at `/var/log/nginx`.\n2. Sidecar container named `log-shipper`: image `busybox:1.36`, command `[\"/bin/sh\", \"-c\", \"tail -f /var/log/nginx/access.log 2>/dev/null || sleep 3600\"]`, mount the shared volume at `/var/log/nginx`.\n3. Use an `emptyDir` volume named `log-volume` shared between both containers.",
+      "question": "Create a Pod named `web-with-sidecar` in namespace `corona` with a main container and a sidecar that ships logs:\n\n1. Main container named `app`: image `nginx:1.25`, mount the shared volume at `/var/log/nginx`.\n2. Sidecar container named `log-shipper`: image `busybox:1.36`, command `[\"/bin/sh\", \"-c\", \"tail -f /var/log/nginx/access.log 2>/dev/null || sleep 3600\"]`, mount the shared volume at `/var/log/nginx`.\n3. Use an `emptyDir` volume named `log-volume` shared between both containers.",
       "concepts": [
         "pods",
         "sidecar",
@@ -113,7 +113,7 @@
       "id": "4",
       "namespace": "aurora",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn the cluster, a PersistentVolume named `app-data-pv` (1Gi, ReadWriteOnce) already exists.\n\n1. Create a PersistentVolumeClaim named `app-data-pvc` in namespace `aurora` with:\n- Storage request: `500Mi`\n- Access mode: `ReadWriteOnce`\n2. Create a Pod named `data-pod` in namespace `aurora` with:\n- Image: `nginx:1.25`\n- Container name: `web`\n- Mount `app-data-pvc` at `/usr/share/nginx/html`",
+      "question": "In the cluster, a PersistentVolume named `app-data-pv` (1Gi, ReadWriteOnce) already exists.\n\n1. Create a PersistentVolumeClaim named `app-data-pvc` in namespace `aurora` with:\n- Storage request: `500Mi`\n- Access mode: `ReadWriteOnce`\n2. Create a Pod named `data-pod` in namespace `aurora` with:\n- Image: `nginx:1.25`\n- Container name: `web`\n- Mount `app-data-pvc` at `/usr/share/nginx/html`",
       "concepts": [
         "persistentvolumeclaims",
         "storage",
@@ -168,7 +168,7 @@
       "id": "5",
       "namespace": "flare",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn namespace `flare`, Deployment `app-blue` (3 replicas, labels `app=webapp, version=blue`) and Service `webapp-svc` (selector `app=webapp, version=blue`) already exist.\n\nImplement a Blue/Green deployment:\n1. Create Deployment `app-green` with `3` replicas, pod labels `app=webapp, version=green`, image `nginx:1.26`, container name `web`.\n2. Switch Service `webapp-svc` to point to the green version (change selector to `version=green`).\n3. Scale Deployment `app-blue` to `0` replicas.",
+      "question": "In namespace `flare`, Deployment `app-blue` (3 replicas, labels `app=webapp, version=blue`) and Service `webapp-svc` (selector `app=webapp, version=blue`) already exist.\n\nImplement a Blue/Green deployment:\n1. Create Deployment `app-green` with `3` replicas, pod labels `app=webapp, version=green`, image `nginx:1.26`, container name `web`.\n2. Switch Service `webapp-svc` to point to the green version (change selector to `version=green`).\n3. Scale Deployment `app-blue` to `0` replicas.",
       "concepts": [
         "deployments",
         "services",
@@ -216,7 +216,7 @@
       "id": "6",
       "namespace": "dawn",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nIn namespace `dawn`, Deployment `api-app` exists with 4 replicas and the default rolling update strategy.\n\n1. Configure the rolling update strategy to `maxSurge: 1` and `maxUnavailable: 0`.\n2. Update the image to `nginx:1.26`.\n3. Verify the rolling update completes with zero downtime.",
+      "question": "In namespace `dawn`, Deployment `api-app` exists with 4 replicas and the default rolling update strategy.\n\n1. Configure the rolling update strategy to `maxSurge: 1` and `maxUnavailable: 0`.\n2. Update the image to `nginx:1.26`.\n3. Verify the rolling update completes with zero downtime.",
       "concepts": [
         "deployments",
         "rolling-update"
@@ -256,7 +256,7 @@
       "id": "7",
       "namespace": "zenith",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nDirectory `/tmp/exam/course/7/` contains two base manifests: `deployment.yaml` and `service.yaml`.\n\n1. Create a `kustomization.yaml` file in `/tmp/exam/course/7/` that:\n- References both `deployment.yaml` and `service.yaml` as resources\n- Adds a `namePrefix: prod-`\n- Sets the replica count to `3` using a patch\n2. Apply with `kubectl apply -k /tmp/exam/course/7/`.\n3. Verify that Deployment `prod-web-app` and Service `prod-web-svc` exist in namespace `zenith`.",
+      "question": "Directory `/tmp/exam/course/7/` contains two base manifests: `deployment.yaml` and `service.yaml`.\n\n1. Create a `kustomization.yaml` file in `/tmp/exam/course/7/` that:\n- References both `deployment.yaml` and `service.yaml` as resources\n- Adds a `namePrefix: prod-`\n- Sets the replica count to `3` using a patch\n2. Apply with `kubectl apply -k /tmp/exam/course/7/`.\n3. Verify that Deployment `prod-web-app` and Service `prod-web-svc` exist in namespace `zenith`.",
       "concepts": [
         "kustomize",
         "deployments",
@@ -290,7 +290,7 @@
       "id": "8",
       "namespace": "radiance",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `radiance`, a Helm release named `web-release` is installed.\n\n1. Inspect the current values with `helm get values`.\n2. Upgrade the release to set `replicaCount=3`.\n3. Verify the upgrade is at revision `2` or higher.\n\nHint: `helm upgrade web-release <chart> -n radiance --set replicaCount=3 --reuse-values`.",
+      "question": "In namespace `radiance`, a Helm release named `web-release` is installed.\n\n1. Inspect the current values with `helm get values`.\n2. Upgrade the release to set `replicaCount=3`.\n3. Verify the upgrade is at revision `2` or higher.\n\nHint: `helm upgrade web-release <chart> -n radiance --set replicaCount=3 --reuse-values`.",
       "concepts": [
         "helm",
         "upgrade"
@@ -323,7 +323,7 @@
       "id": "9",
       "namespace": "eclipse",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `eclipse`, Deployment `slow-app` runs a slow-starting application on port `8080`.\n\nAdd a startup probe to the Deployment with:\n- HTTP GET on path `/healthz`\n- Port `8080`\n- `failureThreshold: 30`\n- `periodSeconds: 10`\n\nEnsure the Deployment rolls out successfully.",
+      "question": "In namespace `eclipse`, Deployment `slow-app` runs a slow-starting application on port `8080`.\n\nAdd a startup probe to the Deployment with:\n- HTTP GET on path `/healthz`\n- Port `8080`\n- `failureThreshold: 30`\n- `periodSeconds: 10`\n\nEnsure the Deployment rolls out successfully.",
       "concepts": [
         "deployments",
         "probes",
@@ -364,7 +364,7 @@
       "id": "10",
       "namespace": "solar",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `solar`, Pod `stuck-pod` has been stuck in `Pending` state.\n\n1. Use `kubectl describe` and events to identify why the Pod is Pending.\n2. Save the `nodeSelector` key that causes the issue to `/tmp/exam/course/10/pending-reason.txt` (just the key name, e.g. `disktype`).\n3. Fix the Pod so it enters `Running` state (delete and recreate without the problematic nodeSelector, or label a node to match).",
+      "question": "In namespace `solar`, Pod `stuck-pod` has been stuck in `Pending` state.\n\n1. Use `kubectl describe` and events to identify why the Pod is Pending.\n2. Save the `nodeSelector` key that causes the issue to `/tmp/exam/course/10/pending-reason.txt` (just the key name, e.g. `disktype`).\n3. Fix the Pod so it enters `Running` state (delete and recreate without the problematic nodeSelector, or label a node to match).",
       "concepts": [
         "troubleshooting",
         "scheduling",
@@ -391,7 +391,7 @@
       "id": "11",
       "namespace": "corona",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `corona`, Pod `multi-logger` runs with two containers: `app` and `sidecar`.\n\n1. Extract the last 20 lines of logs from the `sidecar` container.\n2. Save the output to `/tmp/exam/course/11/sidecar-logs.txt`.\n\nHint: `kubectl logs <pod> -c <container> --tail=20`.",
+      "question": "In namespace `corona`, Pod `multi-logger` runs with two containers: `app` and `sidecar`.\n\n1. Extract the last 20 lines of logs from the `sidecar` container.\n2. Save the output to `/tmp/exam/course/11/sidecar-logs.txt`.\n\nHint: `kubectl logs <pod> -c <container> --tail=20`.",
       "concepts": [
         "logging",
         "multi-container",
@@ -418,7 +418,7 @@
       "id": "12",
       "namespace": "aurora",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Custom Resource Definition (CRD) has been installed in the cluster for managing backups.\n\n1. Discover the CRD with `kubectl get crd` and find the one related to backups.\n2. Save the CRD group (e.g. `ckad.example.com`) to `/tmp/exam/course/12/crd-group.txt`.\n3. Create a custom resource named `daily-backup` in namespace `aurora` with:\n- `apiVersion`: the CRD group + `/v1`\n- `kind`: `Backup`\n- `spec.schedule`: `\"0 2 * * *\"`\n- `spec.retentionDays`: `30`\n- `spec.storageLocation`: `\"s3://backups/daily\"`",
+      "question": "A Custom Resource Definition (CRD) has been installed in the cluster for managing backups.\n\n1. Discover the CRD with `kubectl get crd` and find the one related to backups.\n2. Save the CRD group (e.g. `ckad.example.com`) to `/tmp/exam/course/12/crd-group.txt`.\n3. Create a custom resource named `daily-backup` in namespace `aurora` with:\n- `apiVersion`: the CRD group + `/v1`\n- `kind`: `Backup`\n- `spec.schedule`: `\"0 2 * * *\"`\n- `spec.retentionDays`: `30`\n- `spec.storageLocation`: `\"s3://backups/daily\"`",
       "concepts": [
         "crd",
         "custom-resources"
@@ -451,7 +451,7 @@
       "id": "13",
       "namespace": "flare",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nFiles `/tmp/exam/course/13/tls.crt` and `/tmp/exam/course/13/tls.key` contain a TLS certificate and private key.\n\nCreate a TLS Secret named `web-tls` in namespace `flare` using these files.\n\nHint: `kubectl create secret tls` with `--cert` and `--key`.",
+      "question": "Files `/tmp/exam/course/13/tls.crt` and `/tmp/exam/course/13/tls.key` contain a TLS certificate and private key.\n\nCreate a TLS Secret named `web-tls` in namespace `flare` using these files.\n\nHint: `kubectl create secret tls` with `--cert` and `--key`.",
       "concepts": [
         "secrets",
         "tls"
@@ -491,7 +491,7 @@
       "id": "14",
       "namespace": "dawn",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nIn namespace `dawn`, Deployment `hardened-app` exists without any security hardening.\n\nAdd security constraints to the container named `app`:\n1. `runAsNonRoot: true` at the Pod level.\n2. `readOnlyRootFilesystem: true` at the container level.\n3. Drop all capabilities: `drop: [\"ALL\"]` at the container level.\n\nEnsure the Deployment rolls out successfully after the changes.",
+      "question": "In namespace `dawn`, Deployment `hardened-app` exists without any security hardening.\n\nAdd security constraints to the container named `app`:\n1. `runAsNonRoot: true` at the Pod level.\n2. `readOnlyRootFilesystem: true` at the container level.\n3. Drop all capabilities: `drop: [\"ALL\"]` at the container level.\n\nEnsure the Deployment rolls out successfully after the changes.",
       "concepts": [
         "securitycontext",
         "hardening"
@@ -531,7 +531,7 @@
       "id": "15",
       "namespace": "zenith",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate RBAC resources in namespace `zenith` to allow a ServiceAccount to manage deployments:\n\n1. Create ServiceAccount `deploy-sa`.\n2. Create Role `deploy-role` that grants `get`, `list`, `create`, and `update` on `deployments`.\n3. Create RoleBinding `deploy-rb` binding `deploy-role` to `deploy-sa`.\n4. Verify with `kubectl auth can-i list deployments --as=system:serviceaccount:zenith:deploy-sa -n zenith`.\n5. Save the output (`yes` or `no`) to `/tmp/exam/course/15/auth-check.txt`.",
+      "question": "Create RBAC resources in namespace `zenith` to allow a ServiceAccount to manage deployments:\n\n1. Create ServiceAccount `deploy-sa`.\n2. Create Role `deploy-role` that grants `get`, `list`, `create`, and `update` on `deployments`.\n3. Create RoleBinding `deploy-rb` binding `deploy-role` to `deploy-sa`.\n4. Verify with `kubectl auth can-i list deployments --as=system:serviceaccount:zenith:deploy-sa -n zenith`.\n5. Save the output (`yes` or `no`) to `/tmp/exam/course/15/auth-check.txt`.",
       "concepts": [
         "rbac",
         "serviceaccounts",
@@ -579,7 +579,7 @@
       "id": "16",
       "namespace": "eclipse",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nFile `/tmp/exam/course/16/app.env` contains application configuration in `key=value` format.\n\n1. Create a ConfigMap named `app-config` in namespace `eclipse` from the env file.\n2. Create a Pod named `config-pod` in namespace `eclipse` with:\n- Image: `nginx:1.25`\n- Container name: `web`\n- Load all ConfigMap keys as environment variables using `envFrom`.\n\nHint: `kubectl create configmap app-config --from-env-file=/tmp/exam/course/16/app.env`.",
+      "question": "File `/tmp/exam/course/16/app.env` contains application configuration in `key=value` format.\n\n1. Create a ConfigMap named `app-config` in namespace `eclipse` from the env file.\n2. Create a Pod named `config-pod` in namespace `eclipse` with:\n- Image: `nginx:1.25`\n- Container name: `web`\n- Load all ConfigMap keys as environment variables using `envFrom`.\n\nHint: `kubectl create configmap app-config --from-env-file=/tmp/exam/course/16/app.env`.",
       "concepts": [
         "configmaps",
         "env",
@@ -620,7 +620,7 @@
       "id": "17",
       "namespace": "radiance",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a docker-registry Secret named `registry-creds` in namespace `radiance` with:\n- Docker server: `registry.example.com`\n- Username: `admin`\n- Password: `s3cur3P@ss`\n\nHint: `kubectl create secret docker-registry` with `--docker-server`, `--docker-username`, and `--docker-password`.",
+      "question": "Create a docker-registry Secret named `registry-creds` in namespace `radiance` with:\n- Docker server: `registry.example.com`\n- Username: `admin`\n- Password: `s3cur3P@ss`\n\nHint: `kubectl create secret docker-registry` with `--docker-server`, `--docker-username`, and `--docker-password`.",
       "concepts": [
         "secrets",
         "docker-registry"
@@ -660,7 +660,7 @@
       "id": "18",
       "namespace": "sunbeam",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nIn namespace `sunbeam`, Pod `api-server` (label `app=api`) and Pod `web-frontend` (label `role=frontend`) exist.\n\nCreate a NetworkPolicy named `api-allow` in namespace `sunbeam` that:\n1. Targets Pods with label `app=api` (podSelector).\n2. Allows ingress traffic only from:\n- Pods with label `role=frontend` (podSelector)\n- CIDR block `10.0.0.0/24` (ipBlock)\n3. Allows ingress on port `80` (TCP).\n\nHint: both `podSelector` and `ipBlock` rules go under `spec.ingress[0].from` as separate items.",
+      "question": "In namespace `sunbeam`, Pod `api-server` (label `app=api`) and Pod `web-frontend` (label `role=frontend`) exist.\n\nCreate a NetworkPolicy named `api-allow` in namespace `sunbeam` that:\n1. Targets Pods with label `app=api` (podSelector).\n2. Allows ingress traffic only from:\n- Pods with label `role=frontend` (podSelector)\n- CIDR block `10.0.0.0/24` (ipBlock)\n3. Allows ingress on port `80` (TCP).\n\nHint: both `podSelector` and `ipBlock` rules go under `spec.ingress[0].from` as separate items.",
       "concepts": [
         "networkpolicy",
         "ipblock",
@@ -701,7 +701,7 @@
       "id": "19",
       "namespace": "solstice",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nIn namespace `solstice`, Service `secure-svc` (port 443, targets port 80) and TLS Secret `secure-tls` (certificate for `secure.example.com`) already exist.\n\nCreate an Ingress named `secure-ingress` in namespace `solstice` that:\n1. Configures TLS for host `secure.example.com` using Secret `secure-tls`.\n2. Routes traffic for host `secure.example.com`:\n- Path `/` with `pathType: Prefix`\n- Backend: Service `secure-svc` on port `443`",
+      "question": "In namespace `solstice`, Service `secure-svc` (port 443, targets port 80) and TLS Secret `secure-tls` (certificate for `secure.example.com`) already exist.\n\nCreate an Ingress named `secure-ingress` in namespace `solstice` that:\n1. Configures TLS for host `secure.example.com` using Secret `secure-tls`.\n2. Routes traffic for host `secure.example.com`:\n- Path `/` with `pathType: Prefix`\n- Backend: Service `secure-svc` on port `443`",
       "concepts": [
         "ingress",
         "tls",
@@ -742,7 +742,7 @@
       "id": "20",
       "namespace": "sunbeam",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nIn namespace `sunbeam`, Deployment `dns-app` (labels `app=dns-app`) exists, but Service `dns-svc` has a wrong selector and no endpoints.\n\n1. Fix Service `dns-svc` to correctly select Pods from Deployment `dns-app`.\n2. Verify DNS resolution by running `nslookup dns-svc.sunbeam.svc.cluster.local` from a temporary Pod.\n3. Save the nslookup output to `/tmp/exam/course/20/dns-output.txt`.\n\nHint: `kubectl run tmp-dns --rm -i --restart=Never --image=busybox:1.36 -n sunbeam -- nslookup dns-svc.sunbeam.svc.cluster.local`.",
+      "question": "In namespace `sunbeam`, Deployment `dns-app` (labels `app=dns-app`) exists, but Service `dns-svc` has a wrong selector and no endpoints.\n\n1. Fix Service `dns-svc` to correctly select Pods from Deployment `dns-app`.\n2. Verify DNS resolution by running `nslookup dns-svc.sunbeam.svc.cluster.local` from a temporary Pod.\n3. Save the nslookup output to `/tmp/exam/course/20/dns-output.txt`.\n\nHint: `kubectl run tmp-dns --rm -i --restart=Never --image=busybox:1.36 -n sunbeam -- nslookup dns-svc.sunbeam.svc.cluster.local`.",
       "concepts": [
         "services",
         "dns",

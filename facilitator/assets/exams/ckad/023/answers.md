@@ -1,22 +1,21 @@
 # CKAD Multi-Cluster Practice Lab — Answers
 
 This lab models an app promoted across **three environments, each its own cluster**.
-Connect to the instance named in each question and select the matching context:
+Each environment is a separate server whose cluster is already the default (and only)
+context — just `ssh` to the instance named in the question and work there. There is no
+context to switch:
 
-- `dev`     → `ssh ckad9999`, then `kubectl config use-context k3d-dev`     (namespace `dev`)
-- `staging` → `ssh ckad9988`, then `kubectl config use-context k3d-staging` (namespace `staging`)
-- `prod`    → `ssh ckad9977`, then `kubectl config use-context k3d-prod`    (namespace `prod`)
-
-`kubectl config get-contexts` lists every context available from any server.
+- `dev`     → `ssh ckad9999` (namespace `dev`)
+- `staging` → `ssh ckad9988` (namespace `staging`)
+- `prod`    → `ssh ckad9977` (namespace `prod`)
 
 ---
 
-## dev cluster (`ssh ckad9999`, context `k3d-dev`)
+## dev cluster (`ssh ckad9999`)
 
 ### Question 1 — Multi-container Pod with shared volume
 
 ```bash
-kubectl config use-context k3d-dev
 cat <<'YAML' | kubectl apply -f -
 apiVersion: v1
 kind: Pod
@@ -95,12 +94,11 @@ YAML
 
 ---
 
-## staging cluster (`ssh ckad9988`, context `k3d-staging`)
+## staging cluster (`ssh ckad9988`)
 
 ### Question 5 — Job
 
 ```bash
-kubectl config use-context k3d-staging
 cat <<'YAML' | kubectl apply -f -
 apiVersion: batch/v1
 kind: Job
@@ -149,12 +147,11 @@ kubectl -n staging expose deployment store --name=store-svc --port=80 --target-p
 
 ---
 
-## prod cluster (`ssh ckad9977`, context `k3d-prod`)
+## prod cluster (`ssh ckad9977`)
 
 ### Question 9 — Secret as volume
 
 ```bash
-kubectl config use-context k3d-prod
 kubectl -n prod create secret generic app-secret --from-literal=api-key=abc123 --from-literal=token=xyz789
 cat <<'YAML' | kubectl apply -f -
 apiVersion: v1

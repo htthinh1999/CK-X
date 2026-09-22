@@ -269,24 +269,36 @@ and the lab behaves as a normal single-server lab.
 - `servers`: maps an SSH server name to the cluster it targets. The available
   server names are the pre-provisioned pool: `ckad9999`, `ckad9988`, `ckad9977`.
 - In `assessment.json`, set each question's `machineHostname` to one of the
-  declared server names. The candidate connects with `ssh <machineHostname>` and
-  selects the cluster with `kubectl config use-context k3d-<cluster>`.
+  declared server names.
 
-### Context-aware setup and validation scripts
+**One host == one cluster == one context.** Each server is bound to exactly one
+cluster, and that cluster is its shell's default (and only) context. The
+candidate simply connects with `ssh <machineHostname>` and works there — there is
+**no `kubectl config use-context` to run**. So question text should describe the
+task only; the frontend already shows `Solve this question on instance: ssh
+<machineHostname>`, and there is no need to spell out a server/context preamble.
+
+Under the hood, `env-setup` writes a dedicated kubeconfig per cluster
+(`/home/candidate/.kube/kubeconfig-<cluster>`, a single already-selected
+context), and the facilitator writes a marker (`/home/candidate/.exam-cluster`)
+on each server so its interactive shell defaults `KUBECONFIG` to that file.
+
+### Setup and validation scripts
 
 For multi-cluster labs the facilitator runs each question's setup and validation
-scripts on the target server and exports `KUBE_CONTEXT` (e.g. `k3d-cluster2`).
-Write scripts so they honour it:
+scripts on the target server with `KUBECONFIG` already pointed at that server's
+cluster, so **plain `kubectl` hits the right cluster** — no `--context` needed:
 
 ```bash
 #!/bin/bash
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
-CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
-kubectl $CTX -n beta get pod writer
+# KUBECONFIG is exported by the facilitator (the target cluster's kubeconfig for
+# multi-cluster labs, or the shared one for single-cluster labs).
+kubectl -n beta get pod writer
 ```
 
-When `KUBE_CONTEXT` is unset (single-server labs) `$CTX` is empty and `kubectl`
-uses the default context, so the same pattern is safe in every lab.
+The older `CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"` pattern is still safe
+(`KUBE_CONTEXT` is unset now, so `$CTX` is empty and `kubectl` uses the current
+context), but it is no longer necessary.
 
 See `assets/exams/cka/003` for a complete two-cluster example.
 

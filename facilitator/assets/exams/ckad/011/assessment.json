@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "default",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a basic Helm chart named `sea-app` in `/tmp/exam/course/1/`.\n\nThe chart should be created with `helm create`.\n\nHint: use `helm create sea-app` from inside `/tmp/exam/course/1/`.",
+      "question": "Create a basic Helm chart named `sea-app` in `/tmp/exam/course/1/`.\n\nThe chart should be created with `helm create`.\n\nHint: use `helm create sea-app` from inside `/tmp/exam/course/1/`.",
       "concepts": [
         "helm",
         "charts"
@@ -44,7 +44,7 @@
       "id": "2",
       "namespace": "tide",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nInstall the `bitnami/nginx` chart in namespace `tide` with:\n\n- Release name: `my-release`\n- Set `replicaCount=2`\n\nHint: use `helm install --set`.",
+      "question": "Install the `bitnami/nginx` chart in namespace `tide` with:\n\n- Release name: `my-release`\n- Set `replicaCount=2`\n\nHint: use `helm install --set`.",
       "concepts": [
         "helm",
         "deployments"
@@ -70,7 +70,7 @@
       "id": "3",
       "namespace": "tide",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nUpgrade the `my-release` Helm release in namespace `tide` to have `replicaCount=3`.\n\n(If `my-release` does not yet exist, first install `bitnami/nginx` as `my-release` in `tide`, then upgrade it.)\n\nHint: use `helm upgrade --set`.",
+      "question": "Upgrade the `my-release` Helm release in namespace `tide` to have `replicaCount=3`.\n\n(If `my-release` does not yet exist, first install `bitnami/nginx` as `my-release` in `tide`, then upgrade it.)\n\nHint: use `helm upgrade --set`.",
       "concepts": [
         "helm",
         "upgrade"
@@ -96,7 +96,7 @@
       "id": "4",
       "namespace": "wave",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nA Helm release `rollback-app` exists in namespace `wave` with revision 2.\n\nRollback to revision 1.\n\nHint: use `helm rollback rollback-app 1 -n wave`.",
+      "question": "A Helm release `rollback-app` exists in namespace `wave` with revision 2.\n\nRollback to revision 1.\n\nHint: use `helm rollback rollback-app 1 -n wave`.",
       "concepts": [
         "helm",
         "rollback"
@@ -122,7 +122,7 @@
       "id": "5",
       "namespace": "default",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a PersistentVolume named `sea-pv` with:\n\n- Capacity: `5Gi`\n- Access modes: `ReadWriteOnce`\n- Storage class: `manual`\n- Host path: `/data/sea`\n\nHint: PersistentVolumes are cluster-scoped (no namespace).",
+      "question": "Create a PersistentVolume named `sea-pv` with:\n\n- Capacity: `5Gi`\n- Access modes: `ReadWriteOnce`\n- Storage class: `manual`\n- Host path: `/data/sea`\n\nHint: PersistentVolumes are cluster-scoped (no namespace).",
       "concepts": [
         "persistentvolume",
         "storage"
@@ -169,7 +169,7 @@
       "id": "6",
       "namespace": "depths",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a PersistentVolumeClaim named `sea-pvc` in namespace `depths` that:\n\n- Requests: `2Gi` storage\n- Access mode: `ReadWriteOnce`\n- Storage class: `manual`\n\nHint: the PVC should bind to the `sea-pv` PersistentVolume.",
+      "question": "Create a PersistentVolumeClaim named `sea-pvc` in namespace `depths` that:\n\n- Requests: `2Gi` storage\n- Access mode: `ReadWriteOnce`\n- Storage class: `manual`\n\nHint: the PVC should bind to the `sea-pv` PersistentVolume.",
       "concepts": [
         "persistentvolumeclaim",
         "storage"
@@ -209,7 +209,7 @@
       "id": "7",
       "namespace": "depths",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `pvc-pod` in namespace `depths` that:\n\n- Uses image `busybox:1.36` with command `sleep 3600`\n- Mounts the PVC `sea-pvc` at `/data`\n\nHint: use `spec.volumes` with `persistentVolumeClaim`.",
+      "question": "Create a Pod named `pvc-pod` in namespace `depths` that:\n\n- Uses image `busybox:1.36` with command `sleep 3600`\n- Mounts the PVC `sea-pvc` at `/data`\n\nHint: use `spec.volumes` with `persistentVolumeClaim`.",
       "concepts": [
         "pods",
         "persistentvolumeclaim",
@@ -250,7 +250,7 @@
       "id": "8",
       "namespace": "coral",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `direct-pod` in namespace `coral` with image `nginx:1.25` that is scheduled directly on a specific node using `nodeName`.\n\nUse the first node in your cluster (get it with `kubectl get nodes`).\n\nHint: use `spec.nodeName` in the Pod YAML.",
+      "question": "Create a Pod named `direct-pod` in namespace `coral` with image `nginx:1.25` that is scheduled directly on a specific node using `nodeName`.\n\nUse the first node in your cluster (get it with `kubectl get nodes`).\n\nHint: use `spec.nodeName` in the Pod YAML.",
       "concepts": [
         "pods",
         "scheduling",
@@ -284,7 +284,7 @@
       "id": "9",
       "namespace": "current",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `echo-pod` in namespace `current` with image `busybox:1.36` that:\n\n- Echoes \"hello world\"\n- Then exits\n\nThe Pod should complete (not restart). You may use `--rm` with `kubectl run` interactively, or create it normally with `--restart=Never`.\n\nHint: use `kubectl run` with the echo command.",
+      "question": "Create a Pod named `echo-pod` in namespace `current` with image `busybox:1.36` that:\n\n- Echoes \"hello world\"\n- Then exits\n\nThe Pod should complete (not restart). You may use `--rm` with `kubectl run` interactively, or create it normally with `--restart=Never`.\n\nHint: use `kubectl run` with the echo command.",
       "concepts": [
         "pods",
         "lifecycle"
@@ -310,7 +310,7 @@
       "id": "10",
       "namespace": "abyss",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\n1. Create a Pod named `inspect-pod` with image `nginx:1.25` in namespace `abyss`.\n2. Export its YAML to `/tmp/exam/course/10/pod.yaml`.\n\nHint: use `kubectl get pod -o yaml`.",
+      "question": "1. Create a Pod named `inspect-pod` with image `nginx:1.25` in namespace `abyss`.\n2. Export its YAML to `/tmp/exam/course/10/pod.yaml`.\n\nHint: use `kubectl get pod -o yaml`.",
       "concepts": [
         "pods",
         "observability"
@@ -343,7 +343,7 @@
       "id": "11",
       "namespace": "pearl",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Pod named `problem-pod` exists in namespace `pearl` but is not running correctly.\n\n1. Describe the Pod.\n2. Save the Events section to `/tmp/exam/course/11/events.txt`.\n\nHint: use `kubectl describe pod` and capture the events.",
+      "question": "A Pod named `problem-pod` exists in namespace `pearl` but is not running correctly.\n\n1. Describe the Pod.\n2. Save the Events section to `/tmp/exam/course/11/events.txt`.\n\nHint: use `kubectl describe pod` and capture the events.",
       "concepts": [
         "debugging",
         "events",
@@ -370,7 +370,7 @@
       "id": "12",
       "namespace": "storm",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\n1. Create a Pod named `exec-pod` with image `nginx:1.25` in namespace `storm`.\n2. Execute the `hostname` command inside the Pod.\n3. Save the output to `/tmp/exam/course/12/hostname.txt`.\n\nHint: use `kubectl exec`.",
+      "question": "1. Create a Pod named `exec-pod` with image `nginx:1.25` in namespace `storm`.\n2. Execute the `hostname` command inside the Pod.\n3. Save the output to `/tmp/exam/course/12/hostname.txt`.\n\nHint: use `kubectl exec`.",
       "concepts": [
         "pods",
         "exec",
@@ -397,7 +397,7 @@
       "id": "13",
       "namespace": "harbor",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nA Pod named `restart-pod` exists in namespace `harbor` and has been restarted.\n\nGet the logs from the previous container instance and save to `/tmp/exam/course/13/previous.txt`.\n\nHint: use `kubectl logs --previous`.",
+      "question": "A Pod named `restart-pod` exists in namespace `harbor` and has been restarted.\n\nGet the logs from the previous container instance and save to `/tmp/exam/course/13/previous.txt`.\n\nHint: use `kubectl logs --previous`.",
       "concepts": [
         "logs",
         "debugging",
@@ -417,7 +417,7 @@
       "id": "14",
       "namespace": "default",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nGet the CPU and memory utilization of all nodes and save to `/tmp/exam/course/14/nodes.txt`.\n\nNote: `kubectl top` needs metrics-server. Scoring does not depend on live metrics, only on the saved file.\n\nHint: use `kubectl top nodes`.",
+      "question": "Get the CPU and memory utilization of all nodes and save to `/tmp/exam/course/14/nodes.txt`.\n\nNote: `kubectl top` needs metrics-server. Scoring does not depend on live metrics, only on the saved file.\n\nHint: use `kubectl top nodes`.",
       "concepts": [
         "metrics",
         "observability"
@@ -443,7 +443,7 @@
       "id": "15",
       "namespace": "voyage",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\n1. Create a file `/tmp/exam/course/15/config.env` with content:\n\n```\nDB_HOST=localhost\nDB_PORT=5432\n```\n\n2. Create a ConfigMap named `env-config` in namespace `voyage` from this .env file.\n\nHint: use `kubectl create configmap --from-env-file`.",
+      "question": "1. Create a file `/tmp/exam/course/15/config.env` with content:\n\n```\nDB_HOST=localhost\nDB_PORT=5432\n```\n\n2. Create a ConfigMap named `env-config` in namespace `voyage` from this .env file.\n\nHint: use `kubectl create configmap --from-env-file`.",
       "concepts": [
         "configmaps",
         "configuration"
@@ -483,7 +483,7 @@
       "id": "16",
       "namespace": "tide",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nA Deployment `web-deploy` exists in namespace `tide` with multiple revisions.\n\nRollback to revision `2`.\n\nHint: use `kubectl rollout undo --to-revision`.",
+      "question": "A Deployment `web-deploy` exists in namespace `tide` with multiple revisions.\n\nRollback to revision `2`.\n\nHint: use `kubectl rollout undo --to-revision`.",
       "concepts": [
         "deployments",
         "rollout"
@@ -509,7 +509,7 @@
       "id": "17",
       "namespace": "wave",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nA Deployment `history-deploy` exists in namespace `wave`.\n\nGet the details of revision `3` and save to `/tmp/exam/course/17/revision.txt`.\n\nHint: use `kubectl rollout history --revision`.",
+      "question": "A Deployment `history-deploy` exists in namespace `wave`.\n\nGet the details of revision `3` and save to `/tmp/exam/course/17/revision.txt`.\n\nHint: use `kubectl rollout history --revision`.",
       "concepts": [
         "deployments",
         "rollout",
@@ -536,7 +536,7 @@
       "id": "18",
       "namespace": "coral",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Job named `pi-job` in namespace `coral` that:\n\n- Uses image `perl:5.34`\n- Runs the command: `perl -Mbignum=bpi -wle 'print bpi(100)'`\n- Calculates Pi to 100 decimal places\n\nHint: use `kubectl create job` or a Job manifest.",
+      "question": "Create a Job named `pi-job` in namespace `coral` that:\n\n- Uses image `perl:5.34`\n- Runs the command: `perl -Mbignum=bpi -wle 'print bpi(100)'`\n- Calculates Pi to 100 decimal places\n\nHint: use `kubectl create job` or a Job manifest.",
       "concepts": [
         "jobs",
         "batch"
@@ -569,7 +569,7 @@
       "id": "19",
       "namespace": "abyss",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `sidecar-pod` in namespace `abyss` with:\n\nContainer 1 (main):\n- Name: `app`\n- Image: `busybox:1.36`\n- Command: `while true; do echo \"$(date)\" >> /logs/app.log; sleep 5; done`\n- Mount volume at `/logs`\n\nContainer 2 (sidecar):\n- Name: `sidecar`\n- Image: `busybox:1.36`\n- Command: `tail -f /logs/app.log`\n- Mount same volume at `/logs`\n\nUse an emptyDir volume named `log-volume`.\n\nHint: sidecar pattern for log streaming.",
+      "question": "Create a Pod named `sidecar-pod` in namespace `abyss` with:\n\nContainer 1 (main):\n- Name: `app`\n- Image: `busybox:1.36`\n- Command: `while true; do echo \"$(date)\" >> /logs/app.log; sleep 5; done`\n- Mount volume at `/logs`\n\nContainer 2 (sidecar):\n- Name: `sidecar`\n- Image: `busybox:1.36`\n- Command: `tail -f /logs/app.log`\n- Mount same volume at `/logs`\n\nUse an emptyDir volume named `log-volume`.\n\nHint: sidecar pattern for log streaming.",
       "concepts": [
         "pods",
         "multi-container",
@@ -625,7 +625,7 @@
       "id": "20",
       "namespace": "storm",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nGet the CPU and memory utilization of all Pods in namespace `storm` and save to `/tmp/exam/course/20/top-pods.txt`.\n\nNote: `kubectl top` needs metrics-server. Scoring does not depend on live metrics, only on the saved file.\n\nHint: use `kubectl top pods -n storm`.",
+      "question": "Get the CPU and memory utilization of all Pods in namespace `storm` and save to `/tmp/exam/course/20/top-pods.txt`.\n\nNote: `kubectl top` needs metrics-server. Scoring does not depend on live metrics, only on the saved file.\n\nHint: use `kubectl top pods -n storm`.",
       "concepts": [
         "metrics",
         "observability"

@@ -4,7 +4,7 @@
       "id": "1",
       "namespace": "core-concepts",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a namespace called `core-concepts` and a pod with image `nginx` called `nginx-pod` in this namespace.\n\nThe pod should have the following labels: `app=web`, `env=prod`.",
+      "question": "Create a namespace called `core-concepts` and a pod with image `nginx` called `nginx-pod` in this namespace.\n\nThe pod should have the following labels: `app=web`, `env=prod`.",
       "concepts": [
         "core-concepts",
         "pods",
@@ -46,7 +46,7 @@
       "id": "2",
       "namespace": "multi-container",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `multi-container-pod` in the `multi-container` namespace with \ntwo containers:\n1. Container 1 - \nName: `main-container`, \nImage: `nginx`\n2. Container 2 - \nName: `sidecar-container`, \nImage: `busybox`, \nCommand: `['sh', '-c', 'while true; do echo $(date) >> /var/log/app.log; sleep 5; done']`\n\nCreate a shared volume named `log-volume` that both containers can access. Mount this volume at `/var/log` in both containers. Ensure the namespace exists before creating the pod.",
+      "question": "Create a Pod named `multi-container-pod` in the `multi-container` namespace with \ntwo containers:\n1. Container 1 - \nName: `main-container`, \nImage: `nginx`\n2. Container 2 - \nName: `sidecar-container`, \nImage: `busybox`, \nCommand: `['sh', '-c', 'while true; do echo $(date) >> /var/log/app.log; sleep 5; done']`\n\nCreate a shared volume named `log-volume` that both containers can access. Mount this volume at `/var/log` in both containers. Ensure the namespace exists before creating the pod.",
       "concepts": [
         "multi-container-pods",
         "volumes",
@@ -87,7 +87,7 @@
       "id": "3",
       "namespace": "pod-design",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Deployment in the `pod-design` namespace with the following specifications:\n- Name: `frontend`\n- Replicas: `3`\n- Image: `nginx:1.19.0`\n- Labels: `app=frontend, tier=frontend`\n- Pod Labels: same as deployment labels\n\nThen create a service `frontend-svc` that exposes the deployment on port `80`, targeting container port `80`, and is of type `ClusterIP`. Ensure the namespace exists before creating the resources.",
+      "question": "Create a Deployment in the `pod-design` namespace with the following specifications:\n- Name: `frontend`\n- Replicas: `3`\n- Image: `nginx:1.19.0`\n- Labels: `app=frontend, tier=frontend`\n- Pod Labels: same as deployment labels\n\nThen create a service `frontend-svc` that exposes the deployment on port `80`, targeting container port `80`, and is of type `ClusterIP`. Ensure the namespace exists before creating the resources.",
       "concepts": [
         "deployments",
         "services",
@@ -129,7 +129,7 @@
       "id": "4",
       "namespace": "configuration",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a ConfigMap named `app-config` in the `configuration` namespace \nwith the following data:\n`DB_HOST=mysql`\n`DB_PORT=3306`\n`DB_NAME=myapp`\n\nThen create a Secret named `app-secret` \nwith the following data:\n`DB_USER=admin`\n`DB_PASSWORD=s3cr3t`\n\nFinally, create a Pod named `app-pod` using the `nginx` image that uses both the ConfigMap and Secret. \n\nMount the ConfigMap as environment variables and the Secret as a volume at `/etc/app-secret`. Ensure the namespace exists before creating the resources.",
+      "question": "Create a ConfigMap named `app-config` in the `configuration` namespace \nwith the following data:\n`DB_HOST=mysql`\n`DB_PORT=3306`\n`DB_NAME=myapp`\n\nThen create a Secret named `app-secret` \nwith the following data:\n`DB_USER=admin`\n`DB_PASSWORD=s3cr3t`\n\nFinally, create a Pod named `app-pod` using the `nginx` image that uses both the ConfigMap and Secret. \n\nMount the ConfigMap as environment variables and the Secret as a volume at `/etc/app-secret`. Ensure the namespace exists before creating the resources.",
       "concepts": [
         "configmaps",
         "secrets",
@@ -178,7 +178,7 @@
       "id": "5",
       "namespace": "observability",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Pod named `probes-pod` in the `observability` namespace using the image `nginx`. Configure the following probes:\n\n1. Liveness probe: HTTP GET request to path `/healthz` on port `80`, with initialDelaySeconds=`10` and periodSeconds=`5`\n\n2. Readiness probe: HTTP GET request to path `/` on port `80`, with initialDelaySeconds=`5` and periodSeconds=`3`\n\nAlso, configure the pod with resource requests of CPU=`100m` and memory=`128Mi`, and resource limits of CPU=`200m` and memory=`256Mi`. \nEnsure the namespace exists before creating the pod.",
+      "question": "Create a Pod named `probes-pod` in the `observability` namespace using the image `nginx`. Configure the following probes:\n\n1. Liveness probe: HTTP GET request to path `/healthz` on port `80`, with initialDelaySeconds=`10` and periodSeconds=`5`\n\n2. Readiness probe: HTTP GET request to path `/` on port `80`, with initialDelaySeconds=`5` and periodSeconds=`3`\n\nAlso, configure the pod with resource requests of CPU=`100m` and memory=`128Mi`, and resource limits of CPU=`200m` and memory=`256Mi`. \nEnsure the namespace exists before creating the pod.",
       "concepts": [
         "probes",
         "liveness",
@@ -227,7 +227,7 @@
       "id": "6",
       "namespace": "services",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nCreate a Deployment named `web-app` in the `services` namespace with 3 replicas using the image `nginx:alpine`. \nLabel the pods with `app=web`.\n\nExpose the deployment with three different services:\n1. A ClusterIP service named `web-svc-cluster` on port `80`\n2. A NodePort service named `web-svc-nodeport` on port `80`, using nodePort `30080`\n3. A LoadBalancer service named `web-svc-lb` on port `80`\n\nEnsure the namespace exists before creating the resources.",
+      "question": "Create a Deployment named `web-app` in the `services` namespace with 3 replicas using the image `nginx:alpine`. \nLabel the pods with `app=web`.\n\nExpose the deployment with three different services:\n1. A ClusterIP service named `web-svc-cluster` on port `80`\n2. A NodePort service named `web-svc-nodeport` on port `80`, using nodePort `30080`\n3. A LoadBalancer service named `web-svc-lb` on port `80`\n\nEnsure the namespace exists before creating the resources.",
       "concepts": [
         "services",
         "deployments",
@@ -277,7 +277,7 @@
       "id": "7",
       "namespace": "state",
       "machineHostname": "ckad9999",
-      "question": "> Server: `ckad9999` · cluster `cluster1`. Connect with `ssh ckad9999` and select the cluster with `kubectl config use-context k3d-cluster1` before solving.\n\nSet up persistent storage for a database application in the `state` namespace:\n\n1. Create a PersistentVolume named `db-pv` with storage capacity of `1Gi`, access mode `ReadWriteOnce`, hostPath type pointing to `/mnt/data`, and reclaim policy `Retain`\n2. Create a PersistentVolumeClaim named `db-pvc` that requests `500Mi` storage with access mode `ReadWriteOnce`\n3. Create a Pod named `db-pod` using the `mysql:5.7` image that mounts the PVC at `/var/lib/mysql`\n4. Set the following environment variables for the pod: \n`MYSQL_ROOT_PASSWORD=rootpassword`, \n`MYSQL_DATABASE=mydb`, \n`MYSQL_USER=myuser`, \n`MYSQL_PASSWORD=mypassword`\n\nEnsure the namespace exists before creating the resources.",
+      "question": "Set up persistent storage for a database application in the `state` namespace:\n\n1. Create a PersistentVolume named `db-pv` with storage capacity of `1Gi`, access mode `ReadWriteOnce`, hostPath type pointing to `/mnt/data`, and reclaim policy `Retain`\n2. Create a PersistentVolumeClaim named `db-pvc` that requests `500Mi` storage with access mode `ReadWriteOnce`\n3. Create a Pod named `db-pod` using the `mysql:5.7` image that mounts the PVC at `/var/lib/mysql`\n4. Set the following environment variables for the pod: \n`MYSQL_ROOT_PASSWORD=rootpassword`, \n`MYSQL_DATABASE=mydb`, \n`MYSQL_USER=myuser`, \n`MYSQL_PASSWORD=mypassword`\n\nEnsure the namespace exists before creating the resources.",
       "concepts": [
         "persistent-volumes",
         "persistent-volume-claims",
@@ -333,7 +333,7 @@
       "id": "8",
       "namespace": "pod-design",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a CronJob in the `pod-design` namespace with the following specifications:\n\n1. Name: `backup-job`\n2. Schedule: Every 5 minutes\n3. Container image: `busybox`\n4. Command: `['sh', '-c', 'echo Backup started: $(date); sleep 30; echo Backup completed: $(date)']`\n5. Configure the job with a restart policy of `OnFailure`\n6. Set a deadline of `100` seconds for the job to complete\n\nEnsure the namespace exists before creating the resource.",
+      "question": "Create a CronJob in the `pod-design` namespace with the following specifications:\n\n1. Name: `backup-job`\n2. Schedule: Every 5 minutes\n3. Container image: `busybox`\n4. Command: `['sh', '-c', 'echo Backup started: $(date); sleep 30; echo Backup completed: $(date)']`\n5. Configure the job with a restart policy of `OnFailure`\n6. Set a deadline of `100` seconds for the job to complete\n\nEnsure the namespace exists before creating the resource.",
       "concepts": [
         "cronjobs",
         "jobs",
@@ -374,7 +374,7 @@
       "id": "9",
       "namespace": "troubleshooting",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nThere is a deployment named `broken-deployment` in the `troubleshooting` namespace that is not functioning correctly. The deployment should have `3` replicas of `nginx:1.19` pods, but it's failing.\n\nFind and fix the issue(s) with the deployment. Possible issues might include:\n- Incorrect image name or tag\n- Resource constraints that can't be satisfied\n- Configuration problems with the pod template\n- Network policy restrictions\n\nEnsure the deployment functions correctly with 3 replicas running.",
+      "question": "There is a deployment named `broken-deployment` in the `troubleshooting` namespace that is not functioning correctly. The deployment should have `3` replicas of `nginx:1.19` pods, but it's failing.\n\nFind and fix the issue(s) with the deployment. Possible issues might include:\n- Incorrect image name or tag\n- Resource constraints that can't be satisfied\n- Configuration problems with the pod template\n- Network policy restrictions\n\nEnsure the deployment functions correctly with 3 replicas running.",
       "concepts": [
         "troubleshooting",
         "deployments",
@@ -408,7 +408,7 @@
       "id": "10",
       "namespace": "networking",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a NetworkPolicy in the `networking` namespace that restricts access to the `secure-db` pod with label `app=db` as follows:\n\n1. Allow ingress traffic only from pods with the label `role=frontend` on port `5432`\n2. Allow egress traffic only to pods with the label `role=monitoring` on port `8080`\n3. Deny all other traffic\n\nThen create three pods for testing:\n- A pod named `secure-db` with label `app=db` using image `postgres:12`\n- A pod named `frontend` with label `role=frontend` using image `nginx`\n- A pod named `monitoring` with label `role=monitoring` using image `nginx`\n\nEnsure the namespace exists before creating the resources.",
+      "question": "Create a NetworkPolicy in the `networking` namespace that restricts access to the `secure-db` pod with label `app=db` as follows:\n\n1. Allow ingress traffic only from pods with the label `role=frontend` on port `5432`\n2. Allow egress traffic only to pods with the label `role=monitoring` on port `8080`\n3. Deny all other traffic\n\nThen create three pods for testing:\n- A pod named `secure-db` with label `app=db` using image `postgres:12`\n- A pod named `frontend` with label `role=frontend` using image `nginx`\n- A pod named `monitoring` with label `role=monitoring` using image `nginx`\n\nEnsure the namespace exists before creating the resources.",
       "concepts": [
         "network-policies",
         "pods",
@@ -457,7 +457,7 @@
       "id": "11",
       "namespace": "security",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `secure-app` in the `security` namespace with the following security configurations:\n\n1. Run as non-root user (UID: `1000`)\n2. Set security context to drop all capabilities\n3. Set `readOnlyRootFilesystem` to true\n4. Add a security context to the container to run as non-root\n5. Use the `nginx:alpine` image\n\nEnsure the namespace exists before creating the pod.",
+      "question": "Create a Pod named `secure-app` in the `security` namespace with the following security configurations:\n\n1. Run as non-root user (UID: `1000`)\n2. Set security context to drop all capabilities\n3. Set `readOnlyRootFilesystem` to true\n4. Add a security context to the container to run as non-root\n5. Use the `nginx:alpine` image\n\nEnsure the namespace exists before creating the pod.",
       "concepts": [
         "security-context",
         "pod-security",
@@ -498,7 +498,7 @@
       "id": "12",
       "namespace": "docker-basics",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a simple Docker image and run it:\n\n1. Create a file `/tmp/Dockerfile` with these contents:\n`\nFROM nginx:alpine\nCOPY index.html /usr/share/nginx/html/\nEXPOSE 80\n`\n\n2. Create a file `/tmp/index.html` with this content:\n`\n<!DOCTYPE html>\n<html>\n<body>\n<h1>Hello from CKAD Docker Question!</h1>\n</body>\n</html>\n`\n\n3. Build the Docker image with tag `my-nginx:v1`\n\n4. Run a container from this image with name `my-web` and publish port 80 to 8080 on the host\n\nNote: You'll need to use the Docker command line tools for this task.",
+      "question": "Create a simple Docker image and run it:\n\n1. Create a file `/tmp/Dockerfile` with these contents:\n`\nFROM nginx:alpine\nCOPY index.html /usr/share/nginx/html/\nEXPOSE 80\n`\n\n2. Create a file `/tmp/index.html` with this content:\n`\n<!DOCTYPE html>\n<html>\n<body>\n<h1>Hello from CKAD Docker Question!</h1>\n</body>\n</html>\n`\n\n3. Build the Docker image with tag `my-nginx:v1`\n\n4. Run a container from this image with name `my-web` and publish port 80 to 8080 on the host\n\nNote: You'll need to use the Docker command line tools for this task.",
       "concepts": [
         "docker",
         "images",
@@ -539,7 +539,7 @@
       "id": "13",
       "namespace": "jobs",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Job named `data-processor` in the `jobs` namespace with the following specifications:\n\n1. Use image `busybox`\n2. Command: `['sh', '-c', 'for i in $(seq 1 5); do echo Processing item $i; sleep 2; done']`\n3. Set restart policy to `Never`\n4. Set backoff limit to `4`\n5. Set active deadline seconds to `30`\n\nEnsure the namespace exists before creating the job.",
+      "question": "Create a Job named `data-processor` in the `jobs` namespace with the following specifications:\n\n1. Use image `busybox`\n2. Command: `['sh', '-c', 'for i in $(seq 1 5); do echo Processing item $i; sleep 2; done']`\n3. Set restart policy to `Never`\n4. Set backoff limit to `4`\n5. Set active deadline seconds to `30`\n\nEnsure the namespace exists before creating the job.",
       "concepts": [
         "jobs",
         "restart-policy",
@@ -580,7 +580,7 @@
       "id": "14",
       "namespace": "init-containers",
       "machineHostname": "ckad9988",
-      "question": "> Server: `ckad9988` · cluster `cluster2`. Connect with `ssh ckad9988` and select the cluster with `kubectl config use-context k3d-cluster2` before solving.\n\nCreate a Pod named `app-with-init` in the `init-containers` namespace with the following specifications:\n\n1. Main container using image `nginx`\n2. Init container using image `busybox` with command: `['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done']`\n3. Create a service named `myservice` using image `nginx`\n4. Share a volume between init container and main container at `/shared`\n\nEnsure the namespace exists before creating the resources.",
+      "question": "Create a Pod named `app-with-init` in the `init-containers` namespace with the following specifications:\n\n1. Main container using image `nginx`\n2. Init container using image `busybox` with command: `['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done']`\n3. Create a service named `myservice` using image `nginx`\n4. Share a volume between init container and main container at `/shared`\n\nEnsure the namespace exists before creating the resources.",
       "concepts": [
         "init-containers",
         "services",
@@ -621,7 +621,7 @@
       "id": "15",
       "namespace": "helm-basics",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nPerform basic Helm operations:\n\n1. Create a namespace named `helm-basics`\n2. Add the Bitnami repository to Helm with the name `bitnami`\n3. Install the `nginx` chart from the Bitnami repository in the `helm-basics` namespace with the release name `nginx-release`\n4. Save the release notes of the installation to a file at `/tmp/release-notes.txt`",
+      "question": "Perform basic Helm operations:\n\n1. Create a namespace named `helm-basics`\n2. Add the Bitnami repository to Helm with the name `bitnami`\n3. Install the `nginx` chart from the Bitnami repository in the `helm-basics` namespace with the release name `nginx-release`\n4. Save the release notes of the installation to a file at `/tmp/release-notes.txt`",
       "concepts": [
         "helm",
         "package-management",
@@ -655,7 +655,7 @@
       "id": "16",
       "namespace": "health-checks",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `health-check-pod` in the `health-checks` namespace with the following specifications:\n\n1. Use image `nginx`\n\n2. Configure startup probe:\n   - HTTP GET on port 80\n   - Initial delay: 10s\n   - Period: 3s\n   - Failure threshold: 3\n\n3. Configure liveness probe:\n   - HTTP GET on port 80\n   - Initial delay: 15s\n   - Period: 5s\n   - Failure threshold: 3\n\n4. Configure readiness probe:\n   - HTTP GET on port 80\n   - Initial delay: 5s\n   - Period: 3s\n   - Failure threshold: 3\n\nEnsure the namespace exists before creating the pod.",
+      "question": "Create a Pod named `health-check-pod` in the `health-checks` namespace with the following specifications:\n\n1. Use image `nginx`\n\n2. Configure startup probe:\n   - HTTP GET on port 80\n   - Initial delay: 10s\n   - Period: 3s\n   - Failure threshold: 3\n\n3. Configure liveness probe:\n   - HTTP GET on port 80\n   - Initial delay: 15s\n   - Period: 5s\n   - Failure threshold: 3\n\n4. Configure readiness probe:\n   - HTTP GET on port 80\n   - Initial delay: 5s\n   - Period: 3s\n   - Failure threshold: 3\n\nEnsure the namespace exists before creating the pod.",
       "concepts": [
         "startup-probes",
         "liveness-probes",
@@ -703,7 +703,7 @@
       "id": "17",
       "namespace": "pod-lifecycle",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `lifecycle-pod` in the `pod-lifecycle` namespace with the following specifications:\n\n1. Use image `nginx`\n2. Add postStart hook that creates a file `/usr/share/nginx/html/welcome.txt` with content `Welcome to the pod!`\n3. Add preStop hook that waits for `10` seconds\n4. Set termination grace period to `30` seconds\n\nEnsure the namespace exists before creating the pod.",
+      "question": "Create a Pod named `lifecycle-pod` in the `pod-lifecycle` namespace with the following specifications:\n\n1. Use image `nginx`\n2. Add postStart hook that creates a file `/usr/share/nginx/html/welcome.txt` with content `Welcome to the pod!`\n3. Add preStop hook that waits for `10` seconds\n4. Set termination grace period to `30` seconds\n\nEnsure the namespace exists before creating the pod.",
       "concepts": [
         "lifecycle-hooks",
         "post-start",
@@ -752,7 +752,7 @@
       "id": "18",
       "namespace": "crd-demo",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Custom Resource Definition (CRD) for a simple application:\n\n1. Create a CRD named `applications.training.ckad.io` with:\n   - Group: `training.ckad.io`\n   - Version: `v1`\n   - Kind: `Application`\n   - Scope: `Namespaced`\n   - Required fields: `spec.image` (string) and `spec.replicas` (integer)\n\n2. After creating the CRD, create a custom resource in the `crd-demo` namespace named `my-app` with:\n   - Image: `nginx:1.19.0`\n   - Replicas: `3`\n\nEnsure the namespace exists before creating the resources.",
+      "question": "Create a Custom Resource Definition (CRD) for a simple application:\n\n1. Create a CRD named `applications.training.ckad.io` with:\n   - Group: `training.ckad.io`\n   - Version: `v1`\n   - Kind: `Application`\n   - Scope: `Namespaced`\n   - Required fields: `spec.image` (string) and `spec.replicas` (integer)\n\n2. After creating the CRD, create a custom resource in the `crd-demo` namespace named `my-app` with:\n   - Image: `nginx:1.19.0`\n   - Replicas: `3`\n\nEnsure the namespace exists before creating the resources.",
       "concepts": [
         "custom-resource-definitions",
         "api-extensions",
@@ -800,7 +800,7 @@
       "id": "19",
       "namespace": "custom-columns-demo",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nUse kubectl custom columns to extract and display pod information:\n\n1. There are several pods and deployments running in the `custom-columns-demo` namespace\n2. Create a custom column output showing all pods from all namespaces, including their names, namespaces, and container images\n3. Save this output to `/tmp/pod-images.txt`\n4. Create another output showing multi-container pod details with pod name, namespace, and all container images as comma-separated values\n5. Save this second output to `/tmp/all-container-images.txt`\n\nEnsure the namespace exists before starting your work.",
+      "question": "Use kubectl custom columns to extract and display pod information:\n\n1. There are several pods and deployments running in the `custom-columns-demo` namespace\n2. Create a custom column output showing all pods from all namespaces, including their names, namespaces, and container images\n3. Save this output to `/tmp/pod-images.txt`\n4. Create another output showing multi-container pod details with pod name, namespace, and all container images as comma-separated values\n5. Save this second output to `/tmp/all-container-images.txt`\n\nEnsure the namespace exists before starting your work.",
       "concepts": [
         "kubectl",
         "custom-columns",
@@ -828,7 +828,7 @@
       "id": "20",
       "namespace": "pod-configuration",
       "machineHostname": "ckad9977",
-      "question": "> Server: `ckad9977` · cluster `cluster3`. Connect with `ssh ckad9977` and select the cluster with `kubectl config use-context k3d-cluster3` before solving.\n\nCreate a Pod named `config-pod` in the `pod-configuration` namespace with the following specifications:\n\n1. Use image `nginx`\n2. Add environment variables:\n   - `APP_ENV=production`\n   - `DEBUG=false`\n3. Add environment variables from ConfigMap `app-config` with keys:\n   - `DB_HOST`\n   - `DB_PORT`\n4. Mount ConfigMap `app-config` as a volume at `/etc/app-config`\n5. Add environment variables from Secret `app-secret` with keys:\n   - `API_KEY`\n   - `API_SECRET`\n\nFirst create the ConfigMap and Secret with the specified data.\n\nEnsure the namespace exists before creating the resources.",
+      "question": "Create a Pod named `config-pod` in the `pod-configuration` namespace with the following specifications:\n\n1. Use image `nginx`\n2. Add environment variables:\n   - `APP_ENV=production`\n   - `DEBUG=false`\n3. Add environment variables from ConfigMap `app-config` with keys:\n   - `DB_HOST`\n   - `DB_PORT`\n4. Mount ConfigMap `app-config` as a volume at `/etc/app-config`\n5. Add environment variables from Secret `app-secret` with keys:\n   - `API_KEY`\n   - `API_SECRET`\n\nFirst create the ConfigMap and Secret with the specified data.\n\nEnsure the namespace exists before creating the resources.",
       "concepts": [
         "environment-variables",
         "configmaps",
