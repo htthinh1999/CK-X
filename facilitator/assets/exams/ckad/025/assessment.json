@@ -1,0 +1,218 @@
+{
+    "questions": [
+        {
+            "id": "1",
+            "namespace": "starmap",
+            "machineHostname": "ckad9999",
+            "question": "A local Helm chart for the observatory's sky-map frontend is stored at `/home/candidate/exam/q1/orrery` (the chart names its Deployment after the release). In namespace `starmap`, the release `orrery-north` was installed from this chart and then upgraded to an image tag that does not exist, so its new Pods cannot start.\n\n1. Use Helm to roll `orrery-north` back to its last working revision. Afterwards the Deployment `orrery-north` must run image `nginx:1.25` with `2` ready replicas.\n2. Write a Helm values file `/home/candidate/exam/q1/south-values.yaml` that sets `replicaCount` to `2` and adds the pod annotation `site: south-ridge` (chart value `podAnnotations`).\n3. Install a second release named `orrery-south` from the same local chart into namespace `starmap`, using that values file. Its Deployment `orrery-south` must have `2` ready replicas.",
+            "concepts": ["helm", "helm rollback", "helm values", "releases"],
+            "verification": [
+                { "id": "1", "description": "orrery-north was rolled back to revision 1 (new revision, status deployed)", "verificationScriptFile": "q1_s1_validate_rollback.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment orrery-north runs nginx:1.25 with 2 ready replicas", "verificationScriptFile": "q1_s2_validate_north_ready.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "orrery-south installed from the orrery chart with south-values.yaml (replicaCount 2, podAnnotations.site)", "verificationScriptFile": "q1_s3_validate_south_values.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Deployment orrery-south has 2 ready replicas and pod annotation site=south-ridge", "verificationScriptFile": "q1_s4_validate_south_ready.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "2",
+            "namespace": "mirror",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `mirror`, the Deployment `reflector` (3 replicas, container `web`, image `nginx:1.25`) uses the `Recreate` strategy, which takes the site down during every update.\n\n1. Switch the Deployment to the `RollingUpdate` strategy with `maxSurge: 1` and `maxUnavailable: 0`.\n2. Update container `web` to image `nginx:1.26`.\n3. Set the Deployment annotation `kubernetes.io/change-cause` to `bump reflector to nginx 1.26` so the new revision is described in `kubectl rollout history`.\n4. Make sure the rollout completes: `3` replicas, all updated, ready and available, and no Pods left on the old image.",
+            "concepts": ["deployments", "rolling updates", "rollout strategy", "annotations"],
+            "verification": [
+                { "id": "1", "description": "Strategy is RollingUpdate with maxSurge=1 and maxUnavailable=0", "verificationScriptFile": "q2_s1_validate_strategy.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Container web uses image nginx:1.26", "verificationScriptFile": "q2_s2_validate_image.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Annotation kubernetes.io/change-cause is 'bump reflector to nginx 1.26'", "verificationScriptFile": "q2_s3_validate_change_cause.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Rollout complete: 3/3 replicas updated, ready and available on nginx:1.26", "verificationScriptFile": "q2_s4_validate_rollout_complete.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "3",
+            "namespace": "relay",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `relay`, the telemetry `collector` Pods (label `app=collector`) push data to the Redis Pod `archive` (label `app=archive`, TCP port `6379`, Service `archive`). Other Pods such as `webcache` and `dashboard` run in the same namespace.\n\nCreate a NetworkPolicy named `collector-egress` in namespace `relay` that selects the Pods labelled `app=collector` (using `matchLabels`) and controls **egress only** (`policyTypes` must be exactly `[Egress]`). The collector Pods may only:\n- connect to Pods labelled `app=archive` on TCP port `6379`\n- send DNS queries on port `53` over both UDP and TCP (to any destination)\n\nAll other outgoing traffic from the collector Pods must be denied. Do not modify the existing Pods, Deployments or Services.",
+            "concepts": ["networkpolicy", "egress", "dns", "pod selectors"],
+            "verification": [
+                { "id": "1", "description": "collector-egress selects app=collector with policyTypes [Egress]", "verificationScriptFile": "q3_s1_validate_selector_types.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Egress rule allows Pods app=archive on TCP 6379", "verificationScriptFile": "q3_s2_validate_archive_rule.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Egress allows DNS on port 53 over UDP and TCP", "verificationScriptFile": "q3_s3_validate_dns_rule.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Collector can reach archive:6379 but not webcache:80", "verificationScriptFile": "q3_s4_validate_traffic.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "4",
+            "namespace": "survey",
+            "machineHostname": "ckad9999",
+            "question": "Several Pods are running in namespace `survey`. Write two command files. Each file must contain a `kubectl` command, will be executed with `bash <file>`, and must work no matter which namespace is the current default.\n\n1. `/home/candidate/exam/q4/oldest-first.sh`: print only the names of all Pods in namespace `survey`, one per line, sorted by creation time (oldest first). No header and no `pod/` prefix.\n2. `/home/candidate/exam/q4/pod-ips.sh`: print all Pods in namespace `survey` using `-o custom-columns` with exactly two columns titled `NAME` (the Pod name) and `POD_IP` (the Pod IP), including the header row.",
+            "concepts": ["kubectl", "sort-by", "custom-columns", "pods"],
+            "verification": [
+                { "id": "1", "description": "oldest-first.sh prints survey Pod names sorted by creation time", "verificationScriptFile": "q4_s1_validate_oldest_first.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "pod-ips.sh prints NAME and POD_IP custom columns for all survey Pods", "verificationScriptFile": "q4_s2_validate_pod_ips.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "spectra",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `spectra`, create a Pod named `prism` whose log file is streamed to stdout by a **native sidecar**:\n\n- A volume `logs` of type `emptyDir`, mounted at `/var/log/prism` in both containers below.\n- Main container `emitter`, image `busybox:1.36`, running with `sh -c`:\n  `i=0; while true; do i=$((i+1)); echo \"spectral-line $i\" >> /var/log/prism/emission.log; sleep 2; done`\n- Sidecar `log-tailer`, image `busybox:1.36`, running with `sh -c`: `tail -F /var/log/prism/emission.log`. It must be declared as a native sidecar, i.e. under `initContainers` with `restartPolicy: Always`.\n\nThe Pod must be Running and Ready, and `kubectl logs prism -c log-tailer` must show the `spectral-line` entries.",
+            "concepts": ["pods", "native sidecar", "init containers", "logging", "volumes"],
+            "verification": [
+                { "id": "1", "description": "log-tailer is an initContainer with restartPolicy Always (busybox:1.36), emitter is the main container", "verificationScriptFile": "q5_s1_validate_native_sidecar.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "emptyDir logs is mounted at /var/log/prism in emitter and log-tailer", "verificationScriptFile": "q5_s2_validate_shared_volume.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod prism is Running and Ready with the sidecar running", "verificationScriptFile": "q5_s3_validate_pod_ready.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "kubectl logs -c log-tailer shows spectral-line entries", "verificationScriptFile": "q5_s4_validate_sidecar_logs.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "almanac",
+            "machineHostname": "ckad9999",
+            "question": "Work in namespace `almanac`.\n\n1. Create a ConfigMap named `sky-settings` from the env-file `/home/candidate/exam/q6/almanac.env`, so that each variable in the file becomes its own key.\n2. Create a Pod named `almanac-reader` (image `busybox:1.36`, command `sleep 3600`) that exposes **all** keys of `sky-settings` as environment variables using `envFrom`.\n3. Some outdated ConfigMaps in the namespace carry the label `stale=true`. Delete all of them with a single `kubectl delete` that uses a label selector. ConfigMaps without that exact label (for example those labelled `stale=false`) must be kept.",
+            "concepts": ["configmaps", "envfrom", "labels", "label selectors"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap sky-settings has one key per env-file variable", "verificationScriptFile": "q6_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Pod almanac-reader loads sky-settings via envFrom", "verificationScriptFile": "q6_s2_validate_envfrom.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "almanac-reader is Running and has all four variables in its environment", "verificationScriptFile": "q6_s3_validate_env_runtime.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "All stale=true ConfigMaps deleted, other ConfigMaps kept", "verificationScriptFile": "q6_s4_validate_stale_deleted.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "vault",
+            "machineHostname": "ckad9988",
+            "question": "Two files have been prepared for the observatory's certificate loader in `/home/candidate/exam/q7/`: `signing.key` and `ca.crt`.\n\nIn namespace `vault`:\n\n1. Create a generic Secret named `observatory-tls` from both files, so that it has the keys `signing.key` and `ca.crt` holding the file contents.\n2. Create a Pod named `cert-loader` (image `busybox:1.36`, command `sh -c 'sleep 3600'`) that:\n   - mounts a Secret volume from `observatory-tls` at `/etc/observatory`. The volume must project **only** the key `signing.key`, exposed as the relative path `keys/private.pem` (the file must be `/etc/observatory/keys/private.pem`, and `ca.crt` must not appear in the mount);\n   - sets the Secret volume's `defaultMode` to octal `0400`;\n   - defines an environment variable `ROTATION_TOKEN` from the key `rotation.token` of Secret `observatory-tls`. That key does not exist yet, so mark the reference as optional: the Pod must still start and be `Running`.",
+            "concepts": ["secrets", "volumes", "file-permissions", "environment-variables", "pods"],
+            "verification": [
+                { "id": "1", "description": "Secret observatory-tls has keys signing.key and ca.crt with the file contents", "verificationScriptFile": "q7_s1_validate_secret.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Only signing.key is projected, as keys/private.pem under /etc/observatory", "verificationScriptFile": "q7_s2_validate_items.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Secret volume defaultMode is 0400 (256) and the key file has mode 400", "verificationScriptFile": "q7_s3_validate_mode.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "ROTATION_TOKEN is an optional secretKeyRef to rotation.token and the Pod is Running", "verificationScriptFile": "q7_s4_validate_optional_env.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "dome",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `dome`, the Deployment `skyview` (2 replicas, image `nginx:1.25`, container `web` serving HTTP on port 80) never becomes available: its Pods are Running, but none of them turns Ready because the readiness probe is misconfigured.\n\nFix the Deployment **in place** (do not delete or recreate it) so that the readiness probe of container `web` performs an HTTP GET on path `/` and port `80`.\n\nKeep every other setting unchanged, including the readiness probe's `initialDelaySeconds: 3`, `periodSeconds: 5` and `failureThreshold: 2`, the existing liveness probe, the image and the replica count. Both replicas must end up Ready.",
+            "concepts": ["probes", "readiness", "deployments", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "Readiness probe of container web is httpGet on path / and port 80", "verificationScriptFile": "q8_s1_validate_probe.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment fixed in place; replicas, image, probe timings and liveness probe unchanged", "verificationScriptFile": "q8_s2_validate_unchanged.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "2/2 replicas of skyview are updated and Ready", "verificationScriptFile": "q8_s3_validate_ready.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "antenna",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `antenna`, the Pods of Deployment `dish-receiver` are Running, but the NodePort Service `dish-receiver` has no endpoints.\n\nFix the **Service** only (do not modify the Deployment) so that:\n- its port `8080` forwards to the Deployment's container port by **name** (use the port name the container declares, not a number);\n- it is exposed on nodePort `30725`;\n- it keeps type `NodePort`, port `8080` and its selector `app=dish-receiver`;\n- both `dish-receiver` Pods are registered as endpoints of the Service.",
+            "concepts": ["services", "nodeport", "named-ports", "endpoints", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "Service port 8080 targets the named container port rx-http; Deployment and selector unchanged", "verificationScriptFile": "q9_s1_validate_targetport.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Service is NodePort with port 8080 on nodePort 30725", "verificationScriptFile": "q9_s2_validate_nodeport.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Service has 2 ready endpoints on container port 80", "verificationScriptFile": "q9_s3_validate_endpoints.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "catalog",
+            "machineHostname": "ckad9988",
+            "question": "Namespace `catalog` contains six star-catalog indexer Pods (`idx-*`) that carry `tier` and `survey` labels and various annotations.\n\n1. On every Pod currently labelled `tier=ingest`, change the value of the label `tier` to `stream`.\n2. On every Pod labelled `survey=wide`, add the annotation `catalog.observatory.io/retention` with the exact value `hot=7d,cold=365d`.\n3. Write the names of all Pods in the namespace that carry the annotation `catalog.observatory.io/legacy-schema` (whatever its value) to `/home/candidate/exam/q10/legacy-schema-pods.txt`: one Pod name per line, sorted alphabetically, nothing else. Only this exact annotation key counts.\n\nDo not change any other labels or annotations.",
+            "concepts": ["labels", "annotations", "selectors", "jsonpath", "kubectl"],
+            "verification": [
+                { "id": "1", "description": "Former tier=ingest pods now have tier=stream; other tier labels unchanged", "verificationScriptFile": "q10_s1_validate_tier_label.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Only survey=wide pods carry catalog.observatory.io/retention=hot=7d,cold=365d", "verificationScriptFile": "q10_s2_validate_annotation.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "legacy-schema-pods.txt lists exactly the pods annotated catalog.observatory.io/legacy-schema, sorted", "verificationScriptFile": "q10_s3_validate_legacy_file.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "tracker",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `tracker`, the Deployment `satpos` is already running with memory requests set. A PodDisruptionBudget manifest was left at `/home/candidate/exam/q11/satpos-pdb.yaml`, but it was written for the removed `policy/v1beta1` API and can no longer be applied.\n\n1. Update that file **in place** so it uses the `policy/v1` API (keep the name `satpos-pdb`, `minAvailable: 1` and the selector), then apply it.\n2. Create a HorizontalPodAutoscaler named `satpos-hpa` with API `autoscaling/v2` that scales the Deployment `satpos` between `2` and `6` replicas using a single Resource metric: **memory** with an average utilization target of `75` percent. Give it a scale-down behavior with `stabilizationWindowSeconds: 180`.",
+            "concepts": ["api-deprecation", "poddisruptionbudget", "hpa", "autoscaling"],
+            "verification": [
+                { "id": "1", "description": "satpos-pdb.yaml uses policy/v1 and is accepted by kubectl", "verificationScriptFile": "q11_s1_validate_pdb_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "PDB satpos-pdb (policy/v1) has minAvailable 1 and selects app=satpos", "verificationScriptFile": "q11_s2_validate_pdb.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "HPA satpos-hpa targets Deployment satpos, 2-6 replicas, memory utilization 75%", "verificationScriptFile": "q11_s3_validate_hpa.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "HPA scaleDown stabilizationWindowSeconds is 180", "verificationScriptFile": "q11_s4_validate_scaledown.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "orbit",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `orbit`, the Service `telemetry` (selector `app=telemetry`) sends traffic to two Deployments: the stable `telemetry` (3 replicas, `nginx:1.25`) and the canary `telemetry-canary` (1 replica, `nginx:1.26`). The canary has been approved, so promote it:\n\n1. The stable app is managed with Kustomize from `/home/candidate/exam/q12/telemetry/`. Add an `images` entry to its `kustomization.yaml` so that the `nginx` image is rendered with tag `1.26`. Do **not** edit `deployment.yaml` (it must still reference `nginx:1.25`).\n2. Apply the directory with `kubectl apply -k` and make sure all 3 replicas of `telemetry` run `nginx:1.26` and are Ready.\n3. Delete the Deployment `telemetry-canary`, so that the Service's endpoints are exactly the 3 stable Pods.",
+            "concepts": ["kustomize", "canary", "deployments", "images"],
+            "verification": [
+                { "id": "1", "description": "kustomization.yaml has an images entry; the build renders nginx:1.26 and deployment.yaml is unchanged", "verificationScriptFile": "q12_s1_validate_kustomization.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment telemetry runs nginx:1.26 with 3/3 updated and Ready replicas", "verificationScriptFile": "q12_s2_validate_stable.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Deployment telemetry-canary and its pods are gone", "verificationScriptFile": "q12_s3_validate_canary_removed.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Service telemetry has exactly 3 endpoints, none from the canary", "verificationScriptFile": "q12_s4_validate_endpoints.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "13",
+            "namespace": "nightwatch",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `nightwatch`, the Deployment `watchtower` (2 replicas, label `app=watchtower`, nginx on port `80`) and the Pod `insomniac` are already running.\n\n1. Create a **headless** Service named `watchtower-peers` that selects `app=watchtower` and exposes port `80` (targetPort `80`).\n2. From a temporary Pod using image `busybox:1.36`, run `nslookup watchtower-peers.nightwatch.svc.cluster.local` and save the command's output to `/home/candidate/exam/q13/dns.txt`. The output must list the IP address of every `watchtower` Pod. Remove the temporary Pod afterwards.\n3. The container of Pod `insomniac` crashed once and was restarted; its current logs look healthy. Save the logs of the **previous** (crashed) container instance, and nothing else, to `/home/candidate/exam/q13/crash.log`.",
+            "concepts": ["services", "headless-service", "dns", "logging", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "Headless Service watchtower-peers (clusterIP None) selects app=watchtower on port 80 and has 2 endpoints", "verificationScriptFile": "q13_s1_validate_headless_service.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "dns.txt contains the IP of every watchtower Pod", "verificationScriptFile": "q13_s2_validate_dns_output.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "crash.log contains the crashed (previous) container's logs and not the current instance's", "verificationScriptFile": "q13_s3_validate_previous_logs.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "calibration",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `calibration`, the Deployment `lens-calibrator` (2 replicas) mounts the ConfigMap `optics-v1` through its volume `optics` at `/etc/lens`.\n\n1. Create a new ConfigMap `optics-v2` that is **immutable** and contains exactly these keys: `FOCAL_LENGTH=2400`, `APERTURE=f11`, `FILTER=h-alpha`.\n2. Update the Deployment so that the `optics` volume uses `optics-v2` instead of `optics-v1`. Keep the mount path `/etc/lens` and 2 replicas, and do not modify or delete `optics-v1`.\n3. Add the annotation `observatory.io/optics-checksum: 9f2c41ab` to the Deployment's **pod template**.\n4. Make sure the rollout completes: both new Pods must be Ready and able to read `/etc/lens/FILTER`.",
+            "concepts": ["configmaps", "immutable-configmap", "deployments", "annotations", "rollouts"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap optics-v2 is immutable with exactly FOCAL_LENGTH=2400, APERTURE=f11, FILTER=h-alpha", "verificationScriptFile": "q14_s1_validate_immutable_configmap.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment lens-calibrator mounts optics-v2 at /etc/lens and no longer references optics-v1", "verificationScriptFile": "q14_s2_validate_volume_reference.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod template carries annotation observatory.io/optics-checksum=9f2c41ab", "verificationScriptFile": "q14_s3_validate_template_annotation.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Rollout complete: 2 updated, ready Pods that read FILTER=h-alpha from /etc/lens", "verificationScriptFile": "q14_s4_validate_rollout_pods.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "archive",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `archive`:\n\n1. Create a PersistentVolumeClaim `plate-archive` that requests `100Mi` with access mode `ReadWriteOnce` and uses the StorageClass `local-path` (the default StorageClass, which provisions the volume dynamically).\n2. Create a Deployment `plate-scanner` with 1 replica. Its container `scanner` uses image `busybox:1.36`, runs the command `[\"sh\", \"-c\", \"echo scanned-by $(hostname) >> /archive/scans.log; sleep 86400\"]` and mounts the PVC at `/archive`.\n3. When its Pod is Running, delete that Pod and let the Deployment replace it. The replacement Pod's `/archive/scans.log` must contain its own `scanned-by` line and also the line written by the deleted Pod.",
+            "concepts": ["storage", "persistentvolumeclaims", "storageclass", "deployments", "volumes"],
+            "verification": [
+                { "id": "1", "description": "PVC plate-archive is Bound, uses StorageClass local-path, requests 100Mi, ReadWriteOnce", "verificationScriptFile": "q15_s1_validate_pvc.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment plate-scanner (1 ready replica) mounts PVC plate-archive at /archive in container scanner", "verificationScriptFile": "q15_s2_validate_deployment_mount.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "The running Pod wrote its own scanned-by line to /archive/scans.log", "verificationScriptFile": "q15_s3_validate_own_entry.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "/archive/scans.log in the running Pod still holds the line of the deleted Pod", "verificationScriptFile": "q15_s4_validate_persisted_entry.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "nightly",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `nightly`, create a CronJob named `star-catalog-sync` with these settings:\n\n- schedule `15 3 * * *`, `concurrencyPolicy: Forbid` and `startingDeadlineSeconds: 200`\n- created **suspended**, so it does not run until someone resumes it\n- a single container `sync` with image `busybox:1.36`, command `[\"sh\", \"-c\", \"echo catalog synced\"]` and restartPolicy `OnFailure`\n- the container's `securityContext` sets `allowPrivilegeEscalation: false`, drops `ALL` capabilities and uses the `RuntimeDefault` seccomp profile",
+            "concepts": ["cronjobs", "jobs", "securitycontext", "capabilities", "seccomp"],
+            "verification": [
+                { "id": "1", "description": "CronJob star-catalog-sync: schedule 15 3 * * *, concurrencyPolicy Forbid, startingDeadlineSeconds 200, container sync busybox:1.36", "verificationScriptFile": "q16_s1_validate_schedule_policy.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "CronJob is suspended", "verificationScriptFile": "q16_s2_validate_suspended.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Container sync: allowPrivilegeEscalation false and capabilities drop ALL", "verificationScriptFile": "q16_s3_validate_privesc_capabilities.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Container sync uses seccompProfile RuntimeDefault", "verificationScriptFile": "q16_s4_validate_seccomp.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "spectro",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `spectro`, the Deployment `prism` should run 3 replicas, but none of its Pods are being created. Find out why.\n\nFix it without changing the ResourceQuota `spectro-budget` and without adding `resources` to the Deployment:\n\n1. Create a LimitRange `spectro-defaults` of type `Container` with default limits `cpu: 100m`, `memory: 128Mi` and default requests `cpu: 50m`, `memory: 64Mi`.\n2. Make sure all 3 replicas of `prism` are Running and Ready with these defaults applied. You may restart the Deployment's rollout.",
+            "concepts": ["resourcequota", "limitrange", "troubleshooting", "deployments"],
+            "verification": [
+                { "id": "1", "description": "LimitRange spectro-defaults sets container defaults (limits 100m/128Mi, requests 50m/64Mi)", "verificationScriptFile": "q17_s1_validate_limitrange.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment prism has 3/3 ready Pods carrying the LimitRange defaults", "verificationScriptFile": "q17_s2_validate_ready_replicas.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "ResourceQuota spectro-budget unchanged and Deployment prism declares no resources", "verificationScriptFile": "q17_s3_validate_quota_untouched.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        }
+    ]
+}
