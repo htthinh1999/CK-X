@@ -66,12 +66,17 @@ else
   OLDIFS=$IFS
   IFS=','
   for pair in $CLUSTER_SPEC; do
+    # pair = name[:workers[:server]]
     cname=${pair%%:*}
     CLUSTER_NAMES="$CLUSTER_NAMES $cname"
-    cworkers=${pair#*:}
-    [ "$cworkers" = "$pair" ] && cworkers=0   # no ":" -> default 0 workers
-    log "Creating cluster '$cname' (workers=$cworkers, index=$idx)"
-    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-setup $cworkers $cname $idx"
+    rest=${pair#*:}
+    [ "$rest" = "$pair" ] && rest=0          # no ":" -> default 0 workers
+    cworkers=${rest%%:*}
+    cserver=""
+    [ "$rest" != "$cworkers" ] && cserver=${rest#*:}
+    cserver=${cserver:-ckad9999}             # server whose registry this cluster pulls from
+    log "Creating cluster '$cname' (workers=$cworkers, index=$idx, registry host=$cserver)"
+    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-setup $cworkers $cname $idx $cserver"
     idx=$((idx+1))
   done
   IFS=$OLDIFS

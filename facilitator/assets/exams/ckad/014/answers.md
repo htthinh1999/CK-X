@@ -213,11 +213,15 @@ A misspelled image name triggers ImagePullBackOff because the node cannot pull a
 
 ```bash
 kubectl top pods -n kube-system --sort-by=cpu
-# Record the top pod's name (metrics-server must be installed).
-echo "kube-apiserver-ckad9999" > /tmp/exam/course/10/cpu-usage.txt
+# Record the top pod's name
+kubectl top pods -n kube-system --sort-by=cpu --no-headers | head -1 | awk '{print $1}' \
+  > /tmp/exam/course/10/cpu-usage.txt
+cat /tmp/exam/course/10/cpu-usage.txt
 ```
 
-If `kubectl top` is unavailable, write any reasonable kube-system pod name into the file; scoring only checks the file exists and is non-empty.
+On k3s there are no kube-apiserver/etcd Pods (the control plane runs inside the k3s
+process), so the top consumer is usually `metrics-server-…`, `coredns-…` or `traefik-…`.
+Scoring checks that the file names a real Pod in `kube-system`.
 
 ---
 

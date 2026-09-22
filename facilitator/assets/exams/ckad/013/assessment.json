@@ -113,7 +113,7 @@
       "id": "4",
       "namespace": "aurora",
       "machineHostname": "ckad9999",
-      "question": "In the cluster, a PersistentVolume named `app-data-pv` (1Gi, ReadWriteOnce) already exists.\n\n1. Create a PersistentVolumeClaim named `app-data-pvc` in namespace `aurora` with:\n- Storage request: `500Mi`\n- Access mode: `ReadWriteOnce`\n2. Create a Pod named `data-pod` in namespace `aurora` with:\n- Image: `nginx:1.25`\n- Container name: `web`\n- Mount `app-data-pvc` at `/usr/share/nginx/html`",
+      "question": "In the cluster, a PersistentVolume named `app-data-pv` (1Gi, ReadWriteOnce, storage class `local-path`) already exists.\n\n1. Create a PersistentVolumeClaim named `app-data-pvc` in namespace `aurora` that binds to `app-data-pv`, with:\n- Storage request: `500Mi`\n- Access mode: `ReadWriteOnce`\n2. Create a Pod named `data-pod` in namespace `aurora` with:\n- Image: `nginx:1.25`\n- Container name: `web`\n- Mount `app-data-pvc` at `/usr/share/nginx/html`",
       "concepts": [
         "persistentvolumeclaims",
         "storage",

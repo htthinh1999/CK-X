@@ -255,7 +255,7 @@
       "id": "10",
       "namespace": "kube-system",
       "machineHostname": "ckad9988",
-      "question": "Find the Pod in the `kube-system` namespace that is consuming the most CPU. Write the name of the Pod into the file `/tmp/exam/course/10/cpu-usage.txt`.\n\n(If multiple pods are similar, just record the top one based on `kubectl top`).\n\nNote: `kubectl top` needs metrics-server. If it is unavailable, determine a reasonable top-CPU pod name and record it; scoring only checks that the file exists and is non-empty.",
+      "question": "Find the Pod in the `kube-system` namespace that is consuming the most CPU. Write the name of the Pod into the file `/tmp/exam/course/10/cpu-usage.txt`.\n\n(If multiple pods are similar, just record the top one based on `kubectl top`).\n\nNote: metrics-server is installed on this cluster. Right after the cluster starts it can take a minute before `kubectl top` returns data. Write only the Pod name.",
       "concepts": [
         "metrics",
         "kubectl-top",
@@ -264,7 +264,7 @@
       "verification": [
         {
           "id": "1",
-          "description": "cpu-usage.txt exists and is non-empty",
+          "description": "cpu-usage.txt names a Pod in kube-system",
           "verificationScriptFile": "q10_s1_validate_cpu_file.sh",
           "expectedOutput": "0",
           "weightage": 5

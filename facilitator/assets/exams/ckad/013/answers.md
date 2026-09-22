@@ -111,12 +111,15 @@ metadata:
   name: app-data-pvc
   namespace: aurora
 spec:
+  storageClassName: local-path   # same class as app-data-pv (also the k3s default)
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 500Mi
 EOF
+# local-path uses WaitForFirstConsumer: the PVC stays Pending until data-pod is
+# scheduled, then binds to app-data-pv.
 
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -137,7 +140,7 @@ spec:
         claimName: app-data-pvc
 EOF
 
-kubectl get pvc app-data-pvc -n aurora
+kubectl get pvc app-data-pvc -n aurora   # VOLUME column shows app-data-pv once the pod runs
 kubectl get pod data-pod -n aurora
 ```
 

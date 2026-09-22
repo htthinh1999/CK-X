@@ -313,6 +313,13 @@ setup. Clusters with `workerNodes: 0` are a single node, so put any question
 that needs a worker node, node labels/taints or multi-node scheduling on a
 cluster that has workers.
 
+**Local registry images.** A setup script can start a registry on the exam
+server (`docker run -d -p 5000:5000 --name registry registry:2`) so the
+candidate can `docker push localhost:5000/<image>`. Each cluster's containerd
+mirrors `localhost:5000` to the registry on the server bound to it, so a Pod on
+that server's cluster can run `image: localhost:5000/<image>`. Keep the build,
+push and Pod for such a question on the same server.
+
 The older `CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"` pattern is still safe
 (`KUBE_CONTEXT` is unset now, so `$CTX` is empty and `kubectl` uses the current
 context), but it is no longer necessary.

@@ -7,6 +7,9 @@ kind: PersistentVolume
 metadata:
   name: app-data-pv
 spec:
+  # Same class a PVC gets by default on k3s, so a PVC without storageClassName
+  # binds to this PV instead of local-path dynamically provisioning a new one.
+  storageClassName: local-path
   capacity:
     storage: 1Gi
   accessModes:

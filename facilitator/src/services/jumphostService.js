@@ -43,13 +43,19 @@ function resolveTarget(question, examConfig) {
 }
 
 /**
- * Build the `name:workers` cluster spec string prepare-exam-env expects from a
- * lab config's `clusters` array. Returns '' when none are declared (legacy
+ * Build the `name:workers[:server]` cluster spec string prepare-exam-env expects
+ * from a lab config's `clusters` array. `server` is the exam server bound to
+ * that cluster; the cluster pulls `localhost:5000/...` images from that
+ * server's local registry. Returns '' when no clusters are declared (legacy
  * single-cluster mode).
  */
 function buildClusterSpec(examConfig) {
   const clusters = examConfig && Array.isArray(examConfig.clusters) ? examConfig.clusters : [];
-  return clusters.map((c) => `${c.name}:${c.workerNodes || 0}`).join(',');
+  const servers = examConfig && Array.isArray(examConfig.servers) ? examConfig.servers : [];
+  return clusters.map((c) => {
+    const server = servers.find((s) => s.cluster === c.name);
+    return `${c.name}:${c.workerNodes || 0}${server ? `:${server.name}` : ''}`;
+  }).join(',');
 }
 
 /**

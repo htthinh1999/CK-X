@@ -444,7 +444,7 @@
       "id": "14",
       "namespace": "default",
       "machineHostname": "ckad9988",
-      "question": "Get the values of the `bitnami/nginx` Helm chart and save them to `/tmp/exam/course/14/values.txt`.\n\nOnly save the first 50 lines.\n\nHint: use `helm show values`.",
+      "question": "Get the values of the `bitnami/nginx` Helm chart and save them to `/tmp/exam/course/14/values.txt`.\n\nOnly save the first 50 lines.\n\nThis uses the `bitnami` repository you add in Question 13 (same server), so do that one first.\n\nHint: use `helm show values`.",
       "concepts": [
         "helm",
         "values"

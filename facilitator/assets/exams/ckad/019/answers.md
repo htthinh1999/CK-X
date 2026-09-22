@@ -216,10 +216,12 @@ kubectl apply -f /tmp/exam/course/8/kustomize-output.yaml -n vanguard
 > Server: `ssh ckad9988`
 
 ```bash
+mkdir -p /tmp/exam/course/9
 kubectl get pod data-processor -n sentinel -o yaml > /tmp/exam/course/9/processor.yaml
 # Edit resources.limits.memory to 256Mi, keep requests.memory 64Mi
-kubectl delete pod data-processor -n sentinel --force
-kubectl apply -f /tmp/exam/course/9/processor.yaml
+vi /tmp/exam/course/9/processor.yaml
+# Resource limits of a running Pod can't be edited in place: delete and recreate it
+kubectl replace --force -f /tmp/exam/course/9/processor.yaml
 ```
 
 ```yaml
