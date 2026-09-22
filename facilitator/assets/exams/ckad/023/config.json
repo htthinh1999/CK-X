@@ -1,0 +1,18 @@
+{
+    "lab": "ckad-023",
+    "workerNodes": 1,
+    "clusters": [
+        { "name": "dev", "workerNodes": 1 },
+        { "name": "prod", "workerNodes": 0 }
+    ],
+    "servers": [
+        { "name": "ckad9999", "cluster": "dev" },
+        { "name": "ckad9988", "cluster": "prod" }
+    ],
+    "answers": "assets/exams/ckad/023/answers.md",
+    "questions": "assessment.json",
+    "totalMarks": 48,
+    "lowScore": 19,
+    "mediumScore": 29,
+    "highScore": 43
+}

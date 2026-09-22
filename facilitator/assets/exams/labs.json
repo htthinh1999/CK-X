@@ -279,6 +279,16 @@
       "warmUpTimeInSeconds": 300,
       "difficulty": "Hard",
       "examDurationInMinutes": 90
+    },
+    {
+      "id": "ckad-023",
+      "assetPath": "assets/exams/ckad/023",
+      "name": "CKAD Multi-Cluster Practice Lab",
+      "category": "CKAD",
+      "description": "Original multi-cluster CKAD-style exam spanning a dev cluster (`ssh ckad9999`) and a prod cluster (`ssh ckad9988`). Practice context switching plus multi-container pods, resources, probes, jobs, securityContext, configmaps/secrets as volumes, ingress, cronjobs and network policies across servers.",
+      "warmUpTimeInSeconds": 300,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 90
     }
   ]
 }
