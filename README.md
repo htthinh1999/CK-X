@@ -10,6 +10,8 @@
 > - **[ckad-dojo](https://github.com/TiPunchLabs/ckad-dojo)** — by **Xavier Guéret / [TiPunch Labs](https://ckad-dojo.tipunchlabs.fr/)**. The source of the 20 CKAD exam simulations added here as labs **`ckad-003` … `ckad-022`**. Licensed under **CC BY-NC-SA 4.0** (© 2025 Xavier Guéret).
 >
 > See the [Lab Creation Guide](docs/how-to-add-new-labs.md) for how the ckad-dojo exams were mapped into CK-X labs.
+>
+> The multi-cluster labs **`ckad-023`**, **`ckad-024`**, **`ckad-025`** and **`cka-003`** are original exams written for this fork. Each question runs on its own server (`ssh ckad9999` / `ckad9988` / `ckad9977`), and each server has one cluster.
 
 > 🤖 **Supported by [Claude](https://claude.ai/code)** — Anthropic's Claude Code.
 

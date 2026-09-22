@@ -2,6 +2,9 @@
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace winch --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
+# Start clean: a sidecar added earlier by 'kubectl patch' would survive a plain re-apply.
+kubectl -n winch delete deployment hoist-controller --ignore-not-found --cascade=foreground --wait=true --timeout=60s >/dev/null 2>&1 || true
+
 rm -rf /home/candidate/exam/q11 && mkdir -p /home/candidate/exam/q11
 cat > /home/candidate/exam/q11/hoist-controller.yaml <<'YAML'
 apiVersion: apps/v1

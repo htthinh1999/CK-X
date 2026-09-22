@@ -2,6 +2,10 @@
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace lighthouse --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
+# Start clean so earlier edits (value, annotation, restarted pods) are gone.
+kubectl -n lighthouse delete deployment lamp-driver --ignore-not-found --cascade=foreground --wait=true --timeout=60s >/dev/null 2>&1 || true
+kubectl -n lighthouse delete configmap lamp-config --ignore-not-found >/dev/null 2>&1 || true
+
 cat <<'YAML' | kubectl apply -f - >/dev/null 2>&1 || true
 apiVersion: v1
 kind: ConfigMap

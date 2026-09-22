@@ -289,6 +289,26 @@
       "warmUpTimeInSeconds": 300,
       "difficulty": "Hard",
       "examDurationInMinutes": 90
+    },
+    {
+      "id": "ckad-024",
+      "assetPath": "assets/exams/ckad/024",
+      "name": "CKAD Multi-Cluster Exam A — Harbor Logistics",
+      "category": "CKAD",
+      "description": "Original 17-question CKAD exam across three servers, one cluster each (ssh ckad9999 / ckad9988 / ckad9977). Rollbacks, kubectl commands, Kustomize canaries, Helm, broken Services, readiness probes, ConfigMaps, Secrets, CronJobs with securityContext, HPA API migration, logging sidecars, labels/annotations, Service logs, PV/PVC, NetworkPolicy, ResourceQuota and LimitRange.",
+      "warmUpTimeInSeconds": 300,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-025",
+      "assetPath": "assets/exams/ckad/025",
+      "name": "CKAD Multi-Cluster Exam B — Observatory",
+      "category": "CKAD",
+      "description": "Original 17-question CKAD exam across three servers, one cluster each (ssh ckad9999 / ckad9988 / ckad9977). Helm rollback and values files, rolling-update strategy, egress NetworkPolicy, kubectl output formatting, native sidecars, env-file ConfigMaps, Secret items/modes, probe fixes, named-port Services, annotations, PDB/HPA API migration, canary promotion with Kustomize, headless-Service DNS, immutable ConfigMaps, dynamic PVCs, hardened CronJobs and quota troubleshooting.",
+      "warmUpTimeInSeconds": 300,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
     }
   ]
 }

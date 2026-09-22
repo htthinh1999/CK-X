@@ -2,6 +2,10 @@
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 kubectl create namespace dockhands --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
+# Start clean: recreate the six Pods so earlier label/annotation changes are gone.
+kubectl -n dockhands delete pod stevedore-1 stevedore-2 stevedore-3 lasher-1 lasher-2 clerk-1 \
+  --ignore-not-found --wait=true --timeout=60s >/dev/null 2>&1 || true
+
 kubectl apply -f - <<'YAML' || true
 apiVersion: v1
 kind: Pod
