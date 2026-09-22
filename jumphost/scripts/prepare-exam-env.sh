@@ -10,9 +10,15 @@ log() {
 # Set defaults
 NUMBER_OF_NODES=${1:-1}
 EXAM_ID=${2:-""}
+# Optional multi-cluster spec: comma-separated "name:workers" pairs, e.g.
+#   "cluster1:1,cluster2:0"
+# When empty, a single cluster named "$CLUSTER_NAME" with $NUMBER_OF_NODES
+# workers is created (legacy, unchanged behaviour).
+CLUSTER_SPEC=${3:-""}
 
 echo "Exam ID: $EXAM_ID"
 echo "Number of nodes: $NUMBER_OF_NODES"
+echo "Cluster spec: ${CLUSTER_SPEC:-<single>}"
 
 #check docker is running
 if ! docker info > /dev/null 2>&1; then
@@ -39,15 +45,37 @@ if ! [[ "$NUMBER_OF_NODES" =~ ^[0-9]+$ ]]; then
   exit 1
 fi
 
-# Setup kind cluster
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-setup $NUMBER_OF_NODES $CLUSTER_NAME"
+# ---------------------------------------------------------------------------
+# Provision cluster(s) on the k8s-api-server host
+# ---------------------------------------------------------------------------
+MULTI=0
+if [ -z "$CLUSTER_SPEC" ]; then
+  # Legacy single-cluster path (unchanged)
+  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-setup $NUMBER_OF_NODES $CLUSTER_NAME"
+else
+  # Multi-cluster path: create one cluster per "name:workers" pair, each on a
+  # distinct API port (6443 + index).
+  MULTI=1
+  idx=0
+  OLDIFS=$IFS
+  IFS=','
+  for pair in $CLUSTER_SPEC; do
+    cname=${pair%%:*}
+    cworkers=${pair#*:}
+    [ "$cworkers" = "$pair" ] && cworkers=0   # no ":" -> default 0 workers
+    log "Creating cluster '$cname' (workers=$cworkers, index=$idx)"
+    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-setup $cworkers $cname $idx"
+    idx=$((idx+1))
+  done
+  IFS=$OLDIFS
+fi
 
 #Pull assets from URL
 curl facilitator:3000/api/v1/exams/$EXAM_ID/assets -o assets.tar.gz
 
 mkdir -p /tmp/exam-assets
-#Unzip assets
-tar -xzvf assets.tar.gz -C /tmp/exam-assets    
+#Unzip assets (shared volume in multi-server deployments so every server sees them)
+tar -xzvf assets.tar.gz -C /tmp/exam-assets
 
 #Remove assets.tar.gz
 rm assets.tar.gz
@@ -55,7 +83,7 @@ rm assets.tar.gz
 #make every file in /tmp/exam-assets executable
 find /tmp/exam-assets -type f -exec chmod +x {} \;
 
-echo "Exam assets downloaded and prepared successfully" 
+echo "Exam assets downloaded and prepared successfully"
 
 export KUBECONFIG=/home/candidate/.kube/kubeconfig
 
@@ -69,8 +97,16 @@ done
 
 echo "API server is ready"
 
-#Run setup scripts
-for script in /tmp/exam-assets/scripts/setup/q*_setup.sh; do $script; done
+# Run setup scripts.
+# - Single-cluster (legacy): run every setup script here on this jumphost, as before.
+# - Multi-server: the facilitator runs each question's setup script on that
+#   question's target server (with the right cluster context), so we skip the
+#   local loop here.
+if [ "$MULTI" = "0" ]; then
+  for script in /tmp/exam-assets/scripts/setup/q*_setup.sh; do $script; done
+else
+  log "Multi-server exam: setup scripts will be run per-server by the facilitator"
+fi
 
 log "Exam environment preparation completed successfully"
-exit 0 
+exit 0

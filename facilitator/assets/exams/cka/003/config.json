@@ -1,0 +1,18 @@
+{
+    "lab": "cka-003",
+    "workerNodes": 1,
+    "clusters": [
+        { "name": "cluster1", "workerNodes": 1 },
+        { "name": "cluster2", "workerNodes": 0 }
+    ],
+    "servers": [
+        { "name": "ckad9999", "cluster": "cluster1" },
+        { "name": "ckad9988", "cluster": "cluster2" }
+    ],
+    "answers": "assets/exams/cka/003/answers.md",
+    "questions": "assessment.json",
+    "totalMarks": 50,
+    "lowScore": 20,
+    "mediumScore": 30,
+    "highScore": 45
+}

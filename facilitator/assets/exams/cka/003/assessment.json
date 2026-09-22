@@ -1,0 +1,144 @@
+{
+    "questions": [
+        {
+            "id": "1",
+            "namespace": "alpha",
+            "machineHostname": "ckad9999",
+            "question": "This task runs on cluster `cluster1`. Connect with `ssh ckad9999` and switch context with `kubectl config use-context k3d-cluster1`.\n\nIn the `alpha` namespace, create a Deployment named `web` using image `nginx:1.25` with `3` replicas. Make sure all 3 pods become ready.",
+            "concepts": ["deployments", "multi-cluster", "context"],
+            "verification": [
+                { "id": "1", "description": "Deployment web exists in alpha", "verificationScriptFile": "q1_s1_validate_deploy.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Uses image nginx:1.25", "verificationScriptFile": "q1_s2_validate_image.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Has 3 replicas", "verificationScriptFile": "q1_s3_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "All 3 replicas are ready", "verificationScriptFile": "q1_s4_validate_ready.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "2",
+            "namespace": "alpha",
+            "machineHostname": "ckad9999",
+            "question": "On cluster `cluster1` (`ssh ckad9999`, context `k3d-cluster1`).\n\nA Deployment `cache` (label `app=cache`) already exists in namespace `alpha`. Create a `ClusterIP` Service named `cache-svc` in `alpha` that selects `app=cache` and exposes port `6379` with targetPort `6379`.",
+            "concepts": ["services", "clusterip", "selectors"],
+            "verification": [
+                { "id": "1", "description": "Service cache-svc exists", "verificationScriptFile": "q2_s1_validate_svc.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Service type is ClusterIP", "verificationScriptFile": "q2_s2_validate_type.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Port 6379 -> targetPort 6379", "verificationScriptFile": "q2_s3_validate_ports.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Selector app=cache", "verificationScriptFile": "q2_s4_validate_selector.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "3",
+            "namespace": "alpha",
+            "machineHostname": "ckad9999",
+            "question": "On cluster `cluster1` (`ssh ckad9999`, context `k3d-cluster1`).\n\nIn namespace `alpha`, create a ConfigMap named `app-config` with keys `APP_MODE=prod` and `MAX=10`. Then create a Pod named `config-reader` (image `busybox:1.36`, command `[\"sleep\",\"3600\"]`) that loads all keys of `app-config` as environment variables (for example via `envFrom`).",
+            "concepts": ["configmaps", "pods", "env"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap app-config has APP_MODE=prod and MAX=10", "verificationScriptFile": "q3_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod config-reader consumes app-config as env", "verificationScriptFile": "q3_s2_validate_pod_env.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "4",
+            "namespace": "alpha",
+            "machineHostname": "ckad9999",
+            "question": "On cluster `cluster1` (`ssh ckad9999`, context `k3d-cluster1`).\n\nA Deployment named `payments` exists in `alpha`. Scale it to `5` replicas and configure its rolling update strategy so that `maxUnavailable` is `1` and `maxSurge` is `1`.",
+            "concepts": ["deployments", "scaling", "rolling-update"],
+            "verification": [
+                { "id": "1", "description": "payments scaled to 5 replicas", "verificationScriptFile": "q4_s1_validate_replicas.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "rollingUpdate maxUnavailable=1, maxSurge=1", "verificationScriptFile": "q4_s2_validate_strategy.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "alpha",
+            "machineHostname": "ckad9999",
+            "question": "On cluster `cluster1` (`ssh ckad9999`, context `k3d-cluster1`).\n\nIn namespace `alpha`, create a ServiceAccount named `deployer`, a Role named `deployer-role` that allows `get`, `list` and `create` on `deployments` (apiGroup `apps`), and a RoleBinding named `deployer-binding` that binds the Role to the ServiceAccount.",
+            "concepts": ["rbac", "serviceaccounts", "roles"],
+            "verification": [
+                { "id": "1", "description": "ServiceAccount deployer exists", "verificationScriptFile": "q5_s1_validate_sa.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Role deployer-role grants get/list/create on deployments", "verificationScriptFile": "q5_s2_validate_role.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "RoleBinding binds deployer-role to deployer", "verificationScriptFile": "q5_s3_validate_binding.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "alpha",
+            "machineHostname": "ckad9999",
+            "question": "On cluster `cluster1` (`ssh ckad9999`, context `k3d-cluster1`).\n\nA worker node has been labelled `disk=ssd`. In namespace `alpha`, create a Pod named `pinned` (image `nginx:1.25`) that is scheduled onto a node with the label `disk=ssd` using a `nodeSelector`.",
+            "concepts": ["scheduling", "nodeselector", "labels"],
+            "verification": [
+                { "id": "1", "description": "Pod pinned exists", "verificationScriptFile": "q6_s1_validate_pod.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Pod has nodeSelector disk=ssd", "verificationScriptFile": "q6_s2_validate_nodeselector.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Pod scheduled on a node labelled disk=ssd", "verificationScriptFile": "q6_s3_validate_scheduled.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "alpha",
+            "machineHostname": "ckad9999",
+            "question": "On cluster `cluster1` (`ssh ckad9999`, context `k3d-cluster1`).\n\nThe Deployment `legacy` in namespace `alpha` is failing because its container image does not exist. Fix the Deployment so it uses a valid `nginx` image (for example `nginx:1.25`) and its pods become ready.",
+            "concepts": ["troubleshooting", "deployments", "images"],
+            "verification": [
+                { "id": "1", "description": "legacy uses a valid nginx image", "verificationScriptFile": "q7_s1_validate_image_fixed.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "legacy has at least one ready replica", "verificationScriptFile": "q7_s2_validate_available.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "beta",
+            "machineHostname": "ckad9988",
+            "question": "This task runs on a DIFFERENT cluster, `cluster2`. Connect with `ssh ckad9988` and switch context with `kubectl config use-context k3d-cluster2`.\n\nIn namespace `beta`, create a PersistentVolumeClaim named `data` requesting `1Gi` with access mode `ReadWriteOnce` (use the default StorageClass). Then create a Pod named `writer` (image `busybox:1.36`, command `[\"sleep\",\"3600\"]`) that mounts the claim at `/data`.",
+            "concepts": ["storage", "pvc", "volumes", "multi-cluster"],
+            "verification": [
+                { "id": "1", "description": "PVC data exists with ReadWriteOnce", "verificationScriptFile": "q8_s1_validate_pvc.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "PVC requests 1Gi", "verificationScriptFile": "q8_s2_validate_size.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod writer mounts PVC data at /data", "verificationScriptFile": "q8_s3_validate_mount.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "beta",
+            "machineHostname": "ckad9988",
+            "question": "On cluster `cluster2` (`ssh ckad9988`, context `k3d-cluster2`).\n\nIn namespace `beta`, create a Secret named `db-cred` of type `Opaque` with keys `username=admin` and `password=S3cret!`. Then create a Pod named `db-client` (image `busybox:1.36`, command `[\"sleep\",\"3600\"]`) that loads both keys as environment variables from the Secret.",
+            "concepts": ["secrets", "pods", "env", "multi-cluster"],
+            "verification": [
+                { "id": "1", "description": "Secret db-cred has username and password", "verificationScriptFile": "q9_s1_validate_secret.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod db-client consumes secret db-cred", "verificationScriptFile": "q9_s2_validate_pod_env.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "beta",
+            "machineHostname": "ckad9988",
+            "question": "On cluster `cluster2` (`ssh ckad9988`, context `k3d-cluster2`).\n\nIn namespace `beta`, create a CronJob named `report` that runs on schedule `*/5 * * * *`, uses image `busybox:1.36` with command `[\"sh\",\"-c\",\"echo report\"]`, and sets `concurrencyPolicy` to `Forbid`.",
+            "concepts": ["cronjobs", "jobs", "scheduling"],
+            "verification": [
+                { "id": "1", "description": "CronJob report schedule is */5 * * * *", "verificationScriptFile": "q10_s1_validate_schedule.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "concurrencyPolicy is Forbid", "verificationScriptFile": "q10_s2_validate_policy.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "beta",
+            "machineHostname": "ckad9988",
+            "question": "On cluster `cluster2` (`ssh ckad9988`, context `k3d-cluster2`).\n\nIn namespace `beta`, create a NetworkPolicy named `default-deny` that selects all pods (empty `podSelector`) and denies all ingress traffic (set `policyTypes` to `Ingress` with no ingress rules).",
+            "concepts": ["networkpolicy", "security"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy default-deny selects all pods", "verificationScriptFile": "q11_s1_validate_netpol.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "policyTypes includes Ingress", "verificationScriptFile": "q11_s2_validate_ingress.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "beta",
+            "machineHostname": "ckad9988",
+            "question": "On cluster `cluster2` (`ssh ckad9988`, context `k3d-cluster2`).\n\nIn namespace `beta`, create a Deployment named `api` (image `nginx:1.25`, `2` replicas) and expose it with a `NodePort` Service named `api-np` on nodePort `30081` (service port `80`).",
+            "concepts": ["deployments", "services", "nodeport"],
+            "verification": [
+                { "id": "1", "description": "Deployment api has 2 replicas", "verificationScriptFile": "q12_s1_validate_deploy.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Service api-np is NodePort", "verificationScriptFile": "q12_s2_validate_nodeport_type.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "NodePort is 30081", "verificationScriptFile": "q12_s3_validate_nodeport_value.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        }
+    ]
+}

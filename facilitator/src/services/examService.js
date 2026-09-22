@@ -36,8 +36,19 @@ async function createExam(examData) {
     
     // fetch exam config from the asset path and append it to the examData
     const examConfig = fs.readFileSync(path.join(process.cwd(),  examData.assetPath, 'config.json'), 'utf8');
-    examData.config = JSON.parse(examConfig); 
+    examData.config = JSON.parse(examConfig);
     delete examData.answers;
+
+    // Preload questions so multi-server exams can run each question's setup on
+    // the correct server. Best-effort; single-server labs don't need them.
+    let questions = [];
+    try {
+      const qFile = examData.config.questions || 'assessment.json';
+      const qPath = path.join(process.cwd(), examData.assetPath, qFile);
+      questions = (JSON.parse(fs.readFileSync(qPath, 'utf8')).questions) || [];
+    } catch (qErr) {
+      logger.warn(`Could not preload questions for setup: ${qErr.message}`);
+    }
 
     //persist created at time
     examData.createdAt = new Date().toISOString();
@@ -57,7 +68,7 @@ async function createExam(examData) {
     
     // Set up the exam environment asynchronously
     // This will happen in the background while the response is sent back to the client
-    setupExamEnvironmentAsync(examId, nodeCount);
+    setupExamEnvironmentAsync(examId, nodeCount, examData.config, questions);
     
     // send metrics to metric server
     MetricService.sendMetrics(examId, {
@@ -94,10 +105,10 @@ async function createExam(examData) {
  * @param {string} examId - The exam ID
  * @param {number} nodeCount - Number of nodes to prepare
  */
-async function setupExamEnvironmentAsync(examId, nodeCount) {
+async function setupExamEnvironmentAsync(examId, nodeCount, examConfig = {}, questions = []) {
   try {
     // Call the jumphost service to set up the exam environment
-    const result = await jumphostService.setupExamEnvironment(examId, nodeCount);     
+    const result = await jumphostService.setupExamEnvironment(examId, nodeCount, examConfig, questions);
     
     if (!result.success) {
       logger.error(`Failed to set up exam environment for exam ${examId}`, {
@@ -329,7 +340,7 @@ async function evaluateExam(examId, evaluationData) {
     Promise.resolve().then(async () => {
       try {
         // Call the jumphost service to perform the evaluation
-        await jumphostService.evaluateExamOnJumphost(examId, questionsResponse.data.questions);
+        await jumphostService.evaluateExamOnJumphost(examId, questionsResponse.data.questions, examInfo.config);
       } catch (error) {
         logger.error(`Error in async exam evaluation for exam ${examId}`, { error: error.message });
         // Update exam status to EVALUATION_FAILED

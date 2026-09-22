@@ -16,8 +16,9 @@ log() {
 }
 
 log "Starting exam environment cleanup"
-log "Cleaning up cluster $CLUSTER_NAME"
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-cleanup $CLUSTER_NAME"
+log "Cleaning up all clusters"
+# Delete every cluster (multi-cluster exams create more than one) for a full reset.
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-cleanup all"
 
 #cleanup docker env
 log "Cleaning up docker environment"
@@ -30,9 +31,10 @@ log "Removing exam environment directory"
 rm -rf /tmp/exam-env
 rm -rf /tmp/exam
 
-# Remove the exam assets directory
-log "Removing exam assets directory"
-rm -rf /tmp/exam-assets
+# Clear the exam assets (this is a shared volume mount — clear its contents,
+# not the mount point itself, so the next exam repopulates it for all servers).
+log "Clearing exam assets"
+rm -rf /tmp/exam-assets/* /tmp/exam-assets/.[!.]* 2>/dev/null || true
 
 log "Exam environment cleanup completed successfully"
 exit 0 

@@ -6,10 +6,14 @@ const config = require('../config');
 /**
  * Execute a command on a remote SSH server
  * @param {string} command - The command to execute
+ * @param {string} [host] - Target SSH host. Defaults to config.ssh.host (the
+ *   primary jumphost). Multi-server exams pass the per-question server name
+ *   (e.g. "ckad9988"), which resolves over the compose network alias.
  * @returns {Promise<Object>} The result of the command execution
  */
-async function executeCommand(command) {
-  logger.info(`Executing command: ${command}`);
+async function executeCommand(command, host) {
+  const targetHost = host || config.ssh.host;
+  logger.info(`Executing command on ${targetHost}: ${command}`);
   
   return new Promise((resolve, reject) => {
     const conn = new Client();
@@ -51,9 +55,9 @@ async function executeCommand(command) {
       reject(err);
     });
     
-    // Configure connection for jumphost which accepts passwordless authentication
+    // Configure connection for the target host which accepts passwordless authentication
     const connectionConfig = {
-      host: config.ssh.host,
+      host: targetHost,
       port: config.ssh.port,
       username: config.ssh.username,
       // For passwordless authentication

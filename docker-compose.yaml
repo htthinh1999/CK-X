@@ -102,6 +102,7 @@ services:
       - "22" # SSH port (internal only)
     volumes:
       - kube-config:/home/candidate/.kube # Shared volume for Kubernetes config
+      - exam-assets:/tmp/exam-assets # Shared exam assets (scripts) across all servers
     deploy:
       resources:
         limits:
@@ -110,7 +111,69 @@ services:
           cpus: "0.5"
           memory: 512M
     networks:
-      - ckx-network
+      ckx-network:
+        aliases:
+          - ckad9999 # explicit DNS alias so `ssh ckad9999` resolves from any container
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "22"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Additional exam servers (fixed pool). These reuse the jumphost image and let
+  # multi-server exams route each question to a different SSH server. Exams that
+  # only use ckad9999 leave these idle. Each shares the kubeconfig (all cluster
+  # contexts) and the exam-assets volume so setup/validation scripts are present.
+  jumphost-2:
+    image: nishanb/ck-x-simulator-jumphost:latest
+    build:
+      context: ./jumphost
+    hostname: ckad9988
+    privileged: true
+    expose:
+      - "22"
+    volumes:
+      - kube-config:/home/candidate/.kube
+      - exam-assets:/tmp/exam-assets
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    networks:
+      ckx-network:
+        aliases:
+          - ckad9988
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "22"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  jumphost-3:
+    image: nishanb/ck-x-simulator-jumphost:latest
+    build:
+      context: ./jumphost
+    hostname: ckad9977
+    privileged: true
+    expose:
+      - "22"
+    volumes:
+      - kube-config:/home/candidate/.kube
+      - exam-assets:/tmp/exam-assets
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    networks:
+      ckx-network:
+        aliases:
+          - ckad9977
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "22"]
       interval: 10s
@@ -150,7 +213,9 @@ services:
     hostname: k8s-api-server
     privileged: true # Required for running containers inside KIND
     expose:
-      - "6443"
+      - "6443" # cluster #1 API (index 0)
+      - "6444" # cluster #2 API (index 1) — multi-cluster exams
+      - "6445" # cluster #3 API (index 2) — multi-cluster exams
       - "22"
     volumes:
       - kube-config:/home/candidate/.kube # Shared volume for Kubernetes config
@@ -241,3 +306,4 @@ networks:
 
 volumes:
   kube-config: # Shared volume for Kubernetes configuration
+  exam-assets: # Shared volume so every exam server sees the unpacked setup/validation scripts

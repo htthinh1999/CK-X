@@ -1,27 +1,43 @@
 #!/bin/sh
 exec >> /proc/1/fd/1 2>&1
 # ===============================================================================
-#   K3D Cluster Creation
-#   this script access the parametter i.e num of nodes i.e NUM_WORKERS
-#   example command to run this script  ./setup.sh 3 cluster1
+#   K3D Cluster Creation (multi-cluster capable)
+#
+#   Usage: env-setup <NUM_WORKERS> <CLUSTER_NAME> [INDEX]
+#     NUM_WORKERS  number of agent nodes (default 0)
+#     CLUSTER_NAME k3d cluster name (default "cluster")
+#     INDEX        cluster index; the API is published on port 6443+INDEX
+#                  (default 0 -> 6443, so a single-cluster call is unchanged)
+#
+#   Called once per cluster. After each cluster is created the merged kubeconfig
+#   for ALL clusters is (re)written to /home/candidate/.kube/kubeconfig, with one
+#   context per cluster (k3d names them "k3d-<CLUSTER_NAME>").
+#
+#   Examples:
+#     env-setup 1 cluster            # single cluster on 6443 (legacy behaviour)
+#     env-setup 1 cluster1 0         # cluster1 on 6443
+#     env-setup 0 cluster2 1         # cluster2 on 6444
 # ===============================================================================
 
-NUM_WORKERS=${1:-0}  # Default to 1 worker if not provided
+NUM_WORKERS=${1:-0}      # Default to 0 workers if not provided
 CLUSTER_NAME=${2:-cluster}
+INDEX=${3:-0}            # Cluster index -> API port offset
+API_PORT=$((6443 + INDEX))
+KUBECONFIG_FILE=/home/candidate/.kube/kubeconfig
 
 # Check if k3d is installed, if not install it
 if ! command -v k3d &> /dev/null; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') | k3d not found. Attempting installation..."
-    
-    # Retry k3d installation up to 5 times
+
+    # Retry k3d installation
     INSTALL_ATTEMPTS=0
     while [ $INSTALL_ATTEMPTS -lt 99999 ]; do
         INSTALL_ATTEMPTS=$((INSTALL_ATTEMPTS+1))
         echo "$(date '+%Y-%m-%d %H:%M:%S') | Installation attempt $INSTALL_ATTEMPTS"
-        
+
         # Use the same installation method as in entrypoint.sh
         TAG=v5.8.3 bash /usr/local/bin/k3d-install.sh
-        
+
         # Check if installation was successful
         if command -v k3d &> /dev/null; then
             echo "$(date '+%Y-%m-%d %H:%M:%S') | k3d successfully installed"
@@ -31,22 +47,15 @@ if ! command -v k3d &> /dev/null; then
             sleep 10
         fi
     done
-    
-    # If k3d still not installed after 5 attempts, exit with error
+
+    # If k3d still not installed, exit with error
     if ! command -v k3d &> /dev/null; then
-        echo "$(date '+%Y-%m-%d %H:%M:%S') | ERROR: Failed to install k3d after 5 attempts"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') | ERROR: Failed to install k3d"
         exit 1
     fi
 fi
 
-
-# Delete cluster config if exists
-if [ -f "k3d-config.yaml" ]; then  
-    echo "k3d-config.yaml already exists, deleting it"
-    rm -f k3d-config.yaml
-fi
-
-# Generate K3d config
+# Generate K3d config for this cluster
 cat <<EOF > /tmp/k3d-config.yaml
 apiVersion: k3d.io/v1alpha5
 kind: Simple
@@ -56,7 +65,7 @@ servers: 1
 agents: $NUM_WORKERS
 kubeAPI:
   host: "127.0.0.1"
-  hostPort: "6443"
+  hostPort: "$API_PORT"
 options:
   k3s:
     extraArgs:
@@ -71,53 +80,48 @@ options:
           - server:*
 EOF
 
-echo "Cluster config with $NUM_WORKERS worker nodes generated: /tmp/k3d-config.yaml"
+echo "$(date '+%Y-%m-%d %H:%M:%S') | Creating K3d cluster:"
+echo "$(date '+%Y-%m-%d %H:%M:%S') | ├── Name:   $CLUSTER_NAME"
+echo "$(date '+%Y-%m-%d %H:%M:%S') | ├── API:    k8s-api-server:$API_PORT"
+echo "$(date '+%Y-%m-%d %H:%M:%S') | └── Nodes:  $((NUM_WORKERS + 1)) (1 server + $NUM_WORKERS agents)"
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') | Creating K3d cluster with configuration..."
-echo "$(date '+%Y-%m-%d %H:%M:%S') | ├── Name:  $CLUSTER_NAME"
-echo "$(date '+%Y-%m-%d %H:%M:%S') | ├── Config: /tmp/k3d-config.yaml"
-echo "$(date '+%Y-%m-%d %H:%M:%S') | └── Number of nodes: $((NUM_WORKERS + 1)) (1 server + $NUM_WORKERS agents)"
-
-# Create k3d cluster
-k3d cluster create --config /tmp/k3d-config.yaml
+# Create k3d cluster (skip if it already exists)
+if k3d cluster list | grep -q "^$CLUSTER_NAME "; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') | Cluster '$CLUSTER_NAME' already exists, skipping create"
+else
+    k3d cluster create --config /tmp/k3d-config.yaml
+fi
 
 # ===============================================================================
 #   Cluster Readiness Check
 # ===============================================================================
-
-echo "$(date '+%Y-%m-%d %H:%M:%S') | Verifying cluster status..."
 CLUSTER_CHECK_COUNT=0
-
-# Wait for k3d cluster to be ready
 while ! k3d cluster list | grep -q "$CLUSTER_NAME"; do
     CLUSTER_CHECK_COUNT=$((CLUSTER_CHECK_COUNT+1))
     echo "$(date '+%Y-%m-%d %H:%M:%S') | [WAITING] K3d cluster '$CLUSTER_NAME' not ready yet... (attempt $CLUSTER_CHECK_COUNT)"
     sleep 5
 done
-
 echo "$(date '+%Y-%m-%d %H:%M:%S') | ✅ K3d cluster '$CLUSTER_NAME' is up and running!"
 
 # ===============================================================================
-#   Setup Complete
+#   Write the MERGED kubeconfig for every existing cluster.
+#   "k3d kubeconfig get --all" emits one context per cluster (k3d-<name>);
+#   for a single cluster this is identical to the previous behaviour.
 # ===============================================================================
+mkdir -p /home/candidate/.kube
+k3d kubeconfig get --all > "$KUBECONFIG_FILE"
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') | Docker and KIND environment is ready for use"
+# Point every server URL at the shared service name (keep each cluster's port)
+sed -i 's|server: https://127\.0\.0\.1:\([0-9]*\)|server: https://k8s-api-server:\1|' "$KUBECONFIG_FILE"
+sed -i 's|server: https://0\.0\.0\.0:\([0-9]*\)|server: https://k8s-api-server:\1|' "$KUBECONFIG_FILE"
 
-k3d kubeconfig get $CLUSTER_NAME > /home/candidate/.kube/kubeconfig
-echo "Kubeconfig file created: /home/candidate/.kube/kubeconfig"
+echo "$(date '+%Y-%m-%d %H:%M:%S') | Kubeconfig updated: $KUBECONFIG_FILE"
+echo "Kubeconfig contexts:"
+KUBECONFIG="$KUBECONFIG_FILE" k3d kubeconfig get --all >/dev/null 2>&1 || true
+grep -E '^\s*name:|current-context:' "$KUBECONFIG_FILE" || true
 
-# Save kubeconfig and set API server address
-sed -i 's|server: https://127\.0\.0\.1:\([0-9]*\)|server: https://k8s-api-server:\1|' /home/candidate/.kube/kubeconfig
-
-echo "Kubeconfig file content:"
-cat /home/candidate/.kube/kubeconfig
-
-export KUBECONFIG=/home/candidate/.kube/kubeconfig
-
-#info on config file setup done 
-echo "$(date '+%Y-%m-%d %H:%M:%S') | Config file setup done"
-
-#info on cluster setup done 
+export KUBECONFIG="$KUBECONFIG_FILE"
+echo "$(date '+%Y-%m-%d %H:%M:%S') | Config file setup done for cluster '$CLUSTER_NAME'"
 echo "$(date '+%Y-%m-%d %H:%M:%S') | Cluster setup done"
 
 exit 0

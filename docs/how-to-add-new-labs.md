@@ -239,6 +239,57 @@ Parameters:
 - `warmUpTimeInSeconds`: Preparation time before exam starts
 - `difficulty`: Difficulty level (easy, medium, hard)
 
+## Multi-Server / Multi-Cluster Labs
+
+By default a lab runs on a single cluster and a single server (`ckad9999`). A lab
+can instead span several clusters and SSH servers — each question is solved on
+the server named by its `machineHostname` and graded against that server's
+cluster. This is optional and fully backward compatible: omit the blocks below
+and the lab behaves as a normal single-server lab.
+
+### Declare clusters and servers in `config.json`
+
+```json
+{
+  "lab": "cka-003",
+  "workerNodes": 1,
+  "clusters": [
+    { "name": "cluster1", "workerNodes": 1 },
+    { "name": "cluster2", "workerNodes": 0 }
+  ],
+  "servers": [
+    { "name": "ckad9999", "cluster": "cluster1" },
+    { "name": "ckad9988", "cluster": "cluster2" }
+  ]
+}
+```
+
+- `clusters`: each entry creates a k3d cluster on a distinct API port; its
+  kube-context is named `k3d-<name>`.
+- `servers`: maps an SSH server name to the cluster it targets. The available
+  server names are the pre-provisioned pool: `ckad9999`, `ckad9988`, `ckad9977`.
+- In `assessment.json`, set each question's `machineHostname` to one of the
+  declared server names. The candidate connects with `ssh <machineHostname>` and
+  selects the cluster with `kubectl config use-context k3d-<cluster>`.
+
+### Context-aware setup and validation scripts
+
+For multi-cluster labs the facilitator runs each question's setup and validation
+scripts on the target server and exports `KUBE_CONTEXT` (e.g. `k3d-cluster2`).
+Write scripts so they honour it:
+
+```bash
+#!/bin/bash
+export KUBECONFIG=/home/candidate/.kube/kubeconfig
+CTX="${KUBE_CONTEXT:+--context=$KUBE_CONTEXT}"
+kubectl $CTX -n beta get pod writer
+```
+
+When `KUBE_CONTEXT` is unset (single-server labs) `$CTX` is empty and `kubectl`
+uses the default context, so the same pattern is safe in every lab.
+
+See `assets/exams/cka/003` for a complete two-cluster example.
+
 ## Best Practices
 
 1. **Realistic Scenarios**: Design questions that mimic real certification exam tasks

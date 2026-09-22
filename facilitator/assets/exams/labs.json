@@ -269,6 +269,16 @@
       "warmUpTimeInSeconds": 260,
       "difficulty": "Hard",
       "examDurationInMinutes": 120
+    },
+    {
+      "id": "cka-003",
+      "assetPath": "assets/exams/cka/003",
+      "name": "CKA Multi-Cluster Practice Lab",
+      "category": "CKA",
+      "description": "Original multi-cluster CKA-style exam spanning two clusters (cluster1, cluster2) reached via `ssh ckad9999` and `ssh ckad9988`. Practice context switching, deployments, services, RBAC, node scheduling, storage, secrets, cronjobs, and network policies across servers.",
+      "warmUpTimeInSeconds": 300,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 90
     }
   ]
 }

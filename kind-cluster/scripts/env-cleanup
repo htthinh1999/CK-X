@@ -1,35 +1,41 @@
 #!/bin/bash
 exec >> /proc/1/fd/1 2>&1
 
-# Cleanup script to remove the K3d cluster
+# ===============================================================================
+#   Cleanup script to remove K3d clusters (multi-cluster capable)
+#
+#   Usage: env-cleanup [CLUSTER_NAME]
+#     With no argument (or "all"), every k3d cluster is deleted (full reset).
+#     With a name, only that cluster is deleted.
+# ===============================================================================
 
-CLUSTER_NAME=${1:-cluster}
+CLUSTER_NAME=${1:-all}
 
-# Check if CLUSTER_NAME is set
-if [ -z "$CLUSTER_NAME" ]; then
-    echo "CLUSTER_NAME is not set"
-    exit 1
-fi
+delete_cluster() {
+    name="$1"
+    if k3d cluster list | grep -q "$name"; then
+        k3d cluster delete "$name"
+        while k3d cluster list | grep -q "$name"; do
+            sleep 1
+        done
+        echo "K3d cluster '$name' has been deleted."
+    else
+        echo "K3d cluster '$name' is not running."
+    fi
+}
 
-# Check if the K3d cluster is running
-if k3d cluster list | grep -q "$CLUSTER_NAME"; then
-    # Delete the K3d cluster
-    k3d cluster delete "$CLUSTER_NAME"
-
-    # Wait until the cluster is fully deleted
-    while k3d cluster list | grep -q "$CLUSTER_NAME"; do
-        sleep 1
-    done
-
-    echo "K3d cluster '$CLUSTER_NAME' has been deleted."
+if [ "$CLUSTER_NAME" = "all" ]; then
+    # Delete every cluster (there may be several for multi-cluster exams)
+    if k3d cluster list --no-headers 2>/dev/null | grep -q .; then
+        k3d cluster delete --all
+    fi
+    echo "All K3d clusters have been deleted."
 else
-    echo "K3d cluster '$CLUSTER_NAME' is not running."
-    exit 0
+    delete_cluster "$CLUSTER_NAME"
 fi
 
-# Perform a full Docker system prune (removes all unused containers, networks, images, and build cache)
-# This does NOT remove K3d images, unless you manually want to
-docker volume prune -f 
+# Prune unused docker resources (does NOT remove the k3d node images)
+docker volume prune -f
 docker network prune -f
 docker image prune -f --filter "label!=ghcr.io/k3d-io"
 echo "Docker system cleaned up."
@@ -40,7 +46,7 @@ if [ -f "/tmp/k3d-config.yaml" ]; then
     echo "K3d config file deleted."
 fi
 
-# Delete kubeconfig file if present in /home/candidate/.kube/kubeconfig (adjust path if needed)
+# Delete kubeconfig file if present
 if [ -f "/home/candidate/.kube/kubeconfig" ]; then
     rm -f /home/candidate/.kube/kubeconfig
     echo "Kubeconfig file deleted."
