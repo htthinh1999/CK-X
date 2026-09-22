@@ -8,6 +8,7 @@ json=$(kubectl -n "$NS" get deployment "$DEP" -o json 2>/dev/null) || { echo "FA
 echo "$json" | jq -e '
   .spec.replicas == 2
   and (.status.observedGeneration // 0) >= .metadata.generation
+  and (.status.replicas // 0) == 2
   and (.status.updatedReplicas // 0) == 2
   and (.status.readyReplicas // 0) == 2' >/dev/null \
   || { echo "FAIL: rollout of $DEP not complete (want 2 updated and 2 ready replicas): $(echo "$json" | jq -c '{spec: .spec.replicas, status: (.status | {updatedReplicas, readyReplicas, replicas})}')"; exit 1; }

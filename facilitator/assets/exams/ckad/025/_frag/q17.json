@@ -2,7 +2,7 @@
   "id": "17",
   "namespace": "spectro",
   "machineHostname": "ckad9977",
-  "question": "In namespace `spectro`, the Deployment `prism` should run 3 replicas, but none of its Pods are being created. Find out why.\n\nFix it without changing the ResourceQuota `spectro-budget` and without adding `resources` to the Deployment:\n\n1. Create a LimitRange `spectro-defaults` of type `Container` with default limits `cpu: 100m`, `memory: 128Mi` and default requests `cpu: 50m`, `memory: 64Mi`.\n2. Make sure all 3 replicas of `prism` are Running and Ready with these defaults applied. You may restart the Deployment's rollout.",
+  "question": "In namespace `spectro`, the Deployment `prism` should run 3 replicas, but none of its Pods are being created. Find out why.\n\nFix it without changing the ResourceQuota `spectro-budget` and without adding `resources` to the Deployment:\n\n1. Create a LimitRange `spectro-defaults` of type `Container` with default limits `cpu: 100m`, `memory: 128Mi` and default requests `cpu: 50m`, `memory: 64Mi`.\n2. Make sure all 3 replicas of `prism` are Running and Ready with these defaults applied. After many failed attempts the ReplicaSet controller only retries after a long back-off, so restart the Deployment's rollout once the LimitRange exists.",
   "concepts": [
     "resourcequota",
     "limitrange",
@@ -26,7 +26,7 @@
     },
     {
       "id": "3",
-      "description": "ResourceQuota spectro-budget unchanged and Deployment prism declares no resources",
+      "description": "prism Pods are admitted while ResourceQuota spectro-budget is unchanged and the Deployment declares no resources",
       "verificationScriptFile": "q17_s3_validate_quota_untouched.sh",
       "expectedOutput": "0",
       "weightage": 1

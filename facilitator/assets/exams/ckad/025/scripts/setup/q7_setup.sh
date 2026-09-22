@@ -6,6 +6,10 @@ D=/home/candidate/exam/q7
 rm -rf "$D"
 mkdir -p "$D"
 
+# Reset objects the student creates (idempotent re-runs)
+kubectl -n vault delete pod cert-loader --ignore-not-found --wait=false >/dev/null 2>&1 || true
+kubectl -n vault delete secret observatory-tls --ignore-not-found >/dev/null 2>&1 || true
+
 cat > "$D/signing.key" <<'EOF'
 -----BEGIN OBSERVATORY SIGNING KEY-----
 b2JzZXJ2YXRvcnktc2lnbmluZy1rZXktcHJhY3RpY2Utb25seS0wMQ==
