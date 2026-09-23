@@ -1,0 +1,36 @@
+{
+  "id": "3",
+  "namespace": "signals",
+  "machineHostname": "ckad9999",
+  "question": "Create Pod `signal-box` in namespace `signals`. Its configuration file is rendered at start-up from the template in ConfigMap `box-template` (key `box.conf.tpl`).\n\n- Main container `box`: image `nginx:1.25`, CPU limit `250m`. It mounts an `emptyDir` volume at `/etc/signal` and must find the rendered file at `/etc/signal/box.conf`.\n- Init container `render`: image `busybox:1.36`. It writes `box.conf` into that volume from the template, replacing every `%POD_NAME%` with the Pod's name, every `%NODE_NAME%` with the name of the node the Pod runs on, and every `%CPU_LIMIT%` with the CPU limit of container `box` in millicores. All other template content stays unchanged.\n- The three values must reach `render` as environment variables from the downward API; do not hard-code them.\n\nVerify with: `kubectl -n signals exec signal-box -c box -- cat /etc/signal/box.conf`",
+  "concepts": [
+    "init containers",
+    "downward API",
+    "resourceFieldRef",
+    "emptyDir",
+    "configmaps"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "signal-box: init container render (busybox:1.36) completed; box (nginx:1.25, CPU limit 250m) Ready",
+      "verificationScriptFile": "q3_s1_validate_pod_status.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "render gets metadata.name, spec.nodeName and box's limits.cpu (divisor 1m) from the downward API",
+      "verificationScriptFile": "q3_s2_validate_downward_env.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    },
+    {
+      "id": "3",
+      "description": "/etc/signal/box.conf in box is the fully rendered template (real Pod name, node name, 250)",
+      "verificationScriptFile": "q3_s3_validate_rendered_file.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    }
+  ]
+}

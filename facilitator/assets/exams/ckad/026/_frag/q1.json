@@ -1,0 +1,30 @@
+{
+  "id": "1",
+  "namespace": "ticketing",
+  "machineHostname": "ckad9999",
+  "question": "Namespace `ticketing` has accumulated Secrets over several fare-system migrations. Take stock without deleting anything.\n\n- Find every Secret of type `Opaque` in namespace `ticketing` that is **not referenced by any Pod** in that namespace. A Secret counts as referenced when a Pod uses it through `env` (`secretKeyRef`), `envFrom` or a volume (including projected volumes) of any of its containers or init containers.\n- Write the names of those Secrets to `/home/candidate/exam/q1/orphaned-secrets.txt`, one name per line, sorted alphabetically.\n- Label exactly those Secrets with `lifecycle=orphaned`. When you are done, no other Secret in the namespace may carry that label.\n- Do not delete or modify any Pod, and do not change Secrets other than their labels.",
+  "concepts": [
+    "secrets",
+    "jq",
+    "json processing",
+    "labels",
+    "envFrom",
+    "projected volumes"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "orphaned-secrets.txt lists exactly the unreferenced Opaque Secrets, sorted",
+      "verificationScriptFile": "q1_s1_validate_orphan_file.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    },
+    {
+      "id": "2",
+      "description": "Exactly those Secrets carry lifecycle=orphaned (no other Secret has the label)",
+      "verificationScriptFile": "q1_s2_validate_orphan_labels.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    }
+  ]
+}

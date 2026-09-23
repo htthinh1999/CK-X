@@ -1,0 +1,43 @@
+{
+  "id": "5",
+  "namespace": "platform",
+  "machineHostname": "ckad9999",
+  "question": "The platform display boards in namespace `platform` must be published through the Traefik ingress controller.\n\n- Create Ingress `platform-board` with ingress class `traefik` for host `board.transit.local`: path `/departures` (pathType `Prefix`) must reach the Pods of Deployment `departures-web`, and path `/arrivals` (pathType `Prefix`) the Pods of Deployment `arrivals-web`. Use the existing Services that select those Pods; do not create or modify Services.\n- From a temporary Pod, request `http://traefik.kube-system/departures/next` and `http://traefik.kube-system/arrivals/next` with the header `Host: board.transit.local`, and save the response bodies to `/home/candidate/exam/q5/departures.out` and `/home/candidate/exam/q5/arrivals.out`.",
+  "concepts": [
+    "ingress",
+    "traefik",
+    "services",
+    "named ports",
+    "troubleshooting"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "Ingress platform-board uses ingressClassName traefik and host board.transit.local",
+      "verificationScriptFile": "q5_s1_validate_ingress_class_host.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "/departures -> departures:80 and /arrivals -> arrivals-live:8081 (number or name), both Prefix",
+      "verificationScriptFile": "q5_s2_validate_ingress_paths.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    },
+    {
+      "id": "3",
+      "description": "departures.out is the departures-web response for /departures/next served through Traefik",
+      "verificationScriptFile": "q5_s3_validate_departures_output.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "4",
+      "description": "arrivals.out is the arrivals-web (not legacy) response for /arrivals/next served through Traefik",
+      "verificationScriptFile": "q5_s4_validate_arrivals_output.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    }
+  ]
+}
