@@ -105,6 +105,8 @@ kubectl -n "$NS" patch serviceaccount default --type=json \
   -p '[{"op":"add","path":"/imagePullSecrets","value":[{"name":"legacy-pull"}]}]' >/dev/null
 
 # Pod created now: it only receives the legacy pull secret from the ServiceAccount
+# (short pause so the admission plugin's ServiceAccount cache has seen the patch)
+sleep 2
 cat <<'YAML' | kubectl apply -f - >/dev/null
 apiVersion: v1
 kind: Pod

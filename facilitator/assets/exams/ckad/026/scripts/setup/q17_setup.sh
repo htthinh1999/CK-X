@@ -125,7 +125,9 @@ kubectl wait --for=condition=Established crd/routes.transit.example.com crd/rout
 kubectl -n "$NS" delete routes.transit.example.com --all --ignore-not-found >/dev/null 2>&1 || true
 kubectl -n "$NS" delete routes.freight.example.com --all --ignore-not-found >/dev/null 2>&1 || true
 
-kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' || true
+# retried: right after the CRDs become Established, API discovery can lag briefly
+for i in 1 2 3 4 5; do
+kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' && break
 apiVersion: transit.example.com/v1
 kind: Route
 metadata:
@@ -223,6 +225,8 @@ spec:
   tonnage: 2600
   stops: 4
 YAML
+  sleep 2
+done
 
 echo "Setup complete for Question 17"
 exit 0

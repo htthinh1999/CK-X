@@ -6,6 +6,12 @@ kubectl -n "$NS" get networkpolicy kiosk-ingress >/dev/null 2>&1 || { echo "ERR:
 nps=$(kubectl -n "$NS" get networkpolicy -o json 2>/dev/null | jq -c '[.items[] | {name: .metadata.name, spec: .spec}]')
 tmpl=$(kubectl -n "$NS" get deployment kiosk -o json 2>/dev/null | jq -c '.spec.template.metadata.labels // {}')
 [ -n "$tmpl" ] && [ "$tmpl" != "{}" ] || { echo "ERR: Deployment kiosk not found"; exit 1; }
+# the labels must stay as they are (removing tier=frontend would dodge the existing policy)
+echo "$tmpl" | jq -e '.app == "kiosk" and .tier == "frontend"' >/dev/null 2>&1 \
+  || { echo "ERR: the Pod labels of Deployment kiosk were changed ($tmpl), app=kiosk and tier=frontend must stay"; exit 1; }
+nsl=$(kubectl get namespace kiosk ops-east ops-west -o json 2>/dev/null | jq -cS '[.items[] | {(.metadata.name): (.metadata.labels.team // "")}] | add')
+[ "$nsl" = '{"kiosk":"","ops-east":"ops","ops-west":"dev"}' ] \
+  || { echo "ERR: namespace labels were changed (team labels: $nsl), expected ops-east team=ops, ops-west team=dev, kiosk none"; exit 1; }
 
 # Evaluate the union of all policies that select the kiosk Pods for a set of
 # representative sources (expected: TCP 80 allowed or not; 8081 never allowed)

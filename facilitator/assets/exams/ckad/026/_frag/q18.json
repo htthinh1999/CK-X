@@ -20,7 +20,7 @@
     },
     {
       "id": "2",
-      "description": "all policies selecting the kiosk Pods together allow TCP 80 only from role=monitor in team=ops namespaces and from namespace kiosk, and never 8081",
+      "description": "all policies selecting the kiosk Pods together allow TCP 80 only from role=monitor in team=ops namespaces and from namespace kiosk, and never 8081 (Pod and namespace labels unchanged)",
       "verificationScriptFile": "q18_s2_validate_policy_semantics.sh",
       "expectedOutput": "0",
       "weightage": 2
