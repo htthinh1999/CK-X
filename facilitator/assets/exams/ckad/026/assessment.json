@@ -1,0 +1,235 @@
+{
+    "questions": [
+        {
+            "id": "1",
+            "namespace": "ticketing",
+            "machineHostname": "ckad9999",
+            "question": "Namespace `ticketing` has accumulated Secrets over several fare-system migrations. Take stock without deleting anything.\n\n- Find every Secret of type `Opaque` in namespace `ticketing` that is **not referenced by any Pod** in that namespace. A Secret counts as referenced when a Pod uses it through `env` (`secretKeyRef`), `envFrom` or a volume (including projected volumes) of any of its containers or init containers.\n- Write the names of those Secrets to `/home/candidate/exam/q1/orphaned-secrets.txt`, one name per line, sorted alphabetically.\n- Label exactly those Secrets with `lifecycle=orphaned`. When you are done, no other Secret in the namespace may carry that label.\n- Do not delete or modify any Pod, and do not change Secrets other than their labels.",
+            "concepts": ["secrets", "jq", "json processing", "labels", "envFrom", "projected volumes"],
+            "verification": [
+                { "id": "1", "description": "orphaned-secrets.txt lists exactly the unreferenced Opaque Secrets, sorted", "verificationScriptFile": "q1_s1_validate_orphan_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Exactly those Secrets carry lifecycle=orphaned (no other Secret has the label)", "verificationScriptFile": "q1_s2_validate_orphan_labels.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "2",
+            "namespace": "depot",
+            "machineHostname": "ckad9999",
+            "question": "The Pods of Deployment `wagon-sorter` in namespace `depot` never start.\n\n- Find out why and fix the Deployment so that all `3` replicas run on the depot node (the node labeled `transit.io/pool=depot`) and can never be scheduled onto any other node.\n- Do not modify any node (labels and taints stay as they are) and do not use `nodeName`.\n- Write the name of the depot node to `/home/candidate/exam/q2/depot-node.txt`.\n\nVerify with: `kubectl -n depot get pods -o wide`",
+            "concepts": ["taints and tolerations", "node affinity", "scheduling", "troubleshooting", "deployments"],
+            "verification": [
+                { "id": "1", "description": "depot-node.txt contains the name of the depot node", "verificationScriptFile": "q2_s1_validate_node_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "wagon-sorter tolerates dedicated=depot:NoSchedule and its node selection matches only the depot node (no nodeName)", "verificationScriptFile": "q2_s2_validate_template.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "3/3 wagon-sorter Pods Running and Ready on the depot node; node taint and labels unchanged", "verificationScriptFile": "q2_s3_validate_pods_on_depot.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "3",
+            "namespace": "signals",
+            "machineHostname": "ckad9999",
+            "question": "Create Pod `signal-box` in namespace `signals`. Its configuration file is rendered at start-up from the template in ConfigMap `box-template` (key `box.conf.tpl`).\n\n- Main container `box`: image `nginx:1.25`, CPU limit `250m`. It mounts an `emptyDir` volume at `/etc/signal` and must find the rendered file at `/etc/signal/box.conf`.\n- Init container `render`: image `busybox:1.36`. It writes `box.conf` into that volume from the template, replacing every `%POD_NAME%` with the Pod's name, every `%NODE_NAME%` with the name of the node the Pod runs on, and every `%CPU_LIMIT%` with the CPU limit of container `box` in millicores. All other template content stays unchanged.\n- The three values must reach `render` as environment variables from the downward API; do not hard-code them.\n\nVerify with: `kubectl -n signals exec signal-box -c box -- cat /etc/signal/box.conf`",
+            "concepts": ["init containers", "downward API", "resourceFieldRef", "emptyDir", "configmaps"],
+            "verification": [
+                { "id": "1", "description": "signal-box: init container render (busybox:1.36) completed; box (nginx:1.25, CPU limit 250m) Ready", "verificationScriptFile": "q3_s1_validate_pod_status.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "render gets metadata.name, spec.nodeName and box's limits.cpu (divisor 1m) from the downward API", "verificationScriptFile": "q3_s2_validate_downward_env.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "/etc/signal/box.conf in box is the fully rendered template (real Pod name, node name, 250)", "verificationScriptFile": "q3_s3_validate_rendered_file.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "4",
+            "namespace": "dispatch",
+            "machineHostname": "ckad9999",
+            "question": "The source of the dispatch board image is in `/home/candidate/exam/q4/app`. A container registry is running at `localhost:5000`.\n\n- Build the image `localhost:5000/dispatch-board:2.3` from that directory with the build arguments `DISPATCH_ZONE=riverside` and `BUILD_NO=417`, and push it to the registry. The pushed image must carry the labels `transit.dispatch/zone=riverside` and `transit.dispatch/build=417`, and its page must show `zone=riverside build=417`. You may edit the Dockerfile, but keep its base image.\n- Write only the value of the image's label `transit.dispatch/release`, as reported by `docker image inspect`, to `/home/candidate/exam/q4/release.txt`.\n- Create Deployment `dispatch-board` in namespace `dispatch` with `2` replicas and one container named `board` running image `localhost:5000/dispatch-board:2.3`. Both Pods must be Ready and serve the new page (`/usr/share/nginx/html/index.html`).",
+            "concepts": ["docker build", "build arguments", "container registry", "image labels", "deployments"],
+            "verification": [
+                { "id": "1", "description": "Registry holds dispatch-board:2.3 with labels zone=riverside, build=417, release=riverside-417", "verificationScriptFile": "q4_s1_validate_registry_image.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "release.txt holds the value of label transit.dispatch/release", "verificationScriptFile": "q4_s2_validate_release_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Deployment dispatch-board: container board runs localhost:5000/dispatch-board:2.3 with 2/2 ready replicas", "verificationScriptFile": "q4_s3_validate_deployment.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "Every ready dispatch-board Pod serves zone=riverside build=417", "verificationScriptFile": "q4_s4_validate_served_page.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "platform",
+            "machineHostname": "ckad9999",
+            "question": "The platform display boards in namespace `platform` must be published through the Traefik ingress controller.\n\n- Create Ingress `platform-board` with ingress class `traefik` for host `board.transit.local`: path `/departures` (pathType `Prefix`) must reach the Pods of Deployment `departures-web`, and path `/arrivals` (pathType `Prefix`) the Pods of Deployment `arrivals-web`. Use the existing Services that select those Pods; do not create or modify Services.\n- From a temporary Pod, request `http://traefik.kube-system/departures/next` and `http://traefik.kube-system/arrivals/next` with the header `Host: board.transit.local`, and save the response bodies to `/home/candidate/exam/q5/departures.out` and `/home/candidate/exam/q5/arrivals.out`.",
+            "concepts": ["ingress", "traefik", "services", "named ports", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "Ingress platform-board uses ingressClassName traefik and host board.transit.local", "verificationScriptFile": "q5_s1_validate_ingress_class_host.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "/departures -> departures:80 and /arrivals -> arrivals-live:8081 (number or name), both Prefix", "verificationScriptFile": "q5_s2_validate_ingress_paths.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "departures.out is the departures-web response for /departures/next served through Traefik", "verificationScriptFile": "q5_s3_validate_departures_output.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "arrivals.out is the arrivals-web (not legacy) response for /arrivals/next served through Traefik", "verificationScriptFile": "q5_s4_validate_arrivals_output.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "freight",
+            "machineHostname": "ckad9999",
+            "question": "Deployment `freight-api` in namespace `freight` must run with its own read-only identity.\n\n- Create ServiceAccount `freight-reader`, a Role `freight-reader` and a RoleBinding `freight-reader` that grant it `get`, `list` and `watch` on ConfigMaps and `get` on the Secret `route-key` only. In namespace `freight` the ServiceAccount must end up with no permissions beyond these; do not change what any other subject is allowed to do.\n- Make `freight-api` run as `freight-reader`, with the ServiceAccount token mounted into its Pods.\n- Write the output of these three commands, in this order, one per line, to `/home/candidate/exam/q6/can-i.txt`:\n  - `kubectl auth can-i watch configmaps -n freight --as=system:serviceaccount:freight:freight-reader`\n  - `kubectl auth can-i get secret/route-key -n freight --as=system:serviceaccount:freight:freight-reader`\n  - `kubectl auth can-i get secret/tariff-db -n freight --as=system:serviceaccount:freight:freight-reader`\n\nVerify with: `kubectl auth can-i --list -n freight --as=system:serviceaccount:freight:freight-reader`",
+            "concepts": ["serviceaccounts", "rbac", "resourceNames", "auth can-i", "deployments"],
+            "verification": [
+                { "id": "1", "description": "ServiceAccount, Role and RoleBinding freight-reader exist and are bound together", "verificationScriptFile": "q6_s1_validate_rbac_objects.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "freight-reader can get/list/watch ConfigMaps and get only Secret route-key, nothing more", "verificationScriptFile": "q6_s2_validate_sa_permissions.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Pre-existing edit grant no longer reaches freight-reader; yardmaster and freight-writer keep their access", "verificationScriptFile": "q6_s3_validate_other_subjects.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "freight-api Pods run as freight-reader with the API token mounted", "verificationScriptFile": "q6_s4_validate_deployment_sa.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "can-i.txt holds yes / yes / no", "verificationScriptFile": "q6_s5_validate_can_i_file.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "junction",
+            "machineHostname": "ckad9988",
+            "question": "Namespace `junction` runs a blue/green pair behind Service `junction`: `junction-blue` is live and `junction-green` is the new release, which has not been started yet. Cut the traffic over to green:\n\n- Before changing anything, write the current selector of Service `junction` to `/home/candidate/exam/q7/old-selector.txt` as `key=value` pairs sorted by key and joined with commas (format: `k1=v1,k2=v2`).\n- Scale `junction-green` to the number of replicas `junction-blue` runs now. All of them must be Ready.\n- Point Service `junction` at the green Pods by changing only the value of its `slot` selector key. Do not modify the Service's `ports`. When you are done, the endpoints of `junction` must be exactly the `junction-green` Pods, on port 80.\n- Scale `junction-blue` to 0 replicas. Do not delete it.\n\nVerify with: `kubectl -n junction get endpoints junction -o wide`",
+            "concepts": ["deployments", "services", "labels-selectors", "blue-green-deployment", "endpoints", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "old-selector.txt holds the previous selector app=junction,slot=blue,tier=web", "verificationScriptFile": "q7_s1_validate_old_selector.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "junction-green runs 4 Ready replicas (the size of blue) and keeps nginx:1.26", "verificationScriptFile": "q7_s2_validate_green_scaled.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Service selector is app=junction,slot=green,tier=web, ports unchanged, endpoints are exactly the junction-green Pods on port 80", "verificationScriptFile": "q7_s3_validate_service_switch.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "junction-blue still exists with 0 replicas and no blue Pods running", "verificationScriptFile": "q7_s4_validate_blue_drained.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "lostproperty",
+            "machineHostname": "ckad9988",
+            "question": "The Pods of Deployment `claims-desk` in namespace `lostproperty` never start. The approved settings for the desk are listed in `/home/candidate/exam/q8/desk-settings.properties`.\n\n- Write the exact waiting reason reported for the failing containers to `/home/candidate/exam/q8/reason.txt`.\n- Fix the problem only by adding the missing key(s) to ConfigMap `desk-config`, with the approved values. Add exactly the keys whose absence stops a container from starting, nothing else, and do not change the existing keys.\n- Do not edit, scale, restart or re-create the Deployment. Both replicas must end up Running with all containers Ready.",
+            "concepts": ["configmaps", "environment-variables", "troubleshooting", "pod-lifecycle"],
+            "verification": [
+                { "id": "1", "description": "reason.txt contains CreateContainerConfigError", "verificationScriptFile": "q8_s1_validate_reason_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "desk-config has claim.window=45d and ledger.path=/var/ledger/claims.db; existing keys unchanged", "verificationScriptFile": "q8_s2_validate_missing_keys.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "No other keys were added to desk-config (the optional notify.webhook stays absent)", "verificationScriptFile": "q8_s3_validate_no_extra_keys.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Deployment claims-desk is the original object, unmodified (generation 1), with 2 Ready Pods", "verificationScriptFile": "q8_s4_validate_deployment_recovered.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "timetable",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `timetable`, the Job `timetable-import` has failed.\n\n- Find the exit code of the container that made its Pods fail and write only the number to `/home/candidate/exam/q9/exit-code.txt`.\n- Create a Job `timetable-build` in the same namespace:\n  - 6 successful completions, at most 3 Pods running at the same time, and every Pod gets its own completion index (0-5);\n  - failed Pods are retried at most 2 times before the Job is marked failed, and the Job is also marked failed if it is still running after 4 minutes;\n  - the Job is deleted automatically one day after it finishes;\n  - a single container, image `busybox:1.36`, that prints exactly `timetable shard <index> built` (where `<index>` is the Pod's completion index) and exits.\n- `timetable-build` must complete successfully.",
+            "concepts": ["jobs", "indexed-jobs", "init-containers", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "exit-code.txt contains 23 (exit code of the verify-feed init container)", "verificationScriptFile": "q9_s1_validate_exit_code.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "timetable-build: completions 6, parallelism 3, Indexed, backoffLimit 2, activeDeadlineSeconds 240, ttlSecondsAfterFinished 86400, busybox:1.36", "verificationScriptFile": "q9_s2_validate_job_spec.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "timetable-build is Complete with 6 succeeded Pods", "verificationScriptFile": "q9_s3_validate_job_complete.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Each completion index 0-5 logged 'timetable shard <index> built'", "verificationScriptFile": "q9_s4_validate_marker_logs.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "permits",
+            "machineHostname": "ckad9988",
+            "question": "Workloads in namespace `permits` will pull images from a private registry.\n\n- Create a docker-registry Secret `permits-registry` for server `registry.permits.transit.local:5443`, username `permit-bot` and password `Gr33n$ignal-7`.\n- Make the namespace's `default` ServiceAccount use `permits-registry` as an image pull secret, in addition to the pull secret it already has.\n- Create a TLS Secret `permits-tls` from the certificate `/home/candidate/exam/q10/certs/gate.crt` and its private key. The key is one of the files in `/home/candidate/exam/q10/certs/keys/`.\n- The existing Pod `permit-check` must end up with both pull secrets of the `default` ServiceAccount in its spec. It must receive them from the ServiceAccount: do not list `imagePullSecrets` in the Pod yourself. Keep its name, its image `registry.k8s.io/pause:3.9` and its ServiceAccount; it must be Running.",
+            "concepts": ["secrets", "service-accounts", "image-pull-secrets", "tls", "admission"],
+            "verification": [
+                { "id": "1", "description": "permits-registry is a dockerconfigjson Secret with the exact server, username and password", "verificationScriptFile": "q10_s1_validate_registry_secret.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "ServiceAccount default lists permits-registry and still lists legacy-pull", "verificationScriptFile": "q10_s2_validate_default_sa.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "permits-tls is a kubernetes.io/tls Secret with gate.crt and its matching key", "verificationScriptFile": "q10_s3_validate_tls_secret.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Pod permit-check (pause:3.9, SA default) is Ready and has both legacy-pull and permits-registry in imagePullSecrets", "verificationScriptFile": "q10_s4_validate_pod_pull_secrets.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "capacity",
+            "machineHostname": "ckad9988",
+            "question": "The Pods of Deployment `load-planner` in namespace `capacity` stay `Pending`. Other Pods in the namespace are Pending for their own reasons: leave them alone.\n\n- Find the container of `load-planner` whose resource request the scheduler cannot satisfy, and the resource concerned. Write them to `/home/candidate/exam/q11/blocker.txt` as `<container>:<resource>`.\n- Change only that container, so that it has exactly: requests `cpu: 50m`, `memory: 96Mi`; limits `cpu: 100m`, `memory: 128Mi`. The other container and the other workloads must not change.\n- All 3 replicas of `load-planner` must be Running and Ready.",
+            "concepts": ["resources", "scheduling", "events", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "blocker.txt contains cache:memory", "verificationScriptFile": "q11_s1_validate_blocker_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Only the cache container changed: requests cpu 50m / memory 96Mi, limits cpu 100m / memory 128Mi; planner container and load-reporter unchanged", "verificationScriptFile": "q11_s2_validate_cache_resources.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "load-planner keeps 3 replicas, all updated, scheduled and Ready", "verificationScriptFile": "q11_s3_validate_rollout.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "routes",
+            "machineHostname": "ckad9988",
+            "question": "Kustomize files for the route board are in `/home/candidate/exam/q12`: a `base/` and an example overlay `overlays/staging/`, which is already applied in namespace `routes`. Create the overlay `overlays/prod/` and apply it with `kubectl apply -k`:\n\n- It builds on `../../base`, puts everything in namespace `routes` and prefixes all names with `prod-`.\n- Label every resource `env=prod`. The prod Deployment and Service must select only prod Pods; the namespace also runs other Pods labelled `app=route-board`.\n- The Deployment runs 3 replicas and its `web` container uses `nginx:1.26` (the other container is unchanged).\n- The generated ConfigMap keeps all base keys, except that `ROUTE_MODE` becomes `express`, and it gains `NIGHT_SERVICE=enabled`. Extend the base generator (merge) instead of redefining it.\n- Do not modify `base/` or `overlays/staging/`.\n\nVerify with: `kubectl -n routes get endpoints prod-route-board`",
+            "concepts": ["kustomize", "configmaps", "labels-selectors", "deployments", "services"],
+            "verification": [
+                { "id": "1", "description": "overlays/prod renders, builds on ../../base, and base/ and overlays/staging/ are unchanged", "verificationScriptFile": "q12_s1_validate_overlay.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment prod-route-board: selector app=route-board,env=prod, 3 Ready replicas, web nginx:1.26, feed-sync busybox:1.36", "verificationScriptFile": "q12_s2_validate_deployment.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "The Deployment uses the rendered prod-route-settings-<hash> ConfigMap with the merged data (behavior: merge)", "verificationScriptFile": "q12_s3_validate_configmap_merge.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "Service prod-route-board selects app=route-board,env=prod and its endpoints are exactly the 3 prod Pods", "verificationScriptFile": "q12_s4_validate_service_endpoints.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "13",
+            "namespace": "helmyard",
+            "machineHostname": "ckad9977",
+            "question": "Namespace `helmyard` contains several Helm releases of the local chart `depot-web`. Both packaged versions of the chart are in `/home/candidate/exam/q13/`: `depot-web-0.1.0.tgz` and `depot-web-0.2.0.tgz`. The chart names its Deployment after the release.\n\n- One release in `helmyard` is currently in status `failed`. Write its name to `/home/candidate/exam/q13/failed-release.txt`.\n- Repair that release with `helm upgrade` (do not uninstall it): it must become `deployed` with its Pods running `nginx:1.26`, stay on chart version `0.1.0` and keep all of its other user-supplied values.\n- Upgrade release `route-planner` to chart version `0.2.0`. Its user-supplied values must stay exactly as they are now, and everything it does not override must come from the 0.2.0 chart defaults (0.2.0 defaults to `nginx:1.26` and adds the ConfigMap `route-planner-board`).\n- The Deployments of both releases must end up with all replicas Ready.\n\nVerify with: `helm -n helmyard ls -a`, `helm -n helmyard history <release>`, `helm -n helmyard get values <release>`",
+            "concepts": ["helm", "helm history", "helm upgrade", "reuse-values", "user-supplied values"],
+            "verification": [
+                { "id": "1", "description": "failed-release.txt names the release that is in status failed (stop-indexer)", "verificationScriptFile": "q13_s1_validate_failed_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "stop-indexer repaired by an upgrade: original failed revision kept, now deployed on depot-web-0.1.0 with image.tag 1.26 and its other user values", "verificationScriptFile": "q13_s2_validate_indexer_release.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Deployment stop-indexer has 3/3 Ready replicas on nginx:1.26 with label lane=local", "verificationScriptFile": "q13_s3_validate_indexer_ready.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "route-planner upgraded to depot-web-0.2.0 (deployed) with exactly its original user-supplied values", "verificationScriptFile": "q13_s4_validate_planner_release.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "5", "description": "route-planner runs the 0.2.0 defaults (nginx:1.26, ConfigMap route-planner-board) with its custom values, 2/2 Ready", "verificationScriptFile": "q13_s5_validate_planner_live.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "sleepers",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `sleepers`, the Pods of one Deployment never become Ready: the kubelet keeps restarting one of their containers because its liveness probe fails while the application is still starting up (it needs about 40 seconds before it answers HTTP).\n\n- Find that Deployment and write its name to `/home/candidate/exam/q14/deployment.txt`.\n- Add a `startupProbe` to the affected container: the same HTTP check as its livenessProbe, `periodSeconds: 5`, no initial delay, and a `failureThreshold` that gives the container exactly 60 seconds to start.\n- Do not change the existing livenessProbe and readinessProbe, the images or the commands.\n- After the rollout, both replicas must be Ready and all containers of the new Pods must have a restart count of `0`.",
+            "concepts": ["probes", "startupProbe", "livenessProbe", "troubleshooting", "events"],
+            "verification": [
+                { "id": "1", "description": "deployment.txt names the Deployment killed by its liveness probe (sleeper-berths)", "verificationScriptFile": "q14_s1_validate_deployment_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "container warmer has a startupProbe GET / on port http, periodSeconds 5, no initial delay, failureThreshold 12", "verificationScriptFile": "q14_s2_validate_startup_probe.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "livenessProbe, readinessProbe, images and commands of sleeper-berths unchanged", "verificationScriptFile": "q14_s3_validate_unchanged.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "rollout complete: 2 current Pods Running and Ready with restartCount 0", "verificationScriptFile": "q14_s4_validate_pods_stable.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "fares",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `fares`, Deployment `fare-board` publishes two files from ConfigMap `fare-table`: `/usr/share/nginx/html/fares/current.txt` (key `peak.txt`) and `/usr/share/nginx/html/fares/offpeak.txt` (key `offpeak.txt`). The ConfigMap was updated a while ago, but the running Pods still show the old fares.\n\n- Change `fare-board` so that future ConfigMap changes reach running Pods without a restart: mount one `fare-table` volume as the directory `/usr/share/nginx/html/fares` (no `subPath`), keeping both file paths and the keys they come from. The directory must contain only `current.txt` and `offpeak.txt`.\n- Leave the rest of the Pod (image, ports, the `style` mount) unchanged.\n- When the new Pods are Running, set key `peak.txt` of `fare-table` to `PEAK 3.95` and leave the other keys as they are. Do not restart, delete or re-create the Pods after this change: the running Pods must show the new value by themselves (the kubelet can take up to 1-2 minutes).\n\nVerify with: `kubectl -n fares exec deploy/fare-board -- cat /usr/share/nginx/html/fares/current.txt`",
+            "concepts": ["configmap", "volumes", "subPath", "items", "configuration updates"],
+            "verification": [
+                { "id": "1", "description": "fare-table is mounted once as directory /usr/share/nginx/html/fares with items peak.txt->current.txt and offpeak.txt->offpeak.txt, no subPath", "verificationScriptFile": "q15_s1_validate_directory_mount.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "a current Pod shows only current.txt and offpeak.txt in the directory, index.html and the style mount are intact", "verificationScriptFile": "q15_s2_validate_pod_files.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "fare-table peak.txt is PEAK 3.95, offpeak.txt and night.txt unchanged", "verificationScriptFile": "q15_s3_validate_configmap.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Pods created before the ConfigMap change serve PEAK 3.95 in current.txt (not re-created)", "verificationScriptFile": "q15_s4_validate_live_update.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "yardsafety",
+            "machineHostname": "ckad9977",
+            "question": "Namespace `yardsafety` enforces the `restricted` Pod Security Standard. Deployment `shunter` should run 2 replicas but has no Pods at all.\n\n- Find out why, and fix the Pod template of `shunter` so that both replicas are created and become Running and Ready.\n- Do not change the namespace's labels. Keep the images, commands and container names (init container `prep`, container `shunter`), and keep volume `scratch` mounted at `/scratch` in both containers.\n- The `scratch` volume must use a volume type the policy allows: make it an `emptyDir`.\n- Do not run anything privileged and do not add any Linux capabilities.",
+            "concepts": ["pod security admission", "securityContext", "runAsNonRoot", "capabilities", "seccomp", "init containers"],
+            "verification": [
+                { "id": "1", "description": "namespace still enforces restricted (labels unchanged) and a Pod built from the shunter template is admitted (server dry-run)", "verificationScriptFile": "q16_s1_validate_admission.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "prep and shunter set allowPrivilegeEscalation=false, drop ALL capabilities and add none", "verificationScriptFile": "q16_s2_validate_container_hardening.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "every container runs with runAsNonRoot=true, a non-zero runAsUser and seccomp RuntimeDefault", "verificationScriptFile": "q16_s3_validate_non_root.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "scratch is an emptyDir mounted at /scratch in both containers; images and commands unchanged", "verificationScriptFile": "q16_s4_validate_volume.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "shunter has 2/2 Ready Pods, init container prep completed", "verificationScriptFile": "q16_s5_validate_running.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "manifests",
+            "machineHostname": "ckad9977",
+            "question": "The CRD `routes.transit.example.com` (kind `Route`) is installed. Note that another API group in the cluster also serves a resource named `routes`.\n\n- In namespace `manifests`, create two `Route` objects of API group `transit.example.com`, using the field names and codes documented in the CRD's schema (`kubectl explain`):\n  - `f1-islands`: line `F1`, mode `ferry`, `6` stops, depot `pier-2`, a local all-stops service, one departure every `30` minutes.\n  - `n9-nightliner`: line `N9`, mode `bus`, `31` stops, depot `north`, part of the night network, one departure every `20` minutes.\n- Write a listing of all `transit.example.com` Routes in namespace `manifests` to `/home/candidate/exam/q17/routes.txt`: no header line, one Route per line with four whitespace-separated columns (name, line, service class code, number of stops), sorted by number of stops, ascending.",
+            "concepts": ["custom resources", "crd", "kubectl explain", "custom-columns", "sort-by"],
+            "verification": [
+                { "id": "1", "description": "Route f1-islands (transit.example.com) has line F1, mode ferry, stops 6, depot pier-2, serviceClass C1, frequencyMinutes 30", "verificationScriptFile": "q17_s1_validate_f1_islands.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Route n9-nightliner (transit.example.com) has line N9, mode bus, stops 31, depot north, serviceClass C5, frequencyMinutes 20", "verificationScriptFile": "q17_s2_validate_n9_nightliner.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "routes.txt lists all 7 transit Routes (name line serviceClass stops, no header) sorted by stops and matches the live objects", "verificationScriptFile": "q17_s3_validate_listing.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "kiosk",
+            "machineHostname": "ckad9977",
+            "question": "Deployment `kiosk` in namespace `kiosk` serves HTTP on TCP port `80`; its `metrics` sidecar listens on TCP `8081`. Restrict who can reach the kiosk Pods:\n\n- Create NetworkPolicy `kiosk-ingress` in namespace `kiosk` that applies to the Pods of Deployment `kiosk` only.\n- Allow ingress only from Pods labeled `role=monitor` that run in a namespace labeled `team=ops` (both conditions at once), and from any Pod in namespace `kiosk`.\n- From either source only TCP port `80` may be reached; all other ingress to the kiosk Pods, including port `8081`, must be denied. Policies that already exist in `kiosk` must not allow more than this.\n- Do not change any namespace or Pod labels.\n\nTest from the Pods `monitor` and `guest` in namespaces `ops-east` and `ops-west` and from Pod `kiosk-client`, e.g. `kubectl -n ops-east exec monitor -- wget -qO- -T 2 http://<kiosk-pod-ip>`",
+            "concepts": ["networkpolicy", "namespaceSelector", "podSelector", "ingress", "policy union"],
+            "verification": [
+                { "id": "1", "description": "kiosk-ingress exists, has type Ingress and selects the kiosk Pods only (not kiosk-cache or kiosk-client)", "verificationScriptFile": "q18_s1_validate_pod_selector.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "all policies selecting the kiosk Pods together allow TCP 80 only from role=monitor in team=ops namespaces and from namespace kiosk, and never 8081 (Pod and namespace labels unchanged)", "verificationScriptFile": "q18_s2_validate_policy_semantics.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "live: ops-east/monitor reaches kiosk:80, ops-east/guest and ops-west/monitor are blocked", "verificationScriptFile": "q18_s3_validate_cross_namespace.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "live: kiosk-client reaches kiosk:80, port 8081 is blocked from kiosk-client and ops-east/monitor", "verificationScriptFile": "q18_s4_validate_same_namespace.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        }
+    ]
+}

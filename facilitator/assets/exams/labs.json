@@ -309,6 +309,16 @@
       "warmUpTimeInSeconds": 300,
       "difficulty": "Hard",
       "examDurationInMinutes": 120
+    },
+    {
+      "id": "ckad-026",
+      "assetPath": "assets/exams/ckad/026",
+      "name": "CKAD Multi-Cluster Exam C — Transit Authority",
+      "category": "CKAD",
+      "description": "Original 18-question, exam-difficulty CKAD across three servers, one cluster each (ssh ckad9999 / ckad9988 / ckad9977). Investigation-heavy: diagnose Pending, CreateContainerConfigError, failed Jobs and failed Helm releases; taints/affinity, init containers with the downward API, image build + local registry, Ingress, RBAC with resourceNames, blue/green, Kustomize generators and patches, startupProbes, ConfigMap subPath, Pod Security Admission, CRDs and namespace-scoped NetworkPolicies.",
+      "warmUpTimeInSeconds": 300,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120
     }
   ]
 }
