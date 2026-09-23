@@ -1,0 +1,43 @@
+{
+  "id": "12",
+  "namespace": "routes",
+  "machineHostname": "ckad9988",
+  "question": "Kustomize files for the route board are in `/home/candidate/exam/q12`: a `base/` and an example overlay `overlays/staging/`, which is already applied in namespace `routes`. Create the overlay `overlays/prod/` and apply it with `kubectl apply -k`:\n\n- It builds on `../../base`, puts everything in namespace `routes` and prefixes all names with `prod-`.\n- Label every resource `env=prod`. The prod Deployment and Service must select only prod Pods; the namespace also runs other Pods labelled `app=route-board`.\n- The Deployment runs 3 replicas and its `web` container uses `nginx:1.26` (the other container is unchanged).\n- The generated ConfigMap keeps all base keys, except that `ROUTE_MODE` becomes `express`, and it gains `NIGHT_SERVICE=enabled`. Extend the base generator (merge) instead of redefining it.\n- Do not modify `base/` or `overlays/staging/`.\n\nVerify with: `kubectl -n routes get endpoints prod-route-board`",
+  "concepts": [
+    "kustomize",
+    "configmaps",
+    "labels-selectors",
+    "deployments",
+    "services"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "overlays/prod renders, builds on ../../base, and base/ and overlays/staging/ are unchanged",
+      "verificationScriptFile": "q12_s1_validate_overlay.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "Deployment prod-route-board: selector app=route-board,env=prod, 3 Ready replicas, web nginx:1.26, feed-sync busybox:1.36",
+      "verificationScriptFile": "q12_s2_validate_deployment.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "3",
+      "description": "The Deployment uses the rendered prod-route-settings-<hash> ConfigMap with the merged data (behavior: merge)",
+      "verificationScriptFile": "q12_s3_validate_configmap_merge.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    },
+    {
+      "id": "4",
+      "description": "Service prod-route-board selects app=route-board,env=prod and its endpoints are exactly the 3 prod Pods",
+      "verificationScriptFile": "q12_s4_validate_service_endpoints.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "11",
+  "namespace": "capacity",
+  "machineHostname": "ckad9988",
+  "question": "The Pods of Deployment `load-planner` in namespace `capacity` stay `Pending`. Other Pods in the namespace are Pending for their own reasons: leave them alone.\n\n- Find the container of `load-planner` whose resource request the scheduler cannot satisfy, and the resource concerned. Write them to `/home/candidate/exam/q11/blocker.txt` as `<container>:<resource>`.\n- Change only that container, so that it has exactly: requests `cpu: 50m`, `memory: 96Mi`; limits `cpu: 100m`, `memory: 128Mi`. The other container and the other workloads must not change.\n- All 3 replicas of `load-planner` must be Running and Ready.",
+  "concepts": [
+    "resources",
+    "scheduling",
+    "events",
+    "troubleshooting"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "blocker.txt contains cache:memory",
+      "verificationScriptFile": "q11_s1_validate_blocker_file.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "Only the cache container changed: requests cpu 50m / memory 96Mi, limits cpu 100m / memory 128Mi; planner container and load-reporter unchanged",
+      "verificationScriptFile": "q11_s2_validate_cache_resources.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    },
+    {
+      "id": "3",
+      "description": "load-planner keeps 3 replicas, all updated, scheduled and Ready",
+      "verificationScriptFile": "q11_s3_validate_rollout.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    }
+  ]
+}
