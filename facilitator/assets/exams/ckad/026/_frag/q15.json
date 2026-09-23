@@ -1,0 +1,43 @@
+{
+  "id": "15",
+  "namespace": "fares",
+  "machineHostname": "ckad9977",
+  "question": "In namespace `fares`, Deployment `fare-board` publishes two files from ConfigMap `fare-table`: `/usr/share/nginx/html/fares/current.txt` (key `peak.txt`) and `/usr/share/nginx/html/fares/offpeak.txt` (key `offpeak.txt`). The ConfigMap was updated a while ago, but the running Pods still show the old fares.\n\n- Change `fare-board` so that future ConfigMap changes reach running Pods without a restart: mount one `fare-table` volume as the directory `/usr/share/nginx/html/fares` (no `subPath`), keeping both file paths and the keys they come from. The directory must contain only `current.txt` and `offpeak.txt`.\n- Leave the rest of the Pod (image, ports, the `style` mount) unchanged.\n- When the new Pods are Running, set key `peak.txt` of `fare-table` to `PEAK 3.95` and leave the other keys as they are. Do not restart, delete or re-create the Pods after this change: the running Pods must show the new value by themselves (the kubelet can take up to 1-2 minutes).\n\nVerify with: `kubectl -n fares exec deploy/fare-board -- cat /usr/share/nginx/html/fares/current.txt`",
+  "concepts": [
+    "configmap",
+    "volumes",
+    "subPath",
+    "items",
+    "configuration updates"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "fare-table is mounted once as directory /usr/share/nginx/html/fares with items peak.txt->current.txt and offpeak.txt->offpeak.txt, no subPath",
+      "verificationScriptFile": "q15_s1_validate_directory_mount.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    },
+    {
+      "id": "2",
+      "description": "a current Pod shows only current.txt and offpeak.txt in the directory, index.html and the style mount are intact",
+      "verificationScriptFile": "q15_s2_validate_pod_files.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "3",
+      "description": "fare-table peak.txt is PEAK 3.95, offpeak.txt and night.txt unchanged",
+      "verificationScriptFile": "q15_s3_validate_configmap.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "4",
+      "description": "Pods created before the ConfigMap change serve PEAK 3.95 in current.txt (not re-created)",
+      "verificationScriptFile": "q15_s4_validate_live_update.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    }
+  ]
+}

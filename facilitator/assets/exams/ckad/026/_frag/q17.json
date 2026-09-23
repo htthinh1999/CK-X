@@ -1,0 +1,36 @@
+{
+  "id": "17",
+  "namespace": "manifests",
+  "machineHostname": "ckad9977",
+  "question": "The CRD `routes.transit.example.com` (kind `Route`) is installed. Note that another API group in the cluster also serves a resource named `routes`.\n\n- In namespace `manifests`, create two `Route` objects of API group `transit.example.com`, using the field names and codes documented in the CRD's schema (`kubectl explain`):\n  - `f1-islands`: line `F1`, mode `ferry`, `6` stops, depot `pier-2`, a local all-stops service, one departure every `30` minutes.\n  - `n9-nightliner`: line `N9`, mode `bus`, `31` stops, depot `north`, part of the night network, one departure every `20` minutes.\n- Write a listing of all `transit.example.com` Routes in namespace `manifests` to `/home/candidate/exam/q17/routes.txt`: no header line, one Route per line with four whitespace-separated columns (name, line, service class code, number of stops), sorted by number of stops, ascending.",
+  "concepts": [
+    "custom resources",
+    "crd",
+    "kubectl explain",
+    "custom-columns",
+    "sort-by"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "Route f1-islands (transit.example.com) has line F1, mode ferry, stops 6, depot pier-2, serviceClass C1, frequencyMinutes 30",
+      "verificationScriptFile": "q17_s1_validate_f1_islands.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "Route n9-nightliner (transit.example.com) has line N9, mode bus, stops 31, depot north, serviceClass C5, frequencyMinutes 20",
+      "verificationScriptFile": "q17_s2_validate_n9_nightliner.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "3",
+      "description": "routes.txt lists all 7 transit Routes (name line serviceClass stops, no header) sorted by stops and matches the live objects",
+      "verificationScriptFile": "q17_s3_validate_listing.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    }
+  ]
+}

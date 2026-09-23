@@ -1,0 +1,51 @@
+{
+  "id": "16",
+  "namespace": "yardsafety",
+  "machineHostname": "ckad9977",
+  "question": "Namespace `yardsafety` enforces the `restricted` Pod Security Standard. Deployment `shunter` should run 2 replicas but has no Pods at all.\n\n- Find out why, and fix the Pod template of `shunter` so that both replicas are created and become Running and Ready.\n- Do not change the namespace's labels. Keep the images, commands and container names (init container `prep`, container `shunter`), and keep volume `scratch` mounted at `/scratch` in both containers.\n- The `scratch` volume must use a volume type the policy allows: make it an `emptyDir`.\n- Do not run anything privileged and do not add any Linux capabilities.",
+  "concepts": [
+    "pod security admission",
+    "securityContext",
+    "runAsNonRoot",
+    "capabilities",
+    "seccomp",
+    "init containers"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "namespace still enforces restricted (labels unchanged) and a Pod built from the shunter template is admitted (server dry-run)",
+      "verificationScriptFile": "q16_s1_validate_admission.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "prep and shunter set allowPrivilegeEscalation=false, drop ALL capabilities and add none",
+      "verificationScriptFile": "q16_s2_validate_container_hardening.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "3",
+      "description": "every container runs with runAsNonRoot=true, a non-zero runAsUser and seccomp RuntimeDefault",
+      "verificationScriptFile": "q16_s3_validate_non_root.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "4",
+      "description": "scratch is an emptyDir mounted at /scratch in both containers; images and commands unchanged",
+      "verificationScriptFile": "q16_s4_validate_volume.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "5",
+      "description": "shunter has 2/2 Ready Pods, init container prep completed",
+      "verificationScriptFile": "q16_s5_validate_running.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    }
+  ]
+}

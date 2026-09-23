@@ -1,0 +1,43 @@
+{
+  "id": "18",
+  "namespace": "kiosk",
+  "machineHostname": "ckad9977",
+  "question": "Deployment `kiosk` in namespace `kiosk` serves HTTP on TCP port `80`; its `metrics` sidecar listens on TCP `8081`. Restrict who can reach the kiosk Pods:\n\n- Create NetworkPolicy `kiosk-ingress` in namespace `kiosk` that applies to the Pods of Deployment `kiosk` only.\n- Allow ingress only from Pods labeled `role=monitor` that run in a namespace labeled `team=ops` (both conditions at once), and from any Pod in namespace `kiosk`.\n- From either source only TCP port `80` may be reached; all other ingress to the kiosk Pods, including port `8081`, must be denied. Policies that already exist in `kiosk` must not allow more than this.\n- Do not change any namespace or Pod labels.\n\nTest from the Pods `monitor` and `guest` in namespaces `ops-east` and `ops-west` and from Pod `kiosk-client`, e.g. `kubectl -n ops-east exec monitor -- wget -qO- -T 2 http://<kiosk-pod-ip>`",
+  "concepts": [
+    "networkpolicy",
+    "namespaceSelector",
+    "podSelector",
+    "ingress",
+    "policy union"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "kiosk-ingress exists, has type Ingress and selects the kiosk Pods only (not kiosk-cache or kiosk-client)",
+      "verificationScriptFile": "q18_s1_validate_pod_selector.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "all policies selecting the kiosk Pods together allow TCP 80 only from role=monitor in team=ops namespaces and from namespace kiosk, and never 8081",
+      "verificationScriptFile": "q18_s2_validate_policy_semantics.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    },
+    {
+      "id": "3",
+      "description": "live: ops-east/monitor reaches kiosk:80, ops-east/guest and ops-west/monitor are blocked",
+      "verificationScriptFile": "q18_s3_validate_cross_namespace.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    },
+    {
+      "id": "4",
+      "description": "live: kiosk-client reaches kiosk:80, port 8081 is blocked from kiosk-client and ops-east/monitor",
+      "verificationScriptFile": "q18_s4_validate_same_namespace.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    }
+  ]
+}

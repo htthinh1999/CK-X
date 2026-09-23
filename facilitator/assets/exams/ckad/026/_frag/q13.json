@@ -1,0 +1,50 @@
+{
+  "id": "13",
+  "namespace": "helmyard",
+  "machineHostname": "ckad9977",
+  "question": "Namespace `helmyard` contains several Helm releases of the local chart `depot-web`. Both packaged versions of the chart are in `/home/candidate/exam/q13/`: `depot-web-0.1.0.tgz` and `depot-web-0.2.0.tgz`. The chart names its Deployment after the release.\n\n- One release in `helmyard` is currently in status `failed`. Write its name to `/home/candidate/exam/q13/failed-release.txt`.\n- Repair that release with `helm upgrade` (do not uninstall it): it must become `deployed` with its Pods running `nginx:1.26`, stay on chart version `0.1.0` and keep all of its other user-supplied values.\n- Upgrade release `route-planner` to chart version `0.2.0`. Its user-supplied values must stay exactly as they are now, and everything it does not override must come from the 0.2.0 chart defaults (0.2.0 defaults to `nginx:1.26` and adds the ConfigMap `route-planner-board`).\n- The Deployments of both releases must end up with all replicas Ready.\n\nVerify with: `helm -n helmyard ls -a`, `helm -n helmyard history <release>`, `helm -n helmyard get values <release>`",
+  "concepts": [
+    "helm",
+    "helm history",
+    "helm upgrade",
+    "reuse-values",
+    "user-supplied values"
+  ],
+  "verification": [
+    {
+      "id": "1",
+      "description": "failed-release.txt names the release that is in status failed (stop-indexer)",
+      "verificationScriptFile": "q13_s1_validate_failed_file.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "2",
+      "description": "stop-indexer repaired by an upgrade: original failed revision kept, now deployed on depot-web-0.1.0 with image.tag 1.26 and its other user values",
+      "verificationScriptFile": "q13_s2_validate_indexer_release.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "3",
+      "description": "Deployment stop-indexer has 3/3 Ready replicas on nginx:1.26 with label lane=local",
+      "verificationScriptFile": "q13_s3_validate_indexer_ready.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    },
+    {
+      "id": "4",
+      "description": "route-planner upgraded to depot-web-0.2.0 (deployed) with exactly its original user-supplied values",
+      "verificationScriptFile": "q13_s4_validate_planner_release.sh",
+      "expectedOutput": "0",
+      "weightage": 2
+    },
+    {
+      "id": "5",
+      "description": "route-planner runs the 0.2.0 defaults (nginx:1.26, ConfigMap route-planner-board) with its custom values, 2/2 Ready",
+      "verificationScriptFile": "q13_s5_validate_planner_live.sh",
+      "expectedOutput": "0",
+      "weightage": 1
+    }
+  ]
+}
