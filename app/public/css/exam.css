@@ -336,6 +336,42 @@ ul.requirements li {
 
 .question-body li {
     margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.question-body li > p {
+    margin-bottom: 6px;
+}
+
+/* Nested lists: a little air above, none below (the parent li spaces it) */
+.question-body li > ul,
+.question-body li > ol {
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.question-body > :last-child {
+    margin-bottom: 0;
+}
+
+/* Fenced code blocks in question text */
+.question-body pre {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    white-space: pre-wrap;
+}
+
+.question-body pre code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+}
+
+/* Inline code rendered from Markdown (<code class="inline-code">) */
+.question-body code.inline-code {
+    white-space: normal;
+    word-break: break-word;
 }
 
 .question-body .info-box {

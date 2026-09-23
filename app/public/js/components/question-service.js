@@ -3,59 +3,34 @@
  * Handles question display and navigation
  */
 
-// Process question content to improve formatting and highlighting
-function processQuestionContent(content) {
-    // First, preserve existing HTML formatting
-    let processedContent = content;
-    
-    // Add highlighting to text in single quotes that isn't already styled
-    processedContent = processedContent.replace(
-        /`([^`]+)`/g, 
-        function(match, text) {
-            // Skip if already inside an HTML tag or existing styled element
-            if (match.match(/<.*>/) || 
-                match.includes('class="code"') || 
-                match.includes('class="highlight"')) {
-                return match;
-            }
-            return `<span class="inline-code">${text}</span>`;
-        }
-    );
-    
-    // Style inline code with backticks if not already styled
-    processedContent = processedContent.replace(
-        /`([^`]+)`/g, 
-        '<code class="bg-light px-1 rounded">$1</code>'
-    );
-    
-    // Style bold text
-    processedContent = processedContent.replace(
-        /\*\*([^*]+)\*\*/g, 
-        '<strong>$1</strong>'
-    );
-    
-    // Style italic text
-    processedContent = processedContent.replace(
-        /\*([^*]+)\*/g, 
-        '<em>$1</em>'
-    );
-    
-    // Convert literal newline characters to HTML line breaks
-    processedContent = processedContent.replace(/\n/g, '<br>');
-    
-    // Ensure paragraphs have proper spacing and line breaks
-    processedContent = processedContent.replace(
-        /<\/p><p>/g, 
-        '</p>\n<p>'
-    );
-    
-    // Add more spacing between list items
-    processedContent = processedContent.replace(
-        /<\/li><li>/g, 
-        '</li>\n<li>'
-    );
-    
-    return processedContent;
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+// Render question text (Markdown) to HTML. Real paragraphs and bullet /
+// numbered / nested lists let the spacing rules in exam.css apply, and code
+// spans are parsed before emphasis so text like `*/5 * * * *` stays intact.
+// Uses the vendored marked parser (/vendor/marked); if it is unavailable,
+// falls back to escaped text with line breaks.
+function processQuestionContent(content, md = (typeof window !== 'undefined' ? window.marked : undefined)) {
+    const text = content || '';
+    let html;
+    if (md && typeof md.parse === 'function') {
+        html = md.parse(text, { gfm: true, breaks: true });
+    } else {
+        html = escapeHtml(text)
+            .replace(/`([^`]+)`/g, '<code>$1</code>')
+            .replace(/\n/g, '<br>');
+    }
+    // Inline code keeps the click-to-copy style; fenced code blocks stay as-is.
+    return html
+        .split(/(<pre>[\s\S]*?<\/pre>)/)
+        .map(part => (part.startsWith('<pre>') ? part : part.replace(/<code>/g, '<code class="inline-code">')))
+        .join('');
 }
 
 // Generate question content HTML
