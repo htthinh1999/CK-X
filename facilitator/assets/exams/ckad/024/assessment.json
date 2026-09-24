@@ -2,214 +2,214 @@
     "questions": [
         {
             "id": "1",
-            "namespace": "quayside",
-            "machineHostname": "ckad9999",
-            "question": "The Deployment `crane` in namespace `quayside` has gone through several rollouts. Its most recent update broke it: the new pods can never start and the rollout is stuck.\n\n1. Roll `crane` back to the **last revision that was working** (the revision right before the broken update). Do not delete or recreate the Deployment.\n2. Make sure the rollback completes and all `3` replicas are updated and ready.\n3. Write the revision number the Deployment is running now, i.e. the value of its `deployment.kubernetes.io/revision` annotation after the rollback, to `/home/candidate/exam/q1/revision.txt` (only the number).",
-            "concepts": ["deployments", "rollouts", "rollback", "revision history"],
+            "namespace": "tides",
+            "machineHostname": "ckad9988",
+            "question": "Station settings for the tide gauges are kept as ConfigMaps in namespace `tides`.\n\n1. Create a ConfigMap named `gauge-config` from the file `/home/candidate/exam/q1/gauge.properties`. The whole file must be stored under the single key `station.conf`.\n2. Add the labels `tier=gauge` and `region=west` to `gauge-config`.\n3. Write the names of all ConfigMaps in namespace `tides` that match the label selector `tier=gauge,status!=retired` to `/home/candidate/exam/q1/active-gauges.txt`: names only (no `configmap/` prefix), sorted alphabetically, one per line.",
+            "concepts": ["configmaps", "labels", "selectors", "kubectl"],
             "verification": [
-                { "id": "1", "description": "Deployment crane runs the last working template (nginx:1.25 with LIFT_MODE=tandem)", "verificationScriptFile": "q1_s1_validate_template.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "Rollback completed: 3/3 replicas updated and ready, no stuck pods left", "verificationScriptFile": "q1_s2_validate_ready.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "revision.txt contains the Deployment's active revision number after the rollback", "verificationScriptFile": "q1_s3_validate_revision_file.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "1", "description": "ConfigMap gauge-config stores gauge.properties under the single key station.conf", "verificationScriptFile": "q1_s1_validate_configmap_key.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "gauge-config is labelled tier=gauge and region=west", "verificationScriptFile": "q1_s2_validate_labels.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "active-gauges.txt lists the ConfigMaps matching tier=gauge,status!=retired, sorted, one per line", "verificationScriptFile": "q1_s3_validate_selector_file.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {
             "id": "2",
-            "namespace": "beacon",
+            "namespace": "quayside",
             "machineHostname": "ckad9999",
-            "question": "In namespace `beacon`:\n\n1. Create a Pod named `lamp-keeper` using image `busybox:1.36`, with the label `tier=signal` and the environment variable `BEAM_COLOR=amber`. Its container must run the command `sh -c 'while true; do echo \"beam=$BEAM_COLOR\"; sleep 5; done'`.\n2. Write a **single-line** `kubectl` command to `/home/candidate/exam/q2/phase.sh` that uses `jsonpath` output to print **only** the status phase of Pod `lamp-keeper` (e.g. `Running`). The file will be run with `bash`; the command must work regardless of the current namespace and print nothing else (other pods exist in `beacon`).",
-            "concepts": ["pods", "environment variables", "labels", "kubectl", "jsonpath"],
+            "question": "The Deployment `crane` in namespace `quayside` has gone through several rollouts. Its most recent update broke it: the new pods can never start and the rollout is stuck.\n\n1. Roll `crane` back to the **last revision that was working** (the revision right before the broken update). Do not delete or recreate the Deployment.\n2. Make sure the rollback completes and all `3` replicas are updated and ready.\n3. Write the revision number the Deployment is running now, i.e. the value of its `deployment.kubernetes.io/revision` annotation after the rollback, to `/home/candidate/exam/q2/revision.txt` (only the number).",
+            "concepts": ["deployments", "rollouts", "rollback", "revision history"],
             "verification": [
-                { "id": "1", "description": "Pod lamp-keeper is Running with image busybox:1.36 and label tier=signal", "verificationScriptFile": "q2_s1_validate_pod.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "BEAM_COLOR=amber is set and the container logs show beam=amber", "verificationScriptFile": "q2_s2_validate_env_command.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "phase.sh is a one-line kubectl jsonpath command that prints only Running", "verificationScriptFile": "q2_s3_validate_phase_cmd.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "1", "description": "Deployment crane runs the last working template (nginx:1.25 with LIFT_MODE=tandem)", "verificationScriptFile": "q2_s1_validate_template.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Rollback completed: 3/3 replicas updated and ready, no stuck pods left", "verificationScriptFile": "q2_s2_validate_ready.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "revision.txt contains the Deployment's active revision number after the rollback", "verificationScriptFile": "q2_s3_validate_revision_file.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {
             "id": "3",
-            "namespace": "tally",
-            "machineHostname": "ckad9999",
-            "question": "A Kustomize base for the `weighbridge` app is in `/home/candidate/exam/q3/base`: a Deployment `weighbridge` (3 replicas, `nginx:1.25`) and a Service `weighbridge` selecting `app: weighbridge`, both in namespace `tally`. Do not modify the base.\n\n1. Create a canary overlay at `/home/candidate/exam/q3/overlays/canary/kustomization.yaml` that uses `../../base` as its resource and renders **exactly one object**: a Deployment named `weighbridge-canary` (name suffix `-canary`) with `1` replica and image `nginx:1.26`, whose pods carry the extra label `track: canary` while keeping `app: weighbridge`, so the existing Service also routes to them. The overlay must not render a Service.\n2. Apply the base and the canary overlay with `kubectl apply -k`.\n\nWhen done, the Service `weighbridge` (selector unchanged) must have 4 ready endpoints: 3 stable pods and 1 canary pod.",
-            "concepts": ["kustomize", "overlays", "canary deployments", "labels", "services"],
-            "verification": [
-                { "id": "1", "description": "Deployment weighbridge has 3 ready replicas of nginx:1.25", "verificationScriptFile": "q3_s1_validate_stable.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "Deployment weighbridge-canary has 1 ready nginx:1.26 replica labelled app=weighbridge, track=canary", "verificationScriptFile": "q3_s2_validate_canary.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "Service weighbridge (selector app=weighbridge) has 4 endpoints including 1 canary pod", "verificationScriptFile": "q3_s3_validate_endpoints.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "4", "description": "overlays/canary uses ../../base and renders only Deployment weighbridge-canary; base unchanged", "verificationScriptFile": "q3_s4_validate_overlay.sh", "expectedOutput": "0", "weightage": 1 }
-            ]
-        },
-        {
-            "id": "4",
-            "namespace": "berth",
-            "machineHostname": "ckad9999",
-            "question": "A local Helm chart is available at `/home/candidate/exam/q4/dockyard`. Two releases of it are installed in namespace `berth`: `tugboat` and `pilot-legacy`.\n\n1. Upgrade release `tugboat` with the same chart so that it runs `2` replicas (chart value `replicaCount`) and its pods get the annotation `crew: night-shift` (chart value `podAnnotations.crew`). The values already set on the release (such as its existing pod annotation) must be preserved.\n2. Uninstall the release `pilot-legacy`.\n3. Install a new release named `harbormaster` from the same chart into namespace `berth`, with `service.type` set to `NodePort`.",
-            "concepts": ["helm", "helm upgrade", "helm uninstall", "helm install", "values"],
-            "verification": [
-                { "id": "1", "description": "tugboat upgraded (deployed, revision >= 2) with replicaCount=2 and 2 ready pods", "verificationScriptFile": "q4_s1_validate_tugboat_replicas.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "tugboat pods annotated crew=night-shift and the existing owner=berth-ops value is kept", "verificationScriptFile": "q4_s2_validate_tugboat_annotations.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "Release pilot-legacy and its resources are removed", "verificationScriptFile": "q4_s3_validate_legacy_removed.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "4", "description": "Release harbormaster (chart dockyard) is deployed in berth with a NodePort Service", "verificationScriptFile": "q4_s4_validate_harbormaster.sh", "expectedOutput": "0", "weightage": 1 }
-            ]
-        },
-        {
-            "id": "5",
-            "namespace": "manifest",
-            "machineHostname": "ckad9999",
-            "question": "In namespace `manifest`, the ClusterIP Service `manifest-api` should expose the pods of Deployment `manifest-api` on port `8080`, but it has no endpoints and every request to it fails.\n\nFix the **Service** in place (keep its name, type `ClusterIP` and port `8080`) so that it selects the pods of Deployment `manifest-api` and forwards traffic to the container port declared by the Deployment's nginx container. Do not modify or recreate the Deployment.\n\nWhen done, the Service must list both `manifest-api` pods as endpoints.",
-            "concepts": ["services", "selectors", "endpoints", "troubleshooting"],
-            "verification": [
-                { "id": "1", "description": "Service selector matches the (unchanged) manifest-api pod labels", "verificationScriptFile": "q5_s1_validate_selector.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "Service is still ClusterIP and port 8080 targets container port 80 (http)", "verificationScriptFile": "q5_s2_validate_ports.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "Endpoints list both manifest-api pods on port 80", "verificationScriptFile": "q5_s3_validate_endpoints.sh", "expectedOutput": "0", "weightage": 2 }
-            ]
-        },
-        {
-            "id": "6",
-            "namespace": "gatehouse",
-            "machineHostname": "ckad9999",
-            "question": "In namespace `gatehouse`, create a Deployment named `boom-gate` with `3` replicas. Its only container, named `controller`, uses image `busybox:1.36` and runs:\n\n`sh -c 'sleep 15; touch /tmp/gate-open; while true; do sleep 3600; done'`\n\nThe gate needs about 15 seconds to warm up and must not receive traffic before `/tmp/gate-open` exists. Add a **readiness probe** to the container that executes `cat /tmp/gate-open`, with `initialDelaySeconds: 5` and `periodSeconds: 5`.\n\nMake sure all 3 replicas become ready.",
-            "concepts": ["probes", "readiness probe", "deployments", "exec"],
-            "verification": [
-                { "id": "1", "description": "boom-gate has 3 replicas; container controller (busybox:1.36) runs the given command", "verificationScriptFile": "q6_s1_validate_deployment.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "exec readinessProbe on /tmp/gate-open with initialDelaySeconds=5 and periodSeconds=5", "verificationScriptFile": "q6_s2_validate_probe.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "3", "description": "All 3 boom-gate replicas are updated, ready and available", "verificationScriptFile": "q6_s3_validate_ready.sh", "expectedOutput": "0", "weightage": 1 }
-            ]
-        },
-        {
-            "id": "7",
-            "namespace": "tides",
-            "machineHostname": "ckad9988",
-            "question": "Station settings for the tide gauges are kept as ConfigMaps in namespace `tides`.\n\n1. Create a ConfigMap named `gauge-config` from the file `/home/candidate/exam/q7/gauge.properties`. The whole file must be stored under the single key `station.conf`.\n2. Add the labels `tier=gauge` and `region=west` to `gauge-config`.\n3. Write the names of all ConfigMaps in namespace `tides` that match the label selector `tier=gauge,status!=retired` to `/home/candidate/exam/q7/active-gauges.txt`: names only (no `configmap/` prefix), sorted alphabetically, one per line.",
-            "concepts": ["configmaps", "labels", "selectors", "kubectl"],
-            "verification": [
-                { "id": "1", "description": "ConfigMap gauge-config stores gauge.properties under the single key station.conf", "verificationScriptFile": "q7_s1_validate_configmap_key.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "gauge-config is labelled tier=gauge and region=west", "verificationScriptFile": "q7_s2_validate_labels.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "active-gauges.txt lists the ConfigMaps matching tier=gauge,status!=retired, sorted, one per line", "verificationScriptFile": "q7_s3_validate_selector_file.sh", "expectedOutput": "0", "weightage": 2 }
-            ]
-        },
-        {
-            "id": "8",
             "namespace": "customs",
             "machineHostname": "ckad9988",
             "question": "A customs clearance app in namespace `customs` needs broker credentials.\n\n1. Create a generic Secret named `broker-creds` with two keys: `api-token` = `tk-7731-harbor` and `broker-id` = `HL-0042`.\n2. Create a Pod named `declarations` with a single container named `clerk` (image `nginx:1.25`) that:\n   - mounts the **whole** Secret `broker-creds` (every key, no `items` list) as a volume at `/etc/customs/creds`, with the volume mount set to `readOnly: true`\n   - exposes the Secret key `broker-id` as the environment variable `CUSTOMS_BROKER_ID` using `secretKeyRef` (not a literal value)\n\nThe Pod must be `Running`.",
             "concepts": ["secrets", "volumes", "env", "pods"],
             "verification": [
-                { "id": "1", "description": "Secret broker-creds (Opaque) has api-token=tk-7731-harbor and broker-id=HL-0042", "verificationScriptFile": "q8_s1_validate_secret.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "Whole secret mounted at /etc/customs/creds in container clerk (both key files readable)", "verificationScriptFile": "q8_s2_validate_mount.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "The secret volume mount is readOnly: true", "verificationScriptFile": "q8_s3_validate_readonly.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "4", "description": "CUSTOMS_BROKER_ID comes from secretKeyRef broker-creds/broker-id and printenv shows HL-0042", "verificationScriptFile": "q8_s4_validate_env.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "1", "description": "Secret broker-creds (Opaque) has api-token=tk-7731-harbor and broker-id=HL-0042", "verificationScriptFile": "q3_s1_validate_secret.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Whole secret mounted at /etc/customs/creds in container clerk (both key files readable)", "verificationScriptFile": "q3_s2_validate_mount.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "The secret volume mount is readOnly: true", "verificationScriptFile": "q3_s3_validate_readonly.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "CUSTOMS_BROKER_ID comes from secretKeyRef broker-creds/broker-id and printenv shows HL-0042", "verificationScriptFile": "q3_s4_validate_env.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {
-            "id": "9",
-            "namespace": "ledger",
-            "machineHostname": "ckad9988",
-            "question": "The finance team needs a nightly ledger reconciliation in namespace `ledger`.\n\nCreate a CronJob named `reconcile` with:\n- schedule `15 2 * * *`\n- `successfulJobsHistoryLimit: 5` and `failedJobsHistoryLimit: 2`\n- Pod `restartPolicy: Never` and one container named `reconciler`, image `busybox:1.36`, command `[\"sh\", \"-c\", \"echo ledger-ok uid=$(id -u)\"]`\n- Pod-level securityContext `runAsUser: 2500` and `runAsNonRoot: true`\n- container-level securityContext `readOnlyRootFilesystem: true`\n\nThen, without waiting for the schedule, create a one-off Job named `reconcile-manual-01` from the CronJob `reconcile`. The Job must complete successfully.",
-            "concepts": ["cronjobs", "jobs", "security-context"],
-            "verification": [
-                { "id": "1", "description": "CronJob reconcile: schedule 15 2 * * *, history limits 5/2, restartPolicy Never, image busybox:1.36", "verificationScriptFile": "q9_s1_validate_cronjob.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "Pod runs as uid 2500 with runAsNonRoot=true and readOnlyRootFilesystem=true", "verificationScriptFile": "q9_s2_validate_securitycontext.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "Job reconcile-manual-01 was created from (is owned by) CronJob reconcile", "verificationScriptFile": "q9_s3_validate_job_owner.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "4", "description": "Job reconcile-manual-01 succeeded and its log shows uid=2500", "verificationScriptFile": "q9_s4_validate_job_run.sh", "expectedOutput": "0", "weightage": 1 }
-            ]
-        },
-        {
-            "id": "10",
-            "namespace": "yard",
-            "machineHostname": "ckad9988",
-            "question": "In namespace `yard` the Deployment `forklift` is already running. The manifest `/home/candidate/exam/q10/forklift-hpa.yaml` defines a HorizontalPodAutoscaler for it, but it uses `autoscaling/v2beta2`, an API version that is no longer served, so `kubectl apply` fails.\n\nEdit the file in place so that it:\n- uses `apiVersion: autoscaling/v2`\n- keeps the name `forklift-hpa` and the target Deployment `forklift`\n- sets `minReplicas: 2`, `maxReplicas: 5` and a CPU target of type `Utilization` with `averageUtilization: 60`\n\nApply the file. Once applied, the HPA scales `forklift` up to its new minimum on its own; make sure `forklift` ends up with at least 2 ready replicas.",
-            "concepts": ["hpa", "autoscaling", "api-deprecation"],
-            "verification": [
-                { "id": "1", "description": "forklift-hpa.yaml uses autoscaling/v2 with min 2, max 5, cpu Utilization 60", "verificationScriptFile": "q10_s1_validate_file.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "Live HPA forklift-hpa targets Deployment forklift with min 2, max 5, cpu Utilization 60", "verificationScriptFile": "q10_s2_validate_hpa.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "3", "description": "Deployment forklift has at least 2 ready replicas", "verificationScriptFile": "q10_s3_validate_scaled.sh", "expectedOutput": "0", "weightage": 1 }
-            ]
-        },
-        {
-            "id": "11",
-            "namespace": "winch",
-            "machineHostname": "ckad9988",
-            "question": "In namespace `winch` the Deployment `hoist-controller` runs a container `hoist` that appends a line every 3 seconds to `/var/log/hoist/cycles.log` on an `emptyDir` volume named `hoist-logs`, so nothing shows up in `kubectl logs`. Its manifest is at `/home/candidate/exam/q11/hoist-controller.yaml`.\n\nAdd a logging sidecar to the Deployment as an additional regular container (under `containers`, not `initContainers`):\n- name `log-tail`, image `busybox:1.36`\n- mounts the existing `hoist-logs` volume at `/var/log/hoist`\n- command `[\"sh\", \"-c\", \"tail -n +1 -F /var/log/hoist/cycles.log\"]`\n\nLeave the `hoist` container unchanged. After the rollout, `kubectl logs` for the `log-tail` container of the running Pod must show the `hoist cycle complete` lines.",
-            "concepts": ["multi-container", "sidecar", "logging", "volumes"],
-            "verification": [
-                { "id": "1", "description": "Deployment hoist-controller has containers hoist and log-tail (busybox:1.36)", "verificationScriptFile": "q11_s1_validate_containers.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "log-tail mounts the hoist-logs emptyDir at /var/log/hoist, shared with hoist", "verificationScriptFile": "q11_s2_validate_shared_mount.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "kubectl logs -c log-tail of the running pod shows the hoist cycle lines", "verificationScriptFile": "q11_s3_validate_sidecar_logs.sh", "expectedOutput": "0", "weightage": 2 }
-            ]
-        },
-        {
-            "id": "12",
-            "namespace": "dockhands",
-            "machineHostname": "ckad9988",
-            "question": "Namespace `dockhands` has six Pods labelled with a `role` (`stevedore`, `lasher` or `clerk`). Change their metadata in place (do not delete or recreate any Pod):\n\n1. Add the label `shift=night` to every Pod with `role=stevedore`. No other Pod may have `shift=night`.\n2. Set the annotation `safety.example.com/certified=rigging-l2` on every Pod with `role=lasher` (one of them already carries an outdated value). No other Pod may carry this annotation.\n3. Remove the label `onboarding` from every Pod in the namespace that has it.",
-            "concepts": ["labels", "annotations", "selectors"],
-            "verification": [
-                { "id": "1", "description": "All role=stevedore pods, and only those, have shift=night", "verificationScriptFile": "q12_s1_validate_shift_label.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "All role=lasher pods, and only those, have safety.example.com/certified=rigging-l2", "verificationScriptFile": "q12_s2_validate_annotation.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "3", "description": "All 6 pods still exist and none carries the onboarding label", "verificationScriptFile": "q12_s3_validate_onboarding_removed.sh", "expectedOutput": "0", "weightage": 1 }
-            ]
-        },
-        {
-            "id": "13",
+            "id": "4",
             "namespace": "signal",
             "machineHostname": "ckad9977",
-            "question": "The harbor signal team wants a quick smoke test of its new status page.\n\nIn namespace `signal`:\n\n1. Create a Pod named `foghorn` (image `nginx:1.25`) with the label `app=foghorn`.\n2. Create a Service named `foghorn-svc` of type `ClusterIP` that selects `app=foghorn` and listens on port `8080`, forwarding to container port `80`.\n3. From a temporary Pod (image `busybox:1.36`) in namespace `signal` that is removed once it finishes, request `http://foghorn-svc:8080/` and save the response body to `/home/candidate/exam/q13/response.html`.\n4. After that request, save the logs of the `foghorn` Pod to `/home/candidate/exam/q13/foghorn.log`.",
+            "question": "The harbor signal team wants a quick smoke test of its new status page.\n\nIn namespace `signal`:\n\n1. Create a Pod named `foghorn` (image `nginx:1.25`) with the label `app=foghorn`.\n2. Create a Service named `foghorn-svc` of type `ClusterIP` that selects `app=foghorn` and listens on port `8080`, forwarding to container port `80`.\n3. From a temporary Pod (image `busybox:1.36`) in namespace `signal` that is removed once it finishes, request `http://foghorn-svc:8080/` and save the response body to `/home/candidate/exam/q4/response.html`.\n4. After that request, save the logs of the `foghorn` Pod to `/home/candidate/exam/q4/foghorn.log`.",
             "concepts": ["services", "clusterip", "logs", "kubectl run", "troubleshooting"],
             "verification": [
-                { "id": "1", "description": "Pod foghorn runs nginx:1.25 with label app=foghorn", "verificationScriptFile": "q13_s1_validate_pod.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "Service foghorn-svc is ClusterIP, port 8080 -> targetPort 80, with the foghorn Pod as endpoint", "verificationScriptFile": "q13_s2_validate_service.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "response.html contains the nginx welcome page", "verificationScriptFile": "q13_s3_validate_response.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "4", "description": "foghorn.log contains an nginx GET access log line", "verificationScriptFile": "q13_s4_validate_logs.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "1", "description": "Pod foghorn runs nginx:1.25 with label app=foghorn", "verificationScriptFile": "q4_s1_validate_pod.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Service foghorn-svc is ClusterIP, port 8080 -> targetPort 80, with the foghorn Pod as endpoint", "verificationScriptFile": "q4_s2_validate_service.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "response.html contains the nginx welcome page", "verificationScriptFile": "q4_s3_validate_response.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "foghorn.log contains an nginx GET access log line", "verificationScriptFile": "q4_s4_validate_logs.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {
-            "id": "14",
+            "id": "5",
+            "namespace": "beacon",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `beacon`:\n\n1. Create a Pod named `lamp-keeper` using image `busybox:1.36`, with the label `tier=signal` and the environment variable `BEAM_COLOR=amber`. Its container must run the command `sh -c 'while true; do echo \"beam=$BEAM_COLOR\"; sleep 5; done'`.\n2. Write a **single-line** `kubectl` command to `/home/candidate/exam/q5/phase.sh` that uses `jsonpath` output to print **only** the status phase of Pod `lamp-keeper` (e.g. `Running`). The file will be run with `bash`; the command must work regardless of the current namespace and print nothing else (other pods exist in `beacon`).",
+            "concepts": ["pods", "environment variables", "labels", "kubectl", "jsonpath"],
+            "verification": [
+                { "id": "1", "description": "Pod lamp-keeper is Running with image busybox:1.36 and label tier=signal", "verificationScriptFile": "q5_s1_validate_pod.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "BEAM_COLOR=amber is set and the container logs show beam=amber", "verificationScriptFile": "q5_s2_validate_env_command.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "phase.sh is a one-line kubectl jsonpath command that prints only Running", "verificationScriptFile": "q5_s3_validate_phase_cmd.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "6",
             "namespace": "lighthouse",
             "machineHostname": "ckad9977",
             "question": "In namespace `lighthouse`, the Deployment `lamp-driver` (2 replicas) sets the environment variable `LAMP_ROTATION` from key `rotation` of the ConfigMap `lamp-config`. Operations wants the lamp to rotate faster.\n\n1. Change the value of key `rotation` in ConfigMap `lamp-config` to `fast`. Leave the other keys of the ConfigMap unchanged.\n2. Make sure the running Pods of `lamp-driver` actually use the new value. The Deployment must keep reading `LAMP_ROTATION` from the ConfigMap key (do not hard-code the value) and must end up with 2 ready, up-to-date replicas.\n3. Annotate the ConfigMap `lamp-config` with `harbor-logistics.io/change-ticket=HL-4471`.",
             "concepts": ["configmaps", "environment variables", "rollout restart", "annotations", "deployments"],
             "verification": [
-                { "id": "1", "description": "ConfigMap lamp-config has rotation=fast and color unchanged", "verificationScriptFile": "q14_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "lamp-driver still reads LAMP_ROTATION from the ConfigMap, 2 ready replicas, and every running Pod has LAMP_ROTATION=fast", "verificationScriptFile": "q14_s2_validate_pod_env.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "3", "description": "ConfigMap lamp-config is annotated harbor-logistics.io/change-ticket=HL-4471", "verificationScriptFile": "q14_s3_validate_annotation.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "1", "description": "ConfigMap lamp-config has rotation=fast and color unchanged", "verificationScriptFile": "q6_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "lamp-driver still reads LAMP_ROTATION from the ConfigMap, 2 ready replicas, and every running Pod has LAMP_ROTATION=fast", "verificationScriptFile": "q6_s2_validate_pod_env.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "ConfigMap lamp-config is annotated harbor-logistics.io/change-ticket=HL-4471", "verificationScriptFile": "q6_s3_validate_annotation.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {
-            "id": "15",
+            "id": "7",
+            "namespace": "ledger",
+            "machineHostname": "ckad9988",
+            "question": "The finance team needs a nightly ledger reconciliation in namespace `ledger`.\n\nCreate a CronJob named `reconcile` with:\n- schedule `15 2 * * *`\n- `successfulJobsHistoryLimit: 5` and `failedJobsHistoryLimit: 2`\n- Pod `restartPolicy: Never` and one container named `reconciler`, image `busybox:1.36`, command `[\"sh\", \"-c\", \"echo ledger-ok uid=$(id -u)\"]`\n- Pod-level securityContext `runAsUser: 2500` and `runAsNonRoot: true`\n- container-level securityContext `readOnlyRootFilesystem: true`\n\nThen, without waiting for the schedule, create a one-off Job named `reconcile-manual-01` from the CronJob `reconcile`. The Job must complete successfully.",
+            "concepts": ["cronjobs", "jobs", "security-context"],
+            "verification": [
+                { "id": "1", "description": "CronJob reconcile: schedule 15 2 * * *, history limits 5/2, restartPolicy Never, image busybox:1.36", "verificationScriptFile": "q7_s1_validate_cronjob.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Pod runs as uid 2500 with runAsNonRoot=true and readOnlyRootFilesystem=true", "verificationScriptFile": "q7_s2_validate_securitycontext.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Job reconcile-manual-01 was created from (is owned by) CronJob reconcile", "verificationScriptFile": "q7_s3_validate_job_owner.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Job reconcile-manual-01 succeeded and its log shows uid=2500", "verificationScriptFile": "q7_s4_validate_job_run.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "tally",
+            "machineHostname": "ckad9999",
+            "question": "A Kustomize base for the `weighbridge` app is in `/home/candidate/exam/q8/base`: a Deployment `weighbridge` (3 replicas, `nginx:1.25`) and a Service `weighbridge` selecting `app: weighbridge`, both in namespace `tally`. Do not modify the base.\n\n1. Create a canary overlay at `/home/candidate/exam/q8/overlays/canary/kustomization.yaml` that uses `../../base` as its resource and renders **exactly one object**: a Deployment named `weighbridge-canary` (name suffix `-canary`) with `1` replica and image `nginx:1.26`, whose pods carry the extra label `track: canary` while keeping `app: weighbridge`, so the existing Service also routes to them. The overlay must not render a Service.\n2. Apply the base and the canary overlay with `kubectl apply -k`.\n\nWhen done, the Service `weighbridge` (selector unchanged) must have 4 ready endpoints: 3 stable pods and 1 canary pod.",
+            "concepts": ["kustomize", "overlays", "canary deployments", "labels", "services"],
+            "verification": [
+                { "id": "1", "description": "Deployment weighbridge has 3 ready replicas of nginx:1.25", "verificationScriptFile": "q8_s1_validate_stable.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment weighbridge-canary has 1 ready nginx:1.26 replica labelled app=weighbridge, track=canary", "verificationScriptFile": "q8_s2_validate_canary.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Service weighbridge (selector app=weighbridge) has 4 endpoints including 1 canary pod", "verificationScriptFile": "q8_s3_validate_endpoints.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "overlays/canary uses ../../base and renders only Deployment weighbridge-canary; base unchanged", "verificationScriptFile": "q8_s4_validate_overlay.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "yard",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `yard` the Deployment `forklift` is already running. The manifest `/home/candidate/exam/q9/forklift-hpa.yaml` defines a HorizontalPodAutoscaler for it, but it uses `autoscaling/v2beta2`, an API version that is no longer served, so `kubectl apply` fails.\n\nEdit the file in place so that it:\n- uses `apiVersion: autoscaling/v2`\n- keeps the name `forklift-hpa` and the target Deployment `forklift`\n- sets `minReplicas: 2`, `maxReplicas: 5` and a CPU target of type `Utilization` with `averageUtilization: 60`\n\nApply the file. Once applied, the HPA scales `forklift` up to its new minimum on its own; make sure `forklift` ends up with at least 2 ready replicas.",
+            "concepts": ["hpa", "autoscaling", "api-deprecation"],
+            "verification": [
+                { "id": "1", "description": "forklift-hpa.yaml uses autoscaling/v2 with min 2, max 5, cpu Utilization 60", "verificationScriptFile": "q9_s1_validate_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Live HPA forklift-hpa targets Deployment forklift with min 2, max 5, cpu Utilization 60", "verificationScriptFile": "q9_s2_validate_hpa.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Deployment forklift has at least 2 ready replicas", "verificationScriptFile": "q9_s3_validate_scaled.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "berth",
+            "machineHostname": "ckad9999",
+            "question": "A local Helm chart is available at `/home/candidate/exam/q10/dockyard`. Two releases of it are installed in namespace `berth`: `tugboat` and `pilot-legacy`.\n\n1. Upgrade release `tugboat` with the same chart so that it runs `2` replicas (chart value `replicaCount`) and its pods get the annotation `crew: night-shift` (chart value `podAnnotations.crew`). The values already set on the release (such as its existing pod annotation) must be preserved.\n2. Uninstall the release `pilot-legacy`.\n3. Install a new release named `harbormaster` from the same chart into namespace `berth`, with `service.type` set to `NodePort`.",
+            "concepts": ["helm", "helm upgrade", "helm uninstall", "helm install", "values"],
+            "verification": [
+                { "id": "1", "description": "tugboat upgraded (deployed, revision >= 2) with replicaCount=2 and 2 ready pods", "verificationScriptFile": "q10_s1_validate_tugboat_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "tugboat pods annotated crew=night-shift and the existing owner=berth-ops value is kept", "verificationScriptFile": "q10_s2_validate_tugboat_annotations.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Release pilot-legacy and its resources are removed", "verificationScriptFile": "q10_s3_validate_legacy_removed.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Release harbormaster (chart dockyard) is deployed in berth with a NodePort Service", "verificationScriptFile": "q10_s4_validate_harbormaster.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "11",
             "namespace": "cargo",
             "machineHostname": "ckad9977",
             "question": "The cargo team keeps its manifest ledger on node-local storage that must be provisioned by hand.\n\n1. Create a PersistentVolume named `ledger-pv` with capacity `200Mi`, access mode `ReadWriteOnce` (only), `storageClassName: manual` and a `hostPath` volume at `/tmp/cargo-ledger` (hostPath type `DirectoryOrCreate`).\n2. In namespace `cargo`, create a PersistentVolumeClaim named `ledger-claim` with `storageClassName: manual`, access mode `ReadWriteOnce` and a request of `200Mi`. It must be `Bound` to `ledger-pv`.\n3. In namespace `cargo`, create a Pod named `ledger-writer` (image `busybox:1.36`) that mounts `ledger-claim` at `/ledger`, writes the text `manifest=sealed` to the file `/ledger/entry.txt` and then keeps running (for example with `sleep 86400`).",
             "concepts": ["persistentvolumes", "persistentvolumeclaims", "hostpath", "storage", "volumes"],
             "verification": [
-                { "id": "1", "description": "PV ledger-pv: storageClassName manual, 200Mi, ReadWriteOnce, hostPath /tmp/cargo-ledger", "verificationScriptFile": "q15_s1_validate_pv.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "PVC ledger-claim (class manual, RWO) is Bound to ledger-pv", "verificationScriptFile": "q15_s2_validate_pvc_bound.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "Pod ledger-writer (busybox:1.36) is Running and mounts ledger-claim at /ledger", "verificationScriptFile": "q15_s3_validate_pod_mount.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "4", "description": "/ledger/entry.txt in ledger-writer contains manifest=sealed", "verificationScriptFile": "q15_s4_validate_file.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "1", "description": "PV ledger-pv: storageClassName manual, 200Mi, ReadWriteOnce, hostPath /tmp/cargo-ledger", "verificationScriptFile": "q11_s1_validate_pv.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "PVC ledger-claim (class manual, RWO) is Bound to ledger-pv", "verificationScriptFile": "q11_s2_validate_pvc_bound.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod ledger-writer (busybox:1.36) is Running and mounts ledger-claim at /ledger", "verificationScriptFile": "q11_s3_validate_pod_mount.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "/ledger/entry.txt in ledger-writer contains manifest=sealed", "verificationScriptFile": "q11_s4_validate_file.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {
-            "id": "16",
+            "id": "12",
+            "namespace": "manifest",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `manifest`, the ClusterIP Service `manifest-api` should expose the pods of Deployment `manifest-api` on port `8080`, but it has no endpoints and every request to it fails.\n\nFix the **Service** in place (keep its name, type `ClusterIP` and port `8080`) so that it selects the pods of Deployment `manifest-api` and forwards traffic to the container port declared by the Deployment's nginx container. Do not modify or recreate the Deployment.\n\nWhen done, the Service must list both `manifest-api` pods as endpoints.",
+            "concepts": ["services", "selectors", "endpoints", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "Service selector matches the (unchanged) manifest-api pod labels", "verificationScriptFile": "q12_s1_validate_selector.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Service is still ClusterIP and port 8080 targets container port 80 (http)", "verificationScriptFile": "q12_s2_validate_ports.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Endpoints list both manifest-api pods on port 80", "verificationScriptFile": "q12_s3_validate_endpoints.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "13",
             "namespace": "pier",
             "machineHostname": "ckad9977",
             "question": "Namespace `pier` runs three Pods: `gate-ui` (label `tier=frontend`), `dispatch-api` (label `tier=backend`) and `berth-db` (label `tier=db`, Redis listening on TCP port `6379`). At the moment every Pod can connect to `berth-db`.\n\nCreate a NetworkPolicy named `berth-db-access` in namespace `pier` that:\n\n- applies only to Pods with the label `tier=db`\n- has `policyTypes` set to `Ingress` only (egress must not be restricted)\n- in a single ingress rule, allows traffic only from Pods with the label `tier=backend` in namespace `pier`, and only on TCP port `6379`\n\nDo not modify the existing Pods.",
             "concepts": ["networkpolicy", "ingress", "podselector", "labels", "security"],
             "verification": [
-                { "id": "1", "description": "berth-db-access selects the tier=db Pod and no other Pod", "verificationScriptFile": "q16_s1_validate_podselector.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "policyTypes is exactly [Ingress]", "verificationScriptFile": "q16_s2_validate_policytypes.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "Single ingress rule whose only peer is a podSelector for tier=backend in namespace pier", "verificationScriptFile": "q16_s3_validate_from.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "4", "description": "Ingress rule allows only TCP port 6379", "verificationScriptFile": "q16_s4_validate_port.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "1", "description": "berth-db-access selects the tier=db Pod and no other Pod", "verificationScriptFile": "q13_s1_validate_podselector.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "policyTypes is exactly [Ingress]", "verificationScriptFile": "q13_s2_validate_policytypes.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Single ingress rule whose only peer is a podSelector for tier=backend in namespace pier", "verificationScriptFile": "q13_s3_validate_from.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Ingress rule allows only TCP port 6379", "verificationScriptFile": "q13_s4_validate_port.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {
-            "id": "17",
+            "id": "14",
+            "namespace": "gatehouse",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `gatehouse`, create a Deployment named `boom-gate` with `3` replicas. Its only container, named `controller`, uses image `busybox:1.36` and runs:\n\n`sh -c 'sleep 15; touch /tmp/gate-open; while true; do sleep 3600; done'`\n\nThe gate needs about 15 seconds to warm up and must not receive traffic before `/tmp/gate-open` exists. Add a **readiness probe** to the container that executes `cat /tmp/gate-open`, with `initialDelaySeconds: 5` and `periodSeconds: 5`.\n\nMake sure all 3 replicas become ready.",
+            "concepts": ["probes", "readiness probe", "deployments", "exec"],
+            "verification": [
+                { "id": "1", "description": "boom-gate has 3 replicas; container controller (busybox:1.36) runs the given command", "verificationScriptFile": "q14_s1_validate_deployment.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "exec readinessProbe on /tmp/gate-open with initialDelaySeconds=5 and periodSeconds=5", "verificationScriptFile": "q14_s2_validate_probe.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "All 3 boom-gate replicas are updated, ready and available", "verificationScriptFile": "q14_s3_validate_ready.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "winch",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `winch` the Deployment `hoist-controller` runs a container `hoist` that appends a line every 3 seconds to `/var/log/hoist/cycles.log` on an `emptyDir` volume named `hoist-logs`, so nothing shows up in `kubectl logs`. Its manifest is at `/home/candidate/exam/q15/hoist-controller.yaml`.\n\nAdd a logging sidecar to the Deployment as an additional regular container (under `containers`, not `initContainers`):\n- name `log-tail`, image `busybox:1.36`\n- mounts the existing `hoist-logs` volume at `/var/log/hoist`\n- command `[\"sh\", \"-c\", \"tail -n +1 -F /var/log/hoist/cycles.log\"]`\n\nLeave the `hoist` container unchanged. After the rollout, `kubectl logs` for the `log-tail` container of the running Pod must show the `hoist cycle complete` lines.",
+            "concepts": ["multi-container", "sidecar", "logging", "volumes"],
+            "verification": [
+                { "id": "1", "description": "Deployment hoist-controller has containers hoist and log-tail (busybox:1.36)", "verificationScriptFile": "q15_s1_validate_containers.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "log-tail mounts the hoist-logs emptyDir at /var/log/hoist, shared with hoist", "verificationScriptFile": "q15_s2_validate_shared_mount.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "kubectl logs -c log-tail of the running pod shows the hoist cycle lines", "verificationScriptFile": "q15_s3_validate_sidecar_logs.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "16",
             "namespace": "wharf",
             "machineHostname": "ckad9977",
             "question": "Namespace `wharf` needs guard-rails before the loading teams start deploying there. Do the following in namespace `wharf`, in this order:\n\n1. Create a LimitRange named `crate-defaults` that, for type `Container`, sets default **requests** of cpu `50m` and memory `64Mi` and default **limits** of cpu `100m` and memory `128Mi`.\n2. Create a ResourceQuota named `wharf-quota` with the hard limits `pods=4`, `requests.cpu=400m` and `limits.memory=512Mi`.\n3. Create a Pod named `forklift` (image `nginx:1.25`) **without** a `resources` section. It must get all of its requests and limits from the LimitRange and be `Running`.",
             "concepts": ["limitrange", "resourcequota", "resources", "requests", "limits"],
             "verification": [
-                { "id": "1", "description": "LimitRange crate-defaults: Container defaultRequest 50m/64Mi and default 100m/128Mi", "verificationScriptFile": "q17_s1_validate_limitrange.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "ResourceQuota wharf-quota: pods=4, requests.cpu=400m, limits.memory=512Mi", "verificationScriptFile": "q17_s2_validate_quota.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "Pod forklift (nginx:1.25) is Running with requests 50m/64Mi and limits 100m/128Mi", "verificationScriptFile": "q17_s3_validate_pod_resources.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "4", "description": "forklift's requests and limits were injected by the LimitRange (none set in the Pod spec)", "verificationScriptFile": "q17_s4_validate_defaults_applied.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "1", "description": "LimitRange crate-defaults: Container defaultRequest 50m/64Mi and default 100m/128Mi", "verificationScriptFile": "q16_s1_validate_limitrange.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "ResourceQuota wharf-quota: pods=4, requests.cpu=400m, limits.memory=512Mi", "verificationScriptFile": "q16_s2_validate_quota.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod forklift (nginx:1.25) is Running with requests 50m/64Mi and limits 100m/128Mi", "verificationScriptFile": "q16_s3_validate_pod_resources.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "forklift's requests and limits were injected by the LimitRange (none set in the Pod spec)", "verificationScriptFile": "q16_s4_validate_defaults_applied.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "dockhands",
+            "machineHostname": "ckad9988",
+            "question": "Namespace `dockhands` has six Pods labelled with a `role` (`stevedore`, `lasher` or `clerk`). Change their metadata in place (do not delete or recreate any Pod):\n\n1. Add the label `shift=night` to every Pod with `role=stevedore`. No other Pod may have `shift=night`.\n2. Set the annotation `safety.example.com/certified=rigging-l2` on every Pod with `role=lasher` (one of them already carries an outdated value). No other Pod may carry this annotation.\n3. Remove the label `onboarding` from every Pod in the namespace that has it.",
+            "concepts": ["labels", "annotations", "selectors"],
+            "verification": [
+                { "id": "1", "description": "All role=stevedore pods, and only those, have shift=night", "verificationScriptFile": "q17_s1_validate_shift_label.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "All role=lasher pods, and only those, have safety.example.com/certified=rigging-l2", "verificationScriptFile": "q17_s2_validate_annotation.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "All 6 pods still exist and none carries the onboarding label", "verificationScriptFile": "q17_s3_validate_onboarding_removed.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         }
     ]

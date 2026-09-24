@@ -1,36 +1,25 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace shadow --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl create namespace crescent --dry-run=client -o yaml | kubectl apply -f - || true
 
-# Pre-create the compromised secret (old value) and the pod that mounts it.
 kubectl apply -f - <<'EOF'
 apiVersion: v1
 kind: Secret
 metadata:
-  name: legacy-token
-  namespace: shadow
+  name: db-creds
+  namespace: crescent
 type: Opaque
 data:
-  token: c3VwZXItc2VjcmV0LXYx
+  password: cGFzc3dvcmQxMjM=
 ---
 apiVersion: v1
-kind: Pod
+kind: ConfigMap
 metadata:
-  name: token-reader
-  namespace: shadow
-spec:
-  containers:
-  - name: reader
-    image: busybox:1.36
-    command: ["sleep", "3600"]
-    volumeMounts:
-    - name: secret-vol
-      mountPath: /etc/secret
-  volumes:
-  - name: secret-vol
-    secret:
-      secretName: legacy-token
+  name: app-config
+  namespace: crescent
+data:
+  color: blue
 EOF
 
 echo "Setup complete for Question 15"

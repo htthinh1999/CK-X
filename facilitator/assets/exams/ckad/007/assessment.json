@@ -1,985 +1,287 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "shell",
-      "machineHostname": "ckad9999",
-      "question": "Create a `ResourceQuota` named `namespace-limits` in namespace `shell` that enforces the following hard limits:\n\n- Max pods: `10`\n- Max CPU requests (`requests.cpu`): `4`\n- Max memory requests (`requests.memory`): `4Gi`\n- Max CPU limits (`limits.cpu`): `8`\n- Max memory limits (`limits.memory`): `8Gi`\n- Max ConfigMaps (`configmaps`): `10`\n- Max Secrets (`secrets`): `10`\n\nVerify the quota is applied with `kubectl describe quota namespace-limits -n shell`.",
-      "concepts": [
-        "resourcequota",
-        "configuration",
-        "security"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "ResourceQuota namespace-limits exists in shell",
-          "verificationScriptFile": "q1_s1_validate_rq_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "1",
+            "namespace": "shell",
+            "machineHostname": "ckad9999",
+            "question": "Create a `ResourceQuota` named `namespace-limits` in namespace `shell` that enforces the following hard limits:\n\n- Max pods: `10`\n- Max CPU requests (`requests.cpu`): `4`\n- Max memory requests (`requests.memory`): `4Gi`\n- Max CPU limits (`limits.cpu`): `8`\n- Max memory limits (`limits.memory`): `8Gi`\n- Max ConfigMaps (`configmaps`): `10`\n- Max Secrets (`secrets`): `10`\n\nVerify the quota is applied with `kubectl describe quota namespace-limits -n shell`.",
+            "concepts": ["resourcequota", "configuration", "security"],
+            "verification": [
+                { "id": "1", "description": "ResourceQuota namespace-limits exists in shell", "verificationScriptFile": "q1_s1_validate_rq_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "pods hard limit is 10", "verificationScriptFile": "q1_s2_validate_pods_limit.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "requests.cpu hard limit is 4", "verificationScriptFile": "q1_s3_validate_cpu_requests.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "requests.memory hard limit is 4Gi", "verificationScriptFile": "q1_s4_validate_mem_requests.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "configmaps hard limit is 10", "verificationScriptFile": "q1_s5_validate_configmaps_limit.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "2",
-          "description": "pods hard limit is 10",
-          "verificationScriptFile": "q1_s2_validate_pods_limit.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "2",
+            "namespace": "lagoon",
+            "machineHostname": "ckad9988",
+            "question": "Services `api-v1-svc` and `api-v2-svc` already exist in namespace `lagoon`.\n\nCreate an `Ingress` named `api-routing` in namespace `lagoon` with path-based routing:\n\n- Path `/v1` -> Service `api-v1-svc` port `80`\n- Path `/v2` -> Service `api-v2-svc` port `80`\n\nConfiguration:\n\n- Host: `api.lagoon.local`\n- PathType: `Prefix`\n- IngressClassName: `nginx`",
+            "concepts": ["ingress", "networking", "path-routing"],
+            "verification": [
+                { "id": "1", "description": "Ingress api-routing exists in lagoon", "verificationScriptFile": "q2_s1_validate_ingress_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "host is api.lagoon.local", "verificationScriptFile": "q2_s2_validate_host.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "path /v1 is defined", "verificationScriptFile": "q2_s3_validate_path_v1.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "path /v2 is defined", "verificationScriptFile": "q2_s4_validate_path_v2.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "backend api-v1-svc referenced", "verificationScriptFile": "q2_s5_validate_backend_v1.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "6", "description": "backend api-v2-svc referenced", "verificationScriptFile": "q2_s6_validate_backend_v2.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "3",
-          "description": "requests.cpu hard limit is 4",
-          "verificationScriptFile": "q1_s3_validate_cpu_requests.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "3",
+            "namespace": "tide",
+            "machineHostname": "ckad9977",
+            "question": "A Deployment named `patch-demo` exists in namespace `tide`.\n\nUse `kubectl patch` to make the following changes:\n\n1. Strategic merge patch: update the image to `nginx:1.22`\n2. JSON patch: add a new environment variable `ENV_MODE=production`\n3. JSON patch: update replicas to `4`\n\nSave all three patch commands to `/tmp/exam/course/3/patch-commands.sh`.\n\nVerify changes with `kubectl describe deployment patch-demo -n tide`.",
+            "concepts": ["kubectl-patch", "deployments", "configuration"],
+            "verification": [
+                { "id": "1", "description": "Deployment patch-demo exists in tide", "verificationScriptFile": "q3_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "image is nginx:1.22", "verificationScriptFile": "q3_s2_validate_image.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "replicas is 4", "verificationScriptFile": "q3_s3_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "ENV_MODE=production is set", "verificationScriptFile": "q3_s4_validate_env_mode.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "patch-commands.sh exists", "verificationScriptFile": "q3_s5_validate_file_exists.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "4",
-          "description": "requests.memory hard limit is 4Gi",
-          "verificationScriptFile": "q1_s4_validate_mem_requests.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "4",
+            "namespace": "current",
+            "machineHostname": "ckad9988",
+            "question": "Create a `Job` named `parallel-processor` in namespace `current`:\n\n- Image: `busybox:1.36`\n- Container name: `processor`\n- Command: `[\"sh\", \"-c\", \"echo Processing batch $RANDOM && sleep 5\"]`\n- Completions: `6`\n- Parallelism: `3`\n- backoffLimit: `4`\n\nThe Job should run 6 total completions with 3 running in parallel at a time.\n\nVerify with `kubectl get jobs -n current` that completions reach 6/6.",
+            "concepts": ["jobs", "parallelism", "batch"],
+            "verification": [
+                { "id": "1", "description": "Job parallel-processor exists in current", "verificationScriptFile": "q4_s1_validate_job_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "completions is 6", "verificationScriptFile": "q4_s2_validate_completions.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "parallelism is 3", "verificationScriptFile": "q4_s3_validate_parallelism.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "backoffLimit is 4", "verificationScriptFile": "q4_s4_validate_backofflimit.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "container name is processor", "verificationScriptFile": "q4_s5_validate_container_name.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "5",
-          "description": "configmaps hard limit is 10",
-          "verificationScriptFile": "q1_s5_validate_configmaps_limit.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "5",
+            "namespace": "ocean",
+            "machineHostname": "ckad9999",
+            "question": "A Deployment named `web-app` already exists in namespace `ocean`.\n\nCreate a `HorizontalPodAutoscaler` named `web-app-hpa` in namespace `ocean` that:\n\n- Targets Deployment `web-app`\n- Min replicas: `2`\n- Max replicas: `10`\n- Target CPU utilization: `70%`\n\nUse `kubectl autoscale` or create the HPA manifest directly.\n\nNote: The HPA needs metrics-server to read CPU usage; scoring checks the HPA spec only.",
+            "concepts": ["hpa", "autoscaling", "deployments"],
+            "verification": [
+                { "id": "1", "description": "HPA web-app-hpa exists in ocean", "verificationScriptFile": "q5_s1_validate_hpa_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "HPA targets deployment web-app", "verificationScriptFile": "q5_s2_validate_target.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "minReplicas is 2", "verificationScriptFile": "q5_s3_validate_min_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "maxReplicas is 10", "verificationScriptFile": "q5_s4_validate_max_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "target CPU utilization is 70", "verificationScriptFile": "q5_s5_validate_cpu_target.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "6", "description": "scaleTargetRef kind is Deployment", "verificationScriptFile": "q5_s6_validate_ref_kind.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "anchor",
+            "machineHostname": "ckad9988",
+            "question": "A Pod named `troubled-app` exists in namespace `anchor` but you need to debug it.\n\n1. Use `kubectl debug` to create an ephemeral container in the running pod:\n\n- Image: `busybox:1.36`\n- Container name: `debugger`\n\n2. From within the ephemeral container, run `ls -la /data` and save the output to `/tmp/exam/course/6/debug-output.txt`.\n\nNote: If your cluster doesn't support ephemeral containers, use `kubectl debug` with `--copy-to` to create a debug copy of the pod instead. You may also capture the listing with `kubectl exec troubled-app -n anchor -- ls -la /data`.",
+            "concepts": ["debugging", "ephemeral-containers", "observability"],
+            "verification": [
+                { "id": "1", "description": "Pod troubled-app exists in anchor", "verificationScriptFile": "q6_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "debug-output.txt exists", "verificationScriptFile": "q6_s2_validate_file_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "debug-output.txt has content", "verificationScriptFile": "q6_s3_validate_file_content.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "debug-output.txt contains directory listing", "verificationScriptFile": "q6_s4_validate_file_listing.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "wave",
+            "machineHostname": "ckad9977",
+            "question": "Pods labeled `tier: api` exist in namespace `wave`.\n\nCreate a `NetworkPolicy` named `external-access` in namespace `wave` that:\n\n1. Applies to pods with label `tier: api`\n\n2. Allows ingress from:\n\n- Pods with label `tier: client` on port `80`\n- External IP range `10.0.0.0/8` on port `80` (using `ipBlock`)\n- Except block `10.0.1.0/24` (internal restricted subnet)\n\n3. Allows egress to:\n\n- DNS on port `53` UDP/TCP (any destination)\n- External IP range `0.0.0.0/0` on port `443` (HTTPS to external APIs)",
+            "concepts": ["networkpolicy", "ipblock", "networking"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy external-access exists in wave", "verificationScriptFile": "q7_s1_validate_np_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "podSelector matches tier: api", "verificationScriptFile": "q7_s2_validate_podselector.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "ingress rule with from exists", "verificationScriptFile": "q7_s3_validate_ingress_from.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "ingress uses ipBlock", "verificationScriptFile": "q7_s4_validate_ipblock.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "ipBlock has except", "verificationScriptFile": "q7_s5_validate_except.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "6", "description": "egress rule with to exists", "verificationScriptFile": "q7_s6_validate_egress_to.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "7", "description": "DNS port 53 allowed", "verificationScriptFile": "q7_s7_validate_dns_53.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "8", "description": "HTTPS port 443 allowed", "verificationScriptFile": "q7_s8_validate_https_443.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "shell",
+            "machineHostname": "ckad9988",
+            "question": "A Service named `backend-svc` exists in namespace `shell` with multiple pod endpoints.\n\n1. List all `EndpointSlices` for the service `backend-svc`.\n2. Save the following information to `/tmp/exam/course/8/endpoints-info.txt`:\n\n- Number of endpoints\n- IP addresses of all endpoints\n- Ports exposed\n\nUse `kubectl get endpointslices -n shell -l kubernetes.io/service-name=backend-svc` and `kubectl describe endpointslice`.",
+            "concepts": ["endpointslice", "services", "networking"],
+            "verification": [
+                { "id": "1", "description": "Service backend-svc exists in shell", "verificationScriptFile": "q8_s1_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "endpoints-info.txt exists", "verificationScriptFile": "q8_s2_validate_file_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "endpoints-info.txt has content", "verificationScriptFile": "q8_s3_validate_file_content.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "coral",
+            "machineHostname": "ckad9977",
+            "question": "Create a `Pod` named `network-diagnostic` in namespace `coral` for network troubleshooting:\n\n- Image: `nicolaka/netshoot:latest`\n- Container name: `netshoot`\n- Command: `[\"sleep\", \"3600\"]`\n\nConfigure the pod with:\n\n- `hostNetwork: true` (use the host's network namespace)\n- `hostPID: true` (use the host's PID namespace)\n\nWarning: This gives the pod elevated access. Verify with `kubectl exec network-diagnostic -n coral -- ip addr`.",
+            "concepts": ["hostnetwork", "securitycontext", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod network-diagnostic exists in coral", "verificationScriptFile": "q9_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "hostNetwork is true", "verificationScriptFile": "q9_s2_validate_hostnetwork.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "hostPID is true", "verificationScriptFile": "q9_s3_validate_hostpid.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "container name is netshoot", "verificationScriptFile": "q9_s4_validate_container_name.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "Pod is Running", "verificationScriptFile": "q9_s5_validate_running.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "reef",
+            "machineHostname": "ckad9999",
+            "question": "Create a `StatefulSet` named `db-cluster` in namespace `reef` for a database cluster:\n\n- Image: `redis:7-alpine`\n- Replicas: `3`\n- Container name: `redis`\n- Container port: `6379`\n- Volume claim template named `data` with `100Mi` storage\n- `serviceName`: `db-headless`\n\nAlso create a Headless `Service` named `db-headless` in namespace `reef`:\n\n- Selector: `app: db-cluster`\n- ClusterIP: `None`\n- Port: `6379`\n\nVerify pods are created with ordinal names (`db-cluster-0`, `db-cluster-1`, `db-cluster-2`).",
+            "concepts": ["statefulset", "headless-service", "storage"],
+            "verification": [
+                { "id": "1", "description": "StatefulSet db-cluster exists in reef", "verificationScriptFile": "q10_s1_validate_ss_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "StatefulSet replicas is 3", "verificationScriptFile": "q10_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "container image contains redis", "verificationScriptFile": "q10_s3_validate_image.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "serviceName is db-headless", "verificationScriptFile": "q10_s4_validate_servicename.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "volumeClaimTemplate named data exists", "verificationScriptFile": "q10_s5_validate_vct.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "6", "description": "Headless service db-headless exists in reef", "verificationScriptFile": "q10_s6_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "7", "description": "service clusterIP is None", "verificationScriptFile": "q10_s7_validate_clusterip_none.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "8", "description": "service port is 6379", "verificationScriptFile": "q10_s8_validate_svc_port.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "lagoon",
+            "machineHostname": "ckad9977",
+            "question": "Create cluster-wide RBAC for node monitoring:\n\n1. Create a `ServiceAccount` named `node-monitor-sa` in namespace `lagoon`.\n\n2. Create a `ClusterRole` named `node-reader`:\n\n- Allow `get`, `list`, `watch` on `nodes`\n- Allow `get`, `list` on `namespaces`\n- Allow `get` on `nodes/status`\n\n3. Create a `ClusterRoleBinding` named `node-reader-binding` binding the `node-reader` ClusterRole to the `node-monitor-sa` ServiceAccount.\n\nVerify with `kubectl auth can-i list nodes --as=system:serviceaccount:lagoon:node-monitor-sa`.",
+            "concepts": ["rbac", "clusterrole", "security"],
+            "verification": [
+                { "id": "1", "description": "ServiceAccount node-monitor-sa exists in lagoon", "verificationScriptFile": "q11_s1_validate_sa_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "ClusterRole node-reader exists", "verificationScriptFile": "q11_s2_validate_cr_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "ClusterRole grants access to nodes", "verificationScriptFile": "q11_s3_validate_nodes_perm.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "ClusterRole grants access to namespaces", "verificationScriptFile": "q11_s4_validate_namespaces_perm.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "ClusterRoleBinding node-reader-binding exists", "verificationScriptFile": "q11_s5_validate_crb_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "6", "description": "binding references node-monitor-sa", "verificationScriptFile": "q11_s6_validate_binding_sa.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "ocean",
+            "machineHostname": "ckad9988",
+            "question": "A Service named `local-svc` exists in namespace `ocean`.\n\nModify the Service to use node-local traffic routing:\n\n1. Set `internalTrafficPolicy: Local`\n\nThis ensures traffic is only routed to pods on the same node as the client, reducing latency.\n\nVerify the change with `kubectl get svc local-svc -n ocean -o yaml`.",
+            "concepts": ["services", "internaltrafficpolicy", "networking"],
+            "verification": [
+                { "id": "1", "description": "Service local-svc exists in ocean", "verificationScriptFile": "q12_s1_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "internalTrafficPolicy is Local", "verificationScriptFile": "q12_s2_validate_internaltrafficpolicy.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "13",
+            "namespace": "current",
+            "machineHostname": "ckad9977",
+            "question": "A ServiceAccount named `app-deployer` exists in namespace `current` with specific permissions.\n\nUse `kubectl auth can-i` to check and document its permissions:\n\n1. Check if it can:\n\n- Create deployments in `current` namespace\n- Delete deployments in `current` namespace\n- Create pods in `current` namespace\n- Delete secrets in `current` namespace\n- List nodes (cluster-wide)\n\n2. Save the results in the following format to `/tmp/exam/course/13/permissions.txt`:\n\n```\ncreate deployments: yes/no\ndelete deployments: yes/no\ncreate pods: yes/no\ndelete secrets: yes/no\nlist nodes: yes/no\n```",
+            "concepts": ["rbac", "authorization", "security"],
+            "verification": [
+                { "id": "1", "description": "ServiceAccount app-deployer exists in current", "verificationScriptFile": "q13_s1_validate_sa_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "permissions.txt exists", "verificationScriptFile": "q13_s2_validate_file_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "permissions.txt has content", "verificationScriptFile": "q13_s3_validate_file_content.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "permissions.txt documents deployments", "verificationScriptFile": "q13_s4_validate_file_format.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "deep",
+            "machineHostname": "ckad9999",
+            "question": "Create a `DaemonSet` named `node-monitor` in namespace `deep`:\n\n- Image: `busybox:1.36`\n- Container name: `monitor`\n- Command: `[\"sh\", \"-c\", \"while true; do echo Node: $NODE_NAME; sleep 60; done\"]`\n\nThe container must have an environment variable `NODE_NAME` set via the Downward API from `spec.nodeName`.\n\nAdd a toleration so it runs on all nodes including control-plane nodes:\n\n- Key: `node-role.kubernetes.io/control-plane`\n- Operator: `Exists`\n- Effect: `NoSchedule`",
+            "concepts": ["daemonset", "downward-api", "tolerations"],
+            "verification": [
+                { "id": "1", "description": "DaemonSet node-monitor exists in deep", "verificationScriptFile": "q14_s1_validate_ds_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "container image contains busybox", "verificationScriptFile": "q14_s2_validate_image.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "container name is monitor", "verificationScriptFile": "q14_s3_validate_container_name.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "NODE_NAME env uses fieldRef spec.nodeName", "verificationScriptFile": "q14_s4_validate_downward_env.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "toleration for control-plane exists", "verificationScriptFile": "q14_s5_validate_toleration.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "6", "description": "DaemonSet scheduled on at least 1 node", "verificationScriptFile": "q14_s6_validate_desired.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "anchor",
+            "machineHostname": "ckad9977",
+            "question": "Create a `Pod` named `data-pipeline` in namespace `anchor` implementing a producer-consumer pattern.\n\nContainer 1 `producer`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do date >> /data/log.txt; sleep 5; done\"]`\n\nContainer 2 `consumer`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"tail -f /data/log.txt\"]`\n\nContainer 3 `monitor`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do wc -l /data/log.txt; sleep 10; done\"]`\n\nAll three containers must share an `emptyDir` volume mounted at `/data`.\n\nVerify all containers are running and check logs of the consumer container.",
+            "concepts": ["multi-container", "volumes", "pod-design"],
+            "verification": [
+                { "id": "1", "description": "Pod data-pipeline exists in anchor", "verificationScriptFile": "q15_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "producer container present", "verificationScriptFile": "q15_s2_validate_producer.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "consumer container present", "verificationScriptFile": "q15_s3_validate_consumer.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "monitor container present", "verificationScriptFile": "q15_s4_validate_monitor.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "emptyDir volume present", "verificationScriptFile": "q15_s5_validate_emptydir.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "6", "description": "Pod is Running", "verificationScriptFile": "q15_s6_validate_running.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "tide",
+            "machineHostname": "ckad9999",
+            "question": "1. Create a `PriorityClass` named `critical-priority`:\n\n- Value: `1000000`\n- Global default: `false`\n- Description: `Critical workloads priority`\n\n2. Create a `Pod` named `critical-pod` in namespace `tide`:\n\n- Image: `nginx:1.21`\n- Container name: `nginx`\n- Use the `critical-priority` PriorityClass\n\nVerify with `kubectl get pod critical-pod -n tide -o yaml | grep priority`.",
+            "concepts": ["priorityclass", "scheduling", "pods"],
+            "verification": [
+                { "id": "1", "description": "PriorityClass critical-priority exists", "verificationScriptFile": "q16_s1_validate_pc_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "PriorityClass value is 1000000", "verificationScriptFile": "q16_s2_validate_value.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "globalDefault is not true", "verificationScriptFile": "q16_s3_validate_not_global_default.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Pod critical-pod exists in tide", "verificationScriptFile": "q16_s4_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "Pod uses priorityClassName critical-priority", "verificationScriptFile": "q16_s5_validate_pod_priority.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "reef",
+            "machineHostname": "ckad9988",
+            "question": "Create a `Pod` named `cache-pod` in namespace `reef`:\n\n- Image: `redis:7-alpine`\n- Container name: `cache`\n\nAdd an `emptyDir` volume with:\n\n- Name: `cache-volume`\n- sizeLimit: `100Mi`\n- medium: `Memory` (RAM-backed tmpfs)\n\nMount the volume at `/cache`.\n\nThis creates a memory-backed cache limited to 100Mi.",
+            "concepts": ["volumes", "emptydir", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod cache-pod exists in reef", "verificationScriptFile": "q17_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "emptyDir sizeLimit is 100Mi", "verificationScriptFile": "q17_s2_validate_sizelimit.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "emptyDir medium is Memory", "verificationScriptFile": "q17_s3_validate_medium.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "volume mounted at /cache", "verificationScriptFile": "q17_s4_validate_mountpath.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "wave",
+            "machineHostname": "ckad9999",
+            "question": "Create a `Pod` named `slow-starter` in namespace `wave` for an application that takes a long time to start:\n\n- Image: `nginx:1.21`\n- Container name: `app`\n\nConfigure a `startupProbe`:\n\n- HTTP GET path `/` on port `80`\n- `failureThreshold`: `30`\n- `periodSeconds`: `10`\n\nThis allows up to 5 minutes (30 * 10 seconds) for the application to start.\n\nAlso add a `livenessProbe` with HTTP GET on `/` port `80` with default settings.",
+            "concepts": ["probes", "startupprobe", "observability"],
+            "verification": [
+                { "id": "1", "description": "Pod slow-starter exists in wave", "verificationScriptFile": "q18_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "startupProbe uses httpGet", "verificationScriptFile": "q18_s2_validate_startup_httpget.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "startupProbe failureThreshold is 30", "verificationScriptFile": "q18_s3_validate_startup_threshold.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "livenessProbe uses httpGet", "verificationScriptFile": "q18_s4_validate_liveness_httpget.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "Pod is Running", "verificationScriptFile": "q18_s5_validate_running.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "deep",
+            "machineHostname": "ckad9988",
+            "question": "1. Create a `Secret` named `app-credentials` in namespace `deep` using `stringData` (plain text, auto-encoded):\n\n- `api-key`: `super-secret-key-12345`\n- `db-password`: `postgres@secure!`\n\n2. Make the Secret immutable.\n\n3. Create a `Pod` named `secret-consumer` in namespace `deep`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"cat /secrets/api-key && sleep 3600\"]`\n- Mount the secret `app-credentials` at `/secrets`",
+            "concepts": ["secrets", "configuration", "pods"],
+            "verification": [
+                { "id": "1", "description": "Secret app-credentials exists in deep", "verificationScriptFile": "q19_s1_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Secret is immutable", "verificationScriptFile": "q19_s2_validate_immutable.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod secret-consumer exists in deep", "verificationScriptFile": "q19_s3_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Secret app-credentials is mounted in pod", "verificationScriptFile": "q19_s4_validate_secret_mounted.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "coral",
+            "machineHostname": "ckad9999",
+            "question": "Create a `Deployment` named `web-frontend` in namespace `coral`:\n\n- Image: `nginx:1.21`\n- Replicas: `3`\n- Container name: `frontend`\n- Pod labels: `app: web-frontend`, `tier: frontend`\n\nConfigure `preferredDuringSchedulingIgnoredDuringExecution` pod affinity:\n\n- Weight: `100`\n- Prefer scheduling on the same node as pods with label `app: cache`\n- Topology key: `kubernetes.io/hostname`\n\nNote: This is a soft preference. Pods will be scheduled even if no cache pods exist.",
+            "concepts": ["affinity", "scheduling", "deployments"],
+            "verification": [
+                { "id": "1", "description": "Deployment web-frontend exists in coral", "verificationScriptFile": "q20_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "replicas is 3", "verificationScriptFile": "q20_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "pod template label app is web-frontend", "verificationScriptFile": "q20_s3_validate_label_app.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "podAffinity preferred rule with weight exists", "verificationScriptFile": "q20_s4_validate_pod_affinity.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "topologyKey is kubernetes.io/hostname", "verificationScriptFile": "q20_s5_validate_topology_key.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "6", "description": "affinity label selector app: cache present", "verificationScriptFile": "q20_s6_validate_cache_selector.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "ocean",
-      "machineHostname": "ckad9999",
-      "question": "A Deployment named `web-app` already exists in namespace `ocean`.\n\nCreate a `HorizontalPodAutoscaler` named `web-app-hpa` in namespace `ocean` that:\n\n- Targets Deployment `web-app`\n- Min replicas: `2`\n- Max replicas: `10`\n- Target CPU utilization: `70%`\n\nUse `kubectl autoscale` or create the HPA manifest directly.\n\nNote: The HPA needs metrics-server to read CPU usage; scoring checks the HPA spec only.",
-      "concepts": [
-        "hpa",
-        "autoscaling",
-        "deployments"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "HPA web-app-hpa exists in ocean",
-          "verificationScriptFile": "q2_s1_validate_hpa_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "HPA targets deployment web-app",
-          "verificationScriptFile": "q2_s2_validate_target.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "minReplicas is 2",
-          "verificationScriptFile": "q2_s3_validate_min_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "maxReplicas is 10",
-          "verificationScriptFile": "q2_s4_validate_max_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "target CPU utilization is 70",
-          "verificationScriptFile": "q2_s5_validate_cpu_target.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "6",
-          "description": "scaleTargetRef kind is Deployment",
-          "verificationScriptFile": "q2_s6_validate_ref_kind.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "reef",
-      "machineHostname": "ckad9999",
-      "question": "Create a `StatefulSet` named `db-cluster` in namespace `reef` for a database cluster:\n\n- Image: `redis:7-alpine`\n- Replicas: `3`\n- Container name: `redis`\n- Container port: `6379`\n- Volume claim template named `data` with `100Mi` storage\n- `serviceName`: `db-headless`\n\nAlso create a Headless `Service` named `db-headless` in namespace `reef`:\n\n- Selector: `app: db-cluster`\n- ClusterIP: `None`\n- Port: `6379`\n\nVerify pods are created with ordinal names (`db-cluster-0`, `db-cluster-1`, `db-cluster-2`).",
-      "concepts": [
-        "statefulset",
-        "headless-service",
-        "storage"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "StatefulSet db-cluster exists in reef",
-          "verificationScriptFile": "q3_s1_validate_ss_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "StatefulSet replicas is 3",
-          "verificationScriptFile": "q3_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "container image contains redis",
-          "verificationScriptFile": "q3_s3_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "serviceName is db-headless",
-          "verificationScriptFile": "q3_s4_validate_servicename.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "volumeClaimTemplate named data exists",
-          "verificationScriptFile": "q3_s5_validate_vct.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "6",
-          "description": "Headless service db-headless exists in reef",
-          "verificationScriptFile": "q3_s6_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "7",
-          "description": "service clusterIP is None",
-          "verificationScriptFile": "q3_s7_validate_clusterip_none.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "8",
-          "description": "service port is 6379",
-          "verificationScriptFile": "q3_s8_validate_svc_port.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "deep",
-      "machineHostname": "ckad9999",
-      "question": "Create a `DaemonSet` named `node-monitor` in namespace `deep`:\n\n- Image: `busybox:1.36`\n- Container name: `monitor`\n- Command: `[\"sh\", \"-c\", \"while true; do echo Node: $NODE_NAME; sleep 60; done\"]`\n\nThe container must have an environment variable `NODE_NAME` set via the Downward API from `spec.nodeName`.\n\nAdd a toleration so it runs on all nodes including control-plane nodes:\n\n- Key: `node-role.kubernetes.io/control-plane`\n- Operator: `Exists`\n- Effect: `NoSchedule`",
-      "concepts": [
-        "daemonset",
-        "downward-api",
-        "tolerations"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "DaemonSet node-monitor exists in deep",
-          "verificationScriptFile": "q4_s1_validate_ds_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "container image contains busybox",
-          "verificationScriptFile": "q4_s2_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "container name is monitor",
-          "verificationScriptFile": "q4_s3_validate_container_name.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "NODE_NAME env uses fieldRef spec.nodeName",
-          "verificationScriptFile": "q4_s4_validate_downward_env.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "toleration for control-plane exists",
-          "verificationScriptFile": "q4_s5_validate_toleration.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "6",
-          "description": "DaemonSet scheduled on at least 1 node",
-          "verificationScriptFile": "q4_s6_validate_desired.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "tide",
-      "machineHostname": "ckad9999",
-      "question": "1. Create a `PriorityClass` named `critical-priority`:\n\n- Value: `1000000`\n- Global default: `false`\n- Description: `Critical workloads priority`\n\n2. Create a `Pod` named `critical-pod` in namespace `tide`:\n\n- Image: `nginx:1.21`\n- Container name: `nginx`\n- Use the `critical-priority` PriorityClass\n\nVerify with `kubectl get pod critical-pod -n tide -o yaml | grep priority`.",
-      "concepts": [
-        "priorityclass",
-        "scheduling",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "PriorityClass critical-priority exists",
-          "verificationScriptFile": "q5_s1_validate_pc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "PriorityClass value is 1000000",
-          "verificationScriptFile": "q5_s2_validate_value.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "globalDefault is not true",
-          "verificationScriptFile": "q5_s3_validate_not_global_default.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Pod critical-pod exists in tide",
-          "verificationScriptFile": "q5_s4_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "Pod uses priorityClassName critical-priority",
-          "verificationScriptFile": "q5_s5_validate_pod_priority.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "wave",
-      "machineHostname": "ckad9999",
-      "question": "Create a `Pod` named `slow-starter` in namespace `wave` for an application that takes a long time to start:\n\n- Image: `nginx:1.21`\n- Container name: `app`\n\nConfigure a `startupProbe`:\n\n- HTTP GET path `/` on port `80`\n- `failureThreshold`: `30`\n- `periodSeconds`: `10`\n\nThis allows up to 5 minutes (30 * 10 seconds) for the application to start.\n\nAlso add a `livenessProbe` with HTTP GET on `/` port `80` with default settings.",
-      "concepts": [
-        "probes",
-        "startupprobe",
-        "observability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod slow-starter exists in wave",
-          "verificationScriptFile": "q6_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "startupProbe uses httpGet",
-          "verificationScriptFile": "q6_s2_validate_startup_httpget.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "startupProbe failureThreshold is 30",
-          "verificationScriptFile": "q6_s3_validate_startup_threshold.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "livenessProbe uses httpGet",
-          "verificationScriptFile": "q6_s4_validate_liveness_httpget.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "Pod is Running",
-          "verificationScriptFile": "q6_s5_validate_running.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "coral",
-      "machineHostname": "ckad9999",
-      "question": "Create a `Deployment` named `web-frontend` in namespace `coral`:\n\n- Image: `nginx:1.21`\n- Replicas: `3`\n- Container name: `frontend`\n- Pod labels: `app: web-frontend`, `tier: frontend`\n\nConfigure `preferredDuringSchedulingIgnoredDuringExecution` pod affinity:\n\n- Weight: `100`\n- Prefer scheduling on the same node as pods with label `app: cache`\n- Topology key: `kubernetes.io/hostname`\n\nNote: This is a soft preference. Pods will be scheduled even if no cache pods exist.",
-      "concepts": [
-        "affinity",
-        "scheduling",
-        "deployments"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment web-frontend exists in coral",
-          "verificationScriptFile": "q7_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "replicas is 3",
-          "verificationScriptFile": "q7_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "pod template label app is web-frontend",
-          "verificationScriptFile": "q7_s3_validate_label_app.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "podAffinity preferred rule with weight exists",
-          "verificationScriptFile": "q7_s4_validate_pod_affinity.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "topologyKey is kubernetes.io/hostname",
-          "verificationScriptFile": "q7_s5_validate_topology_key.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "6",
-          "description": "affinity label selector app: cache present",
-          "verificationScriptFile": "q7_s6_validate_cache_selector.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "lagoon",
-      "machineHostname": "ckad9988",
-      "question": "Services `api-v1-svc` and `api-v2-svc` already exist in namespace `lagoon`.\n\nCreate an `Ingress` named `api-routing` in namespace `lagoon` with path-based routing:\n\n- Path `/v1` -> Service `api-v1-svc` port `80`\n- Path `/v2` -> Service `api-v2-svc` port `80`\n\nConfiguration:\n\n- Host: `api.lagoon.local`\n- PathType: `Prefix`\n- IngressClassName: `nginx`",
-      "concepts": [
-        "ingress",
-        "networking",
-        "path-routing"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Ingress api-routing exists in lagoon",
-          "verificationScriptFile": "q8_s1_validate_ingress_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "host is api.lagoon.local",
-          "verificationScriptFile": "q8_s2_validate_host.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "path /v1 is defined",
-          "verificationScriptFile": "q8_s3_validate_path_v1.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "path /v2 is defined",
-          "verificationScriptFile": "q8_s4_validate_path_v2.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "backend api-v1-svc referenced",
-          "verificationScriptFile": "q8_s5_validate_backend_v1.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "6",
-          "description": "backend api-v2-svc referenced",
-          "verificationScriptFile": "q8_s6_validate_backend_v2.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "current",
-      "machineHostname": "ckad9988",
-      "question": "Create a `Job` named `parallel-processor` in namespace `current`:\n\n- Image: `busybox:1.36`\n- Container name: `processor`\n- Command: `[\"sh\", \"-c\", \"echo Processing batch $RANDOM && sleep 5\"]`\n- Completions: `6`\n- Parallelism: `3`\n- backoffLimit: `4`\n\nThe Job should run 6 total completions with 3 running in parallel at a time.\n\nVerify with `kubectl get jobs -n current` that completions reach 6/6.",
-      "concepts": [
-        "jobs",
-        "parallelism",
-        "batch"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Job parallel-processor exists in current",
-          "verificationScriptFile": "q9_s1_validate_job_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "completions is 6",
-          "verificationScriptFile": "q9_s2_validate_completions.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "parallelism is 3",
-          "verificationScriptFile": "q9_s3_validate_parallelism.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "backoffLimit is 4",
-          "verificationScriptFile": "q9_s4_validate_backofflimit.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "container name is processor",
-          "verificationScriptFile": "q9_s5_validate_container_name.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "anchor",
-      "machineHostname": "ckad9988",
-      "question": "A Pod named `troubled-app` exists in namespace `anchor` but you need to debug it.\n\n1. Use `kubectl debug` to create an ephemeral container in the running pod:\n\n- Image: `busybox:1.36`\n- Container name: `debugger`\n\n2. From within the ephemeral container, run `ls -la /data` and save the output to `/tmp/exam/course/10/debug-output.txt`.\n\nNote: If your cluster doesn't support ephemeral containers, use `kubectl debug` with `--copy-to` to create a debug copy of the pod instead. You may also capture the listing with `kubectl exec troubled-app -n anchor -- ls -la /data`.",
-      "concepts": [
-        "debugging",
-        "ephemeral-containers",
-        "observability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod troubled-app exists in anchor",
-          "verificationScriptFile": "q10_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "debug-output.txt exists",
-          "verificationScriptFile": "q10_s2_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "debug-output.txt has content",
-          "verificationScriptFile": "q10_s3_validate_file_content.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "debug-output.txt contains directory listing",
-          "verificationScriptFile": "q10_s4_validate_file_listing.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "shell",
-      "machineHostname": "ckad9988",
-      "question": "A Service named `backend-svc` exists in namespace `shell` with multiple pod endpoints.\n\n1. List all `EndpointSlices` for the service `backend-svc`.\n2. Save the following information to `/tmp/exam/course/11/endpoints-info.txt`:\n\n- Number of endpoints\n- IP addresses of all endpoints\n- Ports exposed\n\nUse `kubectl get endpointslices -n shell -l kubernetes.io/service-name=backend-svc` and `kubectl describe endpointslice`.",
-      "concepts": [
-        "endpointslice",
-        "services",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service backend-svc exists in shell",
-          "verificationScriptFile": "q11_s1_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "endpoints-info.txt exists",
-          "verificationScriptFile": "q11_s2_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "endpoints-info.txt has content",
-          "verificationScriptFile": "q11_s3_validate_file_content.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "ocean",
-      "machineHostname": "ckad9988",
-      "question": "A Service named `local-svc` exists in namespace `ocean`.\n\nModify the Service to use node-local traffic routing:\n\n1. Set `internalTrafficPolicy: Local`\n\nThis ensures traffic is only routed to pods on the same node as the client, reducing latency.\n\nVerify the change with `kubectl get svc local-svc -n ocean -o yaml`.",
-      "concepts": [
-        "services",
-        "internaltrafficpolicy",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service local-svc exists in ocean",
-          "verificationScriptFile": "q12_s1_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "internalTrafficPolicy is Local",
-          "verificationScriptFile": "q12_s2_validate_internaltrafficpolicy.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "reef",
-      "machineHostname": "ckad9988",
-      "question": "Create a `Pod` named `cache-pod` in namespace `reef`:\n\n- Image: `redis:7-alpine`\n- Container name: `cache`\n\nAdd an `emptyDir` volume with:\n\n- Name: `cache-volume`\n- sizeLimit: `100Mi`\n- medium: `Memory` (RAM-backed tmpfs)\n\nMount the volume at `/cache`.\n\nThis creates a memory-backed cache limited to 100Mi.",
-      "concepts": [
-        "volumes",
-        "emptydir",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod cache-pod exists in reef",
-          "verificationScriptFile": "q13_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "emptyDir sizeLimit is 100Mi",
-          "verificationScriptFile": "q13_s2_validate_sizelimit.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "emptyDir medium is Memory",
-          "verificationScriptFile": "q13_s3_validate_medium.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "volume mounted at /cache",
-          "verificationScriptFile": "q13_s4_validate_mountpath.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "deep",
-      "machineHostname": "ckad9988",
-      "question": "1. Create a `Secret` named `app-credentials` in namespace `deep` using `stringData` (plain text, auto-encoded):\n\n- `api-key`: `super-secret-key-12345`\n- `db-password`: `postgres@secure!`\n\n2. Make the Secret immutable.\n\n3. Create a `Pod` named `secret-consumer` in namespace `deep`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"cat /secrets/api-key && sleep 3600\"]`\n- Mount the secret `app-credentials` at `/secrets`",
-      "concepts": [
-        "secrets",
-        "configuration",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Secret app-credentials exists in deep",
-          "verificationScriptFile": "q14_s1_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Secret is immutable",
-          "verificationScriptFile": "q14_s2_validate_immutable.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Pod secret-consumer exists in deep",
-          "verificationScriptFile": "q14_s3_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Secret app-credentials is mounted in pod",
-          "verificationScriptFile": "q14_s4_validate_secret_mounted.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "tide",
-      "machineHostname": "ckad9977",
-      "question": "A Deployment named `patch-demo` exists in namespace `tide`.\n\nUse `kubectl patch` to make the following changes:\n\n1. Strategic merge patch: update the image to `nginx:1.22`\n2. JSON patch: add a new environment variable `ENV_MODE=production`\n3. JSON patch: update replicas to `4`\n\nSave all three patch commands to `/tmp/exam/course/15/patch-commands.sh`.\n\nVerify changes with `kubectl describe deployment patch-demo -n tide`.",
-      "concepts": [
-        "kubectl-patch",
-        "deployments",
-        "configuration"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment patch-demo exists in tide",
-          "verificationScriptFile": "q15_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "image is nginx:1.22",
-          "verificationScriptFile": "q15_s2_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "replicas is 4",
-          "verificationScriptFile": "q15_s3_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "ENV_MODE=production is set",
-          "verificationScriptFile": "q15_s4_validate_env_mode.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "patch-commands.sh exists",
-          "verificationScriptFile": "q15_s5_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "wave",
-      "machineHostname": "ckad9977",
-      "question": "Pods labeled `tier: api` exist in namespace `wave`.\n\nCreate a `NetworkPolicy` named `external-access` in namespace `wave` that:\n\n1. Applies to pods with label `tier: api`\n\n2. Allows ingress from:\n\n- Pods with label `tier: client` on port `80`\n- External IP range `10.0.0.0/8` on port `80` (using `ipBlock`)\n- Except block `10.0.1.0/24` (internal restricted subnet)\n\n3. Allows egress to:\n\n- DNS on port `53` UDP/TCP (any destination)\n- External IP range `0.0.0.0/0` on port `443` (HTTPS to external APIs)",
-      "concepts": [
-        "networkpolicy",
-        "ipblock",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy external-access exists in wave",
-          "verificationScriptFile": "q16_s1_validate_np_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "podSelector matches tier: api",
-          "verificationScriptFile": "q16_s2_validate_podselector.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "ingress rule with from exists",
-          "verificationScriptFile": "q16_s3_validate_ingress_from.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "ingress uses ipBlock",
-          "verificationScriptFile": "q16_s4_validate_ipblock.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "ipBlock has except",
-          "verificationScriptFile": "q16_s5_validate_except.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "6",
-          "description": "egress rule with to exists",
-          "verificationScriptFile": "q16_s6_validate_egress_to.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "7",
-          "description": "DNS port 53 allowed",
-          "verificationScriptFile": "q16_s7_validate_dns_53.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "8",
-          "description": "HTTPS port 443 allowed",
-          "verificationScriptFile": "q16_s8_validate_https_443.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "coral",
-      "machineHostname": "ckad9977",
-      "question": "Create a `Pod` named `network-diagnostic` in namespace `coral` for network troubleshooting:\n\n- Image: `nicolaka/netshoot:latest`\n- Container name: `netshoot`\n- Command: `[\"sleep\", \"3600\"]`\n\nConfigure the pod with:\n\n- `hostNetwork: true` (use the host's network namespace)\n- `hostPID: true` (use the host's PID namespace)\n\nWarning: This gives the pod elevated access. Verify with `kubectl exec network-diagnostic -n coral -- ip addr`.",
-      "concepts": [
-        "hostnetwork",
-        "securitycontext",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod network-diagnostic exists in coral",
-          "verificationScriptFile": "q17_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "hostNetwork is true",
-          "verificationScriptFile": "q17_s2_validate_hostnetwork.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "hostPID is true",
-          "verificationScriptFile": "q17_s3_validate_hostpid.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "container name is netshoot",
-          "verificationScriptFile": "q17_s4_validate_container_name.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "Pod is Running",
-          "verificationScriptFile": "q17_s5_validate_running.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "lagoon",
-      "machineHostname": "ckad9977",
-      "question": "Create cluster-wide RBAC for node monitoring:\n\n1. Create a `ServiceAccount` named `node-monitor-sa` in namespace `lagoon`.\n\n2. Create a `ClusterRole` named `node-reader`:\n\n- Allow `get`, `list`, `watch` on `nodes`\n- Allow `get`, `list` on `namespaces`\n- Allow `get` on `nodes/status`\n\n3. Create a `ClusterRoleBinding` named `node-reader-binding` binding the `node-reader` ClusterRole to the `node-monitor-sa` ServiceAccount.\n\nVerify with `kubectl auth can-i list nodes --as=system:serviceaccount:lagoon:node-monitor-sa`.",
-      "concepts": [
-        "rbac",
-        "clusterrole",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ServiceAccount node-monitor-sa exists in lagoon",
-          "verificationScriptFile": "q18_s1_validate_sa_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "ClusterRole node-reader exists",
-          "verificationScriptFile": "q18_s2_validate_cr_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "ClusterRole grants access to nodes",
-          "verificationScriptFile": "q18_s3_validate_nodes_perm.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "ClusterRole grants access to namespaces",
-          "verificationScriptFile": "q18_s4_validate_namespaces_perm.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "ClusterRoleBinding node-reader-binding exists",
-          "verificationScriptFile": "q18_s5_validate_crb_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "6",
-          "description": "binding references node-monitor-sa",
-          "verificationScriptFile": "q18_s6_validate_binding_sa.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "current",
-      "machineHostname": "ckad9977",
-      "question": "A ServiceAccount named `app-deployer` exists in namespace `current` with specific permissions.\n\nUse `kubectl auth can-i` to check and document its permissions:\n\n1. Check if it can:\n\n- Create deployments in `current` namespace\n- Delete deployments in `current` namespace\n- Create pods in `current` namespace\n- Delete secrets in `current` namespace\n- List nodes (cluster-wide)\n\n2. Save the results in the following format to `/tmp/exam/course/19/permissions.txt`:\n\n```\ncreate deployments: yes/no\ndelete deployments: yes/no\ncreate pods: yes/no\ndelete secrets: yes/no\nlist nodes: yes/no\n```",
-      "concepts": [
-        "rbac",
-        "authorization",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ServiceAccount app-deployer exists in current",
-          "verificationScriptFile": "q19_s1_validate_sa_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "permissions.txt exists",
-          "verificationScriptFile": "q19_s2_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "permissions.txt has content",
-          "verificationScriptFile": "q19_s3_validate_file_content.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "permissions.txt documents deployments",
-          "verificationScriptFile": "q19_s4_validate_file_format.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "anchor",
-      "machineHostname": "ckad9977",
-      "question": "Create a `Pod` named `data-pipeline` in namespace `anchor` implementing a producer-consumer pattern.\n\nContainer 1 `producer`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do date >> /data/log.txt; sleep 5; done\"]`\n\nContainer 2 `consumer`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"tail -f /data/log.txt\"]`\n\nContainer 3 `monitor`:\n\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do wc -l /data/log.txt; sleep 10; done\"]`\n\nAll three containers must share an `emptyDir` volume mounted at `/data`.\n\nVerify all containers are running and check logs of the consumer container.",
-      "concepts": [
-        "multi-container",
-        "volumes",
-        "pod-design"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod data-pipeline exists in anchor",
-          "verificationScriptFile": "q20_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "producer container present",
-          "verificationScriptFile": "q20_s2_validate_producer.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "consumer container present",
-          "verificationScriptFile": "q20_s3_validate_consumer.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "monitor container present",
-          "verificationScriptFile": "q20_s4_validate_monitor.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "emptyDir volume present",
-          "verificationScriptFile": "q20_s5_validate_emptydir.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "6",
-          "description": "Pod is Running",
-          "verificationScriptFile": "q20_s6_validate_running.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    }
-  ]
+    ]
 }

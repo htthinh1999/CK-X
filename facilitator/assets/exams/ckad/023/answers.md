@@ -11,9 +11,32 @@ context to switch:
 
 ---
 
-## dev cluster (`ssh ckad9999`)
+## Question 1 — Secret as volume
 
-### Question 1 — Multi-container Pod with shared volume
+> Server: `ssh ckad9977`
+
+```bash
+kubectl -n prod create secret generic app-secret --from-literal=api-key=abc123 --from-literal=token=xyz789
+cat <<'YAML' | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata: { name: secret-consumer, namespace: prod }
+spec:
+  volumes:
+    - name: sec
+      secret: { secretName: app-secret }
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["sh", "-c", "sleep 3600"]
+      volumeMounts:
+        - { name: sec, mountPath: /etc/secret }
+YAML
+```
+
+---
+
+## Question 2 — Multi-container Pod with shared volume
 
 > Server: `ssh ckad9999`
 
@@ -43,7 +66,57 @@ spec:
 YAML
 ```
 
-### Question 2 — Resource requests/limits
+---
+
+## Question 3 — Ingress
+
+> Server: `ssh ckad9977`
+
+```bash
+cat <<'YAML' | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: { name: shop-ing, namespace: prod }
+spec:
+  rules:
+    - host: shop.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: shop-svc
+                port: { number: 80 }
+YAML
+```
+
+---
+
+## Question 4 — Job
+
+> Server: `ssh ckad9988`
+
+```bash
+cat <<'YAML' | kubectl apply -f -
+apiVersion: batch/v1
+kind: Job
+metadata: { name: batch, namespace: staging }
+spec:
+  completions: 3
+  parallelism: 2
+  backoffLimit: 4
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - { name: worker, image: busybox:1.36, command: ["sh","-c","echo done"] }
+YAML
+```
+
+---
+
+## Question 5 — Resource requests/limits
 
 > Server: `ssh ckad9999`
 
@@ -55,7 +128,29 @@ kubectl -n dev run limited --image=nginx:1.25 \
 kubectl apply -f limited.yaml
 ```
 
-### Question 3 — ConfigMap as volume
+---
+
+## Question 6 — securityContext
+
+> Server: `ssh ckad9988`
+
+```bash
+cat <<'YAML' | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata: { name: secured, namespace: staging }
+spec:
+  securityContext: { runAsUser: 1000 }
+  containers:
+    - name: app
+      image: nginx:1.25
+      securityContext: { allowPrivilegeEscalation: false }
+YAML
+```
+
+---
+
+## Question 7 — ConfigMap as volume
 
 > Server: `ssh ckad9999`
 
@@ -82,68 +177,9 @@ spec:
 YAML
 ```
 
-### Question 4 — Liveness + readiness probes
-
-> Server: `ssh ckad9999`
-
-```bash
-cat <<'YAML' | kubectl apply -f -
-apiVersion: v1
-kind: Pod
-metadata: { name: probed, namespace: dev }
-spec:
-  containers:
-    - name: web
-      image: nginx:1.25
-      livenessProbe:  { httpGet: { path: /, port: 80 } }
-      readinessProbe: { httpGet: { path: /, port: 80 } }
-YAML
-```
-
 ---
 
-## staging cluster (`ssh ckad9988`)
-
-### Question 5 — Job
-
-> Server: `ssh ckad9988`
-
-```bash
-cat <<'YAML' | kubectl apply -f -
-apiVersion: batch/v1
-kind: Job
-metadata: { name: batch, namespace: staging }
-spec:
-  completions: 3
-  parallelism: 2
-  backoffLimit: 4
-  template:
-    spec:
-      restartPolicy: Never
-      containers:
-        - { name: worker, image: busybox:1.36, command: ["sh","-c","echo done"] }
-YAML
-```
-
-### Question 6 — securityContext
-
-> Server: `ssh ckad9988`
-
-```bash
-cat <<'YAML' | kubectl apply -f -
-apiVersion: v1
-kind: Pod
-metadata: { name: secured, namespace: staging }
-spec:
-  securityContext: { runAsUser: 1000 }
-  containers:
-    - name: app
-      image: nginx:1.25
-      securityContext: { allowPrivilegeEscalation: false }
-YAML
-```
-
-### Question 7 — Rolling update
+## Question 8 — Rolling update
 
 > Server: `ssh ckad9988`
 
@@ -152,66 +188,9 @@ kubectl -n staging set image deployment/rollme app=nginx:1.25
 kubectl -n staging rollout status deployment/rollme
 ```
 
-### Question 8 — Deployment + ClusterIP Service
-
-> Server: `ssh ckad9988`
-
-```bash
-kubectl -n staging create deployment store --image=nginx:1.25 --replicas=2
-kubectl -n staging expose deployment store --name=store-svc --port=80 --target-port=80
-```
-
 ---
 
-## prod cluster (`ssh ckad9977`)
-
-### Question 9 — Secret as volume
-
-> Server: `ssh ckad9977`
-
-```bash
-kubectl -n prod create secret generic app-secret --from-literal=api-key=abc123 --from-literal=token=xyz789
-cat <<'YAML' | kubectl apply -f -
-apiVersion: v1
-kind: Pod
-metadata: { name: secret-consumer, namespace: prod }
-spec:
-  volumes:
-    - name: sec
-      secret: { secretName: app-secret }
-  containers:
-    - name: app
-      image: busybox:1.36
-      command: ["sh", "-c", "sleep 3600"]
-      volumeMounts:
-        - { name: sec, mountPath: /etc/secret }
-YAML
-```
-
-### Question 10 — Ingress
-
-> Server: `ssh ckad9977`
-
-```bash
-cat <<'YAML' | kubectl apply -f -
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata: { name: shop-ing, namespace: prod }
-spec:
-  rules:
-    - host: shop.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: shop-svc
-                port: { number: 80 }
-YAML
-```
-
-### Question 11 — CronJob
+## Question 9 — CronJob
 
 > Server: `ssh ckad9977`
 
@@ -232,7 +211,40 @@ spec:
 YAML
 ```
 
-### Question 12 — NetworkPolicy
+---
+
+## Question 10 — Deployment + ClusterIP Service
+
+> Server: `ssh ckad9988`
+
+```bash
+kubectl -n staging create deployment store --image=nginx:1.25 --replicas=2
+kubectl -n staging expose deployment store --name=store-svc --port=80 --target-port=80
+```
+
+---
+
+## Question 11 — Liveness + readiness probes
+
+> Server: `ssh ckad9999`
+
+```bash
+cat <<'YAML' | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata: { name: probed, namespace: dev }
+spec:
+  containers:
+    - name: web
+      image: nginx:1.25
+      livenessProbe:  { httpGet: { path: /, port: 80 } }
+      readinessProbe: { httpGet: { path: /, port: 80 } }
+YAML
+```
+
+---
+
+## Question 12 — NetworkPolicy
 
 > Server: `ssh ckad9977`
 

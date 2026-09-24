@@ -1,8 +1,12 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace abyss --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-mkdir -p /tmp/exam/course/10 || true
+# Namespace for the helm release
+kubectl create namespace tide --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+
+# Make the bitnami chart available (student installs my-release themselves)
+helm repo add bitnami https://charts.bitnami.com/bitnami >/dev/null 2>&1 || true
+helm repo update >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 10"
 exit 0

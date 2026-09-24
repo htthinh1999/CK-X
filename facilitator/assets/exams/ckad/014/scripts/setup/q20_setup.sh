@@ -1,22 +1,31 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace void --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl create namespace nightfall --dry-run=client -o yaml | kubectl apply -f - || true
 
 kubectl apply -f - <<'EOF'
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: dns-tester
-  namespace: void
+  name: critical-processor
+  namespace: nightfall
 spec:
-  containers:
-  - name: tester
-    image: busybox:1.36
-    command: ["sleep", "3600"]
+  replicas: 2
+  selector:
+    matchLabels:
+      app: critical
+  template:
+    metadata:
+      labels:
+        app: critical
+    spec:
+      containers:
+      - name: app
+        image: nginx:1.24
 EOF
 
-mkdir -p /tmp/exam/course/20
+# Trigger a rollout update so there is an in-progress rollout to pause.
+kubectl set image deployment/critical-processor app=nginx:1.25 -n nightfall 2>/dev/null || true
 
 echo "Setup complete for Question 20"
 exit 0

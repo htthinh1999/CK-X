@@ -1,63 +1,36 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace manifest --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace beacon --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+rm -rf /home/candidate/exam/q5 && mkdir -p /home/candidate/exam/q5
 
-# Working Deployment (pods: app=manifest-api, tier=backend, nginx on port 80 "http")
-# and a broken Service: wrong selector value AND wrong targetPort -> no endpoints.
-kubectl -n manifest delete service manifest-api --ignore-not-found >/dev/null 2>&1 || true
-kubectl -n manifest apply -f - >/dev/null 2>&1 <<'YAML' || true
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: manifest-api
-  namespace: manifest
-  labels:
-    app: manifest-api
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: manifest-api
-  template:
-    metadata:
-      labels:
-        app: manifest-api
-        tier: backend
-    spec:
-      containers:
-        - name: api
-          image: nginx:1.25
-          ports:
-            - name: http
-              containerPort: 80
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-            limits:
-              cpu: 50m
-              memory: 64Mi
----
+# The student creates lamp-keeper; remove any leftover copy.
+kubectl -n beacon delete pod lamp-keeper --ignore-not-found --wait=false >/dev/null 2>&1 || true
+
+# Decoy pod sharing the tier=signal label; it completes (phase Succeeded), so a
+# command that prints the phase of more than one pod gives the wrong output.
+kubectl -n beacon apply -f - >/dev/null 2>&1 <<'YAML' || true
 apiVersion: v1
-kind: Service
+kind: Pod
 metadata:
-  name: manifest-api
-  namespace: manifest
+  name: flare-check
+  namespace: beacon
   labels:
-    app: manifest-api
+    tier: signal
+    role: selftest
 spec:
-  type: ClusterIP
-  selector:
-    app: manifest-app
-    tier: backend
-  ports:
-    - name: web
-      protocol: TCP
-      port: 8080
-      targetPort: 8081
+  restartPolicy: Never
+  containers:
+    - name: flare
+      image: busybox:1.36
+      command: ["sh", "-c", "echo flare self-test ok"]
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+        limits:
+          cpu: 50m
+          memory: 32Mi
 YAML
-
-kubectl -n manifest rollout status deployment/manifest-api --timeout=120s >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 5"
 exit 0

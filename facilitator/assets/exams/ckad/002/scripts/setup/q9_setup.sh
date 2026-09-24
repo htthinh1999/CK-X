@@ -1,38 +1,12 @@
 #!/bin/bash
 
-# Create the troubleshooting namespace
-kubectl create namespace troubleshooting
+# Delete the config-management namespace if it exists
+echo "Setting up environment for Question 9 (ConfigMap)..."
+kubectl delete namespace config-management --ignore-not-found=true
 
-# Create a broken deployment - using an invalid image name
-cat <<EOF | kubectl apply -f -
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: broken-deployment
-  namespace: troubleshooting
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.19-invalid-tag
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
-EOF
-
-# Wait a bit to ensure the deployment is created
+# Wait for deletion to complete
 sleep 2
 
-echo "Broken deployment created in the troubleshooting namespace." 
+# Confirm environment is ready
+echo "Environment ready for Question 9"
+exit 0 

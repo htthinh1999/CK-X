@@ -1,38 +1,14 @@
 #!/bin/bash
 
-# Setup for Question 5: Troubleshoot and fix a broken deployment
+# Setup for Question 5: Create a deployment called nginx-deployment in namespace dev
 
-# Create the troubleshooting namespace if it doesn't exist already
-if ! kubectl get namespace troubleshooting &> /dev/null; then
-    kubectl create namespace troubleshooting
+# Create the namespace if it doesn't exist already
+if kubectl get namespace dev &> /dev/null; then
+    kubectl delete namespace dev --ignore-not-found=true
 fi
 
-# Delete any existing deployment with the same name
-kubectl delete deployment broken-app -n troubleshooting --ignore-not-found=true
+# Delete any existing deployment with the same name to ensure a clean state
+kubectl delete deployment nginx-deployment -n dev --ignore-not-found=true
 
-# Create a broken deployment with an invalid image name
-cat <<EOF | kubectl apply -f -
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: broken-app
-  namespace: troubleshooting
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: broken-app
-  template:
-    metadata:
-      labels:
-        app: broken-app
-    spec:
-      containers:
-      - name: app
-        image: nginx:nonexistentversion  # This image tag doesn't exist
-        ports:
-        - containerPort: 80
-EOF
-
-echo "Setup complete for Question 5: Created broken deployment 'broken-app' in namespace 'troubleshooting'"
+echo "Setup complete for Question 5: Environment ready for creating nginx deployment in namespace 'dev'"
 exit 0 

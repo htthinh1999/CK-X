@@ -1,182 +1,137 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=kiosk
+NS=freight
 DIR=/home/candidate/exam/q18
 
-for n in kiosk ops-east ops-west; do
-  kubectl create namespace "$n" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-done
-# namespace labels (reset on every run)
-kubectl label namespace ops-east team=ops --overwrite >/dev/null 2>&1 || true
-kubectl label namespace ops-west team=dev --overwrite >/dev/null 2>&1 || true
-kubectl label namespace kiosk team- >/dev/null 2>&1 || true
+kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
 # Start from a clean state (idempotent re-runs)
-kubectl -n "$NS" delete networkpolicy --all --ignore-not-found >/dev/null 2>&1 || true
-kubectl -n ops-east delete networkpolicy --all --ignore-not-found >/dev/null 2>&1 || true
-kubectl -n ops-west delete networkpolicy --all --ignore-not-found >/dev/null 2>&1 || true
-kubectl -n "$NS" delete deployment kiosk kiosk-cache --ignore-not-found --timeout=60s >/dev/null 2>&1 || true
-kubectl -n "$NS" delete pod kiosk-client --ignore-not-found --grace-period=1 --timeout=60s >/dev/null 2>&1 || true
-for n in ops-east ops-west; do
-  kubectl -n "$n" delete pod monitor guest --ignore-not-found --grace-period=1 --timeout=60s >/dev/null 2>&1 || true
-done
+kubectl -n "$NS" delete deployment freight-api --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n "$NS" delete rolebinding --all --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n "$NS" delete role --all --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n "$NS" delete serviceaccount freight-reader freight-writer --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n "$NS" delete pod --all --grace-period=0 --force --ignore-not-found >/dev/null 2>&1 || true
 rm -rf "$DIR" && mkdir -p "$DIR"
 
-kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' || true
+kubectl apply -f - >/dev/null <<'EOF'
+apiVersion: v1
+kind: Secret
+metadata:
+  name: route-key
+  namespace: freight
+type: Opaque
+stringData:
+  key: rk-7781-alpha
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: route-key-backup
+  namespace: freight
+type: Opaque
+stringData:
+  key: rk-6620-beta
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tariff-db
+  namespace: freight
+type: Opaque
+stringData:
+  DB_USER: tariff
+  DB_PASSWORD: tariff-pw
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freight-routes
+  namespace: freight
+data:
+  routes: "north-yard,harbour-spur,east-loop"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freight-tariffs
+  namespace: freight
+data:
+  base: "12.50"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: freight-writer
+  namespace: freight
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: freight-writer
+  namespace: freight
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "create", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: freight-writer
+  namespace: freight
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: freight-writer
+subjects:
+- kind: ServiceAccount
+  name: freight-writer
+  namespace: freight
+---
+# Left over from an incident: grants far more than read access
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: freight-oncall
+  namespace: freight
+  annotations:
+    transit.io/ticket: "OPS-4471"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: yardmaster
+- kind: ServiceAccount
+  name: freight-reader
+  namespace: freight
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kiosk
-  namespace: kiosk
-  labels:
-    app: kiosk
+  name: freight-api
+  namespace: freight
+  labels: {app: freight-api}
 spec:
   replicas: 2
   selector:
-    matchLabels:
-      app: kiosk
+    matchLabels: {app: freight-api}
   template:
     metadata:
-      labels:
-        app: kiosk
-        tier: frontend
+      labels: {app: freight-api}
     spec:
+      automountServiceAccountToken: false
       containers:
-        - name: web
-          image: nginx:1.25
-          ports:
-            - name: http
-              containerPort: 80
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-            limits:
-              memory: 64Mi
-        - name: metrics
-          image: busybox:1.36
-          command: ["sh", "-c", "mkdir -p /www && echo kiosk-metrics > /www/index.html && exec httpd -f -p 8081 -h /www"]
-          ports:
-            - name: metrics
-              containerPort: 8081
-          resources:
-            requests:
-              cpu: 5m
-              memory: 8Mi
-            limits:
-              memory: 32Mi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: kiosk-cache
-  namespace: kiosk
-  labels:
-    app: kiosk-cache
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: kiosk-cache
-  template:
-    metadata:
-      labels:
-        app: kiosk-cache
-        tier: frontend
-    spec:
-      containers:
-        - name: cache
-          image: busybox:1.36
-          command: ["sh", "-c", "while true; do sleep 3600; done"]
-          resources:
-            requests:
-              cpu: 5m
-              memory: 8Mi
-            limits:
-              memory: 32Mi
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: kiosk-client
-  namespace: kiosk
-  labels:
-    app: kiosk-client
-spec:
-  containers:
-    - name: client
-      image: busybox:1.36
-      command: ["sh", "-c", "while true; do sleep 3600; done"]
-      resources:
-        requests:
-          cpu: 5m
-          memory: 8Mi
-        limits:
-          memory: 32Mi
----
-# left behind by the previous team
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: legacy-frontend
-  namespace: kiosk
-spec:
-  podSelector:
-    matchLabels:
-      tier: frontend
-  policyTypes:
-    - Ingress
-  ingress:
-    - {}
-YAML
+      - name: api
+        image: busybox:1.36
+        command: ["sh", "-c", "while true; do ls /var/run/secrets/kubernetes.io/serviceaccount/ 2>/dev/null || echo 'no API token mounted'; sleep 30; done"]
+        resources:
+          requests: {cpu: 10m, memory: 16Mi}
+EOF
 
-for n in ops-east ops-west; do
-  kubectl -n "$n" apply -f - >/dev/null 2>&1 <<YAML || true
-apiVersion: v1
-kind: Pod
-metadata:
-  name: monitor
-  namespace: $n
-  labels:
-    role: monitor
-spec:
-  containers:
-    - name: probe
-      image: busybox:1.36
-      command: ["sh", "-c", "while true; do sleep 3600; done"]
-      resources:
-        requests:
-          cpu: 5m
-          memory: 8Mi
-        limits:
-          memory: 32Mi
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: guest
-  namespace: $n
-  labels:
-    role: guest
-spec:
-  containers:
-    - name: probe
-      image: busybox:1.36
-      command: ["sh", "-c", "while true; do sleep 3600; done"]
-      resources:
-        requests:
-          cpu: 5m
-          memory: 8Mi
-        limits:
-          memory: 32Mi
-YAML
-done
-
-kubectl -n "$NS" rollout status deployment/kiosk --timeout=120s >/dev/null 2>&1 || true
-kubectl -n "$NS" wait pod/kiosk-client --for=condition=Ready --timeout=60s >/dev/null 2>&1 || true
-for n in ops-east ops-west; do
-  kubectl -n "$n" wait pod/monitor pod/guest --for=condition=Ready --timeout=60s >/dev/null 2>&1 || true
-done
+kubectl -n "$NS" rollout status deployment/freight-api --timeout=120s >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 18"
 exit 0

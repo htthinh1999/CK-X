@@ -1,20 +1,36 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace lunar --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl create namespace shadow --dry-run=client -o yaml | kubectl apply -f - || true
 
-mkdir -p /tmp/exam/course/1
-cat > /tmp/exam/course/1/Dockerfile <<'EOF'
-FROM golang:1.20-alpine
-# Add instructions below
-EOF
-
-cat > /tmp/exam/course/1/main.go <<'EOF'
-package main
-import "fmt"
-func main() {
-    fmt.Println("Tsukuyomi server running")
-}
+# Pre-create the compromised secret (old value) and the pod that mounts it.
+kubectl apply -f - <<'EOF'
+apiVersion: v1
+kind: Secret
+metadata:
+  name: legacy-token
+  namespace: shadow
+type: Opaque
+data:
+  token: c3VwZXItc2VjcmV0LXYx
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: token-reader
+  namespace: shadow
+spec:
+  containers:
+  - name: reader
+    image: busybox:1.36
+    command: ["sleep", "3600"]
+    volumeMounts:
+    - name: secret-vol
+      mountPath: /etc/secret
+  volumes:
+  - name: secret-vol
+    secret:
+      secretName: legacy-token
 EOF
 
 echo "Setup complete for Question 1"

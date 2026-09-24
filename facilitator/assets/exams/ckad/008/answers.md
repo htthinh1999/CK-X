@@ -10,7 +10,70 @@
 
 ---
 
-## Question 1 | Namespace and Pod Creation (4 points)
+## Question 1 | Job with Completions (5 points)
+
+> Server: `ssh ckad9988`
+
+```bash
+kubectl create job echo-job --image=busybox:1.36 -n stone --dry-run=client -o yaml \
+  -- /bin/sh -c 'echo hello; sleep 5; echo world' > /tmp/exam/echo-job.yaml
+```
+
+Edit to add `completions: 5`:
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: echo-job
+  namespace: stone
+spec:
+  completions: 5
+  template:
+    spec:
+      containers:
+      - name: echo-job
+        image: busybox:1.36
+        command: ["/bin/sh", "-c", "echo hello; sleep 5; echo world"]
+      restartPolicy: Never
+```
+
+```bash
+kubectl apply -f /tmp/exam/echo-job.yaml
+```
+
+---
+
+## Question 2 | Secret Creation and Usage (5 points)
+
+> Server: `ssh ckad9977`
+
+```bash
+kubectl create secret generic mysecret --from-literal=password=mypass -n ridge
+```
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-pod
+  namespace: ridge
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.25
+    volumeMounts:
+    - name: secret-volume
+      mountPath: /etc/foo
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: mysecret
+```
+
+---
+
+## Question 3 | Namespace and Pod Creation (4 points)
 
 > Server: `ssh ckad9999`
 
@@ -36,7 +99,42 @@ spec:
 
 ---
 
-## Question 2 | Pod with Environment Variables (5 points)
+## Question 4 | SecurityContext (5 points)
+
+> Server: `ssh ckad9977`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-pod
+  namespace: valley
+spec:
+  securityContext:
+    runAsUser: 101
+  restartPolicy: Never
+  containers:
+  - name: secure-pod
+    image: busybox:1.36
+    command: ["sleep", "3600"]
+```
+
+Note: `busybox` is used instead of `nginx` because the standard nginx image needs root privileges to create its cache directories.
+
+---
+
+## Question 5 | CronJob (5 points)
+
+> Server: `ssh ckad9988`
+
+```bash
+kubectl create cronjob date-job --image=busybox:1.36 --schedule="*/1 * * * *" -n mist \
+  -- /bin/sh -c 'date; echo Hello from Kubernetes'
+```
+
+---
+
+## Question 6 | Pod with Environment Variables (5 points)
 
 > Server: `ssh ckad9999`
 
@@ -65,7 +163,29 @@ spec:
 
 ---
 
-## Question 3 | ResourceQuota (6 points)
+## Question 7 | Multi-Container Pod (6 points)
+
+> Server: `ssh ckad9988`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-container
+  namespace: alpine
+spec:
+  containers:
+  - name: container1
+    image: busybox:1.36
+    command: ["/bin/sh", "-c", "echo hello; sleep 3600"]
+  - name: container2
+    image: busybox:1.36
+    command: ["/bin/sh", "-c", "echo hello; sleep 3600"]
+```
+
+---
+
+## Question 8 | ResourceQuota (6 points)
 
 > Server: `ssh ckad9999`
 
@@ -90,7 +210,75 @@ spec:
 
 ---
 
-## Question 4 | Labels and Selectors (5 points)
+## Question 9 | Init Container (6 points)
+
+> Server: `ssh ckad9988`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-pod
+  namespace: crest
+spec:
+  initContainers:
+  - name: init
+    image: busybox:1.36
+    command: ["/bin/sh", "-c", "echo 'Initialized' > /work-dir/index.html"]
+    volumeMounts:
+    - name: workdir
+      mountPath: /work-dir
+  containers:
+  - name: nginx
+    image: nginx:1.25
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: workdir
+      mountPath: /usr/share/nginx/html
+  volumes:
+  - name: workdir
+    emptyDir: {}
+```
+
+---
+
+## Question 10 | Resource Requests and Limits (5 points)
+
+> Server: `ssh ckad9977`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: resource-pod
+  namespace: cave
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.25
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "200m"
+        memory: "512Mi"
+```
+
+---
+
+## Question 11 | ConfigMap from Literals (4 points)
+
+> Server: `ssh ckad9988`
+
+```bash
+kubectl create configmap app-config --from-literal=foo=lala --from-literal=foo2=lolo -n peak
+```
+
+---
+
+## Question 12 | Labels and Selectors (5 points)
 
 > Server: `ssh ckad9999`
 
@@ -109,7 +297,31 @@ kubectl label po -n ridge -l app=v1 tier=web
 
 ---
 
-## Question 5 | Deployment Creation (6 points)
+## Question 13 | Liveness Probe (5 points)
+
+> Server: `ssh ckad9977`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-pod
+  namespace: stone
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.25
+    livenessProbe:
+      exec:
+        command:
+        - ls
+      initialDelaySeconds: 5
+      periodSeconds: 5
+```
+
+---
+
+## Question 14 | Deployment Creation (6 points)
 
 > Server: `ssh ckad9999`
 
@@ -144,153 +356,7 @@ spec:
 
 ---
 
-## Question 6 | Deployment Rollout (5 points)
-
-> Server: `ssh ckad9999`
-
-```bash
-# Update the image
-kubectl set image deployment/nginx-deploy nginx=nginx:1.19.8 -n valley
-
-# Verify the rollout completed
-kubectl rollout status deployment/nginx-deploy -n valley
-
-# Check the rollout history
-kubectl rollout history deployment/nginx-deploy -n valley
-```
-
----
-
-## Question 7 | Deployment Rollback (5 points)
-
-> Server: `ssh ckad9999`
-
-The `rollback-deploy` Deployment in `cave` was updated to a broken image (`nginx:1.91`) creating a failing revision. Roll it back to the previous working revision.
-
-```bash
-# Observe the failing rollout
-kubectl rollout status deployment/rollback-deploy -n cave
-
-# Roll back to the previous revision
-kubectl rollout undo deployment/rollback-deploy -n cave
-
-# Verify pods are running again
-kubectl get pods -n cave -l app=rollback-deploy
-```
-
----
-
-## Question 8 | Job with Completions (5 points)
-
-> Server: `ssh ckad9988`
-
-```bash
-kubectl create job echo-job --image=busybox:1.36 -n stone --dry-run=client -o yaml \
-  -- /bin/sh -c 'echo hello; sleep 5; echo world' > /tmp/exam/echo-job.yaml
-```
-
-Edit to add `completions: 5`:
-
-```yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: echo-job
-  namespace: stone
-spec:
-  completions: 5
-  template:
-    spec:
-      containers:
-      - name: echo-job
-        image: busybox:1.36
-        command: ["/bin/sh", "-c", "echo hello; sleep 5; echo world"]
-      restartPolicy: Never
-```
-
-```bash
-kubectl apply -f /tmp/exam/echo-job.yaml
-```
-
----
-
-## Question 9 | CronJob (5 points)
-
-> Server: `ssh ckad9988`
-
-```bash
-kubectl create cronjob date-job --image=busybox:1.36 --schedule="*/1 * * * *" -n mist \
-  -- /bin/sh -c 'date; echo Hello from Kubernetes'
-```
-
----
-
-## Question 10 | Multi-Container Pod (6 points)
-
-> Server: `ssh ckad9988`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: multi-container
-  namespace: alpine
-spec:
-  containers:
-  - name: container1
-    image: busybox:1.36
-    command: ["/bin/sh", "-c", "echo hello; sleep 3600"]
-  - name: container2
-    image: busybox:1.36
-    command: ["/bin/sh", "-c", "echo hello; sleep 3600"]
-```
-
----
-
-## Question 11 | Init Container (6 points)
-
-> Server: `ssh ckad9988`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: init-pod
-  namespace: crest
-spec:
-  initContainers:
-  - name: init
-    image: busybox:1.36
-    command: ["/bin/sh", "-c", "echo 'Initialized' > /work-dir/index.html"]
-    volumeMounts:
-    - name: workdir
-      mountPath: /work-dir
-  containers:
-  - name: nginx
-    image: nginx:1.25
-    ports:
-    - containerPort: 80
-    volumeMounts:
-    - name: workdir
-      mountPath: /usr/share/nginx/html
-  volumes:
-  - name: workdir
-    emptyDir: {}
-```
-
----
-
-## Question 12 | ConfigMap from Literals (4 points)
-
-> Server: `ssh ckad9988`
-
-```bash
-kubectl create configmap app-config --from-literal=foo=lala --from-literal=foo2=lolo -n peak
-```
-
----
-
-## Question 13 | ConfigMap as Environment Variable (5 points)
+## Question 15 | ConfigMap as Environment Variable (5 points)
 
 > Server: `ssh ckad9988`
 
@@ -318,138 +384,24 @@ spec:
 
 ---
 
-## Question 14 | ConfigMap as Volume (5 points)
+## Question 16 | Deployment Rollout (5 points)
 
-> Server: `ssh ckad9988`
-
-```bash
-kubectl create configmap cmvolume --from-literal=var8=val8 --from-literal=var9=val9 -n cliff
-```
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: vol-pod
-  namespace: cliff
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.25
-    volumeMounts:
-    - name: config-volume
-      mountPath: /etc/lala
-  volumes:
-  - name: config-volume
-    configMap:
-      name: cmvolume
-```
-
----
-
-## Question 15 | Secret Creation and Usage (5 points)
-
-> Server: `ssh ckad9977`
+> Server: `ssh ckad9999`
 
 ```bash
-kubectl create secret generic mysecret --from-literal=password=mypass -n ridge
-```
+# Update the image
+kubectl set image deployment/nginx-deploy nginx=nginx:1.19.8 -n valley
 
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: secret-pod
-  namespace: ridge
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.25
-    volumeMounts:
-    - name: secret-volume
-      mountPath: /etc/foo
-  volumes:
-  - name: secret-volume
-    secret:
-      secretName: mysecret
+# Verify the rollout completed
+kubectl rollout status deployment/nginx-deploy -n valley
+
+# Check the rollout history
+kubectl rollout history deployment/nginx-deploy -n valley
 ```
 
 ---
 
-## Question 16 | SecurityContext (5 points)
-
-> Server: `ssh ckad9977`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: secure-pod
-  namespace: valley
-spec:
-  securityContext:
-    runAsUser: 101
-  restartPolicy: Never
-  containers:
-  - name: secure-pod
-    image: busybox:1.36
-    command: ["sleep", "3600"]
-```
-
-Note: `busybox` is used instead of `nginx` because the standard nginx image needs root privileges to create its cache directories.
-
----
-
-## Question 17 | Resource Requests and Limits (5 points)
-
-> Server: `ssh ckad9977`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: resource-pod
-  namespace: cave
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.25
-    resources:
-      requests:
-        cpu: "100m"
-        memory: "256Mi"
-      limits:
-        cpu: "200m"
-        memory: "512Mi"
-```
-
----
-
-## Question 18 | Liveness Probe (5 points)
-
-> Server: `ssh ckad9977`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: liveness-pod
-  namespace: stone
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.25
-    livenessProbe:
-      exec:
-        command:
-        - ls
-      initialDelaySeconds: 5
-      periodSeconds: 5
-```
-
----
-
-## Question 19 | Service and NetworkPolicy (6 points)
+## Question 17 | Service and NetworkPolicy (6 points)
 
 > Server: `ssh ckad9977`
 
@@ -475,6 +427,54 @@ spec:
     - podSelector:
         matchLabels:
           access: granted
+```
+
+---
+
+## Question 18 | Deployment Rollback (5 points)
+
+> Server: `ssh ckad9999`
+
+The `rollback-deploy` Deployment in `cave` was updated to a broken image (`nginx:1.91`) creating a failing revision. Roll it back to the previous working revision.
+
+```bash
+# Observe the failing rollout
+kubectl rollout status deployment/rollback-deploy -n cave
+
+# Roll back to the previous revision
+kubectl rollout undo deployment/rollback-deploy -n cave
+
+# Verify pods are running again
+kubectl get pods -n cave -l app=rollback-deploy
+```
+
+---
+
+## Question 19 | ConfigMap as Volume (5 points)
+
+> Server: `ssh ckad9988`
+
+```bash
+kubectl create configmap cmvolume --from-literal=var8=val8 --from-literal=var9=val9 -n cliff
+```
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vol-pod
+  namespace: cliff
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.25
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/lala
+  volumes:
+  - name: config-volume
+    configMap:
+      name: cmvolume
 ```
 
 ---

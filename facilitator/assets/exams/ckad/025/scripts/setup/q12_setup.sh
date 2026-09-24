@@ -1,107 +1,127 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace orbit --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace catalog --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
 D=/home/candidate/exam/q12
 rm -rf "$D"
-mkdir -p "$D/telemetry"
+mkdir -p "$D"
 
-cat > "$D/telemetry/deployment.yaml" <<'YAML'
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: telemetry
-  labels:
-    app: telemetry
-    track: stable
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: telemetry
-      track: stable
-  template:
-    metadata:
-      labels:
-        app: telemetry
-        track: stable
-    spec:
-      containers:
-        - name: web
-          image: nginx:1.25
-          ports:
-            - containerPort: 80
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-            limits:
-              cpu: 50m
-              memory: 64Mi
-YAML
-
-cat > "$D/telemetry/service.yaml" <<'YAML'
+# Server-side apply: no last-applied-configuration annotation is added, so the
+# only annotations on the Pods are the ones below.
+kubectl apply --server-side --force-conflicts -f - <<'YAML' || true
 apiVersion: v1
-kind: Service
+kind: Pod
 metadata:
-  name: telemetry
+  name: idx-andromeda
+  namespace: catalog
   labels:
-    app: telemetry
+    app: indexer
+    tier: ingest
+    survey: deep
+  annotations:
+    catalog.observatory.io/legacy-schema: "v1"
 spec:
-  selector:
-    app: telemetry
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-YAML
-
-cat > "$D/telemetry/kustomization.yaml" <<'YAML'
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: orbit
-resources:
-  - deployment.yaml
-  - service.yaml
-YAML
-
-# Stable app (managed by the kustomization above)
-kubectl apply -k "$D/telemetry" || true
-
-# Canary running the candidate image, NOT part of the kustomization
-kubectl apply -f - <<'YAML' || true
-apiVersion: apps/v1
-kind: Deployment
+  containers:
+    - name: idx
+      image: registry.k8s.io/pause:3.9
+      resources:
+        requests: {cpu: 5m, memory: 8Mi}
+        limits: {cpu: 20m, memory: 16Mi}
+---
+apiVersion: v1
+kind: Pod
 metadata:
-  name: telemetry-canary
-  namespace: orbit
+  name: idx-bootes
+  namespace: catalog
   labels:
-    app: telemetry
-    track: canary
+    app: indexer
+    tier: ingest
+    survey: wide
+  annotations:
+    catalog.observatory.io/legacy-schema-migrated: "2026-08-14"
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: telemetry
-      track: canary
-  template:
-    metadata:
-      labels:
-        app: telemetry
-        track: canary
-    spec:
-      containers:
-        - name: web
-          image: nginx:1.26
-          ports:
-            - containerPort: 80
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-            limits:
-              cpu: 50m
-              memory: 64Mi
+  containers:
+    - name: idx
+      image: registry.k8s.io/pause:3.9
+      resources:
+        requests: {cpu: 5m, memory: 8Mi}
+        limits: {cpu: 20m, memory: 16Mi}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: idx-cygnus
+  namespace: catalog
+  labels:
+    app: indexer
+    tier: query
+    survey: deep
+  annotations:
+    catalog.observatory.io/owner: "stellar-cartography"
+spec:
+  containers:
+    - name: idx
+      image: registry.k8s.io/pause:3.9
+      resources:
+        requests: {cpu: 5m, memory: 8Mi}
+        limits: {cpu: 20m, memory: 16Mi}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: idx-draco
+  namespace: catalog
+  labels:
+    app: indexer
+    tier: query
+    survey: wide
+  annotations:
+    catalog.observatory.io/legacy-schema: "v2"
+spec:
+  containers:
+    - name: idx
+      image: registry.k8s.io/pause:3.9
+      resources:
+        requests: {cpu: 5m, memory: 8Mi}
+        limits: {cpu: 20m, memory: 16Mi}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: idx-eridanus
+  namespace: catalog
+  labels:
+    app: indexer
+    tier: archive
+    survey: deep
+  annotations:
+    catalog.observatory.io/legacy-schema: "v1"
+spec:
+  containers:
+    - name: idx
+      image: registry.k8s.io/pause:3.9
+      resources:
+        requests: {cpu: 5m, memory: 8Mi}
+        limits: {cpu: 20m, memory: 16Mi}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: idx-fornax
+  namespace: catalog
+  labels:
+    app: indexer
+    tier: archive
+    survey: wide
+  annotations:
+    catalog.observatory.io/owner: "deep-field"
+spec:
+  containers:
+    - name: idx
+      image: registry.k8s.io/pause:3.9
+      resources:
+        requests: {cpu: 5m, memory: 8Mi}
+        limits: {cpu: 20m, memory: 16Mi}
 YAML
 
 echo "Setup complete for Question 12"

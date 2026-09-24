@@ -1,9 +1,9 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-d=$(kubectl get cronjob deadline-cron -n grove -o jsonpath='{.spec.startingDeadlineSeconds}' 2>/dev/null)
-if [ "$d" = "17" ]; then
-  echo "Success: startingDeadlineSeconds 17 correct"; exit 0
+d=$(kubectl get job deadline-job -n hollow -o jsonpath='{.spec.activeDeadlineSeconds}' 2>/dev/null)
+if [ "$d" = "30" ]; then
+  echo "Success: activeDeadlineSeconds 30 correct"; exit 0
 else
-  echo "Error: startingDeadlineSeconds is '$d', expected 17"; exit 1
+  echo "Error: activeDeadlineSeconds is '$d', expected 30"; exit 1
 fi

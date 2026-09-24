@@ -1,7 +1,11 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace shrine --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+
+mkdir -p /tmp/exam/course/19 || true
+chown -R candidate:candidate /tmp/exam 2>/dev/null || true
+# The `bitnami` repo is NOT added here: Question 13 (same server) has the student
+# add it, and adding it here would hand them Question 13's points for free.
 
 echo "Setup complete for Question 19"
 exit 0

@@ -1,42 +1,44 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace bulwark --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace fortress --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 kubectl apply -f - >/dev/null 2>&1 <<'EOF' || true
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stable-app
-  namespace: bulwark
+  name: secure-app
+  namespace: fortress
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: webapp
-      version: v1
+      app: secure-app
   template:
     metadata:
       labels:
-        app: webapp
-        version: v1
+        app: secure-app
     spec:
       containers:
-      - name: webapp
-        image: nginx:1.24
+      - name: secure-app
+        image: nginx:1.25
         ports:
         - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: app-svc
-  namespace: bulwark
-spec:
-  type: ClusterIP
-  selector:
-    app: webapp
-  ports:
-  - port: 80
-    targetPort: 80
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /var/cache/nginx
+        - name: run
+          mountPath: /var/run
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}
+      - name: run
+        emptyDir: {}
 EOF
 echo "Setup complete for Question 8"
 exit 0

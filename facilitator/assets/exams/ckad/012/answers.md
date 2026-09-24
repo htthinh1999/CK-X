@@ -12,7 +12,49 @@
 
 ---
 
-## Question 1 | Secrets & Environment Variables (5 points)
+## Question 1 | Canary Deployment (6 points)
+
+> Server: `ssh ckad9988`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: canary-app
+  namespace: bulwark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: webapp
+        version: v2
+    spec:
+      containers:
+      - name: webapp
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+```
+
+```bash
+kubectl apply -f canary-app.yaml
+```
+
+Verify both deployments are selected by the Service:
+
+```bash
+kubectl get ep app-svc -n bulwark
+# Should show IPs from both stable-app and canary-app pods
+```
+
+---
+
+## Question 2 | Secrets & Environment Variables (5 points)
 
 > Server: `ssh ckad9999`
 
@@ -72,7 +114,139 @@ kubectl apply -f webapp-fixed.yaml
 
 ---
 
-## Question 2 | Fix a Broken Ingress (6 points)
+## Question 3 | Fix Service Selector Mismatch (4 points)
+
+> Server: `ssh ckad9988`
+
+Check Pod labels and Service selector:
+
+```bash
+kubectl get pods -n parapet --show-labels        # app=backend-api
+kubectl get svc backend-svc -n parapet -o jsonpath='{.spec.selector}'   # {"app":"backend-wrong"}
+```
+
+Fix the selector:
+
+```bash
+kubectl patch svc backend-svc -n parapet -p '{"spec":{"selector":{"app":"backend-api"}}}'
+```
+
+Verify:
+
+```bash
+kubectl get endpoints backend-svc -n parapet
+```
+
+---
+
+## Question 4 | Troubleshoot Failing Deployment (5 points)
+
+> Server: `ssh ckad9977`
+
+Investigate the failing Pods:
+
+```bash
+kubectl describe pod -l app=health-app -n tower
+```
+
+The liveness probe is checking port `8080` but the container listens on port `80`.
+
+Write the root cause:
+
+```bash
+mkdir -p /tmp/exam/course/4
+echo "Liveness probe configured on port 8080 but container listens on port 80" > /tmp/exam/course/4/root-cause.txt
+```
+
+Fix the Deployment (`kubectl edit deployment health-app -n tower`) — change the liveness probe port from `8080` to `80`:
+
+```yaml
+livenessProbe:
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 3
+  periodSeconds: 5
+```
+
+Verify:
+
+```bash
+kubectl get pods -n tower -l app=health-app
+```
+
+---
+
+## Question 5 | CronJob with Proper Exit (5 points)
+
+> Server: `ssh ckad9988`
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup-job
+  namespace: stronghold
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 30
+      template:
+        spec:
+          containers:
+          - name: cleanup
+            image: busybox:1.36
+            command: ["sh", "-c", "echo \"Cleanup completed at $(date)\""]
+          restartPolicy: Never
+```
+
+```bash
+kubectl apply -f cleanup-job.yaml
+```
+
+`activeDeadlineSeconds` must be under `spec.jobTemplate.spec`, not at the CronJob level.
+
+---
+
+## Question 6 | ConfigMap as Environment Variables (5 points)
+
+> Server: `ssh ckad9977`
+
+Create the ConfigMap:
+
+```bash
+kubectl create configmap app-config \
+  --from-literal=APP_ENV=production \
+  --from-literal=APP_DEBUG=false \
+  -n gate
+```
+
+Create the Pod:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-app
+  namespace: gate
+spec:
+  containers:
+  - name: config-app
+    image: nginx:1.25
+    envFrom:
+    - configMapRef:
+        name: app-config
+```
+
+```bash
+kubectl apply -f config-app.yaml
+kubectl exec config-app -n gate -- env | grep APP_
+```
+
+---
+
+## Question 7 | Fix a Broken Ingress (6 points)
 
 > Server: `ssh ckad9999`
 
@@ -115,7 +289,33 @@ spec:
 
 ---
 
-## Question 3 | Create a New Ingress (5 points)
+## Question 8 | SecurityContext — Merge Settings (5 points)
+
+> Server: `ssh ckad9988`
+
+```bash
+kubectl edit deployment secure-app -n fortress
+```
+
+Add `runAsUser: 10000` alongside the existing settings (do not remove them):
+
+```yaml
+securityContext:
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  runAsUser: 10000
+```
+
+Verify:
+
+```bash
+kubectl get deployment secure-app -n fortress -o jsonpath='{.spec.template.spec.containers[0].securityContext}'
+kubectl get pods -n fortress -l app=secure-app
+```
+
+---
+
+## Question 9 | Create a New Ingress (5 points)
 
 > Server: `ssh ckad9999`
 
@@ -153,7 +353,38 @@ kubectl apply -f api-ingress.yaml
 
 ---
 
-## Question 4 | NetworkPolicy — Label Pods for Communication (6 points)
+## Question 10 | RBAC — Fix Forbidden Error (7 points)
+
+> Server: `ssh ckad9988`
+
+Create the Role:
+
+```bash
+kubectl create role pod-reader-role \
+  --verb=get,list,watch \
+  --resource=pods \
+  -n bastion
+```
+
+Create the RoleBinding:
+
+```bash
+kubectl create rolebinding pod-reader-binding \
+  --role=pod-reader-role \
+  --serviceaccount=bastion:pod-reader-sa \
+  -n bastion
+```
+
+Verify and restart the Deployment to pick up the permissions:
+
+```bash
+kubectl auth can-i list pods -n bastion --as=system:serviceaccount:bastion:pod-reader-sa
+kubectl rollout restart deployment pod-reader -n bastion
+```
+
+---
+
+## Question 11 | NetworkPolicy — Label Pods for Communication (6 points)
 
 > Server: `ssh ckad9999`
 
@@ -185,7 +416,28 @@ kubectl get pods -n rampart --show-labels
 
 ---
 
-## Question 5 | Resource Requests and Limits (5 points)
+## Question 12 | Create ClusterIP Service (4 points)
+
+> Server: `ssh ckad9977`
+
+```bash
+kubectl expose deployment backend-app \
+  --name=backend-svc \
+  --port=80 \
+  --target-port=80 \
+  -n gate
+```
+
+Verify:
+
+```bash
+kubectl get svc backend-svc -n gate
+kubectl get ep backend-svc -n gate
+```
+
+---
+
+## Question 13 | Resource Requests and Limits (5 points)
 
 > Server: `ssh ckad9999`
 
@@ -204,225 +456,44 @@ kubectl get deployment compute-app -n tower -o jsonpath='{.spec.template.spec.co
 
 ---
 
-## Question 6 | Fix ResourceQuota Issue (5 points)
+## Question 14 | Job with Completions and Parallelism (5 points)
 
-> Server: `ssh ckad9999`
-
-Check the quota:
-
-```bash
-kubectl describe quota compute-quota -n garrison
-# Hard limits: requests.cpu=500m, requests.memory=512Mi
-```
-
-Reduce resources to fit within quota (keep limits at double the requests):
-
-```bash
-kubectl set resources deployment quota-app -n garrison \
-  --requests=cpu=250m,memory=256Mi \
-  --limits=cpu=500m,memory=512Mi
-```
-
-Verify Pods are now running:
-
-```bash
-kubectl get pods -n garrison
-```
-
----
-
-## Question 7 | Docker Image Build and Save (5 points)
-
-> Server: `ssh ckad9999`
-
-A local registry is already running at `localhost:5000` on this host.
-
-```bash
-# Build the image
-docker build -t localhost:5000/oni-app:1.0 /tmp/exam/course/7/image/
-
-# Save as tar archive
-docker save -o /tmp/exam/course/7/oni-app.tar localhost:5000/oni-app:1.0
-
-# Push to local registry
-docker push localhost:5000/oni-app:1.0
-```
-
-Verify:
-
-```bash
-docker images | grep oni-app
-ls -la /tmp/exam/course/7/oni-app.tar
-curl -s http://localhost:5000/v2/oni-app/tags/list
-```
-
----
-
-## Question 8 | Canary Deployment (6 points)
-
-> Server: `ssh ckad9988`
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: canary-app
-  namespace: bulwark
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: webapp
-      version: v2
-  template:
-    metadata:
-      labels:
-        app: webapp
-        version: v2
-    spec:
-      containers:
-      - name: webapp
-        image: nginx:1.25
-        ports:
-        - containerPort: 80
-```
-
-```bash
-kubectl apply -f canary-app.yaml
-```
-
-Verify both deployments are selected by the Service:
-
-```bash
-kubectl get ep app-svc -n bulwark
-# Should show IPs from both stable-app and canary-app pods
-```
-
----
-
-## Question 9 | Fix Service Selector Mismatch (4 points)
-
-> Server: `ssh ckad9988`
-
-Check Pod labels and Service selector:
-
-```bash
-kubectl get pods -n parapet --show-labels        # app=backend-api
-kubectl get svc backend-svc -n parapet -o jsonpath='{.spec.selector}'   # {"app":"backend-wrong"}
-```
-
-Fix the selector:
-
-```bash
-kubectl patch svc backend-svc -n parapet -p '{"spec":{"selector":{"app":"backend-api"}}}'
-```
-
-Verify:
-
-```bash
-kubectl get endpoints backend-svc -n parapet
-```
-
----
-
-## Question 10 | CronJob with Proper Exit (5 points)
-
-> Server: `ssh ckad9988`
+> Server: `ssh ckad9977`
 
 ```yaml
 apiVersion: batch/v1
-kind: CronJob
+kind: Job
 metadata:
-  name: cleanup-job
-  namespace: stronghold
+  name: batch-processor
+  namespace: bulwark
 spec:
-  schedule: "*/5 * * * *"
-  jobTemplate:
+  completions: 6
+  parallelism: 2
+  template:
     spec:
-      activeDeadlineSeconds: 30
-      template:
-        spec:
-          containers:
-          - name: cleanup
-            image: busybox:1.36
-            command: ["sh", "-c", "echo \"Cleanup completed at $(date)\""]
-          restartPolicy: Never
+      containers:
+      - name: processor
+        image: busybox:1.36
+        command: ["sh", "-c", "echo 'Processing batch item'"]
+      restartPolicy: Never
 ```
 
 ```bash
-kubectl apply -f cleanup-job.yaml
-```
-
-`activeDeadlineSeconds` must be under `spec.jobTemplate.spec`, not at the CronJob level.
-
----
-
-## Question 11 | SecurityContext — Merge Settings (5 points)
-
-> Server: `ssh ckad9988`
-
-```bash
-kubectl edit deployment secure-app -n fortress
-```
-
-Add `runAsUser: 10000` alongside the existing settings (do not remove them):
-
-```yaml
-securityContext:
-  readOnlyRootFilesystem: true
-  allowPrivilegeEscalation: false
-  runAsUser: 10000
-```
-
-Verify:
-
-```bash
-kubectl get deployment secure-app -n fortress -o jsonpath='{.spec.template.spec.containers[0].securityContext}'
-kubectl get pods -n fortress -l app=secure-app
+kubectl apply -f batch-processor.yaml
+kubectl get job batch-processor -n bulwark
 ```
 
 ---
 
-## Question 12 | RBAC — Fix Forbidden Error (7 points)
-
-> Server: `ssh ckad9988`
-
-Create the Role:
-
-```bash
-kubectl create role pod-reader-role \
-  --verb=get,list,watch \
-  --resource=pods \
-  -n bastion
-```
-
-Create the RoleBinding:
-
-```bash
-kubectl create rolebinding pod-reader-binding \
-  --role=pod-reader-role \
-  --serviceaccount=bastion:pod-reader-sa \
-  -n bastion
-```
-
-Verify and restart the Deployment to pick up the permissions:
-
-```bash
-kubectl auth can-i list pods -n bastion --as=system:serviceaccount:bastion:pod-reader-sa
-kubectl rollout restart deployment pod-reader -n bastion
-```
-
----
-
-## Question 13 | Deployment Rollback (5 points)
+## Question 15 | Deployment Rollback (5 points)
 
 > Server: `ssh ckad9988`
 
 Save the rollout history to file:
 
 ```bash
-mkdir -p /tmp/exam/course/13
-kubectl rollout history deployment web-server -n citadel > /tmp/exam/course/13/rollout-history.txt
+mkdir -p /tmp/exam/course/15
+kubectl rollout history deployment web-server -n citadel > /tmp/exam/course/15/rollout-history.txt
 ```
 
 Roll back to the working revision (`nginx:1.25`):
@@ -442,11 +513,38 @@ kubectl get deployment web-server -n citadel -o jsonpath='{.spec.template.spec.c
 
 ---
 
-## Question 14 | Fix Deprecated API Version (4 points)
+## Question 16 | Deployment Rolling Update Strategy (5 points)
+
+> Server: `ssh ckad9977`
+
+```bash
+kubectl patch deployment rolling-app -n parapet -p '
+{
+  "spec": {
+    "strategy": {
+      "type": "RollingUpdate",
+      "rollingUpdate": {
+        "maxSurge": 1,
+        "maxUnavailable": 0
+      }
+    }
+  }
+}'
+```
+
+Verify:
+
+```bash
+kubectl get deployment rolling-app -n parapet -o jsonpath='{.spec.strategy}'
+```
+
+---
+
+## Question 17 | Fix Deprecated API Version (4 points)
 
 > Server: `ssh ckad9988`
 
-Edit `/tmp/exam/course/14/broken-deploy.yaml`:
+Edit `/tmp/exam/course/17/broken-deploy.yaml`:
 
 1. Change `apiVersion: extensions/v1beta1` to `apiVersion: apps/v1`
 2. Remove the `spec.rollbackTo` field entirely
@@ -480,168 +578,43 @@ spec:
 Apply:
 
 ```bash
-kubectl apply -f /tmp/exam/course/14/broken-deploy.yaml
+kubectl apply -f /tmp/exam/course/17/broken-deploy.yaml
 ```
 
 ---
 
-## Question 15 | Troubleshoot Failing Deployment (5 points)
+## Question 18 | Fix ResourceQuota Issue (5 points)
 
-> Server: `ssh ckad9977`
+> Server: `ssh ckad9999`
 
-Investigate the failing Pods:
-
-```bash
-kubectl describe pod -l app=health-app -n tower
-```
-
-The liveness probe is checking port `8080` but the container listens on port `80`.
-
-Write the root cause:
+Check the quota:
 
 ```bash
-mkdir -p /tmp/exam/course/15
-echo "Liveness probe configured on port 8080 but container listens on port 80" > /tmp/exam/course/15/root-cause.txt
+kubectl describe quota compute-quota -n garrison
+# Hard limits: requests.cpu=500m, requests.memory=512Mi
 ```
 
-Fix the Deployment (`kubectl edit deployment health-app -n tower`) — change the liveness probe port from `8080` to `80`:
-
-```yaml
-livenessProbe:
-  httpGet:
-    path: /
-    port: 80
-  initialDelaySeconds: 3
-  periodSeconds: 5
-```
-
-Verify:
+Reduce resources to fit within quota (keep limits at double the requests):
 
 ```bash
-kubectl get pods -n tower -l app=health-app
+kubectl set resources deployment quota-app -n garrison \
+  --requests=cpu=250m,memory=256Mi \
+  --limits=cpu=500m,memory=512Mi
+```
+
+Verify Pods are now running:
+
+```bash
+kubectl get pods -n garrison
 ```
 
 ---
 
-## Question 16 | ConfigMap as Environment Variables (5 points)
+## Question 19 | Multi-container Pod with Shared Volume (5 points)
 
 > Server: `ssh ckad9977`
 
-Create the ConfigMap:
-
-```bash
-kubectl create configmap app-config \
-  --from-literal=APP_ENV=production \
-  --from-literal=APP_DEBUG=false \
-  -n gate
-```
-
-Create the Pod:
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: config-app
-  namespace: gate
-spec:
-  containers:
-  - name: config-app
-    image: nginx:1.25
-    envFrom:
-    - configMapRef:
-        name: app-config
-```
-
-```bash
-kubectl apply -f config-app.yaml
-kubectl exec config-app -n gate -- env | grep APP_
-```
-
----
-
-## Question 17 | Create ClusterIP Service (4 points)
-
-> Server: `ssh ckad9977`
-
-```bash
-kubectl expose deployment backend-app \
-  --name=backend-svc \
-  --port=80 \
-  --target-port=80 \
-  -n gate
-```
-
-Verify:
-
-```bash
-kubectl get svc backend-svc -n gate
-kubectl get ep backend-svc -n gate
-```
-
----
-
-## Question 18 | Job with Completions and Parallelism (5 points)
-
-> Server: `ssh ckad9977`
-
-```yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: batch-processor
-  namespace: bulwark
-spec:
-  completions: 6
-  parallelism: 2
-  template:
-    spec:
-      containers:
-      - name: processor
-        image: busybox:1.36
-        command: ["sh", "-c", "echo 'Processing batch item'"]
-      restartPolicy: Never
-```
-
-```bash
-kubectl apply -f batch-processor.yaml
-kubectl get job batch-processor -n bulwark
-```
-
----
-
-## Question 19 | Deployment Rolling Update Strategy (5 points)
-
-> Server: `ssh ckad9977`
-
-```bash
-kubectl patch deployment rolling-app -n parapet -p '
-{
-  "spec": {
-    "strategy": {
-      "type": "RollingUpdate",
-      "rollingUpdate": {
-        "maxSurge": 1,
-        "maxUnavailable": 0
-      }
-    }
-  }
-}'
-```
-
-Verify:
-
-```bash
-kubectl get deployment rolling-app -n parapet -o jsonpath='{.spec.strategy}'
-```
-
----
-
-## Question 20 | Multi-container Pod with Shared Volume (5 points)
-
-> Server: `ssh ckad9977`
-
-Complete the template at `/tmp/exam/course/20/sidecar-pod.yaml`:
+Complete the template at `/tmp/exam/course/19/sidecar-pod.yaml`:
 
 ```yaml
 apiVersion: v1
@@ -669,7 +642,34 @@ spec:
 ```
 
 ```bash
-kubectl apply -f /tmp/exam/course/20/sidecar-pod.yaml
+kubectl apply -f /tmp/exam/course/19/sidecar-pod.yaml
 kubectl get pod logger-app -n stronghold
 kubectl logs logger-app -c log-reader -n stronghold
+```
+
+---
+
+## Question 20 | Docker Image Build and Save (5 points)
+
+> Server: `ssh ckad9999`
+
+A local registry is already running at `localhost:5000` on this host.
+
+```bash
+# Build the image
+docker build -t localhost:5000/oni-app:1.0 /tmp/exam/course/20/image/
+
+# Save as tar archive
+docker save -o /tmp/exam/course/20/oni-app.tar localhost:5000/oni-app:1.0
+
+# Push to local registry
+docker push localhost:5000/oni-app:1.0
+```
+
+Verify:
+
+```bash
+docker images | grep oni-app
+ls -la /tmp/exam/course/20/oni-app.tar
+curl -s http://localhost:5000/v2/oni-app/tags/list
 ```

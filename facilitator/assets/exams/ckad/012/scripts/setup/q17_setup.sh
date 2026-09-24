@@ -1,24 +1,26 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace gate --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-kubectl apply -f - >/dev/null 2>&1 <<'EOF' || true
-apiVersion: apps/v1
+kubectl create namespace rampart --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+mkdir -p /tmp/exam/course/17
+cat > /tmp/exam/course/17/broken-deploy.yaml <<'EOF'
+# This manifest contains deprecated API version and fields
+# Fix it so it can be applied to the cluster
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: backend-app
-  namespace: gate
+  name: legacy-app
+  namespace: rampart
 spec:
   replicas: 2
-  selector:
-    matchLabels:
-      app: backend-app
+  rollbackTo:
+    revision: 0
   template:
     metadata:
       labels:
-        app: backend-app
+        app: legacy-app
     spec:
       containers:
-      - name: backend-app
+      - name: legacy-app
         image: nginx:1.25
         ports:
         - containerPort: 80

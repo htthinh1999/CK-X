@@ -1,26 +1,18 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace legacy --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl create namespace triumph --dry-run=client -o yaml | kubectl apply -f - || true
 mkdir -p /tmp/exam/course/7
 kubectl apply -f - <<'EOF' || true
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: legacy-main
-  namespace: legacy
+  name: triumph-app
+  namespace: triumph
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: legacy-web
-  template:
-    metadata:
-      labels:
-        app: legacy-web
-    spec:
-      containers:
-      - name: web
-        image: nginx
+  containers:
+  - name: main
+    image: busybox
+    command: ["sh", "-c", "while true; do echo 'ERROR: connection lost'; sleep 10; done"]
 EOF
 echo "Setup complete for Question 7"
 exit 0

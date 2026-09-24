@@ -1,26 +1,26 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
+kubectl create namespace brook --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 mkdir -p /tmp/exam/course/8
-cat > /tmp/exam/course/8/broken-deploy.yaml <<'EOF'
-# Q8: Broken Deployment YAML with intentional errors
-# 1. Uses deprecated API version (extensions/v1beta1)
-# 2. Missing required selector field
-# 3. Template labels don't match (if selector was present)
-apiVersion: extensions/v1beta1
+kubectl apply -f - <<'EOF' >/dev/null 2>&1 || true
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: broken-app
-  namespace: default
+  name: app-v1
+  namespace: brook
 spec:
-  replicas: 2
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-v1
   template:
     metadata:
       labels:
-        app: myapp
+        app: app-v1
     spec:
       containers:
-        - name: web
-          image: nginx
+        - name: nginx
+          image: nginx:1.20
           ports:
             - containerPort: 80
 EOF

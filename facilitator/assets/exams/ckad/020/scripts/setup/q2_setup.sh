@@ -1,7 +1,9 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace origin --dry-run=client -o yaml | kubectl apply -f - || true
+# Cluster-scoped RBAC question; no namespace prerequisites needed.
+# Clean up any leftover ClusterRoles from a previous attempt.
+kubectl delete clusterrole monitor-viewer aggregated-monitor >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 2"
 exit 0

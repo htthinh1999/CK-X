@@ -1,24 +1,52 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=survey
-DIR=/home/candidate/exam/q4
+NS=mirror
 
 kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-rm -rf "$DIR" && mkdir -p "$DIR"
 
-# Fresh pods so the creation order below is authoritative (no-op on first run)
-kubectl -n "$NS" delete pod --all --grace-period=1 --wait=true --timeout=60s >/dev/null 2>&1 || true
+# Recreate from scratch so the strategy starts as Recreate on every run
+kubectl -n "$NS" delete deployment reflector --ignore-not-found >/dev/null 2>&1 || true
 
-# Created one per second, deliberately NOT in alphabetical order
-kubectl -n "$NS" run quasar   --image=nginx:1.25 --labels=role=receiver >/dev/null 2>&1 || true
-sleep 1
-kubectl -n "$NS" run aurora   --image=busybox:1.36 --labels=role=logger --command -- sleep 86400 >/dev/null 2>&1 || true
-sleep 1
-kubectl -n "$NS" run nebula   --image=redis:7-alpine --labels=role=cache >/dev/null 2>&1 || true
-sleep 1
-kubectl -n "$NS" run borealis --image=registry.k8s.io/pause:3.9 --labels=role=placeholder >/dev/null 2>&1 || true
-sleep 1
-kubectl -n "$NS" run meridian --image=nginx:1.25 --labels=role=receiver >/dev/null 2>&1 || true
+kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' || true
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reflector
+  namespace: mirror
+  labels:
+    app: reflector
+  annotations:
+    kubernetes.io/change-cause: "initial release on nginx 1.25"
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: reflector
+  template:
+    metadata:
+      labels:
+        app: reflector
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+YAML
 
 echo "Setup complete for Question 4"
 exit 0

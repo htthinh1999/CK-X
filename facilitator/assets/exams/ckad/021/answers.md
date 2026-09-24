@@ -31,7 +31,72 @@ kubectl run optimized-build -n ward --image=nginx:alpine
 
 ---
 
-## Question 2 | Sidecar Logging with Shared Volume
+## Question 2 | Role and RoleBinding Setup
+
+> Server: `ssh ckad9977`
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: config-editor
+  namespace: haven
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  resourceNames: ["primary-config", "secondary-config"]
+  verbs: ["get", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-config-binding
+  namespace: haven
+subjects:
+- kind: User
+  name: dev-user
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: config-editor
+  apiGroup: rbac.authorization.k8s.io
+EOF
+```
+
+---
+
+## Question 3 | Kustomize Patches
+
+> Server: `ssh ckad9988`
+
+Starter `deployment.yaml` and `kustomization.yaml` are in `/tmp/exam/course/3/`. Add the patch and apply.
+
+```bash
+cat <<EOF > /tmp/exam/course/3/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- deployment.yaml
+patches:
+- path: patch.yaml
+EOF
+
+cat <<EOF > /tmp/exam/course/3/patch.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 4
+EOF
+
+kubectl kustomize /tmp/exam/course/3 | kubectl apply -n bulwark -f -
+```
+
+---
+
+## Question 4 | Sidecar Logging with Shared Volume
 
 > Server: `ssh ckad9999`
 
@@ -72,7 +137,18 @@ EOF
 
 ---
 
-## Question 3 | CronJob with History Limits
+## Question 5 | PodSecurity Admission Label
+
+> Server: `ssh ckad9977`
+
+```bash
+kubectl label ns refuge pod-security.kubernetes.io/enforce=restricted --overwrite
+kubectl label ns refuge pod-security.kubernetes.io/warn=baseline --overwrite
+```
+
+---
+
+## Question 6 | CronJob with History Limits
 
 > Server: `ssh ckad9999`
 
@@ -83,7 +159,95 @@ kubectl create job manual-backup --from=cronjob/backup-cj -n shield
 
 ---
 
-## Question 4 | Init Container Chain
+## Question 7 | Ingress and Egress NetworkPolicy
+
+> Server: `ssh ckad9977`
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-protect
+  namespace: bastion
+spec:
+  podSelector:
+    matchLabels:
+      app: db
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend
+    ports:
+    - protocol: TCP
+      port: 5432
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/24
+    ports:
+    - protocol: TCP
+      port: 443
+EOF
+```
+
+---
+
+## Question 8 | Failing Deployment Troubleshooting
+
+> Server: `ssh ckad9988`
+
+```bash
+kubectl create secret generic app-secret -n anchor --from-literal=PASSWORD=securepass
+kubectl set image deployment/broken-app -n anchor app=nginx:1.25.0
+kubectl patch deployment broken-app -n anchor --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/ports/0/containerPort", "value": 80}]'
+```
+
+---
+
+## Question 9 | Ingress with Regex Path
+
+> Server: `ssh ckad9977`
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: regex-ingress
+  namespace: bulwark
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.dojo.com
+    http:
+      paths:
+      - path: /v1/.*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: v1-service
+            port:
+              number: 80
+      - path: /v2/.*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: v2-service
+            port:
+              number: 80
+EOF
+```
+
+---
+
+## Question 10 | Init Container Chain
 
 > Server: `ssh ckad9999`
 
@@ -129,110 +293,42 @@ EOF
 
 ---
 
-## Question 5 | Helm Release Inspection
+## Question 11 | Top CPU Pod by Label
+
+> Server: `ssh ckad9988`
+
+```bash
+mkdir -p /tmp/exam/course/11
+# In a real cluster: kubectl top pod -n helm -l tier=backend --sort-by=cpu
+echo "backend-pod-2" > /tmp/exam/course/11/cpu-usage.txt
+```
+
+---
+
+## Question 12 | Helm Release Inspection
 
 > Server: `ssh ckad9999`
 
 The `guardian-app` release is pre-installed in `haven` (chart at `/tmp/guardian-app`). Update replicaCount to 3 and image tag to latest.
 
 ```bash
-mkdir -p /tmp/exam/course/5
-helm get values guardian-app -n haven > /tmp/exam/course/5/old-values.yaml
+mkdir -p /tmp/exam/course/12
+helm get values guardian-app -n haven > /tmp/exam/course/12/old-values.yaml
 
-cat <<EOF > /tmp/exam/course/5/new-values.yaml
+cat <<EOF > /tmp/exam/course/12/new-values.yaml
 replicaCount: 3
 image:
   tag: "latest"
 EOF
 
-helm upgrade guardian-app /tmp/guardian-app -n haven --reuse-values -f /tmp/exam/course/5/new-values.yaml
+helm upgrade guardian-app /tmp/guardian-app -n haven --reuse-values -f /tmp/exam/course/12/new-values.yaml
 ```
 
 Verify: `helm get values guardian-app -n haven -o json` shows `replicaCount: 3` and image tag `latest`.
 
 ---
 
-## Question 6 | HPA-Managed Deployment Rollout
-
-> Server: `ssh ckad9999`
-
-Remove the static replica count from the Deployment and fix the HPA to target `api-server` with min 2 / max 10 / 75% CPU.
-
-```bash
-kubectl patch deployment api-server -n refuge --type=json -p='[{"op": "remove", "path": "/spec/replicas"}]'
-kubectl patch hpa api-hpa -n refuge -p '{"spec":{"minReplicas":2,"maxReplicas":10,"targetCPUUtilizationPercentage":75,"scaleTargetRef":{"kind":"Deployment","name":"api-server","apiVersion":"apps/v1"}}}'
-```
-
----
-
-## Question 7 | Deployment Rollout & Rollback
-
-> Server: `ssh ckad9999`
-
-Update both images (recording the rollout), then undo the latest rollout so `nginx` returns to `nginx:1.24.0`.
-
-```bash
-kubectl set image deployment/worker-deploy -n bastion nginx=nginx:1.25.0 redis=redis:7.0 --record
-kubectl rollout undo deployment/worker-deploy -n bastion
-```
-
----
-
-## Question 8 | Kustomize Patches
-
-> Server: `ssh ckad9988`
-
-Starter `deployment.yaml` and `kustomization.yaml` are in `/tmp/exam/course/8/`. Add the patch and apply.
-
-```bash
-cat <<EOF > /tmp/exam/course/8/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- deployment.yaml
-patches:
-- path: patch.yaml
-EOF
-
-cat <<EOF > /tmp/exam/course/8/patch.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-app
-spec:
-  replicas: 4
-EOF
-
-kubectl kustomize /tmp/exam/course/8 | kubectl apply -n bulwark -f -
-```
-
----
-
-## Question 9 | Failing Deployment Troubleshooting
-
-> Server: `ssh ckad9988`
-
-```bash
-kubectl create secret generic app-secret -n anchor --from-literal=PASSWORD=securepass
-kubectl set image deployment/broken-app -n anchor app=nginx:1.25.0
-kubectl patch deployment broken-app -n anchor --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/ports/0/containerPort", "value": 80}]'
-```
-
----
-
-## Question 10 | Top CPU Pod by Label
-
-> Server: `ssh ckad9988`
-
-```bash
-mkdir -p /tmp/exam/course/10
-# In a real cluster: kubectl top pod -n helm -l tier=backend --sort-by=cpu
-echo "backend-pod-2" > /tmp/exam/course/10/cpu-usage.txt
-```
-
----
-
-## Question 11 | Comprehensive Probes Setup
+## Question 13 | Comprehensive Probes Setup
 
 > Server: `ssh ckad9988`
 
@@ -270,7 +366,20 @@ EOF
 
 ---
 
-## Question 12 | ConfigMap Multiline and Volume
+## Question 14 | HPA-Managed Deployment Rollout
+
+> Server: `ssh ckad9999`
+
+Remove the static replica count from the Deployment and fix the HPA to target `api-server` with min 2 / max 10 / 75% CPU.
+
+```bash
+kubectl patch deployment api-server -n refuge --type=json -p='[{"op": "remove", "path": "/spec/replicas"}]'
+kubectl patch hpa api-hpa -n refuge -p '{"spec":{"minReplicas":2,"maxReplicas":10,"targetCPUUtilizationPercentage":75,"scaleTargetRef":{"kind":"Deployment","name":"api-server","apiVersion":"apps/v1"}}}'
+```
+
+---
+
+## Question 15 | ConfigMap Multiline and Volume
 
 > Server: `ssh ckad9988`
 
@@ -309,169 +418,7 @@ EOF
 
 ---
 
-## Question 13 | ServiceAccount with Token
-
-> Server: `ssh ckad9988`
-
-```bash
-kubectl create sa vault-sa -n shield
-mkdir -p /tmp/exam/course/13
-kubectl create token vault-sa -n shield --duration=24h > /tmp/exam/course/13/token.txt
-```
-
----
-
-## Question 14 | Pod SecurityContext RunAsNonRoot
-
-> Server: `ssh ckad9988`
-
-```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Pod
-metadata:
-  name: secure-pod
-  namespace: guardian
-spec:
-  securityContext:
-    runAsUser: 1000
-    runAsGroup: 3000
-  containers:
-  - name: nginx
-    image: nginx:alpine
-    securityContext:
-      runAsUser: 2000
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop: ["ALL"]
-EOF
-```
-
----
-
-## Question 15 | Role and RoleBinding Setup
-
-> Server: `ssh ckad9977`
-
-```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: config-editor
-  namespace: haven
-rules:
-- apiGroups: [""]
-  resources: ["configmaps"]
-  resourceNames: ["primary-config", "secondary-config"]
-  verbs: ["get", "update", "patch"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: dev-config-binding
-  namespace: haven
-subjects:
-- kind: User
-  name: dev-user
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: Role
-  name: config-editor
-  apiGroup: rbac.authorization.k8s.io
-EOF
-```
-
----
-
-## Question 16 | PodSecurity Admission Label
-
-> Server: `ssh ckad9977`
-
-```bash
-kubectl label ns refuge pod-security.kubernetes.io/enforce=restricted --overwrite
-kubectl label ns refuge pod-security.kubernetes.io/warn=baseline --overwrite
-```
-
----
-
-## Question 17 | Ingress and Egress NetworkPolicy
-
-> Server: `ssh ckad9977`
-
-```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: db-protect
-  namespace: bastion
-spec:
-  podSelector:
-    matchLabels:
-      app: db
-  policyTypes:
-  - Ingress
-  - Egress
-  ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: backend
-    ports:
-    - protocol: TCP
-      port: 5432
-  egress:
-  - to:
-    - ipBlock:
-        cidr: 10.0.0.0/24
-    ports:
-    - protocol: TCP
-      port: 443
-EOF
-```
-
----
-
-## Question 18 | Ingress with Regex Path
-
-> Server: `ssh ckad9977`
-
-```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: regex-ingress
-  namespace: bulwark
-  annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: api.dojo.com
-    http:
-      paths:
-      - path: /v1/.*
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: v1-service
-            port:
-              number: 80
-      - path: /v2/.*
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: v2-service
-            port:
-              number: 80
-EOF
-```
-
----
-
-## Question 19 | Service with Topology Hints
+## Question 16 | Service with Topology Hints
 
 > Server: `ssh ckad9977`
 
@@ -495,7 +442,32 @@ EOF
 
 ---
 
-## Question 20 | Strict Deny NetworkPolicy
+## Question 17 | ServiceAccount with Token
+
+> Server: `ssh ckad9988`
+
+```bash
+kubectl create sa vault-sa -n shield
+mkdir -p /tmp/exam/course/17
+kubectl create token vault-sa -n shield --duration=24h > /tmp/exam/course/17/token.txt
+```
+
+---
+
+## Question 18 | Deployment Rollout & Rollback
+
+> Server: `ssh ckad9999`
+
+Update both images (recording the rollout), then undo the latest rollout so `nginx` returns to `nginx:1.24.0`.
+
+```bash
+kubectl set image deployment/worker-deploy -n bastion nginx=nginx:1.25.0 redis=redis:7.0 --record
+kubectl rollout undo deployment/worker-deploy -n bastion
+```
+
+---
+
+## Question 19 | Strict Deny NetworkPolicy
 
 > Server: `ssh ckad9977`
 
@@ -513,5 +485,33 @@ spec:
   policyTypes:
   - Ingress
   - Egress
+EOF
+```
+
+---
+
+## Question 20 | Pod SecurityContext RunAsNonRoot
+
+> Server: `ssh ckad9988`
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-pod
+  namespace: guardian
+spec:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 3000
+  containers:
+  - name: nginx
+    image: nginx:alpine
+    securityContext:
+      runAsUser: 2000
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
 EOF
 ```

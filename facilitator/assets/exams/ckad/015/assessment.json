@@ -1,437 +1,209 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "default",
-      "machineHostname": "ckad9999",
-      "question": "There is a Dockerfile located at `/tmp/exam/course/1/Dockerfile`.\nBuild a container image using this Dockerfile and tag it as `localhost:5000/fujin-api:v2`.\nPush the built image to the local registry at `localhost:5000`.",
-      "concepts": [
-        "container-images",
-        "docker",
-        "registry"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Image `fujin-api:v2` is present in the local registry at `localhost:5000`",
-          "verificationScriptFile": "q1_s1_validate_image_pushed.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "gale",
-      "machineHostname": "ckad9999",
-      "question": "An application is running in a pod named `wind-logger` in the `gale` namespace. It generates logs in a format that is not easily parsable by our central logging system.\nModify the pod to include an adapter container using the image `busybox:1.31.1`.\nThe main container `app` writes logs to `/var/log/wind.log`. The adapter container should mount the same volume, tail the log file, and output each line prepended with `[WIND-LOG]` to stdout using `tail -f /var/log/wind.log | sed 's/^/[WIND-LOG] /'`.\nMake sure the adapter container is named `adapter` and both containers share a volume named `logs` mounted at `/var/log`. The pod is already created but might need to be replaced.",
-      "concepts": [
-        "sidecar",
-        "multi-container",
-        "logging"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `wind-logger` has a container named `adapter`",
-          "verificationScriptFile": "q2_s1_validate_adapter_container.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "1",
+            "namespace": "tornado",
+            "machineHostname": "ckad9988",
+            "question": "A Kustomization directory is located at `/tmp/exam/course/1/`.\nAdd a Kustomization file (`kustomization.yaml`) in that directory.\nIt should include the `deployment.yaml` file located in the same directory as a resource.\nAlso, generate a ConfigMap named `tornado-config` from a literal value `WIND_SPEED=150mph` using `configMapGenerator`.\nThen apply the Kustomization to the `tornado` namespace.",
+            "concepts": ["kustomize", "configmaps"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap `tornado-config` exists in namespace `tornado`", "verificationScriptFile": "q1_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "File `/tmp/exam/course/8/kustomization.yaml` exists", "verificationScriptFile": "q1_s2_validate_kustomization_file.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "The `adapter` container mounts volume `logs` at `/var/log`",
-          "verificationScriptFile": "q2_s2_validate_adapter_volume_mount.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "breeze",
-      "machineHostname": "ckad9999",
-      "question": "Create a Job named `storm-processor` in the `breeze` namespace.\nThe Job should use the `busybox:1.31.1` image and execute the command: `sh -c 'sleep 2; echo \"Processing storm data\"'`.\nConfigure the Job to run a total of `6` successful completions, with `3` pods running in parallel.",
-      "concepts": [
-        "jobs",
-        "batch",
-        "workloads"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Job `storm-processor` has `completions: 6` and `parallelism: 3`",
-          "verificationScriptFile": "q3_s1_validate_job_config.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "tempest",
-      "machineHostname": "ckad9999",
-      "question": "There is a deployment named `tempest-app` in the `tempest` namespace.\nExtract its pod template and create a standalone Pod named `tempest-debug` in the `tempest` namespace.\nThe `tempest-debug` Pod should have the exact same container specifications (image, ports, env vars) as the deployment's pod template, but change the container's command to `['sleep', '3600']`.\nSave the YAML definition used to create this Pod at `/tmp/exam/course/4/pod.yaml`.",
-      "concepts": [
-        "pods",
-        "deployments",
-        "debugging"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `tempest-debug` container command starts with `sleep`",
-          "verificationScriptFile": "q4_s1_validate_pod_command.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "2",
+            "namespace": "cyclone",
+            "machineHostname": "ckad9977",
+            "question": "Create a LimitRange named `cyclone-limits` in the `cyclone` namespace.\nIt should enforce the following constraints for Pods:\n- Maximum memory: `500Mi`\n- Minimum memory: `100Mi`\nFor Containers:\n- Default CPU limit: `500m`\n- Default CPU request: `200m`",
+            "concepts": ["limitrange", "resources", "quotas"],
+            "verification": [
+                { "id": "1", "description": "LimitRange `cyclone-limits` exists in namespace `cyclone`", "verificationScriptFile": "q2_s1_validate_limitrange_exists.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
         },
         {
-          "id": "2",
-          "description": "File `/tmp/exam/course/4/pod.yaml` exists",
-          "verificationScriptFile": "q4_s2_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "typhoon",
-      "machineHostname": "ckad9999",
-      "question": "A Helm chart has been deployed to the `typhoon` namespace with the release name `storm-app`.\nUpdate the release `storm-app` using the chart located at `/tmp/exam/course/5/storm-chart`.\nOverride the replica count to `3` and change the image tag to `v2.0.0` during the upgrade.",
-      "concepts": [
-        "helm",
-        "deployments",
-        "upgrades"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment for release `storm-app` has `3` replicas",
-          "verificationScriptFile": "q5_s1_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "3",
+            "namespace": "default",
+            "machineHostname": "ckad9999",
+            "question": "There is a Dockerfile located at `/tmp/exam/course/3/Dockerfile`.\nBuild a container image using this Dockerfile and tag it as `localhost:5000/fujin-api:v2`.\nPush the built image to the local registry at `localhost:5000`.",
+            "concepts": ["container-images", "docker", "registry"],
+            "verification": [
+                { "id": "1", "description": "Image `fujin-api:v2` is present in the local registry at `localhost:5000`", "verificationScriptFile": "q3_s1_validate_image_pushed.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Deployment for release `storm-app` uses image tag `v2.0.0`",
-          "verificationScriptFile": "q5_s2_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "cyclone",
-      "machineHostname": "ckad9999",
-      "question": "Update the existing deployment named `cyclone-web` in the `cyclone` namespace.\nChange its `revisionHistoryLimit` to `2`.\nThen perform a rolling update to change the image of the container to `nginx:1.23.1`.",
-      "concepts": [
-        "deployments",
-        "rolling-update"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment `cyclone-web` has `revisionHistoryLimit: 2` and image `nginx:1.23.1`",
-          "verificationScriptFile": "q6_s1_validate_deploy_config.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "zephyr",
-      "machineHostname": "ckad9999",
-      "question": "In the `zephyr` namespace, a blue-green deployment is currently active. The service `zephyr-svc` is routing traffic to the `blue` deployment.\nSwitch the traffic to the `green` deployment by updating the service's selector.\nEnsure that the `zephyr-svc` routes all traffic to pods with the label `version: green`.",
-      "concepts": [
-        "services",
-        "blue-green",
-        "selectors"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service `zephyr-svc` selector has `version: green`",
-          "verificationScriptFile": "q7_s1_validate_svc_selector.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "tornado",
-      "machineHostname": "ckad9988",
-      "question": "A Kustomization directory is located at `/tmp/exam/course/8/`.\nAdd a Kustomization file (`kustomization.yaml`) in that directory.\nIt should include the `deployment.yaml` file located in the same directory as a resource.\nAlso, generate a ConfigMap named `tornado-config` from a literal value `WIND_SPEED=150mph` using `configMapGenerator`.\nThen apply the Kustomization to the `tornado` namespace.",
-      "concepts": [
-        "kustomize",
-        "configmaps"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ConfigMap `tornado-config` exists in namespace `tornado`",
-          "verificationScriptFile": "q8_s1_validate_configmap.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "4",
+            "namespace": "mistral",
+            "machineHostname": "ckad9988",
+            "question": "A pod named `memory-hog` in the `mistral` namespace is repeatedly crashing with an `OOMKilled` status.\nInvestigate and fix the issue by increasing the memory limit of the container named `hog` to `256Mi`. The memory request should remain unchanged at `64Mi`.",
+            "concepts": ["troubleshooting", "resources", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod `memory-hog` container memory limit is `256Mi`", "verificationScriptFile": "q4_s1_validate_memory_limit.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
         },
         {
-          "id": "2",
-          "description": "File `/tmp/exam/course/8/kustomization.yaml` exists",
-          "verificationScriptFile": "q8_s2_validate_kustomization_file.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "mistral",
-      "machineHostname": "ckad9988",
-      "question": "A pod named `memory-hog` in the `mistral` namespace is repeatedly crashing with an `OOMKilled` status.\nInvestigate and fix the issue by increasing the memory limit of the container named `hog` to `256Mi`. The memory request should remain unchanged at `64Mi`.",
-      "concepts": [
-        "troubleshooting",
-        "resources",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `memory-hog` container memory limit is `256Mi`",
-          "verificationScriptFile": "q9_s1_validate_memory_limit.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "sirocco",
-      "machineHostname": "ckad9988",
-      "question": "Identify the top 3 pods in the `sirocco` namespace that are consuming the most memory.\nWrite the names of these pods (just the pod names, one per line) to `/tmp/exam/course/10/top-pods.txt`, sorted from highest memory consumption to lowest.",
-      "concepts": [
-        "observability",
-        "metrics",
-        "kubectl-top"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File `/tmp/exam/course/10/top-pods.txt` exists with at least 3 lines",
-          "verificationScriptFile": "q10_s1_validate_top_pods_file.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "monsoon",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `monsoon-checker` in the `monsoon` namespace using the image `busybox:1.31.1`.\nThe container should run the command `sh -c 'touch /tmp/ready && sleep 3600'`.\nConfigure a readiness probe for the container that uses the `exec` action to run `cat /tmp/ready`.\nSet the initial delay to `5` seconds and period to `10` seconds.",
-      "concepts": [
-        "probes",
-        "readiness",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `monsoon-checker` readiness probe uses `exec` command starting with `cat`",
-          "verificationScriptFile": "q11_s1_validate_readiness_probe.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "gale",
-      "machineHostname": "ckad9988",
-      "question": "Create a Secret named `gale-secret` in the `gale` namespace with a key `password.txt` containing the value `super-secret-wind`.\nCreate a Pod named `secret-reader` in the `gale` namespace using image `alpine:3.14` and command `sleep 3600`.\nMount the Secret into the pod such that only the file `password.txt` appears at `/etc/secrets/password.txt` without deleting any other files that might exist in `/etc/secrets` (use `subPath`).",
-      "concepts": [
-        "secrets",
-        "volumes",
-        "subpath"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `secret-reader` first volumeMount uses `subPath: password.txt`",
-          "verificationScriptFile": "q12_s1_validate_subpath.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "breeze",
-      "machineHostname": "ckad9988",
-      "question": "Create a Role named `breeze-manager` in the `breeze` namespace that grants `create`, `delete`, `list`, and `watch` permissions on `deployments` and `statefulsets` (which are in the `apps` API group).\nCreate a RoleBinding named `breeze-manager-binding` in the same namespace binding this Role to a ServiceAccount named `breeze-admin` (the ServiceAccount already exists).",
-      "concepts": [
-        "rbac",
-        "roles",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Role `breeze-manager` exists in namespace `breeze`",
-          "verificationScriptFile": "q13_s1_validate_role_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "5",
+            "namespace": "zephyr",
+            "machineHostname": "ckad9977",
+            "question": "Update the pod `zephyr-api` in the `zephyr` namespace so that it does NOT automatically mount the default ServiceAccount token. (You may need to recreate the pod).",
+            "concepts": ["serviceaccount", "security", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod `zephyr-api` has `automountServiceAccountToken: false`", "verificationScriptFile": "q5_s1_validate_automount.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
         },
         {
-          "id": "2",
-          "description": "RoleBinding `breeze-manager-binding` exists in namespace `breeze`",
-          "verificationScriptFile": "q13_s2_validate_rolebinding_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "tempest",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `secure-storage` in the `tempest` namespace using the image `nginx:1.23.1`.\nConfigure the pod's security context so that all processes in the containers run with the filesystem group (`fsGroup`) set to `2000`.",
-      "concepts": [
-        "securitycontext",
-        "fsgroup",
-        "pods"
-      ],
-      "verification": [
+            "id": "6",
+            "namespace": "gale",
+            "machineHostname": "ckad9999",
+            "question": "An application is running in a pod named `wind-logger` in the `gale` namespace. It generates logs in a format that is not easily parsable by our central logging system.\nModify the pod to include an adapter container using the image `busybox:1.31.1`.\nThe main container `app` writes logs to `/var/log/wind.log`. The adapter container should mount the same volume, tail the log file, and output each line prepended with `[WIND-LOG]` to stdout using `tail -f /var/log/wind.log | sed 's/^/[WIND-LOG] /'`.\nMake sure the adapter container is named `adapter` and both containers share a volume named `logs` mounted at `/var/log`. The pod is already created but might need to be replaced.",
+            "concepts": ["sidecar", "multi-container", "logging"],
+            "verification": [
+                { "id": "1", "description": "Pod `wind-logger` has a container named `adapter`", "verificationScriptFile": "q6_s1_validate_adapter_container.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "The `adapter` container mounts volume `logs` at `/var/log`", "verificationScriptFile": "q6_s2_validate_adapter_volume_mount.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
         {
-          "id": "1",
-          "description": "Pod `secure-storage` has `securityContext.fsGroup: 2000`",
-          "verificationScriptFile": "q14_s1_validate_fsgroup.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "cyclone",
-      "machineHostname": "ckad9977",
-      "question": "Create a LimitRange named `cyclone-limits` in the `cyclone` namespace.\nIt should enforce the following constraints for Pods:\n- Maximum memory: `500Mi`\n- Minimum memory: `100Mi`\nFor Containers:\n- Default CPU limit: `500m`\n- Default CPU request: `200m`",
-      "concepts": [
-        "limitrange",
-        "resources",
-        "quotas"
-      ],
-      "verification": [
+            "id": "7",
+            "namespace": "sirocco",
+            "machineHostname": "ckad9988",
+            "question": "Identify the top 3 pods in the `sirocco` namespace that are consuming the most memory.\nWrite the names of these pods (just the pod names, one per line) to `/tmp/exam/course/7/top-pods.txt`, sorted from highest memory consumption to lowest.",
+            "concepts": ["observability", "metrics", "kubectl-top"],
+            "verification": [
+                { "id": "1", "description": "File `/tmp/exam/course/10/top-pods.txt` exists with at least 3 lines", "verificationScriptFile": "q7_s1_validate_top_pods_file.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
         {
-          "id": "1",
-          "description": "LimitRange `cyclone-limits` exists in namespace `cyclone`",
-          "verificationScriptFile": "q15_s1_validate_limitrange_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "zephyr",
-      "machineHostname": "ckad9977",
-      "question": "Update the pod `zephyr-api` in the `zephyr` namespace so that it does NOT automatically mount the default ServiceAccount token. (You may need to recreate the pod).",
-      "concepts": [
-        "serviceaccount",
-        "security",
-        "pods"
-      ],
-      "verification": [
+            "id": "8",
+            "namespace": "typhoon",
+            "machineHostname": "ckad9977",
+            "question": "Create a NetworkPolicy named `allow-dns-egress` in the `typhoon` namespace.\nIt should apply to pods with the label `role: worker`.\nAllow egress traffic only to port `53` (TCP and UDP) on all destinations.\nEnsure all other egress traffic from these pods is denied.",
+            "concepts": ["networkpolicy", "egress", "networking"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy `allow-dns-egress` allows egress on port `53`", "verificationScriptFile": "q8_s1_validate_netpol_port.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
+        },
         {
-          "id": "1",
-          "description": "Pod `zephyr-api` has `automountServiceAccountToken: false`",
-          "verificationScriptFile": "q16_s1_validate_automount.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "typhoon",
-      "machineHostname": "ckad9977",
-      "question": "Create a NetworkPolicy named `allow-dns-egress` in the `typhoon` namespace.\nIt should apply to pods with the label `role: worker`.\nAllow egress traffic only to port `53` (TCP and UDP) on all destinations.\nEnsure all other egress traffic from these pods is denied.",
-      "concepts": [
-        "networkpolicy",
-        "egress",
-        "networking"
-      ],
-      "verification": [
+            "id": "9",
+            "namespace": "monsoon",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `monsoon-checker` in the `monsoon` namespace using the image `busybox:1.31.1`.\nThe container should run the command `sh -c 'touch /tmp/ready && sleep 3600'`.\nConfigure a readiness probe for the container that uses the `exec` action to run `cat /tmp/ready`.\nSet the initial delay to `5` seconds and period to `10` seconds.",
+            "concepts": ["probes", "readiness", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod `monsoon-checker` readiness probe uses `exec` command starting with `cat`", "verificationScriptFile": "q9_s1_validate_readiness_probe.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
+        },
         {
-          "id": "1",
-          "description": "NetworkPolicy `allow-dns-egress` allows egress on port `53`",
-          "verificationScriptFile": "q17_s1_validate_netpol_port.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "tornado",
-      "machineHostname": "ckad9977",
-      "question": "Create an Ingress named `tornado-ingress` in the `tornado` namespace.\nIt should route traffic for host `tornado.dojo.com` as follows:\n- Path `/api` routes to service `api-svc` on port `8080`.\n- Path `/web` routes to service `web-svc` on port `80`.\nAssume path type `Prefix` for both.",
-      "concepts": [
-        "ingress",
-        "networking",
-        "routing"
-      ],
-      "verification": [
+            "id": "10",
+            "namespace": "breeze",
+            "machineHostname": "ckad9999",
+            "question": "Create a Job named `storm-processor` in the `breeze` namespace.\nThe Job should use the `busybox:1.31.1` image and execute the command: `sh -c 'sleep 2; echo \"Processing storm data\"'`.\nConfigure the Job to run a total of `6` successful completions, with `3` pods running in parallel.",
+            "concepts": ["jobs", "batch", "workloads"],
+            "verification": [
+                { "id": "1", "description": "Job `storm-processor` has `completions: 6` and `parallelism: 3`", "verificationScriptFile": "q10_s1_validate_job_config.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
         {
-          "id": "1",
-          "description": "Ingress `tornado-ingress` has rule host `tornado.dojo.com`",
-          "verificationScriptFile": "q18_s1_validate_ingress_host.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "mistral",
-      "machineHostname": "ckad9977",
-      "question": "There is a StatefulSet named `mistral-db` in the `mistral` namespace that expects a headless service.\nCreate a headless service named `mistral-db-headless` in the `mistral` namespace that targets pods with label `app: mistral-db`. The service should expose port `3306`.",
-      "concepts": [
-        "services",
-        "headless",
-        "statefulsets"
-      ],
-      "verification": [
+            "id": "11",
+            "namespace": "gale",
+            "machineHostname": "ckad9988",
+            "question": "Create a Secret named `gale-secret` in the `gale` namespace with a key `password.txt` containing the value `super-secret-wind`.\nCreate a Pod named `secret-reader` in the `gale` namespace using image `alpine:3.14` and command `sleep 3600`.\nMount the Secret into the pod such that only the file `password.txt` appears at `/etc/secrets/password.txt` without deleting any other files that might exist in `/etc/secrets` (use `subPath`).",
+            "concepts": ["secrets", "volumes", "subpath"],
+            "verification": [
+                { "id": "1", "description": "Pod `secret-reader` first volumeMount uses `subPath: password.txt`", "verificationScriptFile": "q11_s1_validate_subpath.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
+        },
         {
-          "id": "1",
-          "description": "Service `mistral-db-headless` is headless (`clusterIP: None`)",
-          "verificationScriptFile": "q19_s1_validate_headless.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "sirocco",
-      "machineHostname": "ckad9977",
-      "question": "There is a pod named `sirocco-app` and a service named `sirocco-backend` in the `sirocco` namespace.\nWhen the pod was started, Kubernetes automatically injected environment variables for the service.\nFind the name of the environment variable that stores the IP address of the `sirocco-backend` service inside the `sirocco-app` pod.\nWrite the name of this environment variable (just the variable name, e.g., `SIROCCO_BACKEND_SERVICE_HOST`) into `/tmp/exam/course/20/svc-env.txt`.",
-      "concepts": [
-        "services",
-        "debugging",
-        "environment"
-      ],
-      "verification": [
+            "id": "12",
+            "namespace": "tornado",
+            "machineHostname": "ckad9977",
+            "question": "Create an Ingress named `tornado-ingress` in the `tornado` namespace.\nIt should route traffic for host `tornado.dojo.com` as follows:\n- Path `/api` routes to service `api-svc` on port `8080`.\n- Path `/web` routes to service `web-svc` on port `80`.\nAssume path type `Prefix` for both.",
+            "concepts": ["ingress", "networking", "routing"],
+            "verification": [
+                { "id": "1", "description": "Ingress `tornado-ingress` has rule host `tornado.dojo.com`", "verificationScriptFile": "q12_s1_validate_ingress_host.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
+        },
         {
-          "id": "1",
-          "description": "File `/tmp/exam/course/20/svc-env.txt` contains `SIROCCO_BACKEND_SERVICE_HOST`",
-          "verificationScriptFile": "q20_s1_validate_env_var.sh",
-          "expectedOutput": "0",
-          "weightage": 6
+            "id": "13",
+            "namespace": "tempest",
+            "machineHostname": "ckad9999",
+            "question": "There is a deployment named `tempest-app` in the `tempest` namespace.\nExtract its pod template and create a standalone Pod named `tempest-debug` in the `tempest` namespace.\nThe `tempest-debug` Pod should have the exact same container specifications (image, ports, env vars) as the deployment's pod template, but change the container's command to `['sleep', '3600']`.\nSave the YAML definition used to create this Pod at `/tmp/exam/course/13/pod.yaml`.",
+            "concepts": ["pods", "deployments", "debugging"],
+            "verification": [
+                { "id": "1", "description": "Pod `tempest-debug` container command starts with `sleep`", "verificationScriptFile": "q13_s1_validate_pod_command.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "File `/tmp/exam/course/4/pod.yaml` exists", "verificationScriptFile": "q13_s2_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "breeze",
+            "machineHostname": "ckad9988",
+            "question": "Create a Role named `breeze-manager` in the `breeze` namespace that grants `create`, `delete`, `list`, and `watch` permissions on `deployments` and `statefulsets` (which are in the `apps` API group).\nCreate a RoleBinding named `breeze-manager-binding` in the same namespace binding this Role to a ServiceAccount named `breeze-admin` (the ServiceAccount already exists).",
+            "concepts": ["rbac", "roles", "security"],
+            "verification": [
+                { "id": "1", "description": "Role `breeze-manager` exists in namespace `breeze`", "verificationScriptFile": "q14_s1_validate_role_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "RoleBinding `breeze-manager-binding` exists in namespace `breeze`", "verificationScriptFile": "q14_s2_validate_rolebinding_exists.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "typhoon",
+            "machineHostname": "ckad9999",
+            "question": "A Helm chart has been deployed to the `typhoon` namespace with the release name `storm-app`.\nUpdate the release `storm-app` using the chart located at `/tmp/exam/course/15/storm-chart`.\nOverride the replica count to `3` and change the image tag to `v2.0.0` during the upgrade.",
+            "concepts": ["helm", "deployments", "upgrades"],
+            "verification": [
+                { "id": "1", "description": "Deployment for release `storm-app` has `3` replicas", "verificationScriptFile": "q15_s1_validate_replicas.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Deployment for release `storm-app` uses image tag `v2.0.0`", "verificationScriptFile": "q15_s2_validate_image.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "tempest",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `secure-storage` in the `tempest` namespace using the image `nginx:1.23.1`.\nConfigure the pod's security context so that all processes in the containers run with the filesystem group (`fsGroup`) set to `2000`.",
+            "concepts": ["securitycontext", "fsgroup", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod `secure-storage` has `securityContext.fsGroup: 2000`", "verificationScriptFile": "q16_s1_validate_fsgroup.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "cyclone",
+            "machineHostname": "ckad9999",
+            "question": "Update the existing deployment named `cyclone-web` in the `cyclone` namespace.\nChange its `revisionHistoryLimit` to `2`.\nThen perform a rolling update to change the image of the container to `nginx:1.23.1`.",
+            "concepts": ["deployments", "rolling-update"],
+            "verification": [
+                { "id": "1", "description": "Deployment `cyclone-web` has `revisionHistoryLimit: 2` and image `nginx:1.23.1`", "verificationScriptFile": "q17_s1_validate_deploy_config.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "mistral",
+            "machineHostname": "ckad9977",
+            "question": "There is a StatefulSet named `mistral-db` in the `mistral` namespace that expects a headless service.\nCreate a headless service named `mistral-db-headless` in the `mistral` namespace that targets pods with label `app: mistral-db`. The service should expose port `3306`.",
+            "concepts": ["services", "headless", "statefulsets"],
+            "verification": [
+                { "id": "1", "description": "Service `mistral-db-headless` is headless (`clusterIP: None`)", "verificationScriptFile": "q18_s1_validate_headless.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "zephyr",
+            "machineHostname": "ckad9999",
+            "question": "In the `zephyr` namespace, a blue-green deployment is currently active. The service `zephyr-svc` is routing traffic to the `blue` deployment.\nSwitch the traffic to the `green` deployment by updating the service's selector.\nEnsure that the `zephyr-svc` routes all traffic to pods with the label `version: green`.",
+            "concepts": ["services", "blue-green", "selectors"],
+            "verification": [
+                { "id": "1", "description": "Service `zephyr-svc` selector has `version: green`", "verificationScriptFile": "q19_s1_validate_svc_selector.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "sirocco",
+            "machineHostname": "ckad9977",
+            "question": "There is a pod named `sirocco-app` and a service named `sirocco-backend` in the `sirocco` namespace.\nWhen the pod was started, Kubernetes automatically injected environment variables for the service.\nFind the name of the environment variable that stores the IP address of the `sirocco-backend` service inside the `sirocco-app` pod.\nWrite the name of this environment variable (just the variable name, e.g., `SIROCCO_BACKEND_SERVICE_HOST`) into `/tmp/exam/course/20/svc-env.txt`.",
+            "concepts": ["services", "debugging", "environment"],
+            "verification": [
+                { "id": "1", "description": "File `/tmp/exam/course/20/svc-env.txt` contains `SIROCCO_BACKEND_SERVICE_HOST`", "verificationScriptFile": "q20_s1_validate_env_var.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

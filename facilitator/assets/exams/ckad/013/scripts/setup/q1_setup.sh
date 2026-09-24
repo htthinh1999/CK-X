@@ -1,18 +1,41 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-mkdir -p /tmp/exam/course/1/image
-cat > /tmp/exam/course/1/image/Dockerfile <<'EOF'
-FROM nginx:1.25-alpine
-COPY index.html /usr/share/nginx/html/index.html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+kubectl create namespace zenith --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+mkdir -p /tmp/exam/course/1
+cat > /tmp/exam/course/1/deployment.yaml <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  namespace: zenith
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
 EOF
-cat > /tmp/exam/course/1/image/index.html <<'EOF'
-<!DOCTYPE html>
-<html>
-<head><title>Solar App</title></head>
-<body><h1>Welcome to Solar App v1.0</h1></body>
-</html>
+cat > /tmp/exam/course/1/service.yaml <<'EOF'
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc
+  namespace: zenith
+spec:
+  selector:
+    app: web
+  ports:
+    - port: 80
+      targetPort: 80
 EOF
 echo "Setup complete for Question 1"
 exit 0

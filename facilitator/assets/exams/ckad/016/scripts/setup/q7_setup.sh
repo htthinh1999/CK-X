@@ -1,38 +1,29 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace spark --dry-run=client -o yaml | kubectl apply -f - || true
-kubectl delete deployment backend-v2 -n spark --ignore-not-found=true >/dev/null 2>&1 || true
-kubectl apply -f - <<'YAML'
+kubectl create namespace charge --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl delete deployment api-worker -n charge --ignore-not-found=true >/dev/null 2>&1 || true
+mkdir -p /tmp/exam/course/7
+cat > /tmp/exam/course/7/deployment.yaml <<'YAML'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-v1
-  namespace: spark
+  name: api-worker
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: api-worker
   template:
     metadata:
       labels:
-        app: backend
+        app: api-worker
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.22
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-svc
-  namespace: spark
-spec:
-  selector:
-    app: backend
-  ports:
-  - port: 80
-    targetPort: 80
+      - name: worker
+        image: busybox
+        command: ["sleep", "3600"]
 YAML
+# Remove any leftover student files so kustomization is authored by the candidate
+rm -f /tmp/exam/course/7/kustomization.yaml /tmp/exam/course/7/patch.yaml 2>/dev/null || true
 echo "Setup complete for Question 7"
 exit 0

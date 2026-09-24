@@ -1,532 +1,223 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "ward",
-      "machineHostname": "ckad9999",
-      "question": "You have been tasked to optimize a container build process using multi-stage builds.\n\nIn the directory `/tmp/exam/course/1/` there is a basic `main.go` application and an incomplete `Dockerfile`. Modify the `Dockerfile` to use a multi-stage build:\n\n1. Stage 1: Name it `builder` and use `golang:1.20-alpine` as the base image. Compile the Go app here.\n2. Stage 2: Use `alpine:3.18` as the base image. Copy the compiled binary from the `builder` stage to `/app/main`.\n3. Save the multi-stage `Dockerfile` at `/tmp/exam/course/1/Dockerfile`.\n4. Create a Pod named `optimized-build` in the `ward` namespace using the `nginx:alpine` image.",
-      "concepts": [
-        "docker",
-        "images",
-        "pods"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Dockerfile at /tmp/exam/course/1/Dockerfile is multi-stage (>=2 FROM stages)",
-          "verificationScriptFile": "q1_s1_validate_dockerfile_multistage.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "1",
+            "namespace": "ward",
+            "machineHostname": "ckad9999",
+            "question": "You have been tasked to optimize a container build process using multi-stage builds.\n\nIn the directory `/tmp/exam/course/1/` there is a basic `main.go` application and an incomplete `Dockerfile`. Modify the `Dockerfile` to use a multi-stage build:\n\n1. Stage 1: Name it `builder` and use `golang:1.20-alpine` as the base image. Compile the Go app here.\n2. Stage 2: Use `alpine:3.18` as the base image. Copy the compiled binary from the `builder` stage to `/app/main`.\n3. Save the multi-stage `Dockerfile` at `/tmp/exam/course/1/Dockerfile`.\n4. Create a Pod named `optimized-build` in the `ward` namespace using the `nginx:alpine` image.",
+            "concepts": ["docker", "images", "pods"],
+            "verification": [
+                { "id": "1", "description": "Dockerfile at /tmp/exam/course/1/Dockerfile is multi-stage (>=2 FROM stages)", "verificationScriptFile": "q1_s1_validate_dockerfile_multistage.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Pod optimized-build exists in ward namespace", "verificationScriptFile": "q1_s2_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod optimized-build exists in ward namespace",
-          "verificationScriptFile": "q1_s2_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "aegis",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `logging-pod` in the `aegis` namespace with two containers:\n\n1. Main container: Name `app-container`, Image `busybox:1.36`, command `sh`, `-c`, `while true; do echo 'App running' >> /var/log/app.log; sleep 5; done`.\n2. Sidecar container: Name `log-tailer`, Image `busybox:1.36`, command `sh`, `-c`, `tail -f /var/log/app.log`.\n3. Both containers must mount an `emptyDir` volume at `/var/log`.\n4. `app-container` must have requests of `100m` CPU and `128Mi` memory. `log-tailer` must have limits of `50m` CPU and `64Mi` memory.",
-      "concepts": [
-        "pods",
-        "multi-container",
-        "volumes",
-        "resources"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod logging-pod exists in aegis namespace",
-          "verificationScriptFile": "q2_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "2",
+            "namespace": "haven",
+            "machineHostname": "ckad9977",
+            "question": "Create RBAC resources in the `haven` namespace:\n\n1. A Role named `config-editor` that allows `get`, `update` and `patch` operations, but strictly only on ConfigMaps named `primary-config` and `secondary-config`.\n2. A RoleBinding named `dev-config-binding` that binds this Role to a user named `dev-user`.",
+            "concepts": ["rbac", "roles", "security"],
+            "verification": [
+                { "id": "1", "description": "Role config-editor targets resourceNames primary-config", "verificationScriptFile": "q2_s1_validate_role_resourcenames.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "RoleBinding dev-config-binding exists in haven namespace", "verificationScriptFile": "q2_s2_validate_rolebinding_exists.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod has containers app-container and log-tailer",
-          "verificationScriptFile": "q2_s2_validate_containers.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "3",
+            "namespace": "bulwark",
+            "machineHostname": "ckad9988",
+            "question": "Using Kustomize in `/tmp/exam/course/3/`:\n\n1. A `kustomization.yaml` that includes `deployment.yaml` (Deployment `my-app`) as a resource is provided.\n2. Apply a patch `patch.yaml` to change the replicas of the deployment to `4`.\n3. Build the Kustomization and apply it to the `bulwark` namespace.",
+            "concepts": ["kustomize", "deployments"],
+            "verification": [
+                { "id": "1", "description": "Deployment my-app exists in bulwark namespace", "verificationScriptFile": "q3_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Deployment my-app has replicas patched to 4", "verificationScriptFile": "q3_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "3",
-          "description": "app-container has CPU resource requests set",
-          "verificationScriptFile": "q2_s3_validate_requests.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "shield",
-      "machineHostname": "ckad9999",
-      "question": "A CronJob named `backup-cj` exists in the `shield` namespace. It runs every 10 minutes.\n\n1. Suspend the existing CronJob `backup-cj`.\n2. Manually trigger a Job named `manual-backup` from this CronJob immediately.",
-      "concepts": [
-        "cronjobs",
-        "jobs"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "CronJob backup-cj is suspended",
-          "verificationScriptFile": "q3_s1_validate_cronjob_suspended.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "4",
+            "namespace": "aegis",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `logging-pod` in the `aegis` namespace with two containers:\n\n1. Main container: Name `app-container`, Image `busybox:1.36`, command `sh`, `-c`, `while true; do echo 'App running' >> /var/log/app.log; sleep 5; done`.\n2. Sidecar container: Name `log-tailer`, Image `busybox:1.36`, command `sh`, `-c`, `tail -f /var/log/app.log`.\n3. Both containers must mount an `emptyDir` volume at `/var/log`.\n4. `app-container` must have requests of `100m` CPU and `128Mi` memory. `log-tailer` must have limits of `50m` CPU and `64Mi` memory.",
+            "concepts": ["pods", "multi-container", "volumes", "resources"],
+            "verification": [
+                { "id": "1", "description": "Pod logging-pod exists in aegis namespace", "verificationScriptFile": "q4_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod has containers app-container and log-tailer", "verificationScriptFile": "q4_s2_validate_containers.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "app-container has CPU resource requests set", "verificationScriptFile": "q4_s3_validate_requests.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Job manual-backup exists in shield namespace",
-          "verificationScriptFile": "q3_s2_validate_job_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "guardian",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `init-chain` in the `guardian` namespace that utilizes a sequence of initialization steps.\n\n1. The Pod should have an `emptyDir` volume named `shared-data` mounted at `/data` in all containers.\n2. It should have 3 init containers running sequentially:\n   - Init 1: `busybox` image, writes `step1` to `/data/1.txt`.\n   - Init 2: `busybox` image, writes `step2` to `/data/2.txt`.\n   - Init 3: `busybox` image, writes `step3` to `/data/3.txt`.\n3. Main container: `busybox` image, runs `sleep 3600`.",
-      "concepts": [
-        "pods",
-        "init-containers",
-        "volumes"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod init-chain exists in guardian namespace",
-          "verificationScriptFile": "q4_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "5",
+            "namespace": "refuge",
+            "machineHostname": "ckad9977",
+            "question": "Configure PodSecurityAdmission for the `refuge` namespace.\n\n1. Apply the `restricted` profile for `enforce` mode (label `pod-security.kubernetes.io/enforce=restricted`).\n2. Apply the `baseline` profile for `warn` mode (label `pod-security.kubernetes.io/warn=baseline`).",
+            "concepts": ["podsecurity", "namespaces", "security"],
+            "verification": [
+                { "id": "1", "description": "refuge namespace has enforce=restricted label", "verificationScriptFile": "q5_s1_validate_enforce_label.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "refuge namespace has warn=baseline label", "verificationScriptFile": "q5_s2_validate_warn_label.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod has at least 3 init containers",
-          "verificationScriptFile": "q4_s2_validate_init_count.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "haven",
-      "machineHostname": "ckad9999",
-      "question": "A Helm release named `guardian-app` is deployed in the `haven` namespace.\n\n1. Download its current values to `/tmp/exam/course/5/old-values.yaml`.\n2. Update the replica count to `3` and the image tag to `latest` in a new file `/tmp/exam/course/5/new-values.yaml`.\n3. Upgrade the release using `/tmp/exam/course/5/new-values.yaml` without changing other existing configurations (`--reuse-values`).",
-      "concepts": [
-        "helm",
-        "deployments"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Helm release guardian-app has replicaCount set to 3",
-          "verificationScriptFile": "q5_s1_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "6",
+            "namespace": "shield",
+            "machineHostname": "ckad9999",
+            "question": "A CronJob named `backup-cj` exists in the `shield` namespace. It runs every 10 minutes.\n\n1. Suspend the existing CronJob `backup-cj`.\n2. Manually trigger a Job named `manual-backup` from this CronJob immediately.",
+            "concepts": ["cronjobs", "jobs"],
+            "verification": [
+                { "id": "1", "description": "CronJob backup-cj is suspended", "verificationScriptFile": "q6_s1_validate_cronjob_suspended.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Job manual-backup exists in shield namespace", "verificationScriptFile": "q6_s2_validate_job_exists.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Helm release guardian-app image tag set to latest",
-          "verificationScriptFile": "q5_s2_validate_image_tag.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "refuge",
-      "machineHostname": "ckad9999",
-      "question": "In the `refuge` namespace, there is a Deployment named `api-server` managed by an HPA named `api-hpa`. There is a conflict causing issues. The Deployment specifies 5 replicas, while the HPA is misconfigured.\n\n1. Remove the static replica count from the Deployment specification.\n2. Ensure the HPA `api-hpa` targets the Deployment `api-server` correctly and has a CPU utilization target of `75%`, `minReplicas` `2` and `maxReplicas` `10`.\n\nNote: the HPA needs metrics-server to read CPU usage; scoring checks the HPA spec only.",
-      "concepts": [
-        "hpa",
-        "deployments",
-        "autoscaling"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "HPA api-hpa targets deployment api-server",
-          "verificationScriptFile": "q6_s1_validate_hpa_target.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "7",
+            "namespace": "bastion",
+            "machineHostname": "ckad9977",
+            "question": "Create a NetworkPolicy named `db-protect` in the `bastion` namespace.\n\n1. It should target pods with `app=db`.\n2. Allow INGRESS on port `5432` only from pods with `app=backend` in the same namespace.\n3. Allow EGRESS to a specific IP range `10.0.0.0/24` on port `443` only.\n4. Block all other ingress and egress traffic for the targeted pods.",
+            "concepts": ["networkpolicy", "networking", "security"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy db-protect exists in bastion namespace", "verificationScriptFile": "q7_s1_validate_networkpolicy_exists.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
         },
         {
-          "id": "2",
-          "description": "HPA api-hpa minReplicas is 2",
-          "verificationScriptFile": "q6_s2_validate_hpa_minreplicas.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "bastion",
-      "machineHostname": "ckad9999",
-      "question": "Perform a complex rollout for a Deployment named `worker-deploy` in the `bastion` namespace.\n\n1. The Deployment currently uses `nginx:1.24.0` and `redis:6.2`.\n2. Update the `nginx` container to use `nginx:1.25.0`.\n3. Update the `redis` container to use `redis:7.0`.\n4. Record the rollout.\n5. You realize the `nginx` image is faulty. Undo only the latest rollout (rollback to the previous revision).",
-      "concepts": [
-        "deployments",
-        "rollouts"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "worker-deploy nginx container rolled back to nginx:1.24.0",
-          "verificationScriptFile": "q7_s1_validate_nginx_image.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "8",
+            "namespace": "anchor",
+            "machineHostname": "ckad9988",
+            "question": "A Deployment named `broken-app` in the `anchor` namespace is failing to start. Troubleshoot and fix the issues:\n\n1. The image name is misspelled. Change it from `ngnx:latest` to `nginx:1.25.0`.\n2. A required Secret named `app-secret` is missing. Create it with key `PASSWORD` and value `securepass`.\n3. The container port is incorrectly set to `8080`. Fix it to `80`.",
+            "concepts": ["deployments", "secrets", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "Secret app-secret exists in anchor namespace", "verificationScriptFile": "q8_s1_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "broken-app image corrected to nginx:1.25.0", "verificationScriptFile": "q8_s2_validate_image.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "broken-app containerPort corrected to 80", "verificationScriptFile": "q8_s3_validate_port.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         },
         {
-          "id": "2",
-          "description": "worker-deploy redis container is redis:6.2 or redis:7.0",
-          "verificationScriptFile": "q7_s2_validate_redis_image.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "bulwark",
-      "machineHostname": "ckad9988",
-      "question": "Using Kustomize in `/tmp/exam/course/8/`:\n\n1. A `kustomization.yaml` that includes `deployment.yaml` (Deployment `my-app`) as a resource is provided.\n2. Apply a patch `patch.yaml` to change the replicas of the deployment to `4`.\n3. Build the Kustomization and apply it to the `bulwark` namespace.",
-      "concepts": [
-        "kustomize",
-        "deployments"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment my-app exists in bulwark namespace",
-          "verificationScriptFile": "q8_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "9",
+            "namespace": "bulwark",
+            "machineHostname": "ckad9977",
+            "question": "Create an Ingress named `regex-ingress` in the `bulwark` namespace.\n\n1. Assume an IngressClass named `nginx` exists. Use it.\n2. Route traffic for host `api.dojo.com` with path `/v1/.*` (regex match) to a Service named `v1-service` on port `80`.\n3. Route path `/v2/.*` to a Service named `v2-service` on port `80`.\n\nUse `ImplementationSpecific` path type with the `nginx.ingress.kubernetes.io/use-regex: \"true\"` annotation.",
+            "concepts": ["ingress", "networking"],
+            "verification": [
+                { "id": "1", "description": "Ingress regex-ingress exists in bulwark namespace", "verificationScriptFile": "q9_s1_validate_ingress_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Ingress regex-ingress has use-regex annotation", "verificationScriptFile": "q9_s2_validate_regex_annotation.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Deployment my-app has replicas patched to 4",
-          "verificationScriptFile": "q8_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "anchor",
-      "machineHostname": "ckad9988",
-      "question": "A Deployment named `broken-app` in the `anchor` namespace is failing to start. Troubleshoot and fix the issues:\n\n1. The image name is misspelled. Change it from `ngnx:latest` to `nginx:1.25.0`.\n2. A required Secret named `app-secret` is missing. Create it with key `PASSWORD` and value `securepass`.\n3. The container port is incorrectly set to `8080`. Fix it to `80`.",
-      "concepts": [
-        "deployments",
-        "secrets",
-        "troubleshooting"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Secret app-secret exists in anchor namespace",
-          "verificationScriptFile": "q9_s1_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "10",
+            "namespace": "guardian",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `init-chain` in the `guardian` namespace that utilizes a sequence of initialization steps.\n\n1. The Pod should have an `emptyDir` volume named `shared-data` mounted at `/data` in all containers.\n2. It should have 3 init containers running sequentially:\n   - Init 1: `busybox` image, writes `step1` to `/data/1.txt`.\n   - Init 2: `busybox` image, writes `step2` to `/data/2.txt`.\n   - Init 3: `busybox` image, writes `step3` to `/data/3.txt`.\n3. Main container: `busybox` image, runs `sleep 3600`.",
+            "concepts": ["pods", "init-containers", "volumes"],
+            "verification": [
+                { "id": "1", "description": "Pod init-chain exists in guardian namespace", "verificationScriptFile": "q10_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod has at least 3 init containers", "verificationScriptFile": "q10_s2_validate_init_count.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "broken-app image corrected to nginx:1.25.0",
-          "verificationScriptFile": "q9_s2_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "11",
+            "namespace": "helm",
+            "machineHostname": "ckad9988",
+            "question": "Find the Pod in the `helm` namespace with the label `tier=backend` that is consuming the most CPU. Write the name of this Pod to `/tmp/exam/course/11/cpu-usage.txt`.\n\nNote: In this simulated environment, write the pod name `backend-pod-2` to the file.",
+            "concepts": ["observability", "metrics", "pods"],
+            "verification": [
+                { "id": "1", "description": "/tmp/exam/course/10/cpu-usage.txt contains a backend pod name", "verificationScriptFile": "q11_s1_validate_cpu_file.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
         },
         {
-          "id": "3",
-          "description": "broken-app containerPort corrected to 80",
-          "verificationScriptFile": "q9_s3_validate_port.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "helm",
-      "machineHostname": "ckad9988",
-      "question": "Find the Pod in the `helm` namespace with the label `tier=backend` that is consuming the most CPU. Write the name of this Pod to `/tmp/exam/course/10/cpu-usage.txt`.\n\nNote: In this simulated environment, write the pod name `backend-pod-2` to the file.",
-      "concepts": [
-        "observability",
-        "metrics",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "/tmp/exam/course/10/cpu-usage.txt contains a backend pod name",
-          "verificationScriptFile": "q10_s1_validate_cpu_file.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "ward",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `monitored-pod` in the `ward` namespace using `nginx:alpine` image with comprehensive monitoring.\n\n1. Startup Probe: HTTP GET `/` on port `80`, initial delay `5s`, failure threshold `10`, period `5s`.\n2. Readiness Probe: HTTP GET `/` on port `80`, initial delay `5s`, period `10s`.\n3. Liveness Probe: TCP Socket on port `80`, initial delay `15s`, period `20s`.",
-      "concepts": [
-        "pods",
-        "probes",
-        "observability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod monitored-pod exists in ward namespace",
-          "verificationScriptFile": "q11_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "12",
+            "namespace": "haven",
+            "machineHostname": "ckad9999",
+            "question": "A Helm release named `guardian-app` is deployed in the `haven` namespace.\n\n1. Download its current values to `/tmp/exam/course/12/old-values.yaml`.\n2. Update the replica count to `3` and the image tag to `latest` in a new file `/tmp/exam/course/12/new-values.yaml`.\n3. Upgrade the release using `/tmp/exam/course/12/new-values.yaml` without changing other existing configurations (`--reuse-values`).",
+            "concepts": ["helm", "deployments"],
+            "verification": [
+                { "id": "1", "description": "Helm release guardian-app has replicaCount set to 3", "verificationScriptFile": "q12_s1_validate_replicas.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Helm release guardian-app image tag set to latest", "verificationScriptFile": "q12_s2_validate_image_tag.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod has liveness, readiness and startup probes",
-          "verificationScriptFile": "q11_s2_validate_probes.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "aegis",
-      "machineHostname": "ckad9988",
-      "question": "1. Create a ConfigMap named `app-config` in the `aegis` namespace with multiline data under key `config.json`:\n\n{\n  \"mode\": \"production\",\n  \"timeout\": 30\n}\n\n2. Create a Pod named `config-pod` in the `aegis` namespace (`nginx:alpine`) that mounts this ConfigMap at `/etc/app/config.json` via a volume.",
-      "concepts": [
-        "configmaps",
-        "pods",
-        "volumes"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ConfigMap app-config exists in aegis namespace",
-          "verificationScriptFile": "q12_s1_validate_configmap_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "13",
+            "namespace": "ward",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `monitored-pod` in the `ward` namespace using `nginx:alpine` image with comprehensive monitoring.\n\n1. Startup Probe: HTTP GET `/` on port `80`, initial delay `5s`, failure threshold `10`, period `5s`.\n2. Readiness Probe: HTTP GET `/` on port `80`, initial delay `5s`, period `10s`.\n3. Liveness Probe: TCP Socket on port `80`, initial delay `15s`, period `20s`.",
+            "concepts": ["pods", "probes", "observability"],
+            "verification": [
+                { "id": "1", "description": "Pod monitored-pod exists in ward namespace", "verificationScriptFile": "q13_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod has liveness, readiness and startup probes", "verificationScriptFile": "q13_s2_validate_probes.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod config-pod exists in aegis namespace",
-          "verificationScriptFile": "q12_s2_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "shield",
-      "machineHostname": "ckad9988",
-      "question": "1. Create a ServiceAccount named `vault-sa` in the `shield` namespace.\n2. Generate a token for this ServiceAccount using the TokenRequest API (via `kubectl create token`) with an expiration of 24 hours.\n3. Save the token to `/tmp/exam/course/13/token.txt`.",
-      "concepts": [
-        "serviceaccounts",
-        "rbac",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ServiceAccount vault-sa exists in shield namespace",
-          "verificationScriptFile": "q13_s1_validate_sa_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "14",
+            "namespace": "refuge",
+            "machineHostname": "ckad9999",
+            "question": "In the `refuge` namespace, there is a Deployment named `api-server` managed by an HPA named `api-hpa`. There is a conflict causing issues. The Deployment specifies 5 replicas, while the HPA is misconfigured.\n\n1. Remove the static replica count from the Deployment specification.\n2. Ensure the HPA `api-hpa` targets the Deployment `api-server` correctly and has a CPU utilization target of `75%`, `minReplicas` `2` and `maxReplicas` `10`.\n\nNote: the HPA needs metrics-server to read CPU usage; scoring checks the HPA spec only.",
+            "concepts": ["hpa", "deployments", "autoscaling"],
+            "verification": [
+                { "id": "1", "description": "HPA api-hpa targets deployment api-server", "verificationScriptFile": "q14_s1_validate_hpa_target.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "HPA api-hpa minReplicas is 2", "verificationScriptFile": "q14_s2_validate_hpa_minreplicas.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Token saved to /tmp/exam/course/13/token.txt looks valid",
-          "verificationScriptFile": "q13_s2_validate_token_file.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "guardian",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `secure-pod` in the `guardian` namespace with `nginx:alpine`. Configure the SecurityContext:\n\n1. At the Pod level: `runAsUser: 1000`, `runAsGroup: 3000`.\n2. At the Container level: `runAsUser: 2000`, `allowPrivilegeEscalation: false`, and drop `ALL` capabilities.",
-      "concepts": [
-        "pods",
-        "securitycontext",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "secure-pod pod-level securityContext runAsUser is 1000",
-          "verificationScriptFile": "q14_s1_validate_pod_securitycontext.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "15",
+            "namespace": "aegis",
+            "machineHostname": "ckad9988",
+            "question": "1. Create a ConfigMap named `app-config` in the `aegis` namespace with multiline data under key `config.json`:\n\n{\n  \"mode\": \"production\",\n  \"timeout\": 30\n}\n\n2. Create a Pod named `config-pod` in the `aegis` namespace (`nginx:alpine`) that mounts this ConfigMap at `/etc/app/config.json` via a volume.",
+            "concepts": ["configmaps", "pods", "volumes"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap app-config exists in aegis namespace", "verificationScriptFile": "q15_s1_validate_configmap_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Pod config-pod exists in aegis namespace", "verificationScriptFile": "q15_s2_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "secure-pod container-level securityContext runAsUser is 2000",
-          "verificationScriptFile": "q14_s2_validate_container_securitycontext.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "haven",
-      "machineHostname": "ckad9977",
-      "question": "Create RBAC resources in the `haven` namespace:\n\n1. A Role named `config-editor` that allows `get`, `update` and `patch` operations, but strictly only on ConfigMaps named `primary-config` and `secondary-config`.\n2. A RoleBinding named `dev-config-binding` that binds this Role to a user named `dev-user`.",
-      "concepts": [
-        "rbac",
-        "roles",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Role config-editor targets resourceNames primary-config",
-          "verificationScriptFile": "q15_s1_validate_role_resourcenames.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "16",
+            "namespace": "anchor",
+            "machineHostname": "ckad9977",
+            "question": "Create a Service named `topology-service` in the `anchor` namespace.\n\n1. Target pods with label `app=geo`.\n2. Port `80`, targetPort `80`.\n3. Enable Topology Aware Routing by adding the annotation `service.kubernetes.io/topology-mode: Auto`.",
+            "concepts": ["services", "networking"],
+            "verification": [
+                { "id": "1", "description": "Service topology-service exists in anchor namespace", "verificationScriptFile": "q16_s1_validate_service_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Service topology-service has topology annotation", "verificationScriptFile": "q16_s2_validate_topology_annotation.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "RoleBinding dev-config-binding exists in haven namespace",
-          "verificationScriptFile": "q15_s2_validate_rolebinding_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "refuge",
-      "machineHostname": "ckad9977",
-      "question": "Configure PodSecurityAdmission for the `refuge` namespace.\n\n1. Apply the `restricted` profile for `enforce` mode (label `pod-security.kubernetes.io/enforce=restricted`).\n2. Apply the `baseline` profile for `warn` mode (label `pod-security.kubernetes.io/warn=baseline`).",
-      "concepts": [
-        "podsecurity",
-        "namespaces",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "refuge namespace has enforce=restricted label",
-          "verificationScriptFile": "q16_s1_validate_enforce_label.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "17",
+            "namespace": "shield",
+            "machineHostname": "ckad9988",
+            "question": "1. Create a ServiceAccount named `vault-sa` in the `shield` namespace.\n2. Generate a token for this ServiceAccount using the TokenRequest API (via `kubectl create token`) with an expiration of 24 hours.\n3. Save the token to `/tmp/exam/course/17/token.txt`.",
+            "concepts": ["serviceaccounts", "rbac", "security"],
+            "verification": [
+                { "id": "1", "description": "ServiceAccount vault-sa exists in shield namespace", "verificationScriptFile": "q17_s1_validate_sa_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Token saved to /tmp/exam/course/13/token.txt looks valid", "verificationScriptFile": "q17_s2_validate_token_file.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "refuge namespace has warn=baseline label",
-          "verificationScriptFile": "q16_s2_validate_warn_label.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "bastion",
-      "machineHostname": "ckad9977",
-      "question": "Create a NetworkPolicy named `db-protect` in the `bastion` namespace.\n\n1. It should target pods with `app=db`.\n2. Allow INGRESS on port `5432` only from pods with `app=backend` in the same namespace.\n3. Allow EGRESS to a specific IP range `10.0.0.0/24` on port `443` only.\n4. Block all other ingress and egress traffic for the targeted pods.",
-      "concepts": [
-        "networkpolicy",
-        "networking",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy db-protect exists in bastion namespace",
-          "verificationScriptFile": "q17_s1_validate_networkpolicy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "bulwark",
-      "machineHostname": "ckad9977",
-      "question": "Create an Ingress named `regex-ingress` in the `bulwark` namespace.\n\n1. Assume an IngressClass named `nginx` exists. Use it.\n2. Route traffic for host `api.dojo.com` with path `/v1/.*` (regex match) to a Service named `v1-service` on port `80`.\n3. Route path `/v2/.*` to a Service named `v2-service` on port `80`.\n\nUse `ImplementationSpecific` path type with the `nginx.ingress.kubernetes.io/use-regex: \"true\"` annotation.",
-      "concepts": [
-        "ingress",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Ingress regex-ingress exists in bulwark namespace",
-          "verificationScriptFile": "q18_s1_validate_ingress_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "18",
+            "namespace": "bastion",
+            "machineHostname": "ckad9999",
+            "question": "Perform a complex rollout for a Deployment named `worker-deploy` in the `bastion` namespace.\n\n1. The Deployment currently uses `nginx:1.24.0` and `redis:6.2`.\n2. Update the `nginx` container to use `nginx:1.25.0`.\n3. Update the `redis` container to use `redis:7.0`.\n4. Record the rollout.\n5. You realize the `nginx` image is faulty. Undo only the latest rollout (rollback to the previous revision).",
+            "concepts": ["deployments", "rollouts"],
+            "verification": [
+                { "id": "1", "description": "worker-deploy nginx container rolled back to nginx:1.24.0", "verificationScriptFile": "q18_s1_validate_nginx_image.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "worker-deploy redis container is redis:6.2 or redis:7.0", "verificationScriptFile": "q18_s2_validate_redis_image.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Ingress regex-ingress has use-regex annotation",
-          "verificationScriptFile": "q18_s2_validate_regex_annotation.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "anchor",
-      "machineHostname": "ckad9977",
-      "question": "Create a Service named `topology-service` in the `anchor` namespace.\n\n1. Target pods with label `app=geo`.\n2. Port `80`, targetPort `80`.\n3. Enable Topology Aware Routing by adding the annotation `service.kubernetes.io/topology-mode: Auto`.",
-      "concepts": [
-        "services",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service topology-service exists in anchor namespace",
-          "verificationScriptFile": "q19_s1_validate_service_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "19",
+            "namespace": "helm",
+            "machineHostname": "ckad9977",
+            "question": "Create a NetworkPolicy named `strict-net` in the `helm` namespace. Target pods with label `role=frontend`. Deny all INGRESS and EGRESS traffic for these pods (default deny).",
+            "concepts": ["networkpolicy", "networking", "security"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy strict-net exists in helm namespace", "verificationScriptFile": "q19_s1_validate_networkpolicy_exists.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Service topology-service has topology annotation",
-          "verificationScriptFile": "q19_s2_validate_topology_annotation.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "20",
+            "namespace": "guardian",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `secure-pod` in the `guardian` namespace with `nginx:alpine`. Configure the SecurityContext:\n\n1. At the Pod level: `runAsUser: 1000`, `runAsGroup: 3000`.\n2. At the Container level: `runAsUser: 2000`, `allowPrivilegeEscalation: false`, and drop `ALL` capabilities.",
+            "concepts": ["pods", "securitycontext", "security"],
+            "verification": [
+                { "id": "1", "description": "secure-pod pod-level securityContext runAsUser is 1000", "verificationScriptFile": "q20_s1_validate_pod_securitycontext.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "secure-pod container-level securityContext runAsUser is 2000", "verificationScriptFile": "q20_s2_validate_container_securitycontext.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "helm",
-      "machineHostname": "ckad9977",
-      "question": "Create a NetworkPolicy named `strict-net` in the `helm` namespace. Target pods with label `role=frontend`. Deny all INGRESS and EGRESS traffic for these pods (default deny).",
-      "concepts": [
-        "networkpolicy",
-        "networking",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy strict-net exists in helm namespace",
-          "verificationScriptFile": "q20_s1_validate_networkpolicy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    }
-  ]
+    ]
 }

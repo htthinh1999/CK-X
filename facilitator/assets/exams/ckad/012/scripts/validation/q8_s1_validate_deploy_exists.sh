@@ -1,9 +1,9 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-if kubectl get deployment canary-app -n bulwark >/dev/null 2>&1; then
-  echo "Success: Deployment canary-app exists in bulwark"
+if kubectl get deployment secure-app -n fortress >/dev/null 2>&1; then
+  echo "Success: Deployment secure-app exists in fortress"
   exit 0
 else
-  echo "Error: Deployment canary-app exists in bulwark - not found"
+  echo "Error: Deployment secure-app exists in fortress - not found"
   exit 1
 fi

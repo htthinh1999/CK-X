@@ -7,7 +7,39 @@ This document contains reference solutions for all 20 questions. Each question i
 
 ---
 
-## Question 1 | Pod with Anti-Affinity
+## Question 1 | Ingress with Path-Based Routing
+
+> Server: `ssh ckad9977`
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: path-ingress
+  namespace: poseidon
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api-svc
+            port:
+              number: 8080
+      - path: /web
+        pathType: Prefix
+        backend:
+          service:
+            name: web-svc
+            port:
+              number: 80
+```
+
+---
+
+## Question 2 | Pod with Anti-Affinity
 
 > Server: `ssh ckad9999`
 
@@ -40,7 +72,89 @@ kubectl apply -f titan-alpha.yaml
 
 ---
 
-## Question 2 | ConfigMap from Multiple Sources
+## Question 3 | Pod with Token Projection
+
+> Server: `ssh ckad9977`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: token-pod
+  namespace: hades
+spec:
+  containers:
+  - name: app
+    image: nginx:1.21
+    volumeMounts:
+    - name: token-volume
+      mountPath: /var/run/secrets/tokens
+  volumes:
+  - name: token-volume
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: api
+          expirationSeconds: 3600
+          path: token
+```
+
+---
+
+## Question 4 | Ambassador Pattern - Sidecar Proxy
+
+> Server: `ssh ckad9988`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ambassador-pod
+  namespace: olympus
+spec:
+  containers:
+  - name: app
+    image: nginx:1.21
+    ports:
+    - containerPort: 80
+  - name: proxy
+    image: envoyproxy/envoy:v1.28-latest
+    env:
+    - name: ENVOY_UID
+      value: "0"
+```
+
+---
+
+## Question 5 | CronJob with Concurrency Policy
+
+> Server: `ssh ckad9977`
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scheduled-task
+  namespace: ares
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: task
+            image: busybox:1.36
+            command: ["sh", "-c", "echo Task executed at $(date)"]
+          restartPolicy: OnFailure
+```
+
+---
+
+## Question 6 | ConfigMap from Multiple Sources
 
 > Server: `ssh ckad9999`
 
@@ -74,7 +188,49 @@ EOF
 
 ---
 
-## Question 3 | ExternalName Service
+## Question 7 | Pod Disruption Budget
+
+> Server: `ssh ckad9977`
+
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: app-pdb
+  namespace: hera
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: critical
+```
+
+---
+
+## Question 8 | Job with Backoff Limit
+
+> Server: `ssh ckad9988`
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: retry-job
+  namespace: artemis
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+      - name: job
+        image: busybox:1.36
+        command: ["sh", "-c", "exit 1"]
+      restartPolicy: Never
+```
+
+---
+
+## Question 9 | ExternalName Service
 
 > Server: `ssh ckad9999`
 
@@ -95,7 +251,38 @@ kubectl apply -f external-api.yaml
 
 ---
 
-## Question 4 | LimitRange Configuration
+## Question 10 | Deployment with Annotations
+
+> Server: `ssh ckad9977`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: annotated-app
+  namespace: olympus
+  annotations:
+    kubernetes.io/change-cause: "Initial deployment"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: annotated-app
+  template:
+    metadata:
+      labels:
+        app: annotated-app
+      annotations:
+        prometheus.io/scrape: "true"
+    spec:
+      containers:
+      - name: web
+        image: nginx:1.21
+```
+
+---
+
+## Question 11 | LimitRange Configuration
 
 > Server: `ssh ckad9999`
 
@@ -134,7 +321,37 @@ kubectl apply -f limitrange.yaml
 
 ---
 
-## Question 5 | SecurityContext - Read-Only Root Filesystem
+## Question 12 | Secret Types - Docker Registry
+
+> Server: `ssh ckad9988`
+
+```bash
+# Create docker-registry secret
+kubectl create secret docker-registry registry-creds -n hera \
+  --docker-server=docker.io \
+  --docker-username=myuser \
+  --docker-password=mypassword \
+  --docker-email=user@example.com
+
+# Create pod with imagePullSecret
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: private-app
+  namespace: hera
+spec:
+  containers:
+  - name: app
+    image: nginx:1.21
+  imagePullSecrets:
+  - name: registry-creds
+EOF
+```
+
+---
+
+## Question 13 | SecurityContext - Read-Only Root Filesystem
 
 > Server: `ssh ckad9999`
 
@@ -168,7 +385,38 @@ spec:
 
 ---
 
-## Question 6 | Pod with Multiple Init Containers
+## Question 14 | Adapter Pattern - Log Transformer
+
+> Server: `ssh ckad9988`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: adapter-pod
+  namespace: zeus
+spec:
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: ["sh", "-c", "while true; do echo $(date): log message >> /var/log/app.log; sleep 5; done"]
+    volumeMounts:
+    - name: logs
+      mountPath: /var/log
+  - name: log-adapter
+    image: busybox:1.36
+    command: ["sh", "-c", "tail -f /var/log/app.log | sed 's/^/[ADAPTED] /'"]
+    volumeMounts:
+    - name: logs
+      mountPath: /var/log
+  volumes:
+  - name: logs
+    emptyDir: {}
+```
+
+---
+
+## Question 15 | Pod with Multiple Init Containers
 
 > Server: `ssh ckad9999`
 
@@ -205,138 +453,7 @@ spec:
 
 ---
 
-## Question 7 | Deployment with Pause/Resume
-
-> Server: `ssh ckad9999`
-
-```bash
-# Ensure the target directory exists
-mkdir -p /tmp/exam/course/7
-
-# Update the image
-kubectl set image deployment/battle-app nginx=nginx:1.21 -n ares
-
-# Pause the rollout immediately
-kubectl rollout pause deployment/battle-app -n ares
-
-# Save rollout status
-kubectl rollout status deployment/battle-app -n ares > /tmp/exam/course/7/rollout-status.txt
-```
-
-> Note: `kubectl rollout status` on a paused deployment returns immediately with the current status text, which is written to the file.
-
----
-
-## Question 8 | Ambassador Pattern - Sidecar Proxy
-
-> Server: `ssh ckad9988`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: ambassador-pod
-  namespace: olympus
-spec:
-  containers:
-  - name: app
-    image: nginx:1.21
-    ports:
-    - containerPort: 80
-  - name: proxy
-    image: envoyproxy/envoy:v1.28-latest
-    env:
-    - name: ENVOY_UID
-      value: "0"
-```
-
----
-
-## Question 9 | Job with Backoff Limit
-
-> Server: `ssh ckad9988`
-
-```yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: retry-job
-  namespace: artemis
-spec:
-  backoffLimit: 3
-  template:
-    spec:
-      containers:
-      - name: job
-        image: busybox:1.36
-        command: ["sh", "-c", "exit 1"]
-      restartPolicy: Never
-```
-
----
-
-## Question 10 | Secret Types - Docker Registry
-
-> Server: `ssh ckad9988`
-
-```bash
-# Create docker-registry secret
-kubectl create secret docker-registry registry-creds -n hera \
-  --docker-server=docker.io \
-  --docker-username=myuser \
-  --docker-password=mypassword \
-  --docker-email=user@example.com
-
-# Create pod with imagePullSecret
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Pod
-metadata:
-  name: private-app
-  namespace: hera
-spec:
-  containers:
-  - name: app
-    image: nginx:1.21
-  imagePullSecrets:
-  - name: registry-creds
-EOF
-```
-
----
-
-## Question 11 | Adapter Pattern - Log Transformer
-
-> Server: `ssh ckad9988`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: adapter-pod
-  namespace: zeus
-spec:
-  containers:
-  - name: app
-    image: busybox:1.36
-    command: ["sh", "-c", "while true; do echo $(date): log message >> /var/log/app.log; sleep 5; done"]
-    volumeMounts:
-    - name: logs
-      mountPath: /var/log
-  - name: log-adapter
-    image: busybox:1.36
-    command: ["sh", "-c", "tail -f /var/log/app.log | sed 's/^/[ADAPTED] /'"]
-    volumeMounts:
-    - name: logs
-      mountPath: /var/log
-  volumes:
-  - name: logs
-    emptyDir: {}
-```
-
----
-
-## Question 12 | Network Policy - Egress Rules
+## Question 16 | Network Policy - Egress Rules
 
 > Server: `ssh ckad9988`
 
@@ -370,7 +487,36 @@ spec:
 
 ---
 
-## Question 13 | RBAC - Service Account Permissions
+## Question 17 | Multi-Container Pod with Shared Process Namespace
+
+> Server: `ssh ckad9977`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shared-pid
+  namespace: artemis
+spec:
+  shareProcessNamespace: true
+  containers:
+  - name: app
+    image: nginx:1.21
+  - name: debug
+    image: busybox:1.36
+    command: ["sleep", "3600"]
+```
+
+**Verification:**
+
+```bash
+kubectl exec -n artemis shared-pid -c debug -- ps aux
+# Should show nginx processes from the app container
+```
+
+---
+
+## Question 18 | RBAC - Service Account Permissions
 
 > Server: `ssh ckad9988`
 
@@ -402,7 +548,29 @@ kubectl create rolebinding deploy-binding -n hermes \
 
 ---
 
-## Question 14 | Deployment Rolling Update Strategy
+## Question 19 | Deployment with Pause/Resume
+
+> Server: `ssh ckad9999`
+
+```bash
+# Ensure the target directory exists
+mkdir -p /tmp/exam/course/19
+
+# Update the image
+kubectl set image deployment/battle-app nginx=nginx:1.21 -n ares
+
+# Pause the rollout immediately
+kubectl rollout pause deployment/battle-app -n ares
+
+# Save rollout status
+kubectl rollout status deployment/battle-app -n ares > /tmp/exam/course/19/rollout-status.txt
+```
+
+> Note: `kubectl rollout status` on a paused deployment returns immediately with the current status text, which is written to the file.
+
+---
+
+## Question 20 | Deployment Rolling Update Strategy
 
 > Server: `ssh ckad9988`
 
@@ -432,173 +600,3 @@ spec:
       - name: web
         image: nginx:1.21
 ```
-
----
-
-## Question 15 | Ingress with Path-Based Routing
-
-> Server: `ssh ckad9977`
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: path-ingress
-  namespace: poseidon
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: api-svc
-            port:
-              number: 8080
-      - path: /web
-        pathType: Prefix
-        backend:
-          service:
-            name: web-svc
-            port:
-              number: 80
-```
-
----
-
-## Question 16 | Pod with Token Projection
-
-> Server: `ssh ckad9977`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: token-pod
-  namespace: hades
-spec:
-  containers:
-  - name: app
-    image: nginx:1.21
-    volumeMounts:
-    - name: token-volume
-      mountPath: /var/run/secrets/tokens
-  volumes:
-  - name: token-volume
-    projected:
-      sources:
-      - serviceAccountToken:
-          audience: api
-          expirationSeconds: 3600
-          path: token
-```
-
----
-
-## Question 17 | CronJob with Concurrency Policy
-
-> Server: `ssh ckad9977`
-
-```yaml
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: scheduled-task
-  namespace: ares
-spec:
-  schedule: "*/5 * * * *"
-  concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 1
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-          - name: task
-            image: busybox:1.36
-            command: ["sh", "-c", "echo Task executed at $(date)"]
-          restartPolicy: OnFailure
-```
-
----
-
-## Question 18 | Pod Disruption Budget
-
-> Server: `ssh ckad9977`
-
-```yaml
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: app-pdb
-  namespace: hera
-spec:
-  minAvailable: 2
-  selector:
-    matchLabels:
-      app: critical
-```
-
----
-
-## Question 19 | Deployment with Annotations
-
-> Server: `ssh ckad9977`
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: annotated-app
-  namespace: olympus
-  annotations:
-    kubernetes.io/change-cause: "Initial deployment"
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: annotated-app
-  template:
-    metadata:
-      labels:
-        app: annotated-app
-      annotations:
-        prometheus.io/scrape: "true"
-    spec:
-      containers:
-      - name: web
-        image: nginx:1.21
-```
-
----
-
-## Question 20 | Multi-Container Pod with Shared Process Namespace
-
-> Server: `ssh ckad9977`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: shared-pid
-  namespace: artemis
-spec:
-  shareProcessNamespace: true
-  containers:
-  - name: app
-    image: nginx:1.21
-  - name: debug
-    image: busybox:1.36
-    command: ["sleep", "3600"]
-```
-
-**Verification:**
-
-```bash
-kubectl exec -n artemis shared-pid -c debug -- ps aux
-# Should show nginx processes from the app container
-```
-
----

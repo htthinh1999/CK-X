@@ -1,3 +1,3 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-if kubectl get pod network-diagnostic -n coral >/dev/null 2>&1; then echo "Success: pod network-diagnostic exists in coral"; exit 0; else echo "Error: pod network-diagnostic not found in coral"; exit 1; fi
+if kubectl get pod cache-pod -n reef >/dev/null 2>&1; then echo "Success: pod cache-pod exists in reef"; exit 0; else echo "Error: pod cache-pod not found in reef"; exit 1; fi

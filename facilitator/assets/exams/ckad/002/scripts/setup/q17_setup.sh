@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Delete the pod-lifecycle namespace if it exists
-echo "Setting up environment for Question 17 (Pod Lifecycle)..."
-kubectl delete namespace pod-lifecycle --ignore-not-found=true
+# Delete the persistence namespace if it exists
+echo "Setting up environment for Question 17 (Persistent Volume Claims)..."
+kubectl delete namespace persistence --ignore-not-found=true
 
 # Wait for deletion to complete
 sleep 2

@@ -1,29 +1,72 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace ember --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
-kubectl delete pod crash-app -n ember --ignore-not-found=true >/dev/null 2>&1 || true
+kubectl create namespace blaze --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
+mkdir -p /tmp/exam/course/5
 kubectl apply -f - <<'EOF' || true
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: crash-app
-  namespace: ember
+  name: stable-v1
+  namespace: blaze
   labels:
-    app: crash-app
+    app: web-frontend
+    version: v1
     exam: ckad-simulation1
 spec:
-  containers:
-  - name: app
-    image: busybox:1.36
-    command: ["sleepx", "3600"]
-    resources:
-      requests:
-        memory: "32Mi"
-        cpu: "50m"
-      limits:
-        memory: "64Mi"
-        cpu: "100m"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-frontend
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: web-frontend
+        version: v1
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+EOF
+cat > /tmp/exam/course/5/canary.yaml <<'EOF'
+# Q9 - Canary Deployment Template
+# Task: Create a canary deployment alongside stable-v1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: canary-v2
+  namespace: blaze
+  labels:
+    app: web-frontend
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-frontend
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: web-frontend
+        version: v2
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.22
+        ports:
+        - containerPort: 80
 EOF
 
 echo "Setup complete for Question 5"

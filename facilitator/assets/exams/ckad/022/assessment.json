@@ -1,514 +1,220 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "apex",
-      "machineHostname": "ckad9999",
-      "question": "Create an optimized `Dockerfile` that builds a Go application using multi-stage builds. Use the source code provided in `/tmp/exam/course/1/main.go`.\n\nThe final image should be based on `alpine:latest` and run as a non-root user (UID 1000). Tag the image as `localhost:5000/musashi-app:v1`.\n\nThen create a Pod named `musashi-pod` in the `apex` namespace using this image. Save the Dockerfile at `/tmp/exam/course/1/Dockerfile` and the Pod manifest at `/tmp/exam/course/1/pod.yaml`.",
-      "concepts": [
-        "docker",
-        "images",
-        "pods"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Pod musashi-pod exists in apex namespace",
-          "verificationScriptFile": "q1_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "1",
+            "namespace": "crown",
+            "machineHostname": "ckad9977",
+            "question": "Create a LimitRange `cpu-limits` in `crown`: default `500m`, defaultRequest `200m` for CPU.\n\nCreate a ResourceQuota `compute-quota` in `crown`: max 4 pods, max 2 CPU, max 4Gi memory. Save the manifest at `/tmp/exam/course/1/quota.yaml`.",
+            "concepts": ["limitrange", "resourcequota", "resources"],
+            "verification": [
+                { "id": "1", "description": "LimitRange cpu-limits exists in crown namespace", "verificationScriptFile": "q1_s1_validate_limitrange.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "ResourceQuota compute-quota exists in crown namespace", "verificationScriptFile": "q1_s2_validate_resourcequota.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod musashi-pod uses image localhost:5000/musashi-app:v1",
-          "verificationScriptFile": "q1_s2_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "summit",
-      "machineHostname": "ckad9999",
-      "question": "Create a multi-container Pod named `tri-blade` in the `summit` namespace with three containers sharing an `emptyDir` volume:\n\n1. `main`: image `nginx:1.24`, mounts the shared volume at `/var/log/nginx`.\n2. `sidecar`: image `busybox`, writes the current time to `/shared/time.log` every 5 seconds (volume mounted at `/shared`).\n3. `adapter`: image `fluentd`, tails `/var/log/shared/time.log` (volume mounted at `/var/log/shared`).\n\nSave the manifest at `/tmp/exam/course/2/multi-pod.yaml`.",
-      "concepts": [
-        "pods",
-        "multi-container",
-        "volumes"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod tri-blade exists in summit namespace",
-          "verificationScriptFile": "q2_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "2",
+            "namespace": "mastery",
+            "machineHostname": "ckad9988",
+            "question": "Use Kustomize in `/tmp/exam/course/2/`.\n\nA base exists in `/tmp/exam/course/2/base` (containing a Deployment named `my-app`). Create a production overlay in `/tmp/exam/course/2/prod`.\n\nThe overlay should:\n- Add a label `env=prod`\n- Change the replica count to 4\n- Apply the generated resources to the `mastery` namespace.",
+            "concepts": ["kustomize", "deployments", "labels"],
+            "verification": [
+                { "id": "1", "description": "Deployment my-app is applied in mastery namespace", "verificationScriptFile": "q2_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Deployment my-app has label env=prod", "verificationScriptFile": "q2_s2_validate_label.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod tri-blade has containers main, sidecar and adapter",
-          "verificationScriptFile": "q2_s2_validate_containers.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "pinnacle",
-      "machineHostname": "ckad9999",
-      "question": "Create a Job named `data-processor` in the `pinnacle` namespace.\n\nThe job should calculate the value of pi using the `perl` image with the command `perl -Mbignum=bpi -wle 'print bpi(2000)'`.\n\nConfigure the Job to complete 3 successful pods, with 2 running in parallel. Save the manifest at `/tmp/exam/course/3/job.yaml`.",
-      "concepts": [
-        "jobs",
-        "batch"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Job data-processor exists in pinnacle namespace",
-          "verificationScriptFile": "q3_s1_validate_job_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "3",
+            "namespace": "apex",
+            "machineHostname": "ckad9999",
+            "question": "Create an optimized `Dockerfile` that builds a Go application using multi-stage builds. Use the source code provided in `/tmp/exam/course/3/main.go`.\n\nThe final image should be based on `alpine:latest` and run as a non-root user (UID 1000). Tag the image as `localhost:5000/musashi-app:v1`.\n\nThen create a Pod named `musashi-pod` in the `apex` namespace using this image. Save the Dockerfile at `/tmp/exam/course/3/Dockerfile` and the Pod manifest at `/tmp/exam/course/3/pod.yaml`.",
+            "concepts": ["docker", "images", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod musashi-pod exists in apex namespace", "verificationScriptFile": "q3_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod musashi-pod uses image localhost:5000/musashi-app:v1", "verificationScriptFile": "q3_s2_validate_image.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Job has completions 3 and parallelism 2",
-          "verificationScriptFile": "q3_s2_validate_completions_parallelism.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "zenith",
-      "machineHostname": "ckad9999",
-      "question": "Create a CronJob named `db-backup` in the `zenith` namespace.\n\n- Schedule: every 15 minutes (`*/15 * * * *`).\n- Image: `postgres:15`.\n- Command: `pg_dump -U admin mydb`.\n- Retain 3 successful jobs and 1 failed job.\n\nSave the manifest at `/tmp/exam/course/4/cronjob.yaml`.",
-      "concepts": [
-        "cronjobs",
-        "batch",
-        "scheduling"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "CronJob db-backup exists in zenith namespace",
-          "verificationScriptFile": "q4_s1_validate_cronjob_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "4",
+            "namespace": "glory",
+            "machineHostname": "ckad9977",
+            "question": "Create a PersistentVolume `glory-pv` (1Gi, hostPath `/data/glory`, ReadWriteOnce).\n\nCreate a PersistentVolumeClaim `glory-pvc` (500Mi, ReadWriteOnce) in `glory`.\n\nCreate a Pod `glory-pod` that mounts this PVC at `/var/data`. Save the manifest at `/tmp/exam/course/4/storage.yaml`.",
+            "concepts": ["persistentvolume", "pvc", "storage"],
+            "verification": [
+                { "id": "1", "description": "PersistentVolume glory-pv exists", "verificationScriptFile": "q4_s1_validate_pv.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "PersistentVolumeClaim glory-pvc exists in glory namespace", "verificationScriptFile": "q4_s2_validate_pvc.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "CronJob schedule is */15 * * * *",
-          "verificationScriptFile": "q4_s2_validate_schedule.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "crown",
-      "machineHostname": "ckad9999",
-      "question": "Create a Helm chart named `my-chart` from scratch in `/tmp/exam/course/5/my-chart`.\n\nCreate a `values.yaml` in `/tmp/exam/course/5/` that overrides the replica count to 3, the image repository to `nginx` and the tag to `alpine`.\n\nInstall the chart into the `crown` namespace with the release name `crown-release`.",
-      "concepts": [
-        "helm",
-        "charts",
-        "deployment"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Helm release crown-release is installed in crown namespace",
-          "verificationScriptFile": "q5_s1_validate_helm_release.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "glory",
-      "machineHostname": "ckad9999",
-      "question": "A deployment `glory-deploy` exists in the `glory` namespace.\n\n1. Update its image to `nginx:1.25` and record the change.\n2. Then rollback the deployment to the previous revision.\n3. Finally, scale it to 5 replicas.\n\nSave any manifest you use at `/tmp/exam/course/6/deploy.yaml`.",
-      "concepts": [
-        "deployments",
-        "rollout",
-        "scaling"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment glory-deploy exists in glory namespace",
-          "verificationScriptFile": "q6_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "5",
+            "namespace": "ascend",
+            "machineHostname": "ckad9988",
+            "question": "There are 3 broken pods in the `ascend` namespace: `bug-1`, `bug-2`, and `bug-3`.\n\nTroubleshoot and fix them so that all three reach the `Running` state. You may delete and recreate them if necessary, or edit them in place.",
+            "concepts": ["debugging", "pods", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "Pod bug-1 is Running in ascend namespace", "verificationScriptFile": "q5_s1_validate_bug1_running.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod bug-2 is Running in ascend namespace", "verificationScriptFile": "q5_s2_validate_bug2_running.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Pod bug-3 is Running in ascend namespace", "verificationScriptFile": "q5_s3_validate_bug3_running.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Deployment image is nginx:1.25 or nginx",
-          "verificationScriptFile": "q6_s2_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "6",
+            "namespace": "legacy",
+            "machineHostname": "ckad9977",
+            "question": "In the `legacy` namespace, create a default deny-all NetworkPolicy.\n\nThen create a NetworkPolicy `allow-web` that allows ingress traffic to pods with `app=web` ONLY from pods with `app=api` on port 80. Save the manifest at `/tmp/exam/course/6/netpol.yaml`.",
+            "concepts": ["networkpolicy", "networking", "security"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy allow-web exists in legacy namespace", "verificationScriptFile": "q6_s1_validate_netpol.sh", "expectedOutput": "0", "weightage": 7 }
+            ]
         },
         {
-          "id": "3",
-          "description": "Deployment glory-deploy is scaled to 5 replicas",
-          "verificationScriptFile": "q6_s3_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "legacy",
-      "machineHostname": "ckad9999",
-      "question": "Implement a canary deployment in the `legacy` namespace.\n\nCreate a new deployment `legacy-canary` alongside the existing `legacy-main` deployment. The canary should have 1 replica using `httpd:2.4`, while the main has 4.\n\nEnsure they both carry the label `app=legacy-web` so the existing service routes ~20% of traffic to the canary. Save the manifest at `/tmp/exam/course/7/canary.yaml`.",
-      "concepts": [
-        "deployments",
-        "canary",
-        "labels"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment legacy-canary exists in legacy namespace",
-          "verificationScriptFile": "q7_s1_validate_canary_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "7",
+            "namespace": "triumph",
+            "machineHostname": "ckad9988",
+            "question": "Extract the logs from the `triumph-app` pod in the `triumph` namespace.\n\nFind all lines containing `ERROR` and save them to `/tmp/exam/course/7/logs.txt`.",
+            "concepts": ["logging", "observability"],
+            "verification": [
+                { "id": "1", "description": "File /tmp/exam/course/10/logs.txt exists", "verificationScriptFile": "q7_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "File /tmp/exam/course/10/logs.txt contains ERROR lines", "verificationScriptFile": "q7_s2_validate_error_content.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "legacy-canary pod template has label app=legacy-web",
-          "verificationScriptFile": "q7_s2_validate_label.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "mastery",
-      "machineHostname": "ckad9988",
-      "question": "Use Kustomize in `/tmp/exam/course/8/`.\n\nA base exists in `/tmp/exam/course/8/base` (containing a Deployment named `my-app`). Create a production overlay in `/tmp/exam/course/8/prod`.\n\nThe overlay should:\n- Add a label `env=prod`\n- Change the replica count to 4\n- Apply the generated resources to the `mastery` namespace.",
-      "concepts": [
-        "kustomize",
-        "deployments",
-        "labels"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment my-app is applied in mastery namespace",
-          "verificationScriptFile": "q8_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "8",
+            "namespace": "mastery",
+            "machineHostname": "ckad9977",
+            "question": "Create an Ingress `mastery-ing` in `mastery`.\n\n- Rule host `musashi.com`, path `/api` (prefix) routes to service `api-svc` on port 8080.\n- Path `/web` (prefix) routes to service `web-svc` on port 80.\n\nSave the manifest at `/tmp/exam/course/8/ingress.yaml`.",
+            "concepts": ["ingress", "networking", "services"],
+            "verification": [
+                { "id": "1", "description": "Ingress mastery-ing exists in mastery namespace", "verificationScriptFile": "q8_s1_validate_ingress.sh", "expectedOutput": "0", "weightage": 7 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Deployment my-app has label env=prod",
-          "verificationScriptFile": "q8_s2_validate_label.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "ascend",
-      "machineHostname": "ckad9988",
-      "question": "There are 3 broken pods in the `ascend` namespace: `bug-1`, `bug-2`, and `bug-3`.\n\nTroubleshoot and fix them so that all three reach the `Running` state. You may delete and recreate them if necessary, or edit them in place.",
-      "concepts": [
-        "debugging",
-        "pods",
-        "troubleshooting"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod bug-1 is Running in ascend namespace",
-          "verificationScriptFile": "q9_s1_validate_bug1_running.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "9",
+            "namespace": "summit",
+            "machineHostname": "ckad9999",
+            "question": "Create a multi-container Pod named `tri-blade` in the `summit` namespace with three containers sharing an `emptyDir` volume:\n\n1. `main`: image `nginx:1.24`, mounts the shared volume at `/var/log/nginx`.\n2. `sidecar`: image `busybox`, writes the current time to `/shared/time.log` every 5 seconds (volume mounted at `/shared`).\n3. `adapter`: image `fluentd`, tails `/var/log/shared/time.log` (volume mounted at `/var/log/shared`).\n\nSave the manifest at `/tmp/exam/course/9/multi-pod.yaml`.",
+            "concepts": ["pods", "multi-container", "volumes"],
+            "verification": [
+                { "id": "1", "description": "Pod tri-blade exists in summit namespace", "verificationScriptFile": "q9_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod tri-blade has containers main, sidecar and adapter", "verificationScriptFile": "q9_s2_validate_containers.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod bug-2 is Running in ascend namespace",
-          "verificationScriptFile": "q9_s2_validate_bug2_running.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "10",
+            "namespace": "apex",
+            "machineHostname": "ckad9988",
+            "question": "Use an ephemeral debug container to troubleshoot `distroless-pod` in the `apex` namespace.\n\nAttach an ephemeral container using the `busybox` image and run `nslookup kubernetes.default` inside it.",
+            "concepts": ["debugging", "ephemeral-containers", "observability"],
+            "verification": [
+                { "id": "1", "description": "distroless-pod has an ephemeral container attached", "verificationScriptFile": "q10_s1_validate_ephemeral.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
         },
         {
-          "id": "3",
-          "description": "Pod bug-3 is Running in ascend namespace",
-          "verificationScriptFile": "q9_s3_validate_bug3_running.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "triumph",
-      "machineHostname": "ckad9988",
-      "question": "Extract the logs from the `triumph-app` pod in the `triumph` namespace.\n\nFind all lines containing `ERROR` and save them to `/tmp/exam/course/10/logs.txt`.",
-      "concepts": [
-        "logging",
-        "observability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File /tmp/exam/course/10/logs.txt exists",
-          "verificationScriptFile": "q10_s1_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "11",
+            "namespace": "pinnacle",
+            "machineHostname": "ckad9999",
+            "question": "Create a Job named `data-processor` in the `pinnacle` namespace.\n\nThe job should calculate the value of pi using the `perl` image with the command `perl -Mbignum=bpi -wle 'print bpi(2000)'`.\n\nConfigure the Job to complete 3 successful pods, with 2 running in parallel. Save the manifest at `/tmp/exam/course/11/job.yaml`.",
+            "concepts": ["jobs", "batch"],
+            "verification": [
+                { "id": "1", "description": "Job data-processor exists in pinnacle namespace", "verificationScriptFile": "q11_s1_validate_job_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Job has completions 3 and parallelism 2", "verificationScriptFile": "q11_s2_validate_completions_parallelism.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "File /tmp/exam/course/10/logs.txt contains ERROR lines",
-          "verificationScriptFile": "q10_s2_validate_error_content.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "apex",
-      "machineHostname": "ckad9988",
-      "question": "Use an ephemeral debug container to troubleshoot `distroless-pod` in the `apex` namespace.\n\nAttach an ephemeral container using the `busybox` image and run `nslookup kubernetes.default` inside it.",
-      "concepts": [
-        "debugging",
-        "ephemeral-containers",
-        "observability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "distroless-pod has an ephemeral container attached",
-          "verificationScriptFile": "q11_s1_validate_ephemeral.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "summit",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod `secure-pod` in the `summit` namespace.\n\n- Image: `nginx`.\n- Container security context: `runAsUser: 2000`, `allowPrivilegeEscalation: false`, drop `ALL` capabilities and add `NET_BIND_SERVICE`.\n\nSave the manifest at `/tmp/exam/course/12/secure-pod.yaml`.",
-      "concepts": [
-        "securitycontext",
-        "pods",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod secure-pod exists in summit namespace",
-          "verificationScriptFile": "q12_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "12",
+            "namespace": "ascend",
+            "machineHostname": "ckad9977",
+            "question": "Create a NodePort service `ascend-svc` in `ascend` exposing port 80, targetPort 80, nodePort 30080.\n\nIt should select pods with `app=ascend-app`. Save the manifest at `/tmp/exam/course/12/svc.yaml`.",
+            "concepts": ["services", "networking", "nodeport"],
+            "verification": [
+                { "id": "1", "description": "Service ascend-svc exists in ascend namespace", "verificationScriptFile": "q12_s1_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Service ascend-svc is of type NodePort", "verificationScriptFile": "q12_s2_validate_svc_type.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Container runAsUser is 2000",
-          "verificationScriptFile": "q12_s2_validate_runasuser.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "pinnacle",
-      "machineHostname": "ckad9988",
-      "question": "Create a ServiceAccount `sword-master` in `pinnacle`.\n\nCreate a Role `blade-reader` that can `get`, `list`, `watch` pods and configmaps.\n\nCreate a RoleBinding `master-binding` binding the role to the service account. Save the manifest at `/tmp/exam/course/13/rbac.yaml`.",
-      "concepts": [
-        "rbac",
-        "serviceaccount",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "RoleBinding master-binding exists in pinnacle namespace",
-          "verificationScriptFile": "q13_s1_validate_rolebinding.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "zenith",
-      "machineHostname": "ckad9988",
-      "question": "Create a ConfigMap `app-config` with `THEME=dark`.\n\nCreate a Secret `app-secret` with `API_KEY=musashi123`.\n\nCreate a Pod `inject-pod` in `zenith` that uses `app-config` as environment variables and mounts `app-secret` at `/etc/secret/`. Save the manifest at `/tmp/exam/course/14/inject.yaml`.",
-      "concepts": [
-        "configmaps",
-        "secrets",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod inject-pod exists in zenith namespace",
-          "verificationScriptFile": "q14_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "13",
+            "namespace": "zenith",
+            "machineHostname": "ckad9999",
+            "question": "Create a CronJob named `db-backup` in the `zenith` namespace.\n\n- Schedule: every 15 minutes (`*/15 * * * *`).\n- Image: `postgres:15`.\n- Command: `pg_dump -U admin mydb`.\n- Retain 3 successful jobs and 1 failed job.\n\nSave the manifest at `/tmp/exam/course/13/cronjob.yaml`.",
+            "concepts": ["cronjobs", "batch", "scheduling"],
+            "verification": [
+                { "id": "1", "description": "CronJob db-backup exists in zenith namespace", "verificationScriptFile": "q13_s1_validate_cronjob_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "CronJob schedule is */15 * * * *", "verificationScriptFile": "q13_s2_validate_schedule.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod injects app-config as env or mounts app-secret",
-          "verificationScriptFile": "q14_s2_validate_injection.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "crown",
-      "machineHostname": "ckad9977",
-      "question": "Create a LimitRange `cpu-limits` in `crown`: default `500m`, defaultRequest `200m` for CPU.\n\nCreate a ResourceQuota `compute-quota` in `crown`: max 4 pods, max 2 CPU, max 4Gi memory. Save the manifest at `/tmp/exam/course/15/quota.yaml`.",
-      "concepts": [
-        "limitrange",
-        "resourcequota",
-        "resources"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "LimitRange cpu-limits exists in crown namespace",
-          "verificationScriptFile": "q15_s1_validate_limitrange.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "14",
+            "namespace": "summit",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod `secure-pod` in the `summit` namespace.\n\n- Image: `nginx`.\n- Container security context: `runAsUser: 2000`, `allowPrivilegeEscalation: false`, drop `ALL` capabilities and add `NET_BIND_SERVICE`.\n\nSave the manifest at `/tmp/exam/course/14/secure-pod.yaml`.",
+            "concepts": ["securitycontext", "pods", "security"],
+            "verification": [
+                { "id": "1", "description": "Pod secure-pod exists in summit namespace", "verificationScriptFile": "q14_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Container runAsUser is 2000", "verificationScriptFile": "q14_s2_validate_runasuser.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "ResourceQuota compute-quota exists in crown namespace",
-          "verificationScriptFile": "q15_s2_validate_resourcequota.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "glory",
-      "machineHostname": "ckad9977",
-      "question": "Create a PersistentVolume `glory-pv` (1Gi, hostPath `/data/glory`, ReadWriteOnce).\n\nCreate a PersistentVolumeClaim `glory-pvc` (500Mi, ReadWriteOnce) in `glory`.\n\nCreate a Pod `glory-pod` that mounts this PVC at `/var/data`. Save the manifest at `/tmp/exam/course/16/storage.yaml`.",
-      "concepts": [
-        "persistentvolume",
-        "pvc",
-        "storage"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "PersistentVolume glory-pv exists",
-          "verificationScriptFile": "q16_s1_validate_pv.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "15",
+            "namespace": "crown",
+            "machineHostname": "ckad9999",
+            "question": "Create a Helm chart named `my-chart` from scratch in `/tmp/exam/course/15/my-chart`.\n\nCreate a `values.yaml` in `/tmp/exam/course/15/` that overrides the replica count to 3, the image repository to `nginx` and the tag to `alpine`.\n\nInstall the chart into the `crown` namespace with the release name `crown-release`.",
+            "concepts": ["helm", "charts", "deployment"],
+            "verification": [
+                { "id": "1", "description": "Helm release crown-release is installed in crown namespace", "verificationScriptFile": "q15_s1_validate_helm_release.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
         },
         {
-          "id": "2",
-          "description": "PersistentVolumeClaim glory-pvc exists in glory namespace",
-          "verificationScriptFile": "q16_s2_validate_pvc.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "legacy",
-      "machineHostname": "ckad9977",
-      "question": "In the `legacy` namespace, create a default deny-all NetworkPolicy.\n\nThen create a NetworkPolicy `allow-web` that allows ingress traffic to pods with `app=web` ONLY from pods with `app=api` on port 80. Save the manifest at `/tmp/exam/course/17/netpol.yaml`.",
-      "concepts": [
-        "networkpolicy",
-        "networking",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy allow-web exists in legacy namespace",
-          "verificationScriptFile": "q17_s1_validate_netpol.sh",
-          "expectedOutput": "0",
-          "weightage": 7
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "mastery",
-      "machineHostname": "ckad9977",
-      "question": "Create an Ingress `mastery-ing` in `mastery`.\n\n- Rule host `musashi.com`, path `/api` (prefix) routes to service `api-svc` on port 8080.\n- Path `/web` (prefix) routes to service `web-svc` on port 80.\n\nSave the manifest at `/tmp/exam/course/18/ingress.yaml`.",
-      "concepts": [
-        "ingress",
-        "networking",
-        "services"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Ingress mastery-ing exists in mastery namespace",
-          "verificationScriptFile": "q18_s1_validate_ingress.sh",
-          "expectedOutput": "0",
-          "weightage": 7
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "ascend",
-      "machineHostname": "ckad9977",
-      "question": "Create a NodePort service `ascend-svc` in `ascend` exposing port 80, targetPort 80, nodePort 30080.\n\nIt should select pods with `app=ascend-app`. Save the manifest at `/tmp/exam/course/19/svc.yaml`.",
-      "concepts": [
-        "services",
-        "networking",
-        "nodeport"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service ascend-svc exists in ascend namespace",
-          "verificationScriptFile": "q19_s1_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "16",
+            "namespace": "triumph",
+            "machineHostname": "ckad9977",
+            "question": "Create a Pod `dns-test` in `triumph`.\n\nRun a command to lookup the SRV record for the `kubernetes.default` service and save the output to `/tmp/exam/course/16/dns-output.txt`.",
+            "concepts": ["dns", "networking", "services"],
+            "verification": [
+                { "id": "1", "description": "File /tmp/exam/course/20/dns-output.txt exists", "verificationScriptFile": "q16_s1_validate_dns_output.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Service ascend-svc is of type NodePort",
-          "verificationScriptFile": "q19_s2_validate_svc_type.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "triumph",
-      "machineHostname": "ckad9977",
-      "question": "Create a Pod `dns-test` in `triumph`.\n\nRun a command to lookup the SRV record for the `kubernetes.default` service and save the output to `/tmp/exam/course/20/dns-output.txt`.",
-      "concepts": [
-        "dns",
-        "networking",
-        "services"
-      ],
-      "verification": [
+            "id": "17",
+            "namespace": "glory",
+            "machineHostname": "ckad9999",
+            "question": "A deployment `glory-deploy` exists in the `glory` namespace.\n\n1. Update its image to `nginx:1.25` and record the change.\n2. Then rollback the deployment to the previous revision.\n3. Finally, scale it to 5 replicas.\n\nSave any manifest you use at `/tmp/exam/course/17/deploy.yaml`.",
+            "concepts": ["deployments", "rollout", "scaling"],
+            "verification": [
+                { "id": "1", "description": "Deployment glory-deploy exists in glory namespace", "verificationScriptFile": "q17_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Deployment image is nginx:1.25 or nginx", "verificationScriptFile": "q17_s2_validate_image.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Deployment glory-deploy is scaled to 5 replicas", "verificationScriptFile": "q17_s3_validate_replicas.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
         {
-          "id": "1",
-          "description": "File /tmp/exam/course/20/dns-output.txt exists",
-          "verificationScriptFile": "q20_s1_validate_dns_output.sh",
-          "expectedOutput": "0",
-          "weightage": 6
+            "id": "18",
+            "namespace": "pinnacle",
+            "machineHostname": "ckad9988",
+            "question": "Create a ServiceAccount `sword-master` in `pinnacle`.\n\nCreate a Role `blade-reader` that can `get`, `list`, `watch` pods and configmaps.\n\nCreate a RoleBinding `master-binding` binding the role to the service account. Save the manifest at `/tmp/exam/course/18/rbac.yaml`.",
+            "concepts": ["rbac", "serviceaccount", "security"],
+            "verification": [
+                { "id": "1", "description": "RoleBinding master-binding exists in pinnacle namespace", "verificationScriptFile": "q18_s1_validate_rolebinding.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "legacy",
+            "machineHostname": "ckad9999",
+            "question": "Implement a canary deployment in the `legacy` namespace.\n\nCreate a new deployment `legacy-canary` alongside the existing `legacy-main` deployment. The canary should have 1 replica using `httpd:2.4`, while the main has 4.\n\nEnsure they both carry the label `app=legacy-web` so the existing service routes ~20% of traffic to the canary. Save the manifest at `/tmp/exam/course/19/canary.yaml`.",
+            "concepts": ["deployments", "canary", "labels"],
+            "verification": [
+                { "id": "1", "description": "Deployment legacy-canary exists in legacy namespace", "verificationScriptFile": "q19_s1_validate_canary_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "legacy-canary pod template has label app=legacy-web", "verificationScriptFile": "q19_s2_validate_label.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "zenith",
+            "machineHostname": "ckad9988",
+            "question": "Create a ConfigMap `app-config` with `THEME=dark`.\n\nCreate a Secret `app-secret` with `API_KEY=musashi123`.\n\nCreate a Pod `inject-pod` in `zenith` that uses `app-config` as environment variables and mounts `app-secret` at `/etc/secret/`. Save the manifest at `/tmp/exam/course/20/inject.yaml`.",
+            "concepts": ["configmaps", "secrets", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod inject-pod exists in zenith namespace", "verificationScriptFile": "q20_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod injects app-config as env or mounts app-secret", "verificationScriptFile": "q20_s2_validate_injection.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

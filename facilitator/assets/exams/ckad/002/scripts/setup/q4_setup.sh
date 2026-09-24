@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Delete the config-management namespace if it exists
-echo "Setting up environment for Question 4 (ConfigMap)..."
-kubectl delete namespace config-management --ignore-not-found=true
+# Delete the health-checks namespace if it exists
+echo "Setting up environment for Question 4 (Health Checks)..."
+kubectl delete namespace health-checks --ignore-not-found=true
 
 # Wait for deletion to complete
 sleep 2

@@ -1,126 +1,232 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=fares
+NS=manifests
 DIR=/home/candidate/exam/q15
 
 kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-
-# Start from a clean state (idempotent re-runs)
-kubectl -n "$NS" delete deployment fare-board --ignore-not-found --timeout=60s >/dev/null 2>&1 || true
-kubectl -n "$NS" delete configmap fare-table fare-table-2025 fare-notes board-style --ignore-not-found >/dev/null 2>&1 || true
-kubectl -n "$NS" delete pod -l app=fare-board --grace-period=1 --ignore-not-found --wait=false >/dev/null 2>&1 || true
 rm -rf "$DIR" && mkdir -p "$DIR"
 
-# Old fare table (what the running Pods will keep showing)
-kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' || true
-apiVersion: v1
-kind: ConfigMap
+kubectl apply -f - >/dev/null 2>&1 <<'YAML' || true
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
 metadata:
-  name: fare-table
-  namespace: fares
-  labels:
-    app: fare-board
-data:
-  peak.txt: |
-    PEAK 3.10
-  offpeak.txt: |
-    OFFPEAK 2.20
-  night.txt: |
-    NIGHT 3.80
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: fare-table-2025
-  namespace: fares
-  labels:
-    app: fare-board
-    archived: "true"
-data:
-  peak.txt: |
-    PEAK 2.95
-  offpeak.txt: |
-    OFFPEAK 2.05
-  night.txt: |
-    NIGHT 3.50
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: fare-notes
-  namespace: fares
-data:
-  notes.txt: |
-    Fares are reviewed every quarter by the tariff office.
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: board-style
-  namespace: fares
-data:
-  board.css: |
-    body { font-family: monospace; background: #002b36; color: #fdf6e3; }
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: fare-board
-  namespace: fares
-  labels:
-    app: fare-board
+  name: routes.transit.example.com
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: fare-board
-  template:
-    metadata:
-      labels:
-        app: fare-board
-    spec:
-      containers:
-        - name: board
-          image: nginx:1.25
-          ports:
-            - name: http
-              containerPort: 80
-          volumeMounts:
-            - name: fares
-              mountPath: /usr/share/nginx/html/fares/current.txt
-              subPath: peak.txt
-            - name: fares
-              mountPath: /usr/share/nginx/html/fares/offpeak.txt
-              subPath: offpeak.txt
-            - name: style
-              mountPath: /usr/share/nginx/html/style
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-            limits:
-              memory: 64Mi
-      volumes:
-        - name: fares
-          configMap:
-            name: fare-table
-        - name: style
-          configMap:
-            name: board-style
+  group: transit.example.com
+  scope: Namespaced
+  names:
+    kind: Route
+    listKind: RouteList
+    plural: routes
+    singular: route
+    shortNames: ["trt"]
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      additionalPrinterColumns:
+        - name: Line
+          type: string
+          jsonPath: .spec.line
+        - name: Mode
+          type: string
+          jsonPath: .spec.mode
+        - name: Stops
+          type: integer
+          jsonPath: .spec.stops
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp
+      schema:
+        openAPIV3Schema:
+          type: object
+          description: A passenger route operated by the Transit Authority.
+          properties:
+            spec:
+              type: object
+              description: Timetable data of the route.
+              required: ["line", "mode", "stops"]
+              properties:
+                line:
+                  type: string
+                  pattern: '^[A-Z]{1,2}[0-9]{1,3}$'
+                  description: Public line code shown on the vehicles, e.g. T4 or NB31.
+                mode:
+                  type: string
+                  enum: ["bus", "tram", "metro", "ferry"]
+                  description: Vehicle type used on the route.
+                stops:
+                  type: integer
+                  minimum: 2
+                  maximum: 80
+                  description: Number of stops served, both termini included.
+                depot:
+                  type: string
+                  description: Depot or pier that supplies the vehicles.
+                serviceClass:
+                  type: string
+                  enum: ["C1", "C3", "C5", "C8"]
+                  description: >-
+                    Timetable class code. C1 = local all-stops service,
+                    C3 = limited-stop express, C5 = night network (00:30-05:00),
+                    C8 = school days only.
+                frequencyMinutes:
+                  type: integer
+                  minimum: 1
+                  maximum: 120
+                  description: Minutes between two departures in the base timetable.
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: routes.freight.example.com
+spec:
+  group: freight.example.com
+  scope: Namespaced
+  names:
+    kind: Route
+    listKind: RouteList
+    plural: routes
+    singular: route
+    shortNames: ["frt"]
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      additionalPrinterColumns:
+        - name: Origin
+          type: string
+          jsonPath: .spec.origin
+        - name: Destination
+          type: string
+          jsonPath: .spec.destination
+      schema:
+        openAPIV3Schema:
+          type: object
+          description: A freight corridor leased to a rail operator.
+          properties:
+            spec:
+              type: object
+              required: ["origin", "destination"]
+              properties:
+                origin:
+                  type: string
+                destination:
+                  type: string
+                tonnage:
+                  type: integer
+                stops:
+                  type: integer
 YAML
 
-kubectl -n "$NS" rollout status deployment/fare-board --timeout=120s >/dev/null 2>&1 || true
-kubectl -n "$NS" wait pod -l app=fare-board --for=condition=Ready --timeout=60s >/dev/null 2>&1 || true
-sleep 2
+kubectl wait --for=condition=Established crd/routes.transit.example.com crd/routes.freight.example.com --timeout=60s >/dev/null 2>&1 || true
 
-# The tariff office has published new fares since the Pods started
-kubectl -n "$NS" create configmap fare-table \
-  --from-literal=peak.txt=$'PEAK 3.60\n' \
-  --from-literal=offpeak.txt=$'OFFPEAK 2.40\n' \
-  --from-literal=night.txt=$'NIGHT 4.00\n' \
-  --dry-run=client -o yaml \
-  | kubectl label --local -f - app=fare-board -o yaml \
-  | kubectl -n "$NS" apply -f - >/dev/null 2>&1 || true
+# Start from a clean state (idempotent re-runs)
+kubectl -n "$NS" delete routes.transit.example.com --all --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n "$NS" delete routes.freight.example.com --all --ignore-not-found >/dev/null 2>&1 || true
+
+# retried: right after the CRDs become Established, API discovery can lag briefly
+for i in 1 2 3 4 5; do
+kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' && break
+apiVersion: transit.example.com/v1
+kind: Route
+metadata:
+  name: t4-harbour
+  namespace: manifests
+spec:
+  line: T4
+  mode: tram
+  stops: 18
+  depot: riverside
+  serviceClass: C1
+  frequencyMinutes: 8
+---
+apiVersion: transit.example.com/v1
+kind: Route
+metadata:
+  name: b12-airport
+  namespace: manifests
+spec:
+  line: B12
+  mode: bus
+  stops: 9
+  depot: north
+  serviceClass: C3
+  frequencyMinutes: 15
+---
+apiVersion: transit.example.com/v1
+kind: Route
+metadata:
+  name: m2-crosstown
+  namespace: manifests
+spec:
+  line: M2
+  mode: metro
+  stops: 22
+  depot: central
+  serviceClass: C1
+  frequencyMinutes: 4
+---
+apiVersion: transit.example.com/v1
+kind: Route
+metadata:
+  name: nb31-late
+  namespace: manifests
+spec:
+  line: NB31
+  mode: bus
+  stops: 27
+  depot: north
+  serviceClass: C5
+  frequencyMinutes: 30
+---
+apiVersion: transit.example.com/v1
+kind: Route
+metadata:
+  name: b7-schools
+  namespace: manifests
+spec:
+  line: B7
+  mode: bus
+  stops: 14
+  depot: west
+  serviceClass: C8
+---
+apiVersion: freight.example.com/v1
+kind: Route
+metadata:
+  name: coal-west
+  namespace: manifests
+spec:
+  origin: westport
+  destination: power-station
+  tonnage: 3200
+  stops: 2
+---
+apiVersion: freight.example.com/v1
+kind: Route
+metadata:
+  name: grain-east
+  namespace: manifests
+spec:
+  origin: silo-7
+  destination: eastern-docks
+  tonnage: 1800
+  stops: 3
+---
+apiVersion: freight.example.com/v1
+kind: Route
+metadata:
+  name: steel-north
+  namespace: manifests
+spec:
+  origin: mill-2
+  destination: north-yard
+  tonnage: 2600
+  stops: 4
+YAML
+  sleep 2
+done
 
 echo "Setup complete for Question 15"
 exit 0

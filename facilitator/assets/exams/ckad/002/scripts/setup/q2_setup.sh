@@ -1,12 +1,14 @@
 #!/bin/bash
 
-# Delete the pod-concepts namespace if it exists
-echo "Setting up environment for Question 2 (Multi-Container Pod)..."
-kubectl delete namespace pod-concepts --ignore-not-found=true
+# Check if Helm is installed
+if ! command -v helm &> /dev/null; then
+  echo "Helm is not available, skipping setup"
+  exit 0
+fi
 
-# Wait for deletion to complete
-sleep 2
+# Clean up any existing resources
+kubectl delete namespace helm-basics --ignore-not-found=true
 
-# Confirm environment is ready
-echo "Environment ready for Question 2"
+
+echo "Setup complete for Question 2"
 exit 0 

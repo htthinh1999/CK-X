@@ -1,9 +1,9 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-if kubectl get pod annotated-pod -n prosperity >/dev/null 2>&1; then
-  echo "Success: Pod annotated-pod exists in prosperity"
+if kubectl get pod data-pod -n rice >/dev/null 2>&1; then
+  echo "Success: Pod data-pod exists in rice"
   exit 0
 else
-  echo "Error: Pod annotated-pod not found in prosperity"
+  echo "Error: Pod data-pod not found in rice"
   exit 1
 fi

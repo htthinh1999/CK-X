@@ -1,27 +1,15 @@
 #!/bin/bash
 
-# Setup for Question 4: Create a PersistentVolumeClaim named 'pvc-app'
+# Setup for Question 4: Create a ConfigMap and use it in a Pod
 
-# Create the storage-test namespace if it doesn't exist already
-if ! kubectl get namespace storage-test &> /dev/null; then
-    kubectl create namespace storage-test
+# Create the workloads namespace if it doesn't exist already
+if ! kubectl get namespace workloads &> /dev/null; then
+    kubectl create namespace workloads
 fi
 
-# Delete any existing PVC with the same name to ensure a clean state
-kubectl delete pvc pvc-app -n storage-test --ignore-not-found=true
+# Delete any existing ConfigMap and Pod with the same names
+kubectl delete configmap app-config -n workloads --ignore-not-found=true
+kubectl delete pod config-pod -n workloads --ignore-not-found=true
 
-# Create the StorageClass if it doesn't exist (dependency for this question)
-# if ! kubectl get storageclass fast-storage &> /dev/null; then
-#     cat <<EOF | kubectl apply -f -
-# apiVersion: storage.k8s.io/v1
-# kind: StorageClass
-# metadata:
-#   name: fast-storage
-# provisioner: kubernetes.io/no-provisioner
-# volumeBindingMode: WaitForFirstConsumer
-# EOF
-#     echo "Created dependency: StorageClass 'fast-storage'"
-# fi
-
-echo "Setup complete for Question 4: Environment ready for creating PersistentVolumeClaim 'pvc-app'"
+echo "Setup complete for Question 4: Environment ready for creating ConfigMap 'app-config' and Pod 'config-pod'"
 exit 0 

@@ -1,32 +1,27 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace sunbeam --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace dawn --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 kubectl apply -f - >/dev/null 2>&1 <<'EOF' || true
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: api-server
-  namespace: sunbeam
-  labels:
-    app: api
+  name: api-app
+  namespace: dawn
 spec:
-  containers:
-    - name: api
-      image: nginx:1.25
-      ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: web-frontend
-  namespace: sunbeam
-  labels:
-    role: frontend
-spec:
-  containers:
-    - name: web
-      image: nginx:1.25
+  replicas: 4
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
 EOF
 echo "Setup complete for Question 18"
 exit 0

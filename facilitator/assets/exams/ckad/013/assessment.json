@@ -1,783 +1,259 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "default",
-      "machineHostname": "ckad9999",
-      "question": "Directory `/tmp/exam/course/1/image/` contains a `Dockerfile` and an `index.html` file.\n\n1. Build a container image using Docker named `solar-app:1.0`, using `/tmp/exam/course/1/image/` as the build context.\n2. Save the image as a tarball to `/tmp/exam/course/1/solar-app.tar`.\n\nHint: use `docker build -t <name>:<tag> <context>` and `docker save -o <file> <image>`.",
-      "concepts": [
-        "container-images",
-        "docker",
-        "application-build"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Container image `solar-app:1.0` exists locally (`docker images`)",
-          "verificationScriptFile": "q1_s1_validate_image_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "1",
+            "namespace": "zenith",
+            "machineHostname": "ckad9988",
+            "question": "Directory `/tmp/exam/course/1/` contains two base manifests: `deployment.yaml` and `service.yaml`.\n\n1. Create a `kustomization.yaml` file in `/tmp/exam/course/1/` that:\n- References both `deployment.yaml` and `service.yaml` as resources\n- Adds a `namePrefix: prod-`\n- Sets the replica count to `3` using a patch\n2. Apply with `kubectl apply -k /tmp/exam/course/1/`.\n3. Verify that Deployment `prod-web-app` and Service `prod-web-svc` exist in namespace `zenith`.",
+            "concepts": ["kustomize", "deployments", "services"],
+            "verification": [
+                { "id": "1", "description": "Deployment `prod-web-app` exists in namespace `zenith`", "verificationScriptFile": "q1_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Deployment `prod-web-app` has `3` replicas", "verificationScriptFile": "q1_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Service `prod-web-svc` exists in namespace `zenith`", "verificationScriptFile": "q1_s3_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Image saved as tarball at `/tmp/exam/course/1/solar-app.tar`",
-          "verificationScriptFile": "q1_s2_validate_tarball_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "2",
+            "namespace": "zenith",
+            "machineHostname": "ckad9977",
+            "question": "Create RBAC resources in namespace `zenith` to allow a ServiceAccount to manage deployments:\n\n1. Create ServiceAccount `deploy-sa`.\n2. Create Role `deploy-role` that grants `get`, `list`, `create`, and `update` on `deployments`.\n3. Create RoleBinding `deploy-rb` binding `deploy-role` to `deploy-sa`.\n4. Verify with `kubectl auth can-i list deployments --as=system:serviceaccount:zenith:deploy-sa -n zenith`.\n5. Save the output (`yes` or `no`) to `/tmp/exam/course/2/auth-check.txt`.",
+            "concepts": ["rbac", "serviceaccounts", "roles"],
+            "verification": [
+                { "id": "1", "description": "ServiceAccount `deploy-sa` exists in namespace `zenith`", "verificationScriptFile": "q2_s1_validate_sa_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Role `deploy-role` exists in namespace `zenith`", "verificationScriptFile": "q2_s2_validate_role_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Role grants `get,list,create,update` on `deployments`", "verificationScriptFile": "q2_s3_validate_role_verbs.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "RoleBinding `deploy-rb` exists in namespace `zenith`", "verificationScriptFile": "q2_s4_validate_rolebinding_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "File `/tmp/exam/course/15/auth-check.txt` contains `yes`", "verificationScriptFile": "q2_s5_validate_auth_file.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "3",
+            "namespace": "default",
+            "machineHostname": "ckad9999",
+            "question": "Directory `/tmp/exam/course/3/image/` contains a `Dockerfile` and an `index.html` file.\n\n1. Build a container image using Docker named `solar-app:1.0`, using `/tmp/exam/course/3/image/` as the build context.\n2. Save the image as a tarball to `/tmp/exam/course/3/solar-app.tar`.\n\nHint: use `docker build -t <name>:<tag> <context>` and `docker save -o <file> <image>`.",
+            "concepts": ["container-images", "docker", "application-build"],
+            "verification": [
+                { "id": "1", "description": "Container image `solar-app:1.0` exists locally (`docker images`)", "verificationScriptFile": "q3_s1_validate_image_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Image saved as tarball at `/tmp/exam/course/1/solar-app.tar`", "verificationScriptFile": "q3_s2_validate_tarball_exists.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "4",
+            "namespace": "radiance",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `radiance`, a Helm release named `web-release` is installed.\n\n1. Inspect the current values with `helm get values`.\n2. Upgrade the release to set `replicaCount=3`.\n3. Verify the upgrade is at revision `2` or higher.\n\nHint: `helm upgrade web-release <chart> -n radiance --set replicaCount=3 --reuse-values`.",
+            "concepts": ["helm", "upgrade"],
+            "verification": [
+                { "id": "1", "description": "Helm release `web-release` exists in namespace `radiance`", "verificationScriptFile": "q4_s1_validate_release_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Helm release `web-release` is at revision `2` or higher", "verificationScriptFile": "q4_s2_validate_revision.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Release deployment has `3` replicas", "verificationScriptFile": "q4_s3_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "solar",
+            "machineHostname": "ckad9999",
+            "question": "Create a Deployment named `frontend-app` in namespace `solar` with:\n- Replicas: `3`\n- Pod labels: `app=frontend`, `tier=web`\n- Container name: `web`\n- Image: `nginx:1.25`\n- Container port: `80`\n- Deployment annotation: `kubernetes.io/change-cause: \"initial deployment\"`",
+            "concepts": ["deployments", "labels", "annotations"],
+            "verification": [
+                { "id": "1", "description": "Deployment `frontend-app` exists in namespace `solar`", "verificationScriptFile": "q5_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment `frontend-app` has `3` replicas", "verificationScriptFile": "q5_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod template labels are `app=frontend` and `tier=web`", "verificationScriptFile": "q5_s3_validate_pod_labels.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Annotation `kubernetes.io/change-cause` is `initial deployment`", "verificationScriptFile": "q5_s4_validate_annotation.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "eclipse",
+            "machineHostname": "ckad9977",
+            "question": "File `/tmp/exam/course/6/app.env` contains application configuration in `key=value` format.\n\n1. Create a ConfigMap named `app-config` in namespace `eclipse` from the env file.\n2. Create a Pod named `config-pod` in namespace `eclipse` with:\n- Image: `nginx:1.25`\n- Container name: `web`\n- Load all ConfigMap keys as environment variables using `envFrom`.\n\nHint: `kubectl create configmap app-config --from-env-file=/tmp/exam/course/6/app.env`.",
+            "concepts": ["configmaps", "env", "pods"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap `app-config` exists in namespace `eclipse`", "verificationScriptFile": "q6_s1_validate_configmap_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "ConfigMap `app-config` has key `APP_NAME`", "verificationScriptFile": "q6_s2_validate_app_name_key.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod `config-pod` exists in namespace `eclipse`", "verificationScriptFile": "q6_s3_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Pod `config-pod` loads all keys via `envFrom` from `app-config`", "verificationScriptFile": "q6_s4_validate_envfrom.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "corona",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `web-with-sidecar` in namespace `corona` with a main container and a sidecar that ships logs:\n\n1. Main container named `app`: image `nginx:1.25`, mount the shared volume at `/var/log/nginx`.\n2. Sidecar container named `log-shipper`: image `busybox:1.36`, command `[\"/bin/sh\", \"-c\", \"tail -f /var/log/nginx/access.log 2>/dev/null || sleep 3600\"]`, mount the shared volume at `/var/log/nginx`.\n3. Use an `emptyDir` volume named `log-volume` shared between both containers.",
+            "concepts": ["pods", "sidecar", "volumes"],
+            "verification": [
+                { "id": "1", "description": "Pod `web-with-sidecar` exists in namespace `corona`", "verificationScriptFile": "q7_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Pod has at least 2 containers", "verificationScriptFile": "q7_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Pod has an `emptyDir` volume configured", "verificationScriptFile": "q7_s3_validate_emptydir.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Both containers mount the shared `log-volume` at `/var/log/nginx`", "verificationScriptFile": "q7_s4_validate_shared_mounts.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "radiance",
+            "machineHostname": "ckad9977",
+            "question": "Create a docker-registry Secret named `registry-creds` in namespace `radiance` with:\n- Docker server: `registry.example.com`\n- Username: `admin`\n- Password: `s3cur3P@ss`\n\nHint: `kubectl create secret docker-registry` with `--docker-server`, `--docker-username`, and `--docker-password`.",
+            "concepts": ["secrets", "docker-registry"],
+            "verification": [
+                { "id": "1", "description": "Secret `registry-creds` exists in namespace `radiance`", "verificationScriptFile": "q8_s1_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Secret type is `kubernetes.io/dockerconfigjson`", "verificationScriptFile": "q8_s2_validate_type.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Secret references docker server `registry.example.com`", "verificationScriptFile": "q8_s3_validate_server.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Secret references username `admin`", "verificationScriptFile": "q8_s4_validate_username.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "eclipse",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `eclipse`, Deployment `slow-app` runs a slow-starting application on port `8080`.\n\nAdd a startup probe to the Deployment with:\n- HTTP GET on path `/healthz`\n- Port `8080`\n- `failureThreshold: 30`\n- `periodSeconds: 10`\n\nEnsure the Deployment rolls out successfully.",
+            "concepts": ["deployments", "probes", "startupprobe"],
+            "verification": [
+                { "id": "1", "description": "Deployment `slow-app` exists in namespace `eclipse`", "verificationScriptFile": "q9_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Startup probe HTTP GET path is `/healthz`", "verificationScriptFile": "q9_s2_validate_probe_path.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Startup probe port is `8080`", "verificationScriptFile": "q9_s3_validate_probe_port.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Startup probe `failureThreshold` is `30`", "verificationScriptFile": "q9_s4_validate_failure_threshold.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "sunbeam",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `sunbeam`, Pod `api-server` (label `app=api`) and Pod `web-frontend` (label `role=frontend`) exist.\n\nCreate a NetworkPolicy named `api-allow` in namespace `sunbeam` that:\n1. Targets Pods with label `app=api` (podSelector).\n2. Allows ingress traffic only from:\n- Pods with label `role=frontend` (podSelector)\n- CIDR block `10.0.0.0/24` (ipBlock)\n3. Allows ingress on port `80` (TCP).\n\nHint: both `podSelector` and `ipBlock` rules go under `spec.ingress[0].from` as separate items.",
+            "concepts": ["networkpolicy", "ipblock", "networking"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy `api-allow` exists in namespace `sunbeam`", "verificationScriptFile": "q10_s1_validate_np_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "`podSelector` targets `app=api`", "verificationScriptFile": "q10_s2_validate_podselector.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Ingress allows pods with label `role=frontend`", "verificationScriptFile": "q10_s3_validate_frontend_rule.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "Ingress allows `ipBlock` CIDR `10.0.0.0/24`", "verificationScriptFile": "q10_s4_validate_ipblock.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "corona",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `corona`, Pod `multi-logger` runs with two containers: `app` and `sidecar`.\n\n1. Extract the last 20 lines of logs from the `sidecar` container.\n2. Save the output to `/tmp/exam/course/11/sidecar-logs.txt`.\n\nHint: `kubectl logs <pod> -c <container> --tail=20`.",
+            "concepts": ["logging", "multi-container", "observability"],
+            "verification": [
+                { "id": "1", "description": "File `/tmp/exam/course/11/sidecar-logs.txt` exists", "verificationScriptFile": "q11_s1_validate_logfile_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "File contains sidecar container log lines", "verificationScriptFile": "q11_s2_validate_sidecar_content.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "solstice",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `solstice`, Service `secure-svc` (port 443, targets port 80) and TLS Secret `secure-tls` (certificate for `secure.example.com`) already exist.\n\nCreate an Ingress named `secure-ingress` in namespace `solstice` that:\n1. Configures TLS for host `secure.example.com` using Secret `secure-tls`.\n2. Routes traffic for host `secure.example.com`:\n- Path `/` with `pathType: Prefix`\n- Backend: Service `secure-svc` on port `443`",
+            "concepts": ["ingress", "tls", "networking"],
+            "verification": [
+                { "id": "1", "description": "Ingress `secure-ingress` exists in namespace `solstice`", "verificationScriptFile": "q12_s1_validate_ingress_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "TLS configured with secret `secure-tls` for host `secure.example.com`", "verificationScriptFile": "q12_s2_validate_tls.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Rule host is `secure.example.com`", "verificationScriptFile": "q12_s3_validate_rule_host.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Backend is service `secure-svc` on port `443`", "verificationScriptFile": "q12_s4_validate_backend.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "13",
+            "namespace": "aurora",
+            "machineHostname": "ckad9988",
+            "question": "A Custom Resource Definition (CRD) has been installed in the cluster for managing backups.\n\n1. Discover the CRD with `kubectl get crd` and find the one related to backups.\n2. Save the CRD group (e.g. `ckad.example.com`) to `/tmp/exam/course/13/crd-group.txt`.\n3. Create a custom resource named `daily-backup` in namespace `aurora` with:\n- `apiVersion`: the CRD group + `/v1`\n- `kind`: `Backup`\n- `spec.schedule`: `\"0 2 * * *\"`\n- `spec.retentionDays`: `30`\n- `spec.storageLocation`: `\"s3://backups/daily\"`",
+            "concepts": ["crd", "custom-resources"],
+            "verification": [
+                { "id": "1", "description": "File `/tmp/exam/course/12/crd-group.txt` contains `ckad.example.com`", "verificationScriptFile": "q13_s1_validate_group_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Custom resource `Backup/daily-backup` exists in namespace `aurora`", "verificationScriptFile": "q13_s2_validate_backup_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Backup spec has `schedule=0 2 * * *` and `retentionDays=30`", "verificationScriptFile": "q13_s3_validate_backup_spec.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "aurora",
+            "machineHostname": "ckad9999",
+            "question": "In the cluster, a PersistentVolume named `app-data-pv` (1Gi, ReadWriteOnce, storage class `local-path`) already exists.\n\n1. Create a PersistentVolumeClaim named `app-data-pvc` in namespace `aurora` that binds to `app-data-pv`, with:\n- Storage request: `500Mi`\n- Access mode: `ReadWriteOnce`\n2. Create a Pod named `data-pod` in namespace `aurora` with:\n- Image: `nginx:1.25`\n- Container name: `web`\n- Mount `app-data-pvc` at `/usr/share/nginx/html`",
+            "concepts": ["persistentvolumeclaims", "storage", "pods"],
+            "verification": [
+                { "id": "1", "description": "PVC `app-data-pvc` exists in namespace `aurora`", "verificationScriptFile": "q14_s1_validate_pvc_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "PVC access mode is `ReadWriteOnce`", "verificationScriptFile": "q14_s2_validate_accessmode.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "PVC storage request is `500Mi`", "verificationScriptFile": "q14_s3_validate_storage.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Pod `data-pod` exists in namespace `aurora`", "verificationScriptFile": "q14_s4_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "Pod `data-pod` uses PVC `app-data-pvc`", "verificationScriptFile": "q14_s5_validate_pod_uses_pvc.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "6", "description": "Volume mounted at `/usr/share/nginx/html`", "verificationScriptFile": "q14_s6_validate_mount_path.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "flare",
+            "machineHostname": "ckad9988",
+            "question": "Files `/tmp/exam/course/15/tls.crt` and `/tmp/exam/course/15/tls.key` contain a TLS certificate and private key.\n\nCreate a TLS Secret named `web-tls` in namespace `flare` using these files.\n\nHint: `kubectl create secret tls` with `--cert` and `--key`.",
+            "concepts": ["secrets", "tls"],
+            "verification": [
+                { "id": "1", "description": "Secret `web-tls` exists in namespace `flare`", "verificationScriptFile": "q15_s1_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Secret type is `kubernetes.io/tls`", "verificationScriptFile": "q15_s2_validate_type.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Secret has `tls.crt` key", "verificationScriptFile": "q15_s3_validate_crt.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Secret has `tls.key` key", "verificationScriptFile": "q15_s4_validate_key.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "flare",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `flare`, Deployment `app-blue` (3 replicas, labels `app=webapp, version=blue`) and Service `webapp-svc` (selector `app=webapp, version=blue`) already exist.\n\nImplement a Blue/Green deployment:\n1. Create Deployment `app-green` with `3` replicas, pod labels `app=webapp, version=green`, image `nginx:1.26`, container name `web`.\n2. Switch Service `webapp-svc` to point to the green version (change selector to `version=green`).\n3. Scale Deployment `app-blue` to `0` replicas.",
+            "concepts": ["deployments", "services", "blue-green"],
+            "verification": [
+                { "id": "1", "description": "Deployment `app-green` exists in namespace `flare`", "verificationScriptFile": "q16_s1_validate_green_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment `app-green` has `3` replicas", "verificationScriptFile": "q16_s2_validate_green_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "`app-green` pod labels are `app=webapp` and `version=green`", "verificationScriptFile": "q16_s3_validate_green_labels.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "Service `webapp-svc` selector is `version=green`", "verificationScriptFile": "q16_s4_validate_svc_selector.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "5", "description": "Deployment `app-blue` is scaled to `0` replicas", "verificationScriptFile": "q16_s5_validate_blue_scaled.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "sunbeam",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `sunbeam`, Deployment `dns-app` (labels `app=dns-app`) exists, but Service `dns-svc` has a wrong selector and no endpoints.\n\n1. Fix Service `dns-svc` to correctly select Pods from Deployment `dns-app`.\n2. Verify DNS resolution by running `nslookup dns-svc.sunbeam.svc.cluster.local` from a temporary Pod.\n3. Save the nslookup output to `/tmp/exam/course/17/dns-output.txt`.\n\nHint: `kubectl run tmp-dns --rm -i --restart=Never --image=busybox:1.36 -n sunbeam -- nslookup dns-svc.sunbeam.svc.cluster.local`.",
+            "concepts": ["services", "dns", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "Service `dns-svc` selector is `app=dns-app`", "verificationScriptFile": "q17_s1_validate_svc_selector.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Service `dns-svc` has endpoints", "verificationScriptFile": "q17_s2_validate_endpoints.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "File `/tmp/exam/course/20/dns-output.txt` exists", "verificationScriptFile": "q17_s3_validate_output_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "File contains DNS resolution output", "verificationScriptFile": "q17_s4_validate_dns_content.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "dawn",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `dawn`, Deployment `api-app` exists with 4 replicas and the default rolling update strategy.\n\n1. Configure the rolling update strategy to `maxSurge: 1` and `maxUnavailable: 0`.\n2. Update the image to `nginx:1.26`.\n3. Verify the rolling update completes with zero downtime.",
+            "concepts": ["deployments", "rolling-update"],
+            "verification": [
+                { "id": "1", "description": "Deployment `api-app` strategy type is `RollingUpdate`", "verificationScriptFile": "q18_s1_validate_strategy_type.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "`maxSurge` is `1`", "verificationScriptFile": "q18_s2_validate_maxsurge.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "`maxUnavailable` is `0`", "verificationScriptFile": "q18_s3_validate_maxunavailable.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "Image updated to `nginx:1.26`", "verificationScriptFile": "q18_s4_validate_image.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "dawn",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `dawn`, Deployment `hardened-app` exists without any security hardening.\n\nAdd security constraints to the container named `app`:\n1. `runAsNonRoot: true` at the Pod level.\n2. `readOnlyRootFilesystem: true` at the container level.\n3. Drop all capabilities: `drop: [\"ALL\"]` at the container level.\n\nEnsure the Deployment rolls out successfully after the changes.",
+            "concepts": ["securitycontext", "hardening"],
+            "verification": [
+                { "id": "1", "description": "Deployment `hardened-app` exists in namespace `dawn`", "verificationScriptFile": "q19_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Pod-level `runAsNonRoot` is `true`", "verificationScriptFile": "q19_s2_validate_runasnonroot.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Container has `readOnlyRootFilesystem: true` and `drop: [ALL]`", "verificationScriptFile": "q19_s3_validate_container_hardening.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Deployment `hardened-app` has available replicas", "verificationScriptFile": "q19_s4_validate_available.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "solar",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `solar`, Pod `stuck-pod` has been stuck in `Pending` state.\n\n1. Use `kubectl describe` and events to identify why the Pod is Pending.\n2. Save the `nodeSelector` key that causes the issue to `/tmp/exam/course/20/pending-reason.txt` (just the key name, e.g. `disktype`).\n3. Fix the Pod so it enters `Running` state (delete and recreate without the problematic nodeSelector, or label a node to match).",
+            "concepts": ["troubleshooting", "scheduling", "nodeselector"],
+            "verification": [
+                { "id": "1", "description": "File `/tmp/exam/course/10/pending-reason.txt` contains `disktype`", "verificationScriptFile": "q20_s1_validate_reason_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod `stuck-pod` is in `Running` state", "verificationScriptFile": "q20_s2_validate_pod_running.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "solar",
-      "machineHostname": "ckad9999",
-      "question": "Create a Deployment named `frontend-app` in namespace `solar` with:\n- Replicas: `3`\n- Pod labels: `app=frontend`, `tier=web`\n- Container name: `web`\n- Image: `nginx:1.25`\n- Container port: `80`\n- Deployment annotation: `kubernetes.io/change-cause: \"initial deployment\"`",
-      "concepts": [
-        "deployments",
-        "labels",
-        "annotations"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment `frontend-app` exists in namespace `solar`",
-          "verificationScriptFile": "q2_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Deployment `frontend-app` has `3` replicas",
-          "verificationScriptFile": "q2_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Pod template labels are `app=frontend` and `tier=web`",
-          "verificationScriptFile": "q2_s3_validate_pod_labels.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Annotation `kubernetes.io/change-cause` is `initial deployment`",
-          "verificationScriptFile": "q2_s4_validate_annotation.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "corona",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `web-with-sidecar` in namespace `corona` with a main container and a sidecar that ships logs:\n\n1. Main container named `app`: image `nginx:1.25`, mount the shared volume at `/var/log/nginx`.\n2. Sidecar container named `log-shipper`: image `busybox:1.36`, command `[\"/bin/sh\", \"-c\", \"tail -f /var/log/nginx/access.log 2>/dev/null || sleep 3600\"]`, mount the shared volume at `/var/log/nginx`.\n3. Use an `emptyDir` volume named `log-volume` shared between both containers.",
-      "concepts": [
-        "pods",
-        "sidecar",
-        "volumes"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `web-with-sidecar` exists in namespace `corona`",
-          "verificationScriptFile": "q3_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Pod has at least 2 containers",
-          "verificationScriptFile": "q3_s2_validate_container_count.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Pod has an `emptyDir` volume configured",
-          "verificationScriptFile": "q3_s3_validate_emptydir.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Both containers mount the shared `log-volume` at `/var/log/nginx`",
-          "verificationScriptFile": "q3_s4_validate_shared_mounts.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "aurora",
-      "machineHostname": "ckad9999",
-      "question": "In the cluster, a PersistentVolume named `app-data-pv` (1Gi, ReadWriteOnce, storage class `local-path`) already exists.\n\n1. Create a PersistentVolumeClaim named `app-data-pvc` in namespace `aurora` that binds to `app-data-pv`, with:\n- Storage request: `500Mi`\n- Access mode: `ReadWriteOnce`\n2. Create a Pod named `data-pod` in namespace `aurora` with:\n- Image: `nginx:1.25`\n- Container name: `web`\n- Mount `app-data-pvc` at `/usr/share/nginx/html`",
-      "concepts": [
-        "persistentvolumeclaims",
-        "storage",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "PVC `app-data-pvc` exists in namespace `aurora`",
-          "verificationScriptFile": "q4_s1_validate_pvc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "PVC access mode is `ReadWriteOnce`",
-          "verificationScriptFile": "q4_s2_validate_accessmode.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "PVC storage request is `500Mi`",
-          "verificationScriptFile": "q4_s3_validate_storage.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Pod `data-pod` exists in namespace `aurora`",
-          "verificationScriptFile": "q4_s4_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "Pod `data-pod` uses PVC `app-data-pvc`",
-          "verificationScriptFile": "q4_s5_validate_pod_uses_pvc.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "6",
-          "description": "Volume mounted at `/usr/share/nginx/html`",
-          "verificationScriptFile": "q4_s6_validate_mount_path.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "flare",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `flare`, Deployment `app-blue` (3 replicas, labels `app=webapp, version=blue`) and Service `webapp-svc` (selector `app=webapp, version=blue`) already exist.\n\nImplement a Blue/Green deployment:\n1. Create Deployment `app-green` with `3` replicas, pod labels `app=webapp, version=green`, image `nginx:1.26`, container name `web`.\n2. Switch Service `webapp-svc` to point to the green version (change selector to `version=green`).\n3. Scale Deployment `app-blue` to `0` replicas.",
-      "concepts": [
-        "deployments",
-        "services",
-        "blue-green"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment `app-green` exists in namespace `flare`",
-          "verificationScriptFile": "q5_s1_validate_green_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Deployment `app-green` has `3` replicas",
-          "verificationScriptFile": "q5_s2_validate_green_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "`app-green` pod labels are `app=webapp` and `version=green`",
-          "verificationScriptFile": "q5_s3_validate_green_labels.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "4",
-          "description": "Service `webapp-svc` selector is `version=green`",
-          "verificationScriptFile": "q5_s4_validate_svc_selector.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "5",
-          "description": "Deployment `app-blue` is scaled to `0` replicas",
-          "verificationScriptFile": "q5_s5_validate_blue_scaled.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "dawn",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `dawn`, Deployment `api-app` exists with 4 replicas and the default rolling update strategy.\n\n1. Configure the rolling update strategy to `maxSurge: 1` and `maxUnavailable: 0`.\n2. Update the image to `nginx:1.26`.\n3. Verify the rolling update completes with zero downtime.",
-      "concepts": [
-        "deployments",
-        "rolling-update"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment `api-app` strategy type is `RollingUpdate`",
-          "verificationScriptFile": "q6_s1_validate_strategy_type.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "`maxSurge` is `1`",
-          "verificationScriptFile": "q6_s2_validate_maxsurge.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "`maxUnavailable` is `0`",
-          "verificationScriptFile": "q6_s3_validate_maxunavailable.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "4",
-          "description": "Image updated to `nginx:1.26`",
-          "verificationScriptFile": "q6_s4_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "zenith",
-      "machineHostname": "ckad9988",
-      "question": "Directory `/tmp/exam/course/7/` contains two base manifests: `deployment.yaml` and `service.yaml`.\n\n1. Create a `kustomization.yaml` file in `/tmp/exam/course/7/` that:\n- References both `deployment.yaml` and `service.yaml` as resources\n- Adds a `namePrefix: prod-`\n- Sets the replica count to `3` using a patch\n2. Apply with `kubectl apply -k /tmp/exam/course/7/`.\n3. Verify that Deployment `prod-web-app` and Service `prod-web-svc` exist in namespace `zenith`.",
-      "concepts": [
-        "kustomize",
-        "deployments",
-        "services"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment `prod-web-app` exists in namespace `zenith`",
-          "verificationScriptFile": "q7_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Deployment `prod-web-app` has `3` replicas",
-          "verificationScriptFile": "q7_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Service `prod-web-svc` exists in namespace `zenith`",
-          "verificationScriptFile": "q7_s3_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "radiance",
-      "machineHostname": "ckad9988",
-      "question": "In namespace `radiance`, a Helm release named `web-release` is installed.\n\n1. Inspect the current values with `helm get values`.\n2. Upgrade the release to set `replicaCount=3`.\n3. Verify the upgrade is at revision `2` or higher.\n\nHint: `helm upgrade web-release <chart> -n radiance --set replicaCount=3 --reuse-values`.",
-      "concepts": [
-        "helm",
-        "upgrade"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Helm release `web-release` exists in namespace `radiance`",
-          "verificationScriptFile": "q8_s1_validate_release_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Helm release `web-release` is at revision `2` or higher",
-          "verificationScriptFile": "q8_s2_validate_revision.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Release deployment has `3` replicas",
-          "verificationScriptFile": "q8_s3_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "eclipse",
-      "machineHostname": "ckad9988",
-      "question": "In namespace `eclipse`, Deployment `slow-app` runs a slow-starting application on port `8080`.\n\nAdd a startup probe to the Deployment with:\n- HTTP GET on path `/healthz`\n- Port `8080`\n- `failureThreshold: 30`\n- `periodSeconds: 10`\n\nEnsure the Deployment rolls out successfully.",
-      "concepts": [
-        "deployments",
-        "probes",
-        "startupprobe"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment `slow-app` exists in namespace `eclipse`",
-          "verificationScriptFile": "q9_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Startup probe HTTP GET path is `/healthz`",
-          "verificationScriptFile": "q9_s2_validate_probe_path.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Startup probe port is `8080`",
-          "verificationScriptFile": "q9_s3_validate_probe_port.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Startup probe `failureThreshold` is `30`",
-          "verificationScriptFile": "q9_s4_validate_failure_threshold.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "solar",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `solar`, Pod `stuck-pod` has been stuck in `Pending` state.\n\n1. Use `kubectl describe` and events to identify why the Pod is Pending.\n2. Save the `nodeSelector` key that causes the issue to `/tmp/exam/course/10/pending-reason.txt` (just the key name, e.g. `disktype`).\n3. Fix the Pod so it enters `Running` state (delete and recreate without the problematic nodeSelector, or label a node to match).",
-      "concepts": [
-        "troubleshooting",
-        "scheduling",
-        "nodeselector"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File `/tmp/exam/course/10/pending-reason.txt` contains `disktype`",
-          "verificationScriptFile": "q10_s1_validate_reason_file.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod `stuck-pod` is in `Running` state",
-          "verificationScriptFile": "q10_s2_validate_pod_running.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "corona",
-      "machineHostname": "ckad9988",
-      "question": "In namespace `corona`, Pod `multi-logger` runs with two containers: `app` and `sidecar`.\n\n1. Extract the last 20 lines of logs from the `sidecar` container.\n2. Save the output to `/tmp/exam/course/11/sidecar-logs.txt`.\n\nHint: `kubectl logs <pod> -c <container> --tail=20`.",
-      "concepts": [
-        "logging",
-        "multi-container",
-        "observability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File `/tmp/exam/course/11/sidecar-logs.txt` exists",
-          "verificationScriptFile": "q11_s1_validate_logfile_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "File contains sidecar container log lines",
-          "verificationScriptFile": "q11_s2_validate_sidecar_content.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "aurora",
-      "machineHostname": "ckad9988",
-      "question": "A Custom Resource Definition (CRD) has been installed in the cluster for managing backups.\n\n1. Discover the CRD with `kubectl get crd` and find the one related to backups.\n2. Save the CRD group (e.g. `ckad.example.com`) to `/tmp/exam/course/12/crd-group.txt`.\n3. Create a custom resource named `daily-backup` in namespace `aurora` with:\n- `apiVersion`: the CRD group + `/v1`\n- `kind`: `Backup`\n- `spec.schedule`: `\"0 2 * * *\"`\n- `spec.retentionDays`: `30`\n- `spec.storageLocation`: `\"s3://backups/daily\"`",
-      "concepts": [
-        "crd",
-        "custom-resources"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File `/tmp/exam/course/12/crd-group.txt` contains `ckad.example.com`",
-          "verificationScriptFile": "q12_s1_validate_group_file.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Custom resource `Backup/daily-backup` exists in namespace `aurora`",
-          "verificationScriptFile": "q12_s2_validate_backup_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Backup spec has `schedule=0 2 * * *` and `retentionDays=30`",
-          "verificationScriptFile": "q12_s3_validate_backup_spec.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "flare",
-      "machineHostname": "ckad9988",
-      "question": "Files `/tmp/exam/course/13/tls.crt` and `/tmp/exam/course/13/tls.key` contain a TLS certificate and private key.\n\nCreate a TLS Secret named `web-tls` in namespace `flare` using these files.\n\nHint: `kubectl create secret tls` with `--cert` and `--key`.",
-      "concepts": [
-        "secrets",
-        "tls"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Secret `web-tls` exists in namespace `flare`",
-          "verificationScriptFile": "q13_s1_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Secret type is `kubernetes.io/tls`",
-          "verificationScriptFile": "q13_s2_validate_type.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Secret has `tls.crt` key",
-          "verificationScriptFile": "q13_s3_validate_crt.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Secret has `tls.key` key",
-          "verificationScriptFile": "q13_s4_validate_key.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "dawn",
-      "machineHostname": "ckad9988",
-      "question": "In namespace `dawn`, Deployment `hardened-app` exists without any security hardening.\n\nAdd security constraints to the container named `app`:\n1. `runAsNonRoot: true` at the Pod level.\n2. `readOnlyRootFilesystem: true` at the container level.\n3. Drop all capabilities: `drop: [\"ALL\"]` at the container level.\n\nEnsure the Deployment rolls out successfully after the changes.",
-      "concepts": [
-        "securitycontext",
-        "hardening"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment `hardened-app` exists in namespace `dawn`",
-          "verificationScriptFile": "q14_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Pod-level `runAsNonRoot` is `true`",
-          "verificationScriptFile": "q14_s2_validate_runasnonroot.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Container has `readOnlyRootFilesystem: true` and `drop: [ALL]`",
-          "verificationScriptFile": "q14_s3_validate_container_hardening.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Deployment `hardened-app` has available replicas",
-          "verificationScriptFile": "q14_s4_validate_available.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "zenith",
-      "machineHostname": "ckad9977",
-      "question": "Create RBAC resources in namespace `zenith` to allow a ServiceAccount to manage deployments:\n\n1. Create ServiceAccount `deploy-sa`.\n2. Create Role `deploy-role` that grants `get`, `list`, `create`, and `update` on `deployments`.\n3. Create RoleBinding `deploy-rb` binding `deploy-role` to `deploy-sa`.\n4. Verify with `kubectl auth can-i list deployments --as=system:serviceaccount:zenith:deploy-sa -n zenith`.\n5. Save the output (`yes` or `no`) to `/tmp/exam/course/15/auth-check.txt`.",
-      "concepts": [
-        "rbac",
-        "serviceaccounts",
-        "roles"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ServiceAccount `deploy-sa` exists in namespace `zenith`",
-          "verificationScriptFile": "q15_s1_validate_sa_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Role `deploy-role` exists in namespace `zenith`",
-          "verificationScriptFile": "q15_s2_validate_role_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Role grants `get,list,create,update` on `deployments`",
-          "verificationScriptFile": "q15_s3_validate_role_verbs.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "RoleBinding `deploy-rb` exists in namespace `zenith`",
-          "verificationScriptFile": "q15_s4_validate_rolebinding_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "File `/tmp/exam/course/15/auth-check.txt` contains `yes`",
-          "verificationScriptFile": "q15_s5_validate_auth_file.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "eclipse",
-      "machineHostname": "ckad9977",
-      "question": "File `/tmp/exam/course/16/app.env` contains application configuration in `key=value` format.\n\n1. Create a ConfigMap named `app-config` in namespace `eclipse` from the env file.\n2. Create a Pod named `config-pod` in namespace `eclipse` with:\n- Image: `nginx:1.25`\n- Container name: `web`\n- Load all ConfigMap keys as environment variables using `envFrom`.\n\nHint: `kubectl create configmap app-config --from-env-file=/tmp/exam/course/16/app.env`.",
-      "concepts": [
-        "configmaps",
-        "env",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ConfigMap `app-config` exists in namespace `eclipse`",
-          "verificationScriptFile": "q16_s1_validate_configmap_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "ConfigMap `app-config` has key `APP_NAME`",
-          "verificationScriptFile": "q16_s2_validate_app_name_key.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Pod `config-pod` exists in namespace `eclipse`",
-          "verificationScriptFile": "q16_s3_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Pod `config-pod` loads all keys via `envFrom` from `app-config`",
-          "verificationScriptFile": "q16_s4_validate_envfrom.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "radiance",
-      "machineHostname": "ckad9977",
-      "question": "Create a docker-registry Secret named `registry-creds` in namespace `radiance` with:\n- Docker server: `registry.example.com`\n- Username: `admin`\n- Password: `s3cur3P@ss`\n\nHint: `kubectl create secret docker-registry` with `--docker-server`, `--docker-username`, and `--docker-password`.",
-      "concepts": [
-        "secrets",
-        "docker-registry"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Secret `registry-creds` exists in namespace `radiance`",
-          "verificationScriptFile": "q17_s1_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Secret type is `kubernetes.io/dockerconfigjson`",
-          "verificationScriptFile": "q17_s2_validate_type.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Secret references docker server `registry.example.com`",
-          "verificationScriptFile": "q17_s3_validate_server.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Secret references username `admin`",
-          "verificationScriptFile": "q17_s4_validate_username.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "sunbeam",
-      "machineHostname": "ckad9977",
-      "question": "In namespace `sunbeam`, Pod `api-server` (label `app=api`) and Pod `web-frontend` (label `role=frontend`) exist.\n\nCreate a NetworkPolicy named `api-allow` in namespace `sunbeam` that:\n1. Targets Pods with label `app=api` (podSelector).\n2. Allows ingress traffic only from:\n- Pods with label `role=frontend` (podSelector)\n- CIDR block `10.0.0.0/24` (ipBlock)\n3. Allows ingress on port `80` (TCP).\n\nHint: both `podSelector` and `ipBlock` rules go under `spec.ingress[0].from` as separate items.",
-      "concepts": [
-        "networkpolicy",
-        "ipblock",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy `api-allow` exists in namespace `sunbeam`",
-          "verificationScriptFile": "q18_s1_validate_np_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "`podSelector` targets `app=api`",
-          "verificationScriptFile": "q18_s2_validate_podselector.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Ingress allows pods with label `role=frontend`",
-          "verificationScriptFile": "q18_s3_validate_frontend_rule.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "4",
-          "description": "Ingress allows `ipBlock` CIDR `10.0.0.0/24`",
-          "verificationScriptFile": "q18_s4_validate_ipblock.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "solstice",
-      "machineHostname": "ckad9977",
-      "question": "In namespace `solstice`, Service `secure-svc` (port 443, targets port 80) and TLS Secret `secure-tls` (certificate for `secure.example.com`) already exist.\n\nCreate an Ingress named `secure-ingress` in namespace `solstice` that:\n1. Configures TLS for host `secure.example.com` using Secret `secure-tls`.\n2. Routes traffic for host `secure.example.com`:\n- Path `/` with `pathType: Prefix`\n- Backend: Service `secure-svc` on port `443`",
-      "concepts": [
-        "ingress",
-        "tls",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Ingress `secure-ingress` exists in namespace `solstice`",
-          "verificationScriptFile": "q19_s1_validate_ingress_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "TLS configured with secret `secure-tls` for host `secure.example.com`",
-          "verificationScriptFile": "q19_s2_validate_tls.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Rule host is `secure.example.com`",
-          "verificationScriptFile": "q19_s3_validate_rule_host.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Backend is service `secure-svc` on port `443`",
-          "verificationScriptFile": "q19_s4_validate_backend.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "sunbeam",
-      "machineHostname": "ckad9977",
-      "question": "In namespace `sunbeam`, Deployment `dns-app` (labels `app=dns-app`) exists, but Service `dns-svc` has a wrong selector and no endpoints.\n\n1. Fix Service `dns-svc` to correctly select Pods from Deployment `dns-app`.\n2. Verify DNS resolution by running `nslookup dns-svc.sunbeam.svc.cluster.local` from a temporary Pod.\n3. Save the nslookup output to `/tmp/exam/course/20/dns-output.txt`.\n\nHint: `kubectl run tmp-dns --rm -i --restart=Never --image=busybox:1.36 -n sunbeam -- nslookup dns-svc.sunbeam.svc.cluster.local`.",
-      "concepts": [
-        "services",
-        "dns",
-        "troubleshooting"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service `dns-svc` selector is `app=dns-app`",
-          "verificationScriptFile": "q20_s1_validate_svc_selector.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Service `dns-svc` has endpoints",
-          "verificationScriptFile": "q20_s2_validate_endpoints.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "File `/tmp/exam/course/20/dns-output.txt` exists",
-          "verificationScriptFile": "q20_s3_validate_output_file.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "File contains DNS resolution output",
-          "verificationScriptFile": "q20_s4_validate_dns_content.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    }
-  ]
+    ]
 }

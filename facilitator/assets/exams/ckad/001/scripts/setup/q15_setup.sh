@@ -1,10 +1,38 @@
 #!/bin/bash
-export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-# Setup for Question 15: CustomResourceDefinition backups.data.example.com
+# Setup for Question 15: Troubleshoot and fix a broken deployment
 
-# Create the cluster-admin namespace referenced by the question if it doesn't exist already
-kubectl create namespace cluster-admin --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+# Create the troubleshooting namespace if it doesn't exist already
+if ! kubectl get namespace troubleshooting &> /dev/null; then
+    kubectl create namespace troubleshooting
+fi
 
-echo "Setup complete for Question 15: Environment ready for creating CRD 'backups.data.example.com'"
-exit 0
+# Delete any existing deployment with the same name
+kubectl delete deployment broken-app -n troubleshooting --ignore-not-found=true
+
+# Create a broken deployment with an invalid image name
+cat <<EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broken-app
+  namespace: troubleshooting
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: broken-app
+  template:
+    metadata:
+      labels:
+        app: broken-app
+    spec:
+      containers:
+      - name: app
+        image: nginx:nonexistentversion  # This image tag doesn't exist
+        ports:
+        - containerPort: 80
+EOF
+
+echo "Setup complete for Question 15: Created broken deployment 'broken-app' in namespace 'troubleshooting'"
+exit 0 

@@ -1,9 +1,9 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-if kubectl get pod tcp-health -n ember >/dev/null 2>&1; then
+if kubectl get pod lifecycle-pod -n phoenix >/dev/null 2>&1; then
   echo "Success: pod exists"
   exit 0
 else
-  echo "Error: pod tcp-health not found in ember"
+  echo "Error: pod lifecycle-pod not found in phoenix"
   exit 1
 fi

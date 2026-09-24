@@ -31,169 +31,51 @@ helm -n starmap get values orrery-south
 
 ---
 
-## Question 2 | Zero-downtime rolling update with change-cause
+## Question 2 | Headless Service DNS and previous container logs
 
-> Server: `ssh ckad9999`
-
-```bash
-kubectl -n mirror patch deployment reflector --type=merge -p \
-  '{"spec":{"strategy":{"type":"RollingUpdate","rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}}'
-
-kubectl -n mirror set image deployment/reflector web=nginx:1.26
-kubectl -n mirror annotate deployment reflector \
-  kubernetes.io/change-cause="bump reflector to nginx 1.26" --overwrite
-
-kubectl -n mirror rollout status deployment/reflector --timeout=180s
-kubectl -n mirror rollout history deployment/reflector
-kubectl -n mirror get deployment reflector -o wide
-```
-
-With `maxSurge: 1` / `maxUnavailable: 0` the controller adds one new Pod at a time and only removes an old Pod once a new one is ready. The Deployment already has a change-cause from its first release, so `--overwrite` is needed. The controller copies the annotation to the new ReplicaSet, which is where `rollout history` reads it.
-
----
-
-## Question 3 | Egress NetworkPolicy with DNS
-
-> Server: `ssh ckad9999`
+> Server: `ssh ckad9977`
 
 ```bash
-cat <<'YAML' | kubectl apply -f -
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: collector-egress
-  namespace: relay
-spec:
-  podSelector:
-    matchLabels:
-      app: collector
-  policyTypes:
-    - Egress
-  egress:
-    - to:
-        - podSelector:
-            matchLabels:
-              app: archive
-      ports:
-        - protocol: TCP
-          port: 6379
-    - ports:
-        - protocol: UDP
-          port: 53
-        - protocol: TCP
-          port: 53
-YAML
-
-# verify: archive reachable, everything else blocked
-kubectl -n relay exec deploy/collector -- nc -z -w 3 archive 6379 && echo archive-ok
-kubectl -n relay exec deploy/collector -- nc -z -w 3 webcache 80 || echo webcache-blocked
-```
-
-Once a Pod is selected by a policy with `Egress` in `policyTypes`, only the egress rules listed are allowed. DNS needs its own rule without a `to` (port 53 UDP+TCP), otherwise the Service name `archive` could not be resolved.
-
----
-
-## Question 4 | Sorted and custom-column Pod listings
-
-> Server: `ssh ckad9999`
-
-```bash
-cat > /home/candidate/exam/q4/oldest-first.sh <<'EOF'
-kubectl get pods -n survey --sort-by=.metadata.creationTimestamp -o custom-columns=NAME:.metadata.name --no-headers
-EOF
-
-cat > /home/candidate/exam/q4/pod-ips.sh <<'EOF'
-kubectl get pods -n survey -o custom-columns=NAME:.metadata.name,POD_IP:.status.podIP
-EOF
-
-bash /home/candidate/exam/q4/oldest-first.sh
-bash /home/candidate/exam/q4/pod-ips.sh
-```
-
-`--sort-by` takes a JSONPath to a field and sorts ascending, so `.metadata.creationTimestamp` lists the oldest Pod first. `custom-columns=HEADER:jsonpath,...` sets both the column titles and their values, and `--no-headers` removes the header row. Both commands pass `-n survey` explicitly, so they do not depend on the current namespace.
-
----
-
-## Question 5 | Native sidecar log shipper
-
-> Server: `ssh ckad9999`
-
-```bash
+# 1. Headless Service (clusterIP: None) for the watchtower pods
 cat <<'YAML' | kubectl apply -f -
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
-  name: prism
-  namespace: spectra
+  name: watchtower-peers
+  namespace: nightwatch
 spec:
-  volumes:
-    - name: logs
-      emptyDir: {}
-  initContainers:
-    - name: log-tailer
-      image: busybox:1.36
-      restartPolicy: Always
-      command: ["sh", "-c", "tail -F /var/log/prism/emission.log"]
-      volumeMounts:
-        - name: logs
-          mountPath: /var/log/prism
-  containers:
-    - name: emitter
-      image: busybox:1.36
-      command: ["sh", "-c", "i=0; while true; do i=$((i+1)); echo \"spectral-line $i\" >> /var/log/prism/emission.log; sleep 2; done"]
-      volumeMounts:
-        - name: logs
-          mountPath: /var/log/prism
+  clusterIP: None
+  selector:
+    app: watchtower
+  ports:
+    - port: 80
+      targetPort: 80
 YAML
+kubectl -n nightwatch get endpoints watchtower-peers
+sleep 3
 
-kubectl -n spectra wait pod/prism --for=condition=Ready --timeout=90s
-kubectl -n spectra logs prism -c log-tailer --tail=5
+# 2. Resolve the Service name from a throw-away busybox pod
+kubectl -n nightwatch run dns-probe --image=busybox:1.36 --restart=Never --rm -i --quiet -- \
+  nslookup watchtower-peers.nightwatch.svc.cluster.local > /home/candidate/exam/q2/dns.txt
+cat /home/candidate/exam/q2/dns.txt
+kubectl -n nightwatch get pods -l app=watchtower -o wide   # every pod IP must appear in dns.txt
+
+# 3. Logs of the crashed (previous) container instance only
+kubectl -n nightwatch get pod insomniac                    # RESTARTS >= 1
+kubectl -n nightwatch logs insomniac --previous > /home/candidate/exam/q2/crash.log
+cat /home/candidate/exam/q2/crash.log
 ```
 
-An init container with `restartPolicy: Always` is a native sidecar: it starts before the main container, keeps running alongside it for the life of the Pod, and does not block Pod completion. `tail -F` keeps retrying until the log file appears on the shared `emptyDir`, then streams every line to the sidecar's stdout.
+A headless Service has no virtual IP, so its DNS name resolves straight to one A record per ready Pod instead of a single ClusterIP. `kubectl logs --previous` (`-p`) reads the last terminated instance of the container. That is where the crash message is, because the current instance only logs that it restarted.
 
 ---
 
-## Question 6 | ConfigMap from env-file, envFrom and selector cleanup
-
-> Server: `ssh ckad9999`
-
-```bash
-kubectl -n almanac create configmap sky-settings --from-env-file=/home/candidate/exam/q6/almanac.env
-
-cat <<'YAML' | kubectl apply -f -
-apiVersion: v1
-kind: Pod
-metadata:
-  name: almanac-reader
-  namespace: almanac
-spec:
-  containers:
-    - name: reader
-      image: busybox:1.36
-      command: ["sleep", "3600"]
-      envFrom:
-        - configMapRef:
-            name: sky-settings
-YAML
-
-kubectl -n almanac get configmap -l stale=true
-kubectl -n almanac delete configmap -l stale=true
-
-kubectl -n almanac wait pod/almanac-reader --for=condition=Ready --timeout=60s
-kubectl -n almanac exec almanac-reader -- env | grep -E 'SUNRISE|TIDE|MOON|FORECAST'
-```
-
-`--from-env-file` turns each `KEY=value` line into its own key and skips comments and blank lines. `--from-file` would instead store the whole file under one key. `envFrom.configMapRef` injects every key as an env var, and `-l stale=true` matches only that exact label value, so `stale=false` and unlabelled ConfigMaps are kept.
-
----
-
-## Question 7 | Secret with items, defaultMode and an optional key
+## Question 3 | Secret with items, defaultMode and an optional key
 
 > Server: `ssh ckad9988`
 
 ```bash
-cd /home/candidate/exam/q7
+cd /home/candidate/exam/q3
 kubectl -n vault create secret generic observatory-tls \
   --from-file=signing.key --from-file=ca.crt
 
@@ -238,7 +120,28 @@ kubectl -n vault exec cert-loader -- stat -L -c %a /etc/observatory/keys/private
 
 ---
 
-## Question 8 | Fix a broken readiness probe
+## Question 4 | Zero-downtime rolling update with change-cause
+
+> Server: `ssh ckad9999`
+
+```bash
+kubectl -n mirror patch deployment reflector --type=merge -p \
+  '{"spec":{"strategy":{"type":"RollingUpdate","rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}}'
+
+kubectl -n mirror set image deployment/reflector web=nginx:1.26
+kubectl -n mirror annotate deployment reflector \
+  kubernetes.io/change-cause="bump reflector to nginx 1.26" --overwrite
+
+kubectl -n mirror rollout status deployment/reflector --timeout=180s
+kubectl -n mirror rollout history deployment/reflector
+kubectl -n mirror get deployment reflector -o wide
+```
+
+With `maxSurge: 1` / `maxUnavailable: 0` the controller adds one new Pod at a time and only removes an old Pod once a new one is ready. The Deployment already has a change-cause from its first release, so `--overwrite` is needed. The controller copies the annotation to the new ReplicaSet, which is where `rollout history` reads it.
+
+---
+
+## Question 5 | Fix a broken readiness probe
 
 > Server: `ssh ckad9988`
 
@@ -259,7 +162,48 @@ The probe was failing on both counts: port 8080 refuses the connection and `/hea
 
 ---
 
-## Question 9 | NodePort Service with a named targetPort
+## Question 6 | Egress NetworkPolicy with DNS
+
+> Server: `ssh ckad9999`
+
+```bash
+cat <<'YAML' | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: collector-egress
+  namespace: relay
+spec:
+  podSelector:
+    matchLabels:
+      app: collector
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: archive
+      ports:
+        - protocol: TCP
+          port: 6379
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+YAML
+
+# verify: archive reachable, everything else blocked
+kubectl -n relay exec deploy/collector -- nc -z -w 3 archive 6379 && echo archive-ok
+kubectl -n relay exec deploy/collector -- nc -z -w 3 webcache 80 || echo webcache-blocked
+```
+
+Once a Pod is selected by a policy with `Egress` in `policyTypes`, only the egress rules listed are allowed. DNS needs its own rule without a `to` (port 53 UDP+TCP), otherwise the Service name `archive` could not be resolved.
+
+---
+
+## Question 7 | NodePort Service with a named targetPort
 
 > Server: `ssh ckad9988`
 
@@ -282,131 +226,7 @@ A string `targetPort` is resolved against the `name` of each selected Pod's cont
 
 ---
 
-## Question 10 | Relabel, annotate and query annotations
-
-> Server: `ssh ckad9988`
-
-```bash
-kubectl -n catalog get pods --show-labels
-
-kubectl -n catalog label pods -l tier=ingest tier=stream --overwrite
-kubectl -n catalog annotate pods -l survey=wide 'catalog.observatory.io/retention=hot=7d,cold=365d'
-
-kubectl -n catalog get pods -o json \
-  | jq -r '.items[] | select(.metadata.annotations["catalog.observatory.io/legacy-schema"] != null) | .metadata.name' \
-  | sort > /home/candidate/exam/q10/legacy-schema-pods.txt
-cat /home/candidate/exam/q10/legacy-schema-pods.txt   # idx-andromeda, idx-draco, idx-eridanus
-```
-
-Changing an existing label needs `--overwrite`, and both `label` and `annotate` take `-l`, so one command covers every matching Pod. kubectl splits an annotation argument at the first `=`, so the value can itself contain `=` and `,`. Label selectors can't match annotations, so the file is built by testing the exact key with jq; a `grep legacy-schema` would also pick up `idx-bootes`, which has `catalog.observatory.io/legacy-schema-migrated`.
-
----
-
-## Question 11 | Migrate a PDB to policy/v1 and add a memory HPA
-
-> Server: `ssh ckad9988`
-
-```bash
-# as shipped, applying the file fails: no matches for kind "PodDisruptionBudget" in version "policy/v1beta1"
-sed -i 's#^apiVersion: policy/v1beta1#apiVersion: policy/v1#' /home/candidate/exam/q11/satpos-pdb.yaml
-kubectl apply -f /home/candidate/exam/q11/satpos-pdb.yaml
-kubectl -n tracker get pdb satpos-pdb
-
-cat <<'EOF' | kubectl apply -f -
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: satpos-hpa
-  namespace: tracker
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: satpos
-  minReplicas: 2
-  maxReplicas: 6
-  metrics:
-    - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: 75
-  behavior:
-    scaleDown:
-      stabilizationWindowSeconds: 180
-EOF
-kubectl -n tracker get hpa satpos-hpa
-```
-
-`policy/v1beta1` PodDisruptionBudgets were removed in v1.25. The `policy/v1` spec is the same apart from how an empty selector behaves, so changing `apiVersion` is enough here. `kubectl autoscale` can only create CPU targets, so a memory target and `behavior` need an `autoscaling/v2` manifest; memory utilization is measured against the containers' memory requests.
-
----
-
-## Question 12 | Promote a canary with Kustomize images
-
-> Server: `ssh ckad9988`
-
-```bash
-cd /home/candidate/exam/q12/telemetry
-cat >> kustomization.yaml <<'EOF'
-images:
-  - name: nginx
-    newTag: "1.26"
-EOF
-
-kubectl kustomize . | grep 'image:'          # image: nginx:1.26
-kubectl apply -k .
-kubectl -n orbit rollout status deployment/telemetry --timeout=120s
-
-kubectl -n orbit delete deployment telemetry-canary
-kubectl -n orbit get endpoints telemetry     # 3 addresses, all stable pods
-```
-
-The kustomize `images` transformer rewrites every container image named `nginx` when the manifests are rendered, so `deployment.yaml` keeps `nginx:1.25` while the applied Deployment runs `nginx:1.26`. Quote the tag so YAML keeps `1.26` a string rather than a number. Once the stable Deployment is fully rolled out on the new image, deleting the canary leaves the Service selecting only the 3 stable Pods.
-
----
-
-## Question 13 | Headless Service DNS and previous container logs
-
-> Server: `ssh ckad9977`
-
-```bash
-# 1. Headless Service (clusterIP: None) for the watchtower pods
-cat <<'YAML' | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  name: watchtower-peers
-  namespace: nightwatch
-spec:
-  clusterIP: None
-  selector:
-    app: watchtower
-  ports:
-    - port: 80
-      targetPort: 80
-YAML
-kubectl -n nightwatch get endpoints watchtower-peers
-sleep 3
-
-# 2. Resolve the Service name from a throw-away busybox pod
-kubectl -n nightwatch run dns-probe --image=busybox:1.36 --restart=Never --rm -i --quiet -- \
-  nslookup watchtower-peers.nightwatch.svc.cluster.local > /home/candidate/exam/q13/dns.txt
-cat /home/candidate/exam/q13/dns.txt
-kubectl -n nightwatch get pods -l app=watchtower -o wide   # every pod IP must appear in dns.txt
-
-# 3. Logs of the crashed (previous) container instance only
-kubectl -n nightwatch get pod insomniac                    # RESTARTS >= 1
-kubectl -n nightwatch logs insomniac --previous > /home/candidate/exam/q13/crash.log
-cat /home/candidate/exam/q13/crash.log
-```
-
-A headless Service has no virtual IP, so its DNS name resolves straight to one A record per ready Pod instead of a single ClusterIP. `kubectl logs --previous` (`-p`) reads the last terminated instance of the container. That is where the crash message is, because the current instance only logs that it restarted.
-
----
-
-## Question 14 | Immutable ConfigMap swap with a checksum annotation
+## Question 8 | Immutable ConfigMap swap with a checksum annotation
 
 > Server: `ssh ckad9977`
 
@@ -438,7 +258,28 @@ Nobody can edit an immutable ConfigMap, so to change config you create a new, ve
 
 ---
 
-## Question 15 | Dynamic PVC surviving pod replacement
+## Question 9 | Sorted and custom-column Pod listings
+
+> Server: `ssh ckad9999`
+
+```bash
+cat > /home/candidate/exam/q9/oldest-first.sh <<'EOF'
+kubectl get pods -n survey --sort-by=.metadata.creationTimestamp -o custom-columns=NAME:.metadata.name --no-headers
+EOF
+
+cat > /home/candidate/exam/q9/pod-ips.sh <<'EOF'
+kubectl get pods -n survey -o custom-columns=NAME:.metadata.name,POD_IP:.status.podIP
+EOF
+
+bash /home/candidate/exam/q9/oldest-first.sh
+bash /home/candidate/exam/q9/pod-ips.sh
+```
+
+`--sort-by` takes a JSONPath to a field and sorts ascending, so `.metadata.creationTimestamp` lists the oldest Pod first. `custom-columns=HEADER:jsonpath,...` sets both the column titles and their values, and `--no-headers` removes the header row. Both commands pass `-n survey` explicitly, so they do not depend on the current namespace.
+
+---
+
+## Question 10 | Dynamic PVC surviving pod replacement
 
 > Server: `ssh ckad9977`
 
@@ -497,7 +338,67 @@ The `local-path` StorageClass uses `WaitForFirstConsumer`, so the PVC stays Pend
 
 ---
 
-## Question 16 | Suspended, hardened CronJob
+## Question 11 | Native sidecar log shipper
+
+> Server: `ssh ckad9999`
+
+```bash
+cat <<'YAML' | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: prism
+  namespace: spectra
+spec:
+  volumes:
+    - name: logs
+      emptyDir: {}
+  initContainers:
+    - name: log-tailer
+      image: busybox:1.36
+      restartPolicy: Always
+      command: ["sh", "-c", "tail -F /var/log/prism/emission.log"]
+      volumeMounts:
+        - name: logs
+          mountPath: /var/log/prism
+  containers:
+    - name: emitter
+      image: busybox:1.36
+      command: ["sh", "-c", "i=0; while true; do i=$((i+1)); echo \"spectral-line $i\" >> /var/log/prism/emission.log; sleep 2; done"]
+      volumeMounts:
+        - name: logs
+          mountPath: /var/log/prism
+YAML
+
+kubectl -n spectra wait pod/prism --for=condition=Ready --timeout=90s
+kubectl -n spectra logs prism -c log-tailer --tail=5
+```
+
+An init container with `restartPolicy: Always` is a native sidecar: it starts before the main container, keeps running alongside it for the life of the Pod, and does not block Pod completion. `tail -F` keeps retrying until the log file appears on the shared `emptyDir`, then streams every line to the sidecar's stdout.
+
+---
+
+## Question 12 | Relabel, annotate and query annotations
+
+> Server: `ssh ckad9988`
+
+```bash
+kubectl -n catalog get pods --show-labels
+
+kubectl -n catalog label pods -l tier=ingest tier=stream --overwrite
+kubectl -n catalog annotate pods -l survey=wide 'catalog.observatory.io/retention=hot=7d,cold=365d'
+
+kubectl -n catalog get pods -o json \
+  | jq -r '.items[] | select(.metadata.annotations["catalog.observatory.io/legacy-schema"] != null) | .metadata.name' \
+  | sort > /home/candidate/exam/q12/legacy-schema-pods.txt
+cat /home/candidate/exam/q12/legacy-schema-pods.txt   # idx-andromeda, idx-draco, idx-eridanus
+```
+
+Changing an existing label needs `--overwrite`, and both `label` and `annotate` take `-l`, so one command covers every matching Pod. kubectl splits an annotation argument at the first `=`, so the value can itself contain `=` and `,`. Label selectors can't match annotations, so the file is built by testing the exact key with jq; a `grep legacy-schema` would also pick up `idx-bootes`, which has `catalog.observatory.io/legacy-schema-migrated`.
+
+---
+
+## Question 13 | Suspended, hardened CronJob
 
 > Server: `ssh ckad9977`
 
@@ -536,7 +437,82 @@ kubectl -n nightly get cronjob star-catalog-sync   # SUSPEND = True, no jobs cre
 
 ---
 
-## Question 17 | Quota-blocked Deployment fixed with LimitRange defaults
+## Question 14 | ConfigMap from env-file, envFrom and selector cleanup
+
+> Server: `ssh ckad9999`
+
+```bash
+kubectl -n almanac create configmap sky-settings --from-env-file=/home/candidate/exam/q14/almanac.env
+
+cat <<'YAML' | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: almanac-reader
+  namespace: almanac
+spec:
+  containers:
+    - name: reader
+      image: busybox:1.36
+      command: ["sleep", "3600"]
+      envFrom:
+        - configMapRef:
+            name: sky-settings
+YAML
+
+kubectl -n almanac get configmap -l stale=true
+kubectl -n almanac delete configmap -l stale=true
+
+kubectl -n almanac wait pod/almanac-reader --for=condition=Ready --timeout=60s
+kubectl -n almanac exec almanac-reader -- env | grep -E 'SUNRISE|TIDE|MOON|FORECAST'
+```
+
+`--from-env-file` turns each `KEY=value` line into its own key and skips comments and blank lines. `--from-file` would instead store the whole file under one key. `envFrom.configMapRef` injects every key as an env var, and `-l stale=true` matches only that exact label value, so `stale=false` and unlabelled ConfigMaps are kept.
+
+---
+
+## Question 15 | Migrate a PDB to policy/v1 and add a memory HPA
+
+> Server: `ssh ckad9988`
+
+```bash
+# as shipped, applying the file fails: no matches for kind "PodDisruptionBudget" in version "policy/v1beta1"
+sed -i 's#^apiVersion: policy/v1beta1#apiVersion: policy/v1#' /home/candidate/exam/q15/satpos-pdb.yaml
+kubectl apply -f /home/candidate/exam/q15/satpos-pdb.yaml
+kubectl -n tracker get pdb satpos-pdb
+
+cat <<'EOF' | kubectl apply -f -
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: satpos-hpa
+  namespace: tracker
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: satpos
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 75
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 180
+EOF
+kubectl -n tracker get hpa satpos-hpa
+```
+
+`policy/v1beta1` PodDisruptionBudgets were removed in v1.25. The `policy/v1` spec is the same apart from how an empty selector behaves, so changing `apiVersion` is enough here. `kubectl autoscale` can only create CPU targets, so a memory target and `behavior` need an `autoscaling/v2` manifest; memory utilization is measured against the containers' memory requests.
+
+---
+
+## Question 16 | Quota-blocked Deployment fixed with LimitRange defaults
 
 > Server: `ssh ckad9977`
 
@@ -573,3 +549,27 @@ kubectl -n spectro describe resourcequota spectro-budget   # used: 150m/192Mi re
 ```
 
 A ResourceQuota that covers `requests.*`/`limits.*` rejects any pod whose containers leave those values unset. The LimitRanger admission plugin fills in the LimitRange defaults before the quota is checked, so the three pods (limits 300m/384Mi and requests 150m/192Mi in total) are admitted without editing the quota or the Deployment manifest.
+
+---
+
+## Question 17 | Promote a canary with Kustomize images
+
+> Server: `ssh ckad9988`
+
+```bash
+cd /home/candidate/exam/q17/telemetry
+cat >> kustomization.yaml <<'EOF'
+images:
+  - name: nginx
+    newTag: "1.26"
+EOF
+
+kubectl kustomize . | grep 'image:'          # image: nginx:1.26
+kubectl apply -k .
+kubectl -n orbit rollout status deployment/telemetry --timeout=120s
+
+kubectl -n orbit delete deployment telemetry-canary
+kubectl -n orbit get endpoints telemetry     # 3 addresses, all stable pods
+```
+
+The kustomize `images` transformer rewrites every container image named `nginx` when the manifests are rendered, so `deployment.yaml` keeps `nginx:1.25` while the applied Deployment runs `nginx:1.26`. Quote the tag so YAML keeps `1.26` a string rather than a number. Once the stable Deployment is fully rolled out on the new image, deleting the canary leaves the Service selecting only the 3 stable Pods.

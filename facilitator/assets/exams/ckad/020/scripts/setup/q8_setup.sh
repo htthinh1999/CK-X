@@ -1,39 +1,23 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace matrix --dry-run=client -o yaml | kubectl apply -f - || true
+# Namespace
+kubectl create namespace genesis --dry-run=client -o yaml | kubectl apply -f - || true
 
-# Provide the kustomize starter files (student adds secretGenerator/generatorOptions)
-mkdir -p /tmp/exam/course/8/kustomize
+# Start a throwaway local registry so docker push localhost:5000/... works
+docker rm -f registry 2>/dev/null
+docker run -d -p 5000:5000 --restart=always --name registry registry:2 >/dev/null 2>&1 || true
 
-cat > /tmp/exam/course/8/kustomize/kustomization.yaml <<'EOF'
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
+# Provide the skeleton Dockerfile (student must add USER 1000)
+mkdir -p /tmp/exam/course/8
+cat > /tmp/exam/course/8/Dockerfile <<'EOF'
+FROM nginx:1.21
 
-resources:
-- deployment.yaml
+RUN echo "Hello World" > /usr/share/nginx/html/index.html
 
-# TODO: Add secretGenerator and generatorOptions
-EOF
+# TODO: Add instruction to create user 'izanagi' with UID 1000 and switch to it
 
-cat > /tmp/exam/course/8/kustomize/deployment.yaml <<'EOF'
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: matrix-web
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: matrix-web
-  template:
-    metadata:
-      labels:
-        app: matrix-web
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.21
+CMD ["nginx", "-g", "daemon off;"]
 EOF
 
 echo "Setup complete for Question 8"

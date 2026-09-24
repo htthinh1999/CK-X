@@ -1,10 +1,27 @@
 #!/bin/bash
-export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-# Setup for Question 13: ClusterRole and ClusterRoleBinding
+# Setup for Question 13: Create a PersistentVolumeClaim named 'pvc-app'
 
-# Create the cluster-admin namespace referenced by the question if it doesn't exist already
-kubectl create namespace cluster-admin --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+# Create the storage-test namespace if it doesn't exist already
+if ! kubectl get namespace storage-test &> /dev/null; then
+    kubectl create namespace storage-test
+fi
 
-echo "Setup complete for Question 13: Environment ready for creating ClusterRole 'pod-reader' and ClusterRoleBinding 'read-pods'"
-exit 0
+# Delete any existing PVC with the same name to ensure a clean state
+kubectl delete pvc pvc-app -n storage-test --ignore-not-found=true
+
+# Create the StorageClass if it doesn't exist (dependency for this question)
+# if ! kubectl get storageclass fast-storage &> /dev/null; then
+#     cat <<EOF | kubectl apply -f -
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: fast-storage
+# provisioner: kubernetes.io/no-provisioner
+# volumeBindingMode: WaitForFirstConsumer
+# EOF
+#     echo "Created dependency: StorageClass 'fast-storage'"
+# fi
+
+echo "Setup complete for Question 13: Environment ready for creating PersistentVolumeClaim 'pvc-app'"
+exit 0 

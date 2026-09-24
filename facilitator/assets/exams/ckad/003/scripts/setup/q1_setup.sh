@@ -1,7 +1,7 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-mkdir -p /tmp/exam/course/1
+kubectl create namespace corona --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
 
 echo "Setup complete for Question 1"
 exit 0

@@ -1,23 +1,31 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace shield --dry-run=client -o yaml | kubectl apply -f - || true
-kubectl apply -f - <<'YAML'
-apiVersion: batch/v1
-kind: CronJob
+kubectl create namespace bulwark --dry-run=client -o yaml | kubectl apply -f - || true
+mkdir -p /tmp/exam/course/3
+cat > /tmp/exam/course/3/deployment.yaml <<'YAML'
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: backup-cj
-  namespace: shield
+  name: my-app
 spec:
-  schedule: "*/10 * * * *"
-  jobTemplate:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
     spec:
-      template:
-        spec:
-          containers:
-          - name: backup
-            image: busybox
-            command: ["echo", "backup"]
-          restartPolicy: OnFailure
+      containers:
+      - name: nginx
+        image: nginx:alpine
+YAML
+cat > /tmp/exam/course/3/kustomization.yaml <<'YAML'
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- deployment.yaml
 YAML
 echo "Setup complete for Question 3"
 exit 0

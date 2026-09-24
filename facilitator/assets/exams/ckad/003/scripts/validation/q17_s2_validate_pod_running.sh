@@ -1,6 +1,6 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-ph=$(kubectl get pod tcp-health -n ember -o jsonpath='{.status.phase}' 2>/dev/null)
+ph=$(kubectl get pod lifecycle-pod -n phoenix -o jsonpath='{.status.phase}' 2>/dev/null)
 if [ "$ph" = "Running" ]; then
   echo "Success: pod Running"
   exit 0

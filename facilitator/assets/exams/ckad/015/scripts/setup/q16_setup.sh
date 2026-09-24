@@ -1,16 +1,5 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace zephyr --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-kubectl apply -f - <<'EOF' >/dev/null 2>&1 || true
-apiVersion: v1
-kind: Pod
-metadata:
-  name: zephyr-api
-  namespace: zephyr
-spec:
-  containers:
-  - name: api
-    image: nginx:alpine
-EOF
+kubectl create namespace tempest --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 echo "Setup complete for Question 16"
 exit 0

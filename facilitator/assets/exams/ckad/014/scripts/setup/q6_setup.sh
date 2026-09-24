@@ -1,7 +1,7 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace shadow --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl create namespace dusk --dry-run=client -o yaml | kubectl apply -f - || true
 
 echo "Setup complete for Question 6"
 exit 0

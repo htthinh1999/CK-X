@@ -1,73 +1,92 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace quayside --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace tides --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+
 rm -rf /home/candidate/exam/q1 && mkdir -p /home/candidate/exam/q1
+cat > /home/candidate/exam/q1/gauge.properties <<'EOF'
+station.id=WG-17
+sample.interval.seconds=30
+tide.datum=LAT
+alert.high.water.cm=520
+EOF
 
-# Start from a clean revision history so the revisions are exactly 1, 2, 3.
-kubectl -n quayside delete deployment crane --ignore-not-found --cascade=foreground --wait=true --timeout=60s >/dev/null 2>&1 || true
+# start clean: the student creates this one
+kubectl -n tides delete configmap gauge-config --ignore-not-found >/dev/null 2>&1 || true
 
-# $1 = change-cause, $2 = image, $3 = optional env block
-crane_manifest() {
-  cat <<YAML
-apiVersion: apps/v1
-kind: Deployment
+kubectl apply -f - <<'YAML' || true
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: crane
-  namespace: quayside
+  name: tide-north
+  namespace: tides
   labels:
-    app: crane
-  annotations:
-    kubernetes.io/change-cause: "$1"
-spec:
-  replicas: 3
-  revisionHistoryLimit: 10
-  progressDeadlineSeconds: 120
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-  selector:
-    matchLabels:
-      app: crane
-  template:
-    metadata:
-      labels:
-        app: crane
-    spec:
-      containers:
-        - name: hoist
-          image: $2
-          ports:
-            - containerPort: 80
-$3
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-            limits:
-              cpu: 50m
-              memory: 64Mi
+    tier: gauge
+    region: north
+data:
+  station.id: NG-02
+  sample.interval.seconds: "60"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tide-south
+  namespace: tides
+  labels:
+    tier: gauge
+    region: south
+    status: active
+data:
+  station.id: SG-09
+  sample.interval.seconds: "30"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tide-east
+  namespace: tides
+  labels:
+    tier: gauge
+    region: east
+    status: retired
+data:
+  station.id: EG-01
+  sample.interval.seconds: "120"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tide-mouth
+  namespace: tides
+  labels:
+    tier: gauge
+    region: south
+    status: standby
+data:
+  station.id: MG-04
+  sample.interval.seconds: "30"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tide-archive
+  namespace: tides
+  labels:
+    tier: gauge-archive
+    region: north
+data:
+  retention.days: "365"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: berth-planner
+  namespace: tides
+  labels:
+    tier: planner
+    region: west
+data:
+  berths: "12"
 YAML
-}
-
-ENV_BLOCK='          env:
-            - name: LIFT_MODE
-              value: tandem'
-
-# Revision 1: initial release (works)
-crane_manifest "initial release on nginx:1.25" "nginx:1.25" "" | kubectl apply -f - >/dev/null 2>&1 || true
-kubectl -n quayside rollout status deployment/crane --timeout=120s >/dev/null 2>&1 || true
-
-# Revision 2: config change (works) - this is the last good revision
-crane_manifest "enable tandem lift mode" "nginx:1.25" "$ENV_BLOCK" | kubectl apply -f - >/dev/null 2>&1 || true
-kubectl -n quayside rollout status deployment/crane --timeout=120s >/dev/null 2>&1 || true
-
-# Revision 3: broken image tag (pods stuck in ErrImagePull / ImagePullBackOff)
-crane_manifest "upgrade image to nginx:1.25-harbor" "nginx:1.25-harbor" "$ENV_BLOCK" | kubectl apply -f - >/dev/null 2>&1 || true
-kubectl -n quayside wait deployment/crane \
-  --for=jsonpath='{.metadata.annotations.deployment\.kubernetes\.io/revision}'=3 \
-  --timeout=60s >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 1"
 exit 0

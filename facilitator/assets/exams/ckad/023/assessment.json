@@ -2,58 +2,58 @@
     "questions": [
         {
             "id": "1",
-            "namespace": "dev",
-            "machineHostname": "ckad9999",
-            "question": "In namespace `dev`, create a Pod named `sidecar-pod` with two containers sharing an `emptyDir` volume named `shared`:\n- container `main` (image `nginx:1.25`) mounting `shared` at `/usr/share/nginx/html`\n- container `sidecar` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"sleep 3600\"]`) mounting `shared` at `/work`",
-            "concepts": ["multi-container", "pods", "volumes", "multi-cluster"],
+            "namespace": "prod",
+            "machineHostname": "ckad9977",
+            "question": "In namespace `prod`, create a Secret named `app-secret` of type `Opaque` with keys `api-key=abc123` and `token=xyz789`. Then create a Pod named `secret-consumer` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"sleep 3600\"]`) that mounts the Secret as a volume at `/etc/secret`.",
+            "concepts": ["secrets", "volumes", "pods", "multi-cluster"],
             "verification": [
-                { "id": "1", "description": "Pod sidecar-pod has two containers", "verificationScriptFile": "q1_s1_validate_containers.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "Both containers share an emptyDir volume", "verificationScriptFile": "q1_s2_validate_shared_volume.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "1", "description": "Secret app-secret has api-key and token", "verificationScriptFile": "q1_s1_validate_secret.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "secret-consumer mounts app-secret at /etc/secret", "verificationScriptFile": "q1_s2_validate_mount.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {
             "id": "2",
             "namespace": "dev",
             "machineHostname": "ckad9999",
-            "question": "In namespace `dev`, create a Pod named `limited` (image `nginx:1.25`) whose container sets resource `requests` of cpu `100m` / memory `64Mi` and `limits` of cpu `200m` / memory `128Mi`.",
-            "concepts": ["resources", "requests", "limits"],
+            "question": "In namespace `dev`, create a Pod named `sidecar-pod` with two containers sharing an `emptyDir` volume named `shared`:\n- container `main` (image `nginx:1.25`) mounting `shared` at `/usr/share/nginx/html`\n- container `sidecar` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"sleep 3600\"]`) mounting `shared` at `/work`",
+            "concepts": ["multi-container", "pods", "volumes", "multi-cluster"],
             "verification": [
-                { "id": "1", "description": "requests cpu=100m memory=64Mi", "verificationScriptFile": "q2_s1_validate_requests.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "limits cpu=200m memory=128Mi", "verificationScriptFile": "q2_s2_validate_limits.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "1", "description": "Pod sidecar-pod has two containers", "verificationScriptFile": "q2_s1_validate_containers.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Both containers share an emptyDir volume", "verificationScriptFile": "q2_s2_validate_shared_volume.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {
             "id": "3",
-            "namespace": "dev",
-            "machineHostname": "ckad9999",
-            "question": "In namespace `dev`, create a ConfigMap named `feature-flags` with keys `DARK_MODE=true` and `BETA=false`. Then create a Deployment named `flags-app` (image `nginx:1.25`) that mounts the `feature-flags` ConfigMap as a volume at `/etc/flags`.",
-            "concepts": ["configmaps", "volumes", "deployments"],
+            "namespace": "prod",
+            "machineHostname": "ckad9977",
+            "question": "A Service `shop-svc` (port `80`) already exists in namespace `prod`. Create an Ingress named `shop-ing` that routes host `shop.local`, path `/`, to Service `shop-svc` on port `80`.",
+            "concepts": ["ingress", "services", "networking"],
             "verification": [
-                { "id": "1", "description": "ConfigMap feature-flags has DARK_MODE=true, BETA=false", "verificationScriptFile": "q3_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "flags-app mounts feature-flags at /etc/flags", "verificationScriptFile": "q3_s2_validate_volume.sh", "expectedOutput": "0", "weightage": 3 }
+                { "id": "1", "description": "Ingress shop-ing host is shop.local", "verificationScriptFile": "q3_s1_validate_host.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Ingress backend is shop-svc:80", "verificationScriptFile": "q3_s2_validate_backend.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {
             "id": "4",
-            "namespace": "dev",
-            "machineHostname": "ckad9999",
-            "question": "In namespace `dev`, create a Pod named `probed` (image `nginx:1.25`) with both a `livenessProbe` and a `readinessProbe`, each using an HTTP GET on path `/` and port `80`.",
-            "concepts": ["probes", "liveness", "readiness"],
-            "verification": [
-                { "id": "1", "description": "livenessProbe httpGet is set", "verificationScriptFile": "q4_s1_validate_liveness.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "readinessProbe httpGet is set", "verificationScriptFile": "q4_s2_validate_readiness.sh", "expectedOutput": "0", "weightage": 2 }
-            ]
-        },
-        {
-            "id": "5",
             "namespace": "staging",
             "machineHostname": "ckad9988",
             "question": "In namespace `staging`, create a Job named `batch` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"echo done\"]`) with `completions: 3`, `parallelism: 2` and `backoffLimit: 4`.",
             "concepts": ["jobs", "parallelism"],
             "verification": [
-                { "id": "1", "description": "completions is 3", "verificationScriptFile": "q5_s1_validate_completions.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "parallelism is 2", "verificationScriptFile": "q5_s2_validate_parallelism.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "backoffLimit is 4", "verificationScriptFile": "q5_s3_validate_backoff.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "1", "description": "completions is 3", "verificationScriptFile": "q4_s1_validate_completions.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "parallelism is 2", "verificationScriptFile": "q4_s2_validate_parallelism.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "backoffLimit is 4", "verificationScriptFile": "q4_s3_validate_backoff.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "dev",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `dev`, create a Pod named `limited` (image `nginx:1.25`) whose container sets resource `requests` of cpu `100m` / memory `64Mi` and `limits` of cpu `200m` / memory `128Mi`.",
+            "concepts": ["resources", "requests", "limits"],
+            "verification": [
+                { "id": "1", "description": "requests cpu=100m memory=64Mi", "verificationScriptFile": "q5_s1_validate_requests.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "limits cpu=200m memory=128Mi", "verificationScriptFile": "q5_s2_validate_limits.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {
@@ -69,58 +69,58 @@
         },
         {
             "id": "7",
-            "namespace": "staging",
-            "machineHostname": "ckad9988",
-            "question": "The Deployment `rollme` in namespace `staging` currently runs `nginx:1.24`. Perform a rolling update to `nginx:1.25` and make sure the rollout completes (all pods ready).",
-            "concepts": ["deployments", "rollout", "images"],
+            "namespace": "dev",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `dev`, create a ConfigMap named `feature-flags` with keys `DARK_MODE=true` and `BETA=false`. Then create a Deployment named `flags-app` (image `nginx:1.25`) that mounts the `feature-flags` ConfigMap as a volume at `/etc/flags`.",
+            "concepts": ["configmaps", "volumes", "deployments"],
             "verification": [
-                { "id": "1", "description": "rollme uses nginx:1.25", "verificationScriptFile": "q7_s1_validate_image.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "rollme rollout completed (pods ready)", "verificationScriptFile": "q7_s2_validate_ready.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "1", "description": "ConfigMap feature-flags has DARK_MODE=true, BETA=false", "verificationScriptFile": "q7_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "flags-app mounts feature-flags at /etc/flags", "verificationScriptFile": "q7_s2_validate_volume.sh", "expectedOutput": "0", "weightage": 3 }
             ]
         },
         {
             "id": "8",
             "namespace": "staging",
             "machineHostname": "ckad9988",
-            "question": "In namespace `staging`, create a Deployment named `store` (image `nginx:1.25`, `2` replicas, pod label `app=store`) and expose it with a `ClusterIP` Service named `store-svc` on port `80` selecting `app=store`.",
-            "concepts": ["deployments", "services", "clusterip"],
+            "question": "The Deployment `rollme` in namespace `staging` currently runs `nginx:1.24`. Perform a rolling update to `nginx:1.25` and make sure the rollout completes (all pods ready).",
+            "concepts": ["deployments", "rollout", "images"],
             "verification": [
-                { "id": "1", "description": "Deployment store has 2 replicas", "verificationScriptFile": "q8_s1_validate_deploy.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "store-svc is ClusterIP on port 80", "verificationScriptFile": "q8_s2_validate_svc_type.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "store-svc selects app=store", "verificationScriptFile": "q8_s3_validate_selector.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "1", "description": "rollme uses nginx:1.25", "verificationScriptFile": "q8_s1_validate_image.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "rollme rollout completed (pods ready)", "verificationScriptFile": "q8_s2_validate_ready.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {
             "id": "9",
             "namespace": "prod",
             "machineHostname": "ckad9977",
-            "question": "In namespace `prod`, create a Secret named `app-secret` of type `Opaque` with keys `api-key=abc123` and `token=xyz789`. Then create a Pod named `secret-consumer` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"sleep 3600\"]`) that mounts the Secret as a volume at `/etc/secret`.",
-            "concepts": ["secrets", "volumes", "pods", "multi-cluster"],
+            "question": "In namespace `prod`, create a CronJob named `backup` that runs on schedule `0 */6 * * *`, uses image `busybox:1.36` with command `[\"sh\",\"-c\",\"echo backup\"]`, and whose pod `restartPolicy` is `OnFailure`.",
+            "concepts": ["cronjobs", "jobs"],
             "verification": [
-                { "id": "1", "description": "Secret app-secret has api-key and token", "verificationScriptFile": "q9_s1_validate_secret.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "secret-consumer mounts app-secret at /etc/secret", "verificationScriptFile": "q9_s2_validate_mount.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "1", "description": "CronJob backup schedule is 0 */6 * * *", "verificationScriptFile": "q9_s1_validate_schedule.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "pod restartPolicy is OnFailure", "verificationScriptFile": "q9_s2_validate_restartpolicy.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {
             "id": "10",
-            "namespace": "prod",
-            "machineHostname": "ckad9977",
-            "question": "A Service `shop-svc` (port `80`) already exists in namespace `prod`. Create an Ingress named `shop-ing` that routes host `shop.local`, path `/`, to Service `shop-svc` on port `80`.",
-            "concepts": ["ingress", "services", "networking"],
+            "namespace": "staging",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `staging`, create a Deployment named `store` (image `nginx:1.25`, `2` replicas, pod label `app=store`) and expose it with a `ClusterIP` Service named `store-svc` on port `80` selecting `app=store`.",
+            "concepts": ["deployments", "services", "clusterip"],
             "verification": [
-                { "id": "1", "description": "Ingress shop-ing host is shop.local", "verificationScriptFile": "q10_s1_validate_host.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "Ingress backend is shop-svc:80", "verificationScriptFile": "q10_s2_validate_backend.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "1", "description": "Deployment store has 2 replicas", "verificationScriptFile": "q10_s1_validate_deploy.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "store-svc is ClusterIP on port 80", "verificationScriptFile": "q10_s2_validate_svc_type.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "store-svc selects app=store", "verificationScriptFile": "q10_s3_validate_selector.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {
             "id": "11",
-            "namespace": "prod",
-            "machineHostname": "ckad9977",
-            "question": "In namespace `prod`, create a CronJob named `backup` that runs on schedule `0 */6 * * *`, uses image `busybox:1.36` with command `[\"sh\",\"-c\",\"echo backup\"]`, and whose pod `restartPolicy` is `OnFailure`.",
-            "concepts": ["cronjobs", "jobs"],
+            "namespace": "dev",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `dev`, create a Pod named `probed` (image `nginx:1.25`) with both a `livenessProbe` and a `readinessProbe`, each using an HTTP GET on path `/` and port `80`.",
+            "concepts": ["probes", "liveness", "readiness"],
             "verification": [
-                { "id": "1", "description": "CronJob backup schedule is 0 */6 * * *", "verificationScriptFile": "q11_s1_validate_schedule.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "pod restartPolicy is OnFailure", "verificationScriptFile": "q11_s2_validate_restartpolicy.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "1", "description": "livenessProbe httpGet is set", "verificationScriptFile": "q11_s1_validate_liveness.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "readinessProbe httpGet is set", "verificationScriptFile": "q11_s2_validate_readiness.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {

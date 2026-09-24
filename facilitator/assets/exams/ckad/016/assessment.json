@@ -1,673 +1,243 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "default",
-      "machineHostname": "ckad9999",
-      "question": "Create a Dockerfile in `/tmp/exam/course/1/` that fulfills the following requirements:\n\n- Use `nginx:1.23-alpine` as the base image.\n- Add a `HEALTHCHECK` instruction that tests if the web server is responding.\n- The check should run the command `curl -f http://localhost/ || exit 1`.\n- Set the interval to `10s`, timeout to `3s`, and retries to `3`.\n- You do NOT need to build the image.",
-      "concepts": [
-        "docker",
-        "healthcheck",
-        "dockerfile"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Dockerfile exists at /tmp/exam/course/1/Dockerfile",
-          "verificationScriptFile": "q1_s1_validate_dockerfile_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "1",
+            "namespace": "voltage",
+            "machineHostname": "ckad9977",
+            "question": "Create a ConfigMap named `app-args` in the `voltage` namespace with a key `mode` and value `verbose`.\nCreate a Pod named `arg-reader` in the `voltage` namespace using the `busybox` image.\nThe pod should run the command `echo` and its argument should be derived from the ConfigMap `app-args` (key `mode`), so the pod essentially runs `echo verbose`.\nUse environment variables mapped from the ConfigMap to pass it to the `args` field.",
+            "concepts": ["configmaps", "pods", "configuration"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap app-args exists in voltage namespace", "verificationScriptFile": "q1_s1_validate_configmap_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Pod arg-reader exists in voltage namespace", "verificationScriptFile": "q1_s2_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Pod arg-reader has args configured", "verificationScriptFile": "q1_s3_validate_pod_args.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Base image is nginx:1.23-alpine",
-          "verificationScriptFile": "q1_s2_validate_base_image.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "2",
+            "namespace": "default",
+            "machineHostname": "ckad9999",
+            "question": "Create a Dockerfile in `/tmp/exam/course/2/` that fulfills the following requirements:\n\n- Use `nginx:1.23-alpine` as the base image.\n- Add a `HEALTHCHECK` instruction that tests if the web server is responding.\n- The check should run the command `curl -f http://localhost/ || exit 1`.\n- Set the interval to `10s`, timeout to `3s`, and retries to `3`.\n- You do NOT need to build the image.",
+            "concepts": ["docker", "healthcheck", "dockerfile"],
+            "verification": [
+                { "id": "1", "description": "Dockerfile exists at /tmp/exam/course/1/Dockerfile", "verificationScriptFile": "q2_s1_validate_dockerfile_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Base image is nginx:1.23-alpine", "verificationScriptFile": "q2_s2_validate_base_image.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "HEALTHCHECK with --interval=10s and --timeout=3s", "verificationScriptFile": "q2_s3_validate_healthcheck_timing.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "HEALTHCHECK command is correct", "verificationScriptFile": "q2_s4_validate_healthcheck_cmd.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "3",
-          "description": "HEALTHCHECK with --interval=10s and --timeout=3s",
-          "verificationScriptFile": "q1_s3_validate_healthcheck_timing.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "3",
+            "namespace": "spark",
+            "machineHostname": "ckad9977",
+            "question": "Create a ClusterRole named `secret-reader` that can `get`, `watch`, and `list` resources of type `secrets`.\nCreate a ClusterRoleBinding named `secret-reader-binding` to bind the `secret-reader` ClusterRole to a ServiceAccount named `app-sa` in the `spark` namespace. (You may need to create the ServiceAccount if it doesn't exist.)",
+            "concepts": ["rbac", "clusterrole", "serviceaccount"],
+            "verification": [
+                { "id": "1", "description": "ClusterRole secret-reader exists", "verificationScriptFile": "q3_s1_validate_clusterrole_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "ClusterRole first rule targets secrets", "verificationScriptFile": "q3_s2_validate_resource.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "ClusterRoleBinding secret-reader-binding exists", "verificationScriptFile": "q3_s3_validate_binding_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "Binding subject is app-sa", "verificationScriptFile": "q3_s4_validate_subject.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "4",
-          "description": "HEALTHCHECK command is correct",
-          "verificationScriptFile": "q1_s4_validate_healthcheck_cmd.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "4",
+            "namespace": "thunder",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `thunder-logger` in the `thunder` namespace.\n\n- The main container should be named `app-container`, using the `busybox` image, and run the command: `sh -c 'while true; do echo \"INFO: Processing request\"; sleep 2; echo \"ERROR: Connection timeout\"; sleep 3; done > /var/log/app.log'`\n- Mount an `emptyDir` volume at `/var/log` for the main container.\n- Add a sidecar container named `error-tailer`, using the `busybox` image.\n- The sidecar should mount the same volume and run a command to tail the log file but ONLY output lines containing `ERROR` (e.g. `sh -c 'tail -f /var/log/app.log | grep ERROR'`).",
+            "concepts": ["pods", "sidecar", "volumes"],
+            "verification": [
+                { "id": "1", "description": "Pod thunder-logger exists in thunder namespace", "verificationScriptFile": "q4_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Both app-container and error-tailer containers exist", "verificationScriptFile": "q4_s2_validate_containers.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "emptyDir volume is configured", "verificationScriptFile": "q4_s3_validate_emptydir.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Sidecar error-tailer command uses tail/grep ERROR", "verificationScriptFile": "q4_s4_validate_sidecar_cmd.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "charge",
+            "machineHostname": "ckad9977",
+            "question": "Create a NetworkPolicy named `strict-ingress` in the `charge` namespace.\nIt should apply to pods with the label `role=db` in the `charge` namespace.\nAllow ingress traffic on TCP port `3306` ONLY if the traffic comes from:\n\n- Pods with the label `role=api` AND\n- The pods must be in a namespace with the label `env=prod`.\n\n(Ensure you use the correct syntax for AND logic in `from` rules — a single `from` element containing both a `namespaceSelector` and a `podSelector`.)",
+            "concepts": ["networkpolicy", "networking", "security"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy strict-ingress exists in charge namespace", "verificationScriptFile": "q5_s1_validate_netpol_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "podSelector applies to role=db", "verificationScriptFile": "q5_s2_validate_podselector.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "AND logic: namespaceSelector env=prod and podSelector role=api", "verificationScriptFile": "q5_s3_validate_and_logic.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "bolt",
+            "machineHostname": "ckad9999",
+            "question": "Create a CronJob named `lightning-strike` in the `bolt` namespace.\n\n- It should run every 5 minutes (`*/5 * * * *`).\n- The job should use the `busybox` image and run the command `echo \"Strike!\"`.\n- Configure `startingDeadlineSeconds` to `15` seconds.\n- Configure `successfulJobsHistoryLimit` to `2`.",
+            "concepts": ["cronjobs", "jobs", "scheduling"],
+            "verification": [
+                { "id": "1", "description": "CronJob lightning-strike exists in bolt namespace", "verificationScriptFile": "q6_s1_validate_cronjob_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Schedule is */5 * * * *", "verificationScriptFile": "q6_s2_validate_schedule.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "startingDeadlineSeconds is 15", "verificationScriptFile": "q6_s3_validate_deadline.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "successfulJobsHistoryLimit is 2", "verificationScriptFile": "q6_s4_validate_history_limit.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "charge",
+            "machineHostname": "ckad9988",
+            "question": "In `/tmp/exam/course/7/`, there is a base deployment file `deployment.yaml`.\nCreate a `kustomization.yaml` file in the same directory.\nConfigure it to include `deployment.yaml` as a resource.\nAdd a strategic merge patch (either inline or as a separate file) that adds the environment variable `APP_ENV=production` to the `worker` container of the deployment.\nApply the kustomization to the `charge` namespace using `kubectl apply -k`.",
+            "concepts": ["kustomize", "deployments", "configuration"],
+            "verification": [
+                { "id": "1", "description": "Deployment api-worker exists in charge namespace", "verificationScriptFile": "q7_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "worker container has env APP_ENV=production", "verificationScriptFile": "q7_s2_validate_env.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "storm",
+            "machineHostname": "ckad9999",
+            "question": "A Service named `database-svc` will be created in the `storm` namespace in the future.\nCreate a Pod named `app-with-wait` in the `storm` namespace:\n\n- Main container: name `main-app`, image `nginx:alpine`.\n- Init container: name `wait-for-db`, image `busybox`.\n- The init container should run a command that repeatedly checks if `database-svc` is resolvable or reachable (e.g. using `nslookup database-svc` or `wget -qO- http://database-svc`), looping until it succeeds before the main container starts. Use a simple shell loop with a sleep.",
+            "concepts": ["pods", "init-containers"],
+            "verification": [
+                { "id": "1", "description": "Pod app-with-wait exists in storm namespace", "verificationScriptFile": "q8_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Init container named wait-for-db exists", "verificationScriptFile": "q8_s2_validate_init_container.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Init container command references database-svc", "verificationScriptFile": "q8_s3_validate_init_command.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "surge",
+            "machineHostname": "ckad9977",
+            "question": "Create an Ingress named `default-ing` in the `surge` namespace.\nConfigure it with a `defaultBackend` that routes all unmatched traffic to a service named `fallback-svc` on port `8080`.\nThere should be NO host or path rules defined.",
+            "concepts": ["ingress", "networking"],
+            "verification": [
+                { "id": "1", "description": "Ingress default-ing exists in surge namespace", "verificationScriptFile": "q9_s1_validate_ingress_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "defaultBackend service is fallback-svc", "verificationScriptFile": "q9_s2_validate_default_backend.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "flash",
+            "machineHostname": "ckad9988",
+            "question": "A Pod named `data-processor` in the `flash` namespace is stuck in a `CrashLoopBackOff`.\nFind the cause and fix it. The pod should be running successfully.\n(Hint: The application container exits with an error — inspect the command/args or probe configuration and correct it so the pod stays Running.)",
+            "concepts": ["troubleshooting", "pods", "observability"],
+            "verification": [
+                { "id": "1", "description": "Pod data-processor is Running in flash namespace", "verificationScriptFile": "q10_s1_validate_pod_running.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "flash",
+            "machineHostname": "ckad9977",
+            "question": "Create a Service named `sticky-svc` in the `flash` namespace that exposes port `80` and targets TCP port `8080`.\nThe selector should be `app=sticky`.\nConfigure the service to use `ClientIP` session affinity.\nSet the session affinity timeout to `10800` seconds (3 hours).",
+            "concepts": ["services", "networking", "session-affinity"],
+            "verification": [
+                { "id": "1", "description": "Service sticky-svc exists in flash namespace", "verificationScriptFile": "q11_s1_validate_service_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "sessionAffinity is ClientIP", "verificationScriptFile": "q11_s2_validate_affinity.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "sessionAffinity timeout is 10800", "verificationScriptFile": "q11_s3_validate_timeout.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "strike",
+            "machineHostname": "ckad9988",
+            "question": "List all events in the `strike` namespace, sorted by their creation timestamp (oldest first).\nSave the output (which should include at least the time, type, reason, and object name) to `/tmp/exam/course/12/events.txt`.",
+            "concepts": ["events", "observability", "kubectl"],
+            "verification": [
+                { "id": "1", "description": "events.txt exists at /tmp/exam/course/10/events.txt", "verificationScriptFile": "q12_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "events.txt is not empty", "verificationScriptFile": "q12_s2_validate_file_nonempty.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "13",
+            "namespace": "strike",
+            "machineHostname": "ckad9977",
+            "question": "There is a Pod named `hidden-api` running in the `strike` namespace, listening on port `8080`.\nUse port-forwarding to forward local port `9090` to the pod's port `8080`.\nWhile the port-forward is running, use `curl` to fetch `http://localhost:9090/status`.\nSave the exact response body to `/tmp/exam/course/13/response.txt`.\n(Ensure you kill the port-forward process after obtaining the response.)",
+            "concepts": ["port-forward", "networking", "kubectl"],
+            "verification": [
+                { "id": "1", "description": "response.txt exists at /tmp/exam/course/20/response.txt", "verificationScriptFile": "q13_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "response contains expected echo output (method/path/headers)", "verificationScriptFile": "q13_s2_validate_content.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "plasma",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `complex-app` in the `plasma` namespace using the `nginx:alpine` image.\nConfigure all three probe types for the container on port `80`:\n\n- Startup Probe: HTTP GET on `/`, wait for up to 30 seconds (e.g. failureThreshold: 30, periodSeconds: 1).\n- Liveness Probe: TCP Socket on port `80`, periodSeconds 10.\n- Readiness Probe: HTTP GET on `/`, periodSeconds 5, initialDelaySeconds 5.",
+            "concepts": ["probes", "pods", "observability"],
+            "verification": [
+                { "id": "1", "description": "Pod complex-app exists in plasma namespace", "verificationScriptFile": "q14_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Startup probe is configured", "verificationScriptFile": "q14_s2_validate_startup_probe.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Liveness probe is configured", "verificationScriptFile": "q14_s3_validate_liveness_probe.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "Readiness probe is configured", "verificationScriptFile": "q14_s4_validate_readiness_probe.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "surge",
+            "machineHostname": "ckad9999",
+            "question": "A helm chart is located at `/tmp/exam/course/15/chart`.\nRender the helm templates using the release name `thunder-web` and namespace `surge`.\nOverride the following values:\n\n- `replicaCount` to `3`\n- `image.tag` to `latest`\n\nSave the rendered output to `/tmp/exam/course/15/output.yaml`.\nDo NOT install the helm chart.",
+            "concepts": ["helm", "templating"],
+            "verification": [
+                { "id": "1", "description": "Rendered output file /tmp/exam/course/5/output.yaml exists", "verificationScriptFile": "q15_s1_validate_output_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Rendered output contains replicas: 3", "verificationScriptFile": "q15_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Rendered output contains image nginx:latest", "verificationScriptFile": "q15_s3_validate_image_tag.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "thunder",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `env-info` in the `thunder` namespace using the `busybox` image.\nIt should run the command `sleep 3600`.\nUse the Downward API to inject the following environment variables:\n\n- `POD_NAME`: the name of the pod (`metadata.name`)\n- `POD_NAMESPACE`: the namespace of the pod (`metadata.namespace`)",
+            "concepts": ["downward-api", "pods", "configuration"],
+            "verification": [
+                { "id": "1", "description": "Pod env-info exists in thunder namespace", "verificationScriptFile": "q16_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "POD_NAME mapped to metadata.name", "verificationScriptFile": "q16_s2_validate_pod_name.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "POD_NAMESPACE mapped to metadata.namespace", "verificationScriptFile": "q16_s3_validate_pod_namespace.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "voltage",
+            "machineHostname": "ckad9999",
+            "question": "There is a Deployment named `api-gateway` in the `voltage` namespace that has been updated a few times, and the current version is broken.\nRoll back the Deployment to revision `1`.\nEnsure the Deployment is successfully rolled back and running (revision 1 used image `nginx:1.23`).",
+            "concepts": ["deployments", "rollback", "rollout"],
+            "verification": [
+                { "id": "1", "description": "Deployment api-gateway exists in voltage namespace", "verificationScriptFile": "q17_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Deployment rolled back to nginx:1.23", "verificationScriptFile": "q17_s2_validate_image.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "bolt",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `secure-net` in the `bolt` namespace using the `alpine` image, running `sleep 1d`.\nConfigure the container's `securityContext` to:\n\n- Drop `ALL` capabilities.\n- Add the `NET_ADMIN` capability.",
+            "concepts": ["securitycontext", "capabilities", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod secure-net exists in bolt namespace", "verificationScriptFile": "q18_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Container drops ALL capabilities", "verificationScriptFile": "q18_s2_validate_drop_all.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Container adds NET_ADMIN capability", "verificationScriptFile": "q18_s3_validate_add_netadmin.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "spark",
+            "machineHostname": "ckad9999",
+            "question": "In the `spark` namespace, a Service named `backend-svc` exists, routing traffic to a Deployment named `backend-v1` (with 4 replicas).\nYou need to introduce a canary version:\n\n- Create a new Deployment named `backend-v2` in the `spark` namespace with `1` replica, using the `nginx:1.23` image.\n- Ensure the `backend-svc` distributes traffic to BOTH `backend-v1` and `backend-v2` (Hint: check the labels of the existing service and deployment — the pod template label `app` must be `backend`).\n- The traffic split should essentially be 4:1 (since v1 has 4 replicas and v2 has 1).",
+            "concepts": ["deployments", "canary", "services"],
+            "verification": [
+                { "id": "1", "description": "Deployment backend-v2 exists in spark namespace", "verificationScriptFile": "q19_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "backend-v2 has 1 replica", "verificationScriptFile": "q19_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "backend-v2 uses image nginx:1.23", "verificationScriptFile": "q19_s3_validate_image.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Pod template label app=backend matches service selector", "verificationScriptFile": "q19_s4_validate_labels.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "storm",
+            "machineHostname": "ckad9988",
+            "question": "Create a YAML manifest for a Secret named `db-credentials` in the `storm` namespace.\nUse the `stringData` field to define the following key-value pairs (do not use base64 encoding in the manifest):\n\n- `username`: `admin`\n- `password`: `supersecret123`\n\nApply the YAML file to create the Secret.",
+            "concepts": ["secrets", "configuration"],
+            "verification": [
+                { "id": "1", "description": "Secret db-credentials exists in storm namespace", "verificationScriptFile": "q20_s1_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "username key equals admin", "verificationScriptFile": "q20_s2_validate_username.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "password key equals supersecret123", "verificationScriptFile": "q20_s3_validate_password.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "thunder",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `thunder-logger` in the `thunder` namespace.\n\n- The main container should be named `app-container`, using the `busybox` image, and run the command: `sh -c 'while true; do echo \"INFO: Processing request\"; sleep 2; echo \"ERROR: Connection timeout\"; sleep 3; done > /var/log/app.log'`\n- Mount an `emptyDir` volume at `/var/log` for the main container.\n- Add a sidecar container named `error-tailer`, using the `busybox` image.\n- The sidecar should mount the same volume and run a command to tail the log file but ONLY output lines containing `ERROR` (e.g. `sh -c 'tail -f /var/log/app.log | grep ERROR'`).",
-      "concepts": [
-        "pods",
-        "sidecar",
-        "volumes"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod thunder-logger exists in thunder namespace",
-          "verificationScriptFile": "q2_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Both app-container and error-tailer containers exist",
-          "verificationScriptFile": "q2_s2_validate_containers.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "emptyDir volume is configured",
-          "verificationScriptFile": "q2_s3_validate_emptydir.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Sidecar error-tailer command uses tail/grep ERROR",
-          "verificationScriptFile": "q2_s4_validate_sidecar_cmd.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "bolt",
-      "machineHostname": "ckad9999",
-      "question": "Create a CronJob named `lightning-strike` in the `bolt` namespace.\n\n- It should run every 5 minutes (`*/5 * * * *`).\n- The job should use the `busybox` image and run the command `echo \"Strike!\"`.\n- Configure `startingDeadlineSeconds` to `15` seconds.\n- Configure `successfulJobsHistoryLimit` to `2`.",
-      "concepts": [
-        "cronjobs",
-        "jobs",
-        "scheduling"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "CronJob lightning-strike exists in bolt namespace",
-          "verificationScriptFile": "q3_s1_validate_cronjob_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Schedule is */5 * * * *",
-          "verificationScriptFile": "q3_s2_validate_schedule.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "startingDeadlineSeconds is 15",
-          "verificationScriptFile": "q3_s3_validate_deadline.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "successfulJobsHistoryLimit is 2",
-          "verificationScriptFile": "q3_s4_validate_history_limit.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "storm",
-      "machineHostname": "ckad9999",
-      "question": "A Service named `database-svc` will be created in the `storm` namespace in the future.\nCreate a Pod named `app-with-wait` in the `storm` namespace:\n\n- Main container: name `main-app`, image `nginx:alpine`.\n- Init container: name `wait-for-db`, image `busybox`.\n- The init container should run a command that repeatedly checks if `database-svc` is resolvable or reachable (e.g. using `nslookup database-svc` or `wget -qO- http://database-svc`), looping until it succeeds before the main container starts. Use a simple shell loop with a sleep.",
-      "concepts": [
-        "pods",
-        "init-containers"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod app-with-wait exists in storm namespace",
-          "verificationScriptFile": "q4_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Init container named wait-for-db exists",
-          "verificationScriptFile": "q4_s2_validate_init_container.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Init container command references database-svc",
-          "verificationScriptFile": "q4_s3_validate_init_command.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "surge",
-      "machineHostname": "ckad9999",
-      "question": "A helm chart is located at `/tmp/exam/course/5/chart`.\nRender the helm templates using the release name `thunder-web` and namespace `surge`.\nOverride the following values:\n\n- `replicaCount` to `3`\n- `image.tag` to `latest`\n\nSave the rendered output to `/tmp/exam/course/5/output.yaml`.\nDo NOT install the helm chart.",
-      "concepts": [
-        "helm",
-        "templating"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Rendered output file /tmp/exam/course/5/output.yaml exists",
-          "verificationScriptFile": "q5_s1_validate_output_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Rendered output contains replicas: 3",
-          "verificationScriptFile": "q5_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Rendered output contains image nginx:latest",
-          "verificationScriptFile": "q5_s3_validate_image_tag.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "voltage",
-      "machineHostname": "ckad9999",
-      "question": "There is a Deployment named `api-gateway` in the `voltage` namespace that has been updated a few times, and the current version is broken.\nRoll back the Deployment to revision `1`.\nEnsure the Deployment is successfully rolled back and running (revision 1 used image `nginx:1.23`).",
-      "concepts": [
-        "deployments",
-        "rollback",
-        "rollout"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment api-gateway exists in voltage namespace",
-          "verificationScriptFile": "q6_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Deployment rolled back to nginx:1.23",
-          "verificationScriptFile": "q6_s2_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "spark",
-      "machineHostname": "ckad9999",
-      "question": "In the `spark` namespace, a Service named `backend-svc` exists, routing traffic to a Deployment named `backend-v1` (with 4 replicas).\nYou need to introduce a canary version:\n\n- Create a new Deployment named `backend-v2` in the `spark` namespace with `1` replica, using the `nginx:1.23` image.\n- Ensure the `backend-svc` distributes traffic to BOTH `backend-v1` and `backend-v2` (Hint: check the labels of the existing service and deployment — the pod template label `app` must be `backend`).\n- The traffic split should essentially be 4:1 (since v1 has 4 replicas and v2 has 1).",
-      "concepts": [
-        "deployments",
-        "canary",
-        "services"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment backend-v2 exists in spark namespace",
-          "verificationScriptFile": "q7_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "backend-v2 has 1 replica",
-          "verificationScriptFile": "q7_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "backend-v2 uses image nginx:1.23",
-          "verificationScriptFile": "q7_s3_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Pod template label app=backend matches service selector",
-          "verificationScriptFile": "q7_s4_validate_labels.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "charge",
-      "machineHostname": "ckad9988",
-      "question": "In `/tmp/exam/course/8/`, there is a base deployment file `deployment.yaml`.\nCreate a `kustomization.yaml` file in the same directory.\nConfigure it to include `deployment.yaml` as a resource.\nAdd a strategic merge patch (either inline or as a separate file) that adds the environment variable `APP_ENV=production` to the `worker` container of the deployment.\nApply the kustomization to the `charge` namespace using `kubectl apply -k`.",
-      "concepts": [
-        "kustomize",
-        "deployments",
-        "configuration"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment api-worker exists in charge namespace",
-          "verificationScriptFile": "q8_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "worker container has env APP_ENV=production",
-          "verificationScriptFile": "q8_s2_validate_env.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "flash",
-      "machineHostname": "ckad9988",
-      "question": "A Pod named `data-processor` in the `flash` namespace is stuck in a `CrashLoopBackOff`.\nFind the cause and fix it. The pod should be running successfully.\n(Hint: The application container exits with an error — inspect the command/args or probe configuration and correct it so the pod stays Running.)",
-      "concepts": [
-        "troubleshooting",
-        "pods",
-        "observability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod data-processor is Running in flash namespace",
-          "verificationScriptFile": "q9_s1_validate_pod_running.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "strike",
-      "machineHostname": "ckad9988",
-      "question": "List all events in the `strike` namespace, sorted by their creation timestamp (oldest first).\nSave the output (which should include at least the time, type, reason, and object name) to `/tmp/exam/course/10/events.txt`.",
-      "concepts": [
-        "events",
-        "observability",
-        "kubectl"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "events.txt exists at /tmp/exam/course/10/events.txt",
-          "verificationScriptFile": "q10_s1_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        },
-        {
-          "id": "2",
-          "description": "events.txt is not empty",
-          "verificationScriptFile": "q10_s2_validate_file_nonempty.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "plasma",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `complex-app` in the `plasma` namespace using the `nginx:alpine` image.\nConfigure all three probe types for the container on port `80`:\n\n- Startup Probe: HTTP GET on `/`, wait for up to 30 seconds (e.g. failureThreshold: 30, periodSeconds: 1).\n- Liveness Probe: TCP Socket on port `80`, periodSeconds 10.\n- Readiness Probe: HTTP GET on `/`, periodSeconds 5, initialDelaySeconds 5.",
-      "concepts": [
-        "probes",
-        "pods",
-        "observability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod complex-app exists in plasma namespace",
-          "verificationScriptFile": "q11_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Startup probe is configured",
-          "verificationScriptFile": "q11_s2_validate_startup_probe.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Liveness probe is configured",
-          "verificationScriptFile": "q11_s3_validate_liveness_probe.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "4",
-          "description": "Readiness probe is configured",
-          "verificationScriptFile": "q11_s4_validate_readiness_probe.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "thunder",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `env-info` in the `thunder` namespace using the `busybox` image.\nIt should run the command `sleep 3600`.\nUse the Downward API to inject the following environment variables:\n\n- `POD_NAME`: the name of the pod (`metadata.name`)\n- `POD_NAMESPACE`: the namespace of the pod (`metadata.namespace`)",
-      "concepts": [
-        "downward-api",
-        "pods",
-        "configuration"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod env-info exists in thunder namespace",
-          "verificationScriptFile": "q12_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "POD_NAME mapped to metadata.name",
-          "verificationScriptFile": "q12_s2_validate_pod_name.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "POD_NAMESPACE mapped to metadata.namespace",
-          "verificationScriptFile": "q12_s3_validate_pod_namespace.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "bolt",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `secure-net` in the `bolt` namespace using the `alpine` image, running `sleep 1d`.\nConfigure the container's `securityContext` to:\n\n- Drop `ALL` capabilities.\n- Add the `NET_ADMIN` capability.",
-      "concepts": [
-        "securitycontext",
-        "capabilities",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod secure-net exists in bolt namespace",
-          "verificationScriptFile": "q13_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Container drops ALL capabilities",
-          "verificationScriptFile": "q13_s2_validate_drop_all.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Container adds NET_ADMIN capability",
-          "verificationScriptFile": "q13_s3_validate_add_netadmin.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "storm",
-      "machineHostname": "ckad9988",
-      "question": "Create a YAML manifest for a Secret named `db-credentials` in the `storm` namespace.\nUse the `stringData` field to define the following key-value pairs (do not use base64 encoding in the manifest):\n\n- `username`: `admin`\n- `password`: `supersecret123`\n\nApply the YAML file to create the Secret.",
-      "concepts": [
-        "secrets",
-        "configuration"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Secret db-credentials exists in storm namespace",
-          "verificationScriptFile": "q14_s1_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "username key equals admin",
-          "verificationScriptFile": "q14_s2_validate_username.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "password key equals supersecret123",
-          "verificationScriptFile": "q14_s3_validate_password.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "voltage",
-      "machineHostname": "ckad9977",
-      "question": "Create a ConfigMap named `app-args` in the `voltage` namespace with a key `mode` and value `verbose`.\nCreate a Pod named `arg-reader` in the `voltage` namespace using the `busybox` image.\nThe pod should run the command `echo` and its argument should be derived from the ConfigMap `app-args` (key `mode`), so the pod essentially runs `echo verbose`.\nUse environment variables mapped from the ConfigMap to pass it to the `args` field.",
-      "concepts": [
-        "configmaps",
-        "pods",
-        "configuration"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ConfigMap app-args exists in voltage namespace",
-          "verificationScriptFile": "q15_s1_validate_configmap_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Pod arg-reader exists in voltage namespace",
-          "verificationScriptFile": "q15_s2_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Pod arg-reader has args configured",
-          "verificationScriptFile": "q15_s3_validate_pod_args.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "spark",
-      "machineHostname": "ckad9977",
-      "question": "Create a ClusterRole named `secret-reader` that can `get`, `watch`, and `list` resources of type `secrets`.\nCreate a ClusterRoleBinding named `secret-reader-binding` to bind the `secret-reader` ClusterRole to a ServiceAccount named `app-sa` in the `spark` namespace. (You may need to create the ServiceAccount if it doesn't exist.)",
-      "concepts": [
-        "rbac",
-        "clusterrole",
-        "serviceaccount"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ClusterRole secret-reader exists",
-          "verificationScriptFile": "q16_s1_validate_clusterrole_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "ClusterRole first rule targets secrets",
-          "verificationScriptFile": "q16_s2_validate_resource.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "ClusterRoleBinding secret-reader-binding exists",
-          "verificationScriptFile": "q16_s3_validate_binding_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "4",
-          "description": "Binding subject is app-sa",
-          "verificationScriptFile": "q16_s4_validate_subject.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "charge",
-      "machineHostname": "ckad9977",
-      "question": "Create a NetworkPolicy named `strict-ingress` in the `charge` namespace.\nIt should apply to pods with the label `role=db` in the `charge` namespace.\nAllow ingress traffic on TCP port `3306` ONLY if the traffic comes from:\n\n- Pods with the label `role=api` AND\n- The pods must be in a namespace with the label `env=prod`.\n\n(Ensure you use the correct syntax for AND logic in `from` rules — a single `from` element containing both a `namespaceSelector` and a `podSelector`.)",
-      "concepts": [
-        "networkpolicy",
-        "networking",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy strict-ingress exists in charge namespace",
-          "verificationScriptFile": "q17_s1_validate_netpol_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "podSelector applies to role=db",
-          "verificationScriptFile": "q17_s2_validate_podselector.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "AND logic: namespaceSelector env=prod and podSelector role=api",
-          "verificationScriptFile": "q17_s3_validate_and_logic.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "surge",
-      "machineHostname": "ckad9977",
-      "question": "Create an Ingress named `default-ing` in the `surge` namespace.\nConfigure it with a `defaultBackend` that routes all unmatched traffic to a service named `fallback-svc` on port `8080`.\nThere should be NO host or path rules defined.",
-      "concepts": [
-        "ingress",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Ingress default-ing exists in surge namespace",
-          "verificationScriptFile": "q18_s1_validate_ingress_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "defaultBackend service is fallback-svc",
-          "verificationScriptFile": "q18_s2_validate_default_backend.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "flash",
-      "machineHostname": "ckad9977",
-      "question": "Create a Service named `sticky-svc` in the `flash` namespace that exposes port `80` and targets TCP port `8080`.\nThe selector should be `app=sticky`.\nConfigure the service to use `ClientIP` session affinity.\nSet the session affinity timeout to `10800` seconds (3 hours).",
-      "concepts": [
-        "services",
-        "networking",
-        "session-affinity"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service sticky-svc exists in flash namespace",
-          "verificationScriptFile": "q19_s1_validate_service_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "sessionAffinity is ClientIP",
-          "verificationScriptFile": "q19_s2_validate_affinity.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "sessionAffinity timeout is 10800",
-          "verificationScriptFile": "q19_s3_validate_timeout.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "strike",
-      "machineHostname": "ckad9977",
-      "question": "There is a Pod named `hidden-api` running in the `strike` namespace, listening on port `8080`.\nUse port-forwarding to forward local port `9090` to the pod's port `8080`.\nWhile the port-forward is running, use `curl` to fetch `http://localhost:9090/status`.\nSave the exact response body to `/tmp/exam/course/20/response.txt`.\n(Ensure you kill the port-forward process after obtaining the response.)",
-      "concepts": [
-        "port-forward",
-        "networking",
-        "kubectl"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "response.txt exists at /tmp/exam/course/20/response.txt",
-          "verificationScriptFile": "q20_s1_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        },
-        {
-          "id": "2",
-          "description": "response contains expected echo output (method/path/headers)",
-          "verificationScriptFile": "q20_s2_validate_content.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    }
-  ]
+    ]
 }

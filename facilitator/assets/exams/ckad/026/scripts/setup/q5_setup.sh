@@ -1,205 +1,215 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=platform
+NS=sleepers
 DIR=/home/candidate/exam/q5
 
 kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
 # Start from a clean state (idempotent re-runs)
-kubectl -n "$NS" delete ingress --all --ignore-not-found >/dev/null 2>&1 || true
-kubectl -n "$NS" delete service departures arrivals arrivals-live --ignore-not-found >/dev/null 2>&1 || true
-kubectl -n "$NS" delete deployment departures-web arrivals-web arrivals-legacy --ignore-not-found >/dev/null 2>&1 || true
-kubectl -n "$NS" delete pod --all --grace-period=0 --force --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n "$NS" delete deployment --all --ignore-not-found --timeout=60s >/dev/null 2>&1 || true
+kubectl -n "$NS" delete pod --all --grace-period=1 --ignore-not-found --wait=false >/dev/null 2>&1 || true
 rm -rf "$DIR" && mkdir -p "$DIR"
 
-kubectl apply -f - >/dev/null <<'EOF'
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: departures-conf
-  namespace: platform
-data:
-  default.conf: |
-    server {
-        listen 8080;
-        location / {
-            default_type text/plain;
-            return 200 "board=departures build=d-2291 host=$host xfh=$http_x_forwarded_host uri=$request_uri\n";
-        }
-    }
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: arrivals-conf
-  namespace: platform
-data:
-  default.conf: |
-    server {
-        listen 8080;
-        location / {
-            default_type text/plain;
-            return 200 "board=arrivals build=a-4410 host=$host xfh=$http_x_forwarded_host uri=$request_uri\n";
-        }
-    }
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: arrivals-legacy-conf
-  namespace: platform
-data:
-  default.conf: |
-    server {
-        listen 8080;
-        location / {
-            default_type text/plain;
-            return 200 "board=arrivals build=legacy-0907 host=$host xfh=$http_x_forwarded_host uri=$request_uri\n";
-        }
-    }
----
+kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' || true
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: departures-web
-  namespace: platform
-  labels: {app: departures}
-spec:
-  replicas: 2
-  selector:
-    matchLabels: {app: departures, track: live}
-  template:
-    metadata:
-      labels: {app: departures, track: live}
-    spec:
-      containers:
-      - name: board
-        image: nginx:1.25
-        ports:
-        - name: http
-          containerPort: 8080
-        volumeMounts:
-        - name: conf
-          mountPath: /etc/nginx/conf.d
-      volumes:
-      - name: conf
-        configMap:
-          name: departures-conf
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: arrivals-web
-  namespace: platform
-  labels: {app: arrivals}
-spec:
-  replicas: 2
-  selector:
-    matchLabels: {app: arrivals, track: live}
-  template:
-    metadata:
-      labels: {app: arrivals, track: live}
-    spec:
-      containers:
-      - name: board
-        image: nginx:1.25
-        ports:
-        - name: web
-          containerPort: 8080
-        volumeMounts:
-        - name: conf
-          mountPath: /etc/nginx/conf.d
-      volumes:
-      - name: conf
-        configMap:
-          name: arrivals-conf
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: arrivals-legacy
-  namespace: platform
-  labels: {app: arrivals}
+  name: sleeper-lounge
+  namespace: sleepers
+  labels:
+    app: sleeper-lounge
 spec:
   replicas: 1
   selector:
-    matchLabels: {app: arrivals, track: legacy}
+    matchLabels:
+      app: sleeper-lounge
   template:
     metadata:
-      labels: {app: arrivals, track: legacy}
+      labels:
+        app: sleeper-lounge
     spec:
       containers:
-      - name: board
-        image: nginx:1.25
-        ports:
-        - containerPort: 8080
-        volumeMounts:
-        - name: conf
-          mountPath: /etc/nginx/conf.d
-      volumes:
-      - name: conf
-        configMap:
-          name: arrivals-legacy-conf
+        - name: web
+          image: nginx:1.25
+          ports:
+            - name: http
+              containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
 ---
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: departures
-  namespace: platform
+  name: sleeper-bar
+  namespace: sleepers
+  labels:
+    app: sleeper-bar
 spec:
-  selector: {app: departures, track: live}
-  ports:
-  - port: 80
-    targetPort: http
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sleeper-bar
+  template:
+    metadata:
+      labels:
+        app: sleeper-bar
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: bar
+          image: nginx:1.25
+          command: ["sh", "-c", "echo 'stocking the bar (10s)'; sleep 10 & wait $!; exec nginx -g 'daemon off;'"]
+          ports:
+            - name: http
+              containerPort: 80
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
 ---
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: arrivals
-  namespace: platform
-  annotations:
-    transit.io/note: "old arrivals board"
+  name: sleeper-linen
+  namespace: sleepers
+  labels:
+    app: sleeper-linen
 spec:
-  selector: {app: arrivals, track: legacy}
-  ports:
-  - port: 80
-    targetPort: 8080
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sleeper-linen
+  template:
+    metadata:
+      labels:
+        app: sleeper-linen
+    spec:
+      containers:
+        - name: linen
+          image: busybox:1.36
+          command: ["sh", "-c", "echo 'reading /etc/linen/stock.csv'; sleep 5; echo 'ERROR: stock file not found' >&2; exit 3"]
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              memory: 32Mi
 ---
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: arrivals-live
-  namespace: platform
+  name: sleeper-wakeup
+  namespace: sleepers
+  labels:
+    app: sleeper-wakeup
 spec:
-  selector: {app: arrivals, track: live}
-  ports:
-  - name: board
-    port: 8081
-    targetPort: web
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sleeper-wakeup
+  template:
+    metadata:
+      labels:
+        app: sleeper-wakeup
+    spec:
+      containers:
+        - name: alarm
+          image: busybox:1.36
+          command: ["sh", "-c", "touch /tmp/alive; while true; do date; sleep 60; done"]
+          livenessProbe:
+            exec:
+              command: ["test", "-f", "/tmp/alive"]
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              memory: 32Mi
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: platform-status
-  namespace: platform
+  name: sleeper-berths
+  namespace: sleepers
+  labels:
+    app: sleeper-berths
 spec:
-  ingressClassName: traefik
-  rules:
-  - host: status.transit.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: departures
-            port:
-              number: 80
-EOF
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sleeper-berths
+  template:
+    metadata:
+      labels:
+        app: sleeper-berths
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: log-tail
+          image: busybox:1.36
+          command: ["sh", "-c", "while true; do sleep 3600; done"]
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              memory: 32Mi
+        - name: warmer
+          image: nginx:1.25
+          command: ["sh", "-c", "echo 'loading berth allocation map, this takes about 40s'; sleep 40 & wait $!; echo 'map loaded'; exec nginx -g 'daemon off;'"]
+          ports:
+            - name: http
+              containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+YAML
 
-kubectl -n "$NS" rollout status deployment/departures-web --timeout=120s >/dev/null 2>&1 || true
-kubectl -n "$NS" rollout status deployment/arrivals-web --timeout=120s >/dev/null 2>&1 || true
-kubectl -n "$NS" rollout status deployment/arrivals-legacy --timeout=120s >/dev/null 2>&1 || true
+kubectl -n "$NS" rollout status deployment/sleeper-lounge --timeout=120s >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 5"
 exit 0

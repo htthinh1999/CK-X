@@ -1,231 +1,181 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=manifests
+NS=kiosk
 DIR=/home/candidate/exam/q17
 
-kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-rm -rf "$DIR" && mkdir -p "$DIR"
-
-kubectl apply -f - >/dev/null 2>&1 <<'YAML' || true
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: routes.transit.example.com
-spec:
-  group: transit.example.com
-  scope: Namespaced
-  names:
-    kind: Route
-    listKind: RouteList
-    plural: routes
-    singular: route
-    shortNames: ["trt"]
-  versions:
-    - name: v1
-      served: true
-      storage: true
-      additionalPrinterColumns:
-        - name: Line
-          type: string
-          jsonPath: .spec.line
-        - name: Mode
-          type: string
-          jsonPath: .spec.mode
-        - name: Stops
-          type: integer
-          jsonPath: .spec.stops
-        - name: Age
-          type: date
-          jsonPath: .metadata.creationTimestamp
-      schema:
-        openAPIV3Schema:
-          type: object
-          description: A passenger route operated by the Transit Authority.
-          properties:
-            spec:
-              type: object
-              description: Timetable data of the route.
-              required: ["line", "mode", "stops"]
-              properties:
-                line:
-                  type: string
-                  pattern: '^[A-Z]{1,2}[0-9]{1,3}$'
-                  description: Public line code shown on the vehicles, e.g. T4 or NB31.
-                mode:
-                  type: string
-                  enum: ["bus", "tram", "metro", "ferry"]
-                  description: Vehicle type used on the route.
-                stops:
-                  type: integer
-                  minimum: 2
-                  maximum: 80
-                  description: Number of stops served, both termini included.
-                depot:
-                  type: string
-                  description: Depot or pier that supplies the vehicles.
-                serviceClass:
-                  type: string
-                  enum: ["C1", "C3", "C5", "C8"]
-                  description: >-
-                    Timetable class code. C1 = local all-stops service,
-                    C3 = limited-stop express, C5 = night network (00:30-05:00),
-                    C8 = school days only.
-                frequencyMinutes:
-                  type: integer
-                  minimum: 1
-                  maximum: 120
-                  description: Minutes between two departures in the base timetable.
----
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: routes.freight.example.com
-spec:
-  group: freight.example.com
-  scope: Namespaced
-  names:
-    kind: Route
-    listKind: RouteList
-    plural: routes
-    singular: route
-    shortNames: ["frt"]
-  versions:
-    - name: v1
-      served: true
-      storage: true
-      additionalPrinterColumns:
-        - name: Origin
-          type: string
-          jsonPath: .spec.origin
-        - name: Destination
-          type: string
-          jsonPath: .spec.destination
-      schema:
-        openAPIV3Schema:
-          type: object
-          description: A freight corridor leased to a rail operator.
-          properties:
-            spec:
-              type: object
-              required: ["origin", "destination"]
-              properties:
-                origin:
-                  type: string
-                destination:
-                  type: string
-                tonnage:
-                  type: integer
-                stops:
-                  type: integer
-YAML
-
-kubectl wait --for=condition=Established crd/routes.transit.example.com crd/routes.freight.example.com --timeout=60s >/dev/null 2>&1 || true
+for n in kiosk ops-east ops-west; do
+  kubectl create namespace "$n" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+done
+# namespace labels (reset on every run)
+kubectl label namespace ops-east team=ops --overwrite >/dev/null 2>&1 || true
+kubectl label namespace ops-west team=dev --overwrite >/dev/null 2>&1 || true
+kubectl label namespace kiosk team- >/dev/null 2>&1 || true
 
 # Start from a clean state (idempotent re-runs)
-kubectl -n "$NS" delete routes.transit.example.com --all --ignore-not-found >/dev/null 2>&1 || true
-kubectl -n "$NS" delete routes.freight.example.com --all --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n "$NS" delete networkpolicy --all --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n ops-east delete networkpolicy --all --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n ops-west delete networkpolicy --all --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n "$NS" delete deployment kiosk kiosk-cache --ignore-not-found --timeout=60s >/dev/null 2>&1 || true
+kubectl -n "$NS" delete pod kiosk-client --ignore-not-found --grace-period=1 --timeout=60s >/dev/null 2>&1 || true
+for n in ops-east ops-west; do
+  kubectl -n "$n" delete pod monitor guest --ignore-not-found --grace-period=1 --timeout=60s >/dev/null 2>&1 || true
+done
+rm -rf "$DIR" && mkdir -p "$DIR"
 
-# retried: right after the CRDs become Established, API discovery can lag briefly
-for i in 1 2 3 4 5; do
-kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' && break
-apiVersion: transit.example.com/v1
-kind: Route
+kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' || true
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: t4-harbour
-  namespace: manifests
+  name: kiosk
+  namespace: kiosk
+  labels:
+    app: kiosk
 spec:
-  line: T4
-  mode: tram
-  stops: 18
-  depot: riverside
-  serviceClass: C1
-  frequencyMinutes: 8
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kiosk
+  template:
+    metadata:
+      labels:
+        app: kiosk
+        tier: frontend
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.25
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+        - name: metrics
+          image: busybox:1.36
+          command: ["sh", "-c", "mkdir -p /www && echo kiosk-metrics > /www/index.html && exec httpd -f -p 8081 -h /www"]
+          ports:
+            - name: metrics
+              containerPort: 8081
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              memory: 32Mi
 ---
-apiVersion: transit.example.com/v1
-kind: Route
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: b12-airport
-  namespace: manifests
+  name: kiosk-cache
+  namespace: kiosk
+  labels:
+    app: kiosk-cache
 spec:
-  line: B12
-  mode: bus
-  stops: 9
-  depot: north
-  serviceClass: C3
-  frequencyMinutes: 15
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kiosk-cache
+  template:
+    metadata:
+      labels:
+        app: kiosk-cache
+        tier: frontend
+    spec:
+      containers:
+        - name: cache
+          image: busybox:1.36
+          command: ["sh", "-c", "while true; do sleep 3600; done"]
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              memory: 32Mi
 ---
-apiVersion: transit.example.com/v1
-kind: Route
+apiVersion: v1
+kind: Pod
 metadata:
-  name: m2-crosstown
-  namespace: manifests
+  name: kiosk-client
+  namespace: kiosk
+  labels:
+    app: kiosk-client
 spec:
-  line: M2
-  mode: metro
-  stops: 22
-  depot: central
-  serviceClass: C1
-  frequencyMinutes: 4
+  containers:
+    - name: client
+      image: busybox:1.36
+      command: ["sh", "-c", "while true; do sleep 3600; done"]
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+        limits:
+          memory: 32Mi
 ---
-apiVersion: transit.example.com/v1
-kind: Route
+# left behind by the previous team
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
-  name: nb31-late
-  namespace: manifests
+  name: legacy-frontend
+  namespace: kiosk
 spec:
-  line: NB31
-  mode: bus
-  stops: 27
-  depot: north
-  serviceClass: C5
-  frequencyMinutes: 30
----
-apiVersion: transit.example.com/v1
-kind: Route
-metadata:
-  name: b7-schools
-  namespace: manifests
-spec:
-  line: B7
-  mode: bus
-  stops: 14
-  depot: west
-  serviceClass: C8
----
-apiVersion: freight.example.com/v1
-kind: Route
-metadata:
-  name: coal-west
-  namespace: manifests
-spec:
-  origin: westport
-  destination: power-station
-  tonnage: 3200
-  stops: 2
----
-apiVersion: freight.example.com/v1
-kind: Route
-metadata:
-  name: grain-east
-  namespace: manifests
-spec:
-  origin: silo-7
-  destination: eastern-docks
-  tonnage: 1800
-  stops: 3
----
-apiVersion: freight.example.com/v1
-kind: Route
-metadata:
-  name: steel-north
-  namespace: manifests
-spec:
-  origin: mill-2
-  destination: north-yard
-  tonnage: 2600
-  stops: 4
+  podSelector:
+    matchLabels:
+      tier: frontend
+  policyTypes:
+    - Ingress
+  ingress:
+    - {}
 YAML
-  sleep 2
+
+for n in ops-east ops-west; do
+  kubectl -n "$n" apply -f - >/dev/null 2>&1 <<YAML || true
+apiVersion: v1
+kind: Pod
+metadata:
+  name: monitor
+  namespace: $n
+  labels:
+    role: monitor
+spec:
+  containers:
+    - name: probe
+      image: busybox:1.36
+      command: ["sh", "-c", "while true; do sleep 3600; done"]
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+        limits:
+          memory: 32Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: guest
+  namespace: $n
+  labels:
+    role: guest
+spec:
+  containers:
+    - name: probe
+      image: busybox:1.36
+      command: ["sh", "-c", "while true; do sleep 3600; done"]
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+        limits:
+          memory: 32Mi
+YAML
+done
+
+kubectl -n "$NS" rollout status deployment/kiosk --timeout=120s >/dev/null 2>&1 || true
+kubectl -n "$NS" wait pod/kiosk-client --for=condition=Ready --timeout=60s >/dev/null 2>&1 || true
+for n in ops-east ops-west; do
+  kubectl -n "$n" wait pod/monitor pod/guest --for=condition=Ready --timeout=60s >/dev/null 2>&1 || true
 done
 
 echo "Setup complete for Question 17"

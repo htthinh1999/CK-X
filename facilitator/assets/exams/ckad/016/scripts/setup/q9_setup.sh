@@ -1,18 +1,19 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace flash --dry-run=client -o yaml | kubectl apply -f - || true
-kubectl delete pod data-processor -n flash --ignore-not-found=true >/dev/null 2>&1 || true
+kubectl create namespace surge --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl delete ingress default-ing -n surge --ignore-not-found=true >/dev/null 2>&1 || true
 kubectl apply -f - <<'YAML'
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
-  name: data-processor
-  namespace: flash
+  name: fallback-svc
+  namespace: surge
 spec:
-  containers:
-  - name: processor
-    image: busybox
-    command: ["sh", "-c", "echo Starting...; sleep 2; exit 1"]
+  selector:
+    app: fallback
+  ports:
+  - port: 8080
+    targetPort: 8080
 YAML
 echo "Setup complete for Question 9"
 exit 0

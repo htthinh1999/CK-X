@@ -1,693 +1,245 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "genesis",
-      "machineHostname": "ckad9999",
-      "question": "There is a skeleton Dockerfile located at `/tmp/exam/course/1/Dockerfile`.\n\n1. Modify the `Dockerfile` to use a non-root user. Add an instruction to create a user named `izanagi` with UID `1000` and switch to this user.\n2. Build the Docker image from this `Dockerfile` and tag it as `localhost:5000/genesis-app:v1`.\n3. Push the image to the local registry at `localhost:5000`.\n4. Create a Pod named `genesis-pod` in the `genesis` namespace using this image `localhost:5000/genesis-app:v1`. Ensure it executes the default command defined in the Dockerfile.",
-      "concepts": [
-        "docker",
-        "images",
-        "pods",
-        "securitycontext"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Image localhost:5000/genesis-app:v1 built and tagged locally",
-          "verificationScriptFile": "q1_s1_validate_image_built.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "1",
+            "namespace": "matrix",
+            "machineHostname": "ckad9988",
+            "question": "In `/tmp/exam/course/1/kustomize`, there is a `kustomization.yaml` file.\n\n1. Add a `secretGenerator` to the `kustomization.yaml` to generate a secret named `matrix-secret`.\n2. The secret should contain a literal `db-password=supersecret`.\n3. Configure `generatorOptions` to disable the suffix hash (`disableNameSuffixHash: true`).\n4. Apply the kustomization to the `matrix` namespace.",
+            "concepts": ["kustomize", "secrets", "secretgenerator"],
+            "verification": [
+                { "id": "1", "description": "Secret matrix-secret exists in matrix namespace (no hash suffix)", "verificationScriptFile": "q1_s1_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Secret matrix-secret db-password equals supersecret", "verificationScriptFile": "q1_s2_validate_secret_value.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Image configured to run as USER 1000",
-          "verificationScriptFile": "q1_s2_validate_image_user.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "2",
+            "namespace": "default",
+            "machineHostname": "ckad9977",
+            "question": "Create a ClusterRole named `monitor-viewer`.\n\n1. It should have permissions to `get`, `list`, and `watch` all `pods` and `services` cluster-wide.\n2. Create another ClusterRole named `aggregated-monitor` that uses aggregation labels to automatically inherit the rules from `monitor-viewer`.\n3. Add the required label to `monitor-viewer` so it gets aggregated into `aggregated-monitor`.",
+            "concepts": ["rbac", "clusterrole", "aggregation"],
+            "verification": [
+                { "id": "1", "description": "ClusterRole monitor-viewer exists", "verificationScriptFile": "q2_s1_validate_clusterrole_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "ClusterRole monitor-viewer has labels", "verificationScriptFile": "q2_s2_validate_labels.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "ClusterRole aggregated-monitor has an aggregationRule", "verificationScriptFile": "q2_s3_validate_aggregationrule.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         },
         {
-          "id": "3",
-          "description": "Pod genesis-pod exists in genesis namespace",
-          "verificationScriptFile": "q1_s3_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "3",
+            "namespace": "cosmos",
+            "machineHostname": "ckad9988",
+            "question": "A Pod named `stuck-pod` in the `cosmos` namespace is stuck in the `Init:Error` state.\n\n1. Identify the reason why the init container is failing.\n2. Fix the pod so that it reaches the `Running` state. You may recreate the pod if necessary. Note: The init container is supposed to successfully run a shell command and exit.",
+            "concepts": ["troubleshooting", "init-containers", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod stuck-pod is Running in cosmos namespace", "verificationScriptFile": "q3_s1_validate_pod_running.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
         },
         {
-          "id": "4",
-          "description": "Pod genesis-pod uses image localhost:5000/genesis-app:v1",
-          "verificationScriptFile": "q1_s4_validate_pod_image.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "4",
+            "namespace": "eden",
+            "machineHostname": "ckad9977",
+            "question": "Create a ResourceQuota named `priority-quota` in the `eden` namespace.\n\n1. Configure it to limit the total number of pods to `5` and total `requests.cpu` to `2`.\n2. Apply a scope selector so that this quota ONLY applies to Pods that have the `PriorityClass` of `high-priority`. Use the scope `PriorityClassIn` with values `high-priority` (scopeName `PriorityClass`, operator `In`).",
+            "concepts": ["resourcequota", "priorityclass", "scopes"],
+            "verification": [
+                { "id": "1", "description": "ResourceQuota priority-quota exists in eden namespace", "verificationScriptFile": "q4_s1_validate_quota_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Quota hard limit pods is 5", "verificationScriptFile": "q4_s2_validate_pods.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Quota hard limit requests.cpu is 2", "verificationScriptFile": "q4_s3_validate_cpu.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Quota scopeSelector uses PriorityClass scope", "verificationScriptFile": "q4_s4_validate_scope.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "zenith",
+            "machineHostname": "ckad9988",
+            "question": "Extract the latest events from the `zenith` namespace and output them to a file at `/tmp/exam/course/5/events.txt`.\n\nUse `custom-columns` output format to display only the event `TYPE`, `REASON`, and `MESSAGE`.\n\nEnsure the output has the exact headers `TYPE`, `REASON`, and `MESSAGE`.",
+            "concepts": ["events", "observability", "custom-columns"],
+            "verification": [
+                { "id": "1", "description": "File /tmp/exam/course/10/events.txt exists", "verificationScriptFile": "q5_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "File header contains TYPE, REASON and MESSAGE columns", "verificationScriptFile": "q5_s2_validate_headers.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "matrix",
+            "machineHostname": "ckad9977",
+            "question": "Create a NetworkPolicy named `allow-named-port` in the `matrix` namespace.\n\n- It should apply to pods with the label `role=backend`.\n- It should allow incoming TCP traffic on the named port `api-port`.\n- It should only allow this traffic from pods in the `matrix` namespace with the label `role=frontend`.",
+            "concepts": ["networkpolicy", "named-ports", "networking"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy allow-named-port exists in matrix namespace", "verificationScriptFile": "q6_s1_validate_netpol_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Ingress rule uses named port api-port", "verificationScriptFile": "q6_s2_validate_named_port.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "genesis",
+            "machineHostname": "ckad9988",
+            "question": "There is a deployment `backend-api` in the `genesis` namespace that is exposing an API internally on port `8080`.\n\n1. Create a script at `/tmp/exam/course/7/check.sh` that sets up a temporary port-forwarding to the `backend-api` service on local port `9999` mapping to the service port `8080`.\n2. The script should use `curl` to fetch `http://localhost:9999/health`, append the output to `/tmp/exam/course/7/health.log`, and then terminate the port-forward process.\n\n(You don't need to actually run the script in the background for grading, but ensure it contains the correct commands to perform this sequence).",
+            "concepts": ["port-forward", "services", "debugging"],
+            "verification": [
+                { "id": "1", "description": "Script /tmp/exam/course/11/check.sh exists", "verificationScriptFile": "q7_s1_validate_script_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Script contains kubectl port-forward svc/backend-api 9999:8080", "verificationScriptFile": "q7_s2_validate_portforward_cmd.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Script contains curl to http://localhost:9999/health", "verificationScriptFile": "q7_s3_validate_curl_cmd.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "genesis",
+            "machineHostname": "ckad9999",
+            "question": "There is a skeleton Dockerfile located at `/tmp/exam/course/8/Dockerfile`.\n\n1. Modify the `Dockerfile` to use a non-root user. Add an instruction to create a user named `izanagi` with UID `1000` and switch to this user.\n2. Build the Docker image from this `Dockerfile` and tag it as `localhost:5000/genesis-app:v1`.\n3. Push the image to the local registry at `localhost:5000`.\n4. Create a Pod named `genesis-pod` in the `genesis` namespace using this image `localhost:5000/genesis-app:v1`. Ensure it executes the default command defined in the Dockerfile.",
+            "concepts": ["docker", "images", "pods", "securitycontext"],
+            "verification": [
+                { "id": "1", "description": "Image localhost:5000/genesis-app:v1 built and tagged locally", "verificationScriptFile": "q8_s1_validate_image_built.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Image configured to run as USER 1000", "verificationScriptFile": "q8_s2_validate_image_user.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Pod genesis-pod exists in genesis namespace", "verificationScriptFile": "q8_s3_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Pod genesis-pod uses image localhost:5000/genesis-app:v1", "verificationScriptFile": "q8_s4_validate_pod_image.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "origin",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `projected-pod` in the `origin` namespace using the `nginx:alpine` image.\n\nUse a single `projected` volume mounted at `/var/run/projected` to expose all of the following sources:\n\n1. A Secret named `my-secret` (already exists in the namespace) - expose the `username` key.\n2. A ConfigMap named `my-config` (already exists) - expose all its keys.\n3. DownwardAPI - expose the pod's `metadata.labels` as a file named `labels`.\n4. A ServiceAccountToken with audience `vault` and expiration of `3600` seconds, exposed as a file named `token`.",
+            "concepts": ["projected-volumes", "secrets", "downwardapi", "serviceaccount"],
+            "verification": [
+                { "id": "1", "description": "Pod projected-pod exists in origin namespace", "verificationScriptFile": "q9_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Projected volume includes my-secret source", "verificationScriptFile": "q9_s2_validate_secret_source.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Projected volume includes my-config source", "verificationScriptFile": "q9_s3_validate_configmap_source.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Projected volume includes downwardAPI source", "verificationScriptFile": "q9_s4_validate_downwardapi_source.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "5", "description": "Projected volume includes serviceAccountToken source", "verificationScriptFile": "q9_s5_validate_satoken_source.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "origin",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `data-transformer` in the `origin` namespace implementing the Adapter pattern.\n\n- The Pod should have an `emptyDir` volume named `shared-data`.\n- Main container:\n  - Name: `app-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `while true; do echo \"$(date) - DATA\" >> /var/log/app.log; sleep 5; done`\n  - Volume mount: Mount `shared-data` at `/var/log`\n- Adapter container:\n  - Name: `adapter-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `tail -f /var/log/app.log | sed 's/DATA/TRANSFORMED_DATA/g' > /var/log/transformed.log`\n  - Volume mount: Mount `shared-data` at `/var/log`",
+            "concepts": ["pods", "multi-container", "volumes", "adapter-pattern"],
+            "verification": [
+                { "id": "1", "description": "Pod data-transformer exists in origin namespace", "verificationScriptFile": "q10_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod has at least 2 containers", "verificationScriptFile": "q10_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "shared-data emptyDir volume is defined", "verificationScriptFile": "q10_s3_validate_emptydir.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "shared-data volume mounted at /var/log in both containers", "verificationScriptFile": "q10_s4_validate_volume_mounts.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "cosmos",
+            "machineHostname": "ckad9977",
+            "question": "An Ingress named `cosmos-ingress` exists in the `cosmos` namespace.\n\nUpdate this Ingress to explicitly use the IngressClass named `nginx` by setting the `ingressClassName` field.\n\nEnsure the routing rule points traffic for `cosmos.local` to the service `cosmos-svc` on port `80`.",
+            "concepts": ["ingress", "networking", "ingressclass"],
+            "verification": [
+                { "id": "1", "description": "Ingress cosmos-ingress exists in cosmos namespace", "verificationScriptFile": "q11_s1_validate_ingress_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Ingress ingressClassName is nginx", "verificationScriptFile": "q11_s2_validate_ingressclass.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Ingress backend service port is 80", "verificationScriptFile": "q11_s3_validate_port.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "primal",
+            "machineHostname": "ckad9999",
+            "question": "Create a Job named `index-processor` in the `primal` namespace.\n\n- Configure it to use Indexed completion mode (`completionMode: Indexed`).\n- It should run a total of `5` completions.\n- It should run up to `2` pods in parallel.\n- The container should use the `busybox:1.32` image and run the command: `sh`, `-c`, `echo \"Processing item $JOB_COMPLETION_INDEX\"`",
+            "concepts": ["jobs", "indexed-jobs", "parallelism"],
+            "verification": [
+                { "id": "1", "description": "Job index-processor exists in primal namespace", "verificationScriptFile": "q12_s1_validate_job_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Job uses Indexed completion mode", "verificationScriptFile": "q12_s2_validate_completion_mode.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Job has 5 completions", "verificationScriptFile": "q12_s3_validate_completions.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Job has parallelism of 2", "verificationScriptFile": "q12_s4_validate_parallelism.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "13",
+            "namespace": "zenith",
+            "machineHostname": "ckad9977",
+            "question": "There is a service named `data-svc` in the `ancient` namespace.\n\nCreate a Pod named `dns-tester` in the `zenith` namespace using the `busybox:1.32` image. It should run a sleep command (`sleep 3600`).\n\nCreate a file at `/tmp/exam/course/13/fqdn.txt` containing the Fully Qualified Domain Name (FQDN) that the `dns-tester` pod can use to reach the `data-svc` service in the `ancient` namespace.",
+            "concepts": ["dns", "services", "fqdn"],
+            "verification": [
+                { "id": "1", "description": "Pod dns-tester exists in zenith namespace", "verificationScriptFile": "q13_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "fqdn.txt contains data-svc.ancient.svc.cluster.local", "verificationScriptFile": "q13_s2_validate_fqdn.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "ancient",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `graceful-shutdown` in the `ancient` namespace.\n\n- Image: `nginx:1.21`\n- Set the `terminationGracePeriodSeconds` to `45`.\n- Configure a `preStop` hook using `exec` that runs the command: `sh`, `-c`, `sleep 10 && nginx -s quit`",
+            "concepts": ["pods", "lifecycle-hooks", "prestop"],
+            "verification": [
+                { "id": "1", "description": "Pod graceful-shutdown exists in ancient namespace", "verificationScriptFile": "q14_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "terminationGracePeriodSeconds is 45", "verificationScriptFile": "q14_s2_validate_grace_period.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "preStop exec hook is configured", "verificationScriptFile": "q14_s3_validate_prestop.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "nexus",
+            "machineHostname": "ckad9977",
+            "question": "Create a NetworkPolicy named `isolate-namespace` in the `nexus` namespace.\n\n- It should apply to ALL pods in the `nexus` namespace.\n- It should allow all incoming traffic from pods within the `nexus` namespace.\n- It should explicitly block all incoming traffic from pods in ANY OTHER namespace.\n- It should allow all outgoing (egress) traffic.",
+            "concepts": ["networkpolicy", "isolation", "networking"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy isolate-namespace exists in nexus namespace", "verificationScriptFile": "q15_s1_validate_netpol_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "policyTypes includes Ingress and Egress", "verificationScriptFile": "q15_s2_validate_policytypes.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "podSelector is empty (applies to all pods)", "verificationScriptFile": "q15_s3_validate_podselector.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "nexus",
+            "machineHostname": "ckad9999",
+            "question": "A Helm release named `genesis-web` is deployed in the `nexus` namespace.\n\n1. Inspect the chart values currently deployed.\n2. Upgrade the release to change the `replicaCount` to `3` without altering any other custom values that were previously set (use `--reuse-values`).\n3. You can find the chart source at `/tmp/exam/course/16/genesis-web-chart` if needed, but you only need to modify the deployed release.",
+            "concepts": ["helm", "upgrade", "reuse-values"],
+            "verification": [
+                { "id": "1", "description": "genesis-web release replicaCount updated to 3", "verificationScriptFile": "q16_s1_validate_replicacount.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Previously set customLabel value retained", "verificationScriptFile": "q16_s2_validate_customlabel.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "primal",
+            "machineHostname": "ckad9988",
+            "question": "Create a Secret named `static-creds` in the `primal` namespace.\n\n- It should contain the literal `api-key=12345ABC`.\n- Make the Secret immutable so its contents cannot be modified.",
+            "concepts": ["secrets", "immutable"],
+            "verification": [
+                { "id": "1", "description": "Secret static-creds exists in primal namespace", "verificationScriptFile": "q17_s1_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Secret static-creds is immutable", "verificationScriptFile": "q17_s2_validate_immutable.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "terra",
+            "machineHostname": "ckad9999",
+            "question": "1. Create a Deployment named `terra-web` in the `terra` namespace with `4` replicas using the `nginx:1.21` image.\n2. Create a PodDisruptionBudget named `terra-pdb` in the same namespace targeting the pods of the `terra-web` Deployment.\n3. Configure the PDB to require a `minAvailable` of `75%`.",
+            "concepts": ["deployments", "poddisruptionbudget", "availability"],
+            "verification": [
+                { "id": "1", "description": "Deployment terra-web exists in terra namespace", "verificationScriptFile": "q18_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Deployment terra-web has 4 replicas", "verificationScriptFile": "q18_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "PodDisruptionBudget terra-pdb exists in terra namespace", "verificationScriptFile": "q18_s3_validate_pdb_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "PDB terra-pdb minAvailable is 75%", "verificationScriptFile": "q18_s4_validate_pdb_minavailable.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "ancient",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `secure-pod` in the `ancient` namespace using the `nginx:alpine` image.\n\nConfigure the container's security context with the following hardening settings:\n\n- It must run as a non-root user (e.g., `runAsNonRoot: true`, `runAsUser: 1000`).\n- The root filesystem must be read-only.\n- Drop ALL capabilities.\n- Privilege escalation must not be allowed (`allowPrivilegeEscalation: false`).\n\n(Note: You will need to add an `emptyDir` volume mounted at `/var/cache/nginx` and `/var/run` so nginx can start up with a read-only root filesystem).",
+            "concepts": ["securitycontext", "pods", "hardening"],
+            "verification": [
+                { "id": "1", "description": "Pod secure-pod exists in ancient namespace", "verificationScriptFile": "q19_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Container runAsNonRoot is true", "verificationScriptFile": "q19_s2_validate_runasnonroot.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Container readOnlyRootFilesystem is true", "verificationScriptFile": "q19_s3_validate_readonlyrootfs.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "Container allowPrivilegeEscalation is false", "verificationScriptFile": "q19_s4_validate_privesc.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "Container drops ALL capabilities", "verificationScriptFile": "q19_s5_validate_drop_all.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "eden",
+            "machineHostname": "ckad9999",
+            "question": "A Deployment named `eden-api` exists in the `eden` namespace.\n\n1. Update the Deployment's image from `nginx:1.20` to `nginx:1.21`.\n2. Ensure that the change is recorded in the rollout history by setting the revision annotation (`kubernetes.io/change-cause`) on the Deployment resource.\n3. Ensure the Deployment uses a rolling update strategy with `maxSurge` set to `2` and `maxUnavailable` set to `0`.",
+            "concepts": ["deployments", "rollout", "rolling-update"],
+            "verification": [
+                { "id": "1", "description": "eden-api image updated to nginx:1.21", "verificationScriptFile": "q20_s1_validate_image.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "change-cause revision annotation exists", "verificationScriptFile": "q20_s2_validate_change_cause.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Rolling update strategy has maxSurge 2 and maxUnavailable 0", "verificationScriptFile": "q20_s3_validate_strategy.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "origin",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `data-transformer` in the `origin` namespace implementing the Adapter pattern.\n\n- The Pod should have an `emptyDir` volume named `shared-data`.\n- Main container:\n  - Name: `app-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `while true; do echo \"$(date) - DATA\" >> /var/log/app.log; sleep 5; done`\n  - Volume mount: Mount `shared-data` at `/var/log`\n- Adapter container:\n  - Name: `adapter-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `tail -f /var/log/app.log | sed 's/DATA/TRANSFORMED_DATA/g' > /var/log/transformed.log`\n  - Volume mount: Mount `shared-data` at `/var/log`",
-      "concepts": [
-        "pods",
-        "multi-container",
-        "volumes",
-        "adapter-pattern"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod data-transformer exists in origin namespace",
-          "verificationScriptFile": "q2_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod has at least 2 containers",
-          "verificationScriptFile": "q2_s2_validate_container_count.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "shared-data emptyDir volume is defined",
-          "verificationScriptFile": "q2_s3_validate_emptydir.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "shared-data volume mounted at /var/log in both containers",
-          "verificationScriptFile": "q2_s4_validate_volume_mounts.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "primal",
-      "machineHostname": "ckad9999",
-      "question": "Create a Job named `index-processor` in the `primal` namespace.\n\n- Configure it to use Indexed completion mode (`completionMode: Indexed`).\n- It should run a total of `5` completions.\n- It should run up to `2` pods in parallel.\n- The container should use the `busybox:1.32` image and run the command: `sh`, `-c`, `echo \"Processing item $JOB_COMPLETION_INDEX\"`",
-      "concepts": [
-        "jobs",
-        "indexed-jobs",
-        "parallelism"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Job index-processor exists in primal namespace",
-          "verificationScriptFile": "q3_s1_validate_job_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Job uses Indexed completion mode",
-          "verificationScriptFile": "q3_s2_validate_completion_mode.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Job has 5 completions",
-          "verificationScriptFile": "q3_s3_validate_completions.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Job has parallelism of 2",
-          "verificationScriptFile": "q3_s4_validate_parallelism.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "ancient",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `graceful-shutdown` in the `ancient` namespace.\n\n- Image: `nginx:1.21`\n- Set the `terminationGracePeriodSeconds` to `45`.\n- Configure a `preStop` hook using `exec` that runs the command: `sh`, `-c`, `sleep 10 && nginx -s quit`",
-      "concepts": [
-        "pods",
-        "lifecycle-hooks",
-        "prestop"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod graceful-shutdown exists in ancient namespace",
-          "verificationScriptFile": "q4_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "terminationGracePeriodSeconds is 45",
-          "verificationScriptFile": "q4_s2_validate_grace_period.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "preStop exec hook is configured",
-          "verificationScriptFile": "q4_s3_validate_prestop.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "nexus",
-      "machineHostname": "ckad9999",
-      "question": "A Helm release named `genesis-web` is deployed in the `nexus` namespace.\n\n1. Inspect the chart values currently deployed.\n2. Upgrade the release to change the `replicaCount` to `3` without altering any other custom values that were previously set (use `--reuse-values`).\n3. You can find the chart source at `/tmp/exam/course/5/genesis-web-chart` if needed, but you only need to modify the deployed release.",
-      "concepts": [
-        "helm",
-        "upgrade",
-        "reuse-values"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "genesis-web release replicaCount updated to 3",
-          "verificationScriptFile": "q5_s1_validate_replicacount.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        },
-        {
-          "id": "2",
-          "description": "Previously set customLabel value retained",
-          "verificationScriptFile": "q5_s2_validate_customlabel.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "terra",
-      "machineHostname": "ckad9999",
-      "question": "1. Create a Deployment named `terra-web` in the `terra` namespace with `4` replicas using the `nginx:1.21` image.\n2. Create a PodDisruptionBudget named `terra-pdb` in the same namespace targeting the pods of the `terra-web` Deployment.\n3. Configure the PDB to require a `minAvailable` of `75%`.",
-      "concepts": [
-        "deployments",
-        "poddisruptionbudget",
-        "availability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment terra-web exists in terra namespace",
-          "verificationScriptFile": "q6_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Deployment terra-web has 4 replicas",
-          "verificationScriptFile": "q6_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "PodDisruptionBudget terra-pdb exists in terra namespace",
-          "verificationScriptFile": "q6_s3_validate_pdb_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "PDB terra-pdb minAvailable is 75%",
-          "verificationScriptFile": "q6_s4_validate_pdb_minavailable.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "eden",
-      "machineHostname": "ckad9999",
-      "question": "A Deployment named `eden-api` exists in the `eden` namespace.\n\n1. Update the Deployment's image from `nginx:1.20` to `nginx:1.21`.\n2. Ensure that the change is recorded in the rollout history by setting the revision annotation (`kubernetes.io/change-cause`) on the Deployment resource.\n3. Ensure the Deployment uses a rolling update strategy with `maxSurge` set to `2` and `maxUnavailable` set to `0`.",
-      "concepts": [
-        "deployments",
-        "rollout",
-        "rolling-update"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "eden-api image updated to nginx:1.21",
-          "verificationScriptFile": "q7_s1_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "change-cause revision annotation exists",
-          "verificationScriptFile": "q7_s2_validate_change_cause.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Rolling update strategy has maxSurge 2 and maxUnavailable 0",
-          "verificationScriptFile": "q7_s3_validate_strategy.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "matrix",
-      "machineHostname": "ckad9988",
-      "question": "In `/tmp/exam/course/8/kustomize`, there is a `kustomization.yaml` file.\n\n1. Add a `secretGenerator` to the `kustomization.yaml` to generate a secret named `matrix-secret`.\n2. The secret should contain a literal `db-password=supersecret`.\n3. Configure `generatorOptions` to disable the suffix hash (`disableNameSuffixHash: true`).\n4. Apply the kustomization to the `matrix` namespace.",
-      "concepts": [
-        "kustomize",
-        "secrets",
-        "secretgenerator"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Secret matrix-secret exists in matrix namespace (no hash suffix)",
-          "verificationScriptFile": "q8_s1_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        },
-        {
-          "id": "2",
-          "description": "Secret matrix-secret db-password equals supersecret",
-          "verificationScriptFile": "q8_s2_validate_secret_value.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "cosmos",
-      "machineHostname": "ckad9988",
-      "question": "A Pod named `stuck-pod` in the `cosmos` namespace is stuck in the `Init:Error` state.\n\n1. Identify the reason why the init container is failing.\n2. Fix the pod so that it reaches the `Running` state. You may recreate the pod if necessary. Note: The init container is supposed to successfully run a shell command and exit.",
-      "concepts": [
-        "troubleshooting",
-        "init-containers",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod stuck-pod is Running in cosmos namespace",
-          "verificationScriptFile": "q9_s1_validate_pod_running.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "zenith",
-      "machineHostname": "ckad9988",
-      "question": "Extract the latest events from the `zenith` namespace and output them to a file at `/tmp/exam/course/10/events.txt`.\n\nUse `custom-columns` output format to display only the event `TYPE`, `REASON`, and `MESSAGE`.\n\nEnsure the output has the exact headers `TYPE`, `REASON`, and `MESSAGE`.",
-      "concepts": [
-        "events",
-        "observability",
-        "custom-columns"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File /tmp/exam/course/10/events.txt exists",
-          "verificationScriptFile": "q10_s1_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "File header contains TYPE, REASON and MESSAGE columns",
-          "verificationScriptFile": "q10_s2_validate_headers.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "genesis",
-      "machineHostname": "ckad9988",
-      "question": "There is a deployment `backend-api` in the `genesis` namespace that is exposing an API internally on port `8080`.\n\n1. Create a script at `/tmp/exam/course/11/check.sh` that sets up a temporary port-forwarding to the `backend-api` service on local port `9999` mapping to the service port `8080`.\n2. The script should use `curl` to fetch `http://localhost:9999/health`, append the output to `/tmp/exam/course/11/health.log`, and then terminate the port-forward process.\n\n(You don't need to actually run the script in the background for grading, but ensure it contains the correct commands to perform this sequence).",
-      "concepts": [
-        "port-forward",
-        "services",
-        "debugging"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Script /tmp/exam/course/11/check.sh exists",
-          "verificationScriptFile": "q11_s1_validate_script_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Script contains kubectl port-forward svc/backend-api 9999:8080",
-          "verificationScriptFile": "q11_s2_validate_portforward_cmd.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Script contains curl to http://localhost:9999/health",
-          "verificationScriptFile": "q11_s3_validate_curl_cmd.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "origin",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `projected-pod` in the `origin` namespace using the `nginx:alpine` image.\n\nUse a single `projected` volume mounted at `/var/run/projected` to expose all of the following sources:\n\n1. A Secret named `my-secret` (already exists in the namespace) - expose the `username` key.\n2. A ConfigMap named `my-config` (already exists) - expose all its keys.\n3. DownwardAPI - expose the pod's `metadata.labels` as a file named `labels`.\n4. A ServiceAccountToken with audience `vault` and expiration of `3600` seconds, exposed as a file named `token`.",
-      "concepts": [
-        "projected-volumes",
-        "secrets",
-        "downwardapi",
-        "serviceaccount"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod projected-pod exists in origin namespace",
-          "verificationScriptFile": "q12_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Projected volume includes my-secret source",
-          "verificationScriptFile": "q12_s2_validate_secret_source.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Projected volume includes my-config source",
-          "verificationScriptFile": "q12_s3_validate_configmap_source.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Projected volume includes downwardAPI source",
-          "verificationScriptFile": "q12_s4_validate_downwardapi_source.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "5",
-          "description": "Projected volume includes serviceAccountToken source",
-          "verificationScriptFile": "q12_s5_validate_satoken_source.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "primal",
-      "machineHostname": "ckad9988",
-      "question": "Create a Secret named `static-creds` in the `primal` namespace.\n\n- It should contain the literal `api-key=12345ABC`.\n- Make the Secret immutable so its contents cannot be modified.",
-      "concepts": [
-        "secrets",
-        "immutable"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Secret static-creds exists in primal namespace",
-          "verificationScriptFile": "q13_s1_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Secret static-creds is immutable",
-          "verificationScriptFile": "q13_s2_validate_immutable.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "ancient",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `secure-pod` in the `ancient` namespace using the `nginx:alpine` image.\n\nConfigure the container's security context with the following hardening settings:\n\n- It must run as a non-root user (e.g., `runAsNonRoot: true`, `runAsUser: 1000`).\n- The root filesystem must be read-only.\n- Drop ALL capabilities.\n- Privilege escalation must not be allowed (`allowPrivilegeEscalation: false`).\n\n(Note: You will need to add an `emptyDir` volume mounted at `/var/cache/nginx` and `/var/run` so nginx can start up with a read-only root filesystem).",
-      "concepts": [
-        "securitycontext",
-        "pods",
-        "hardening"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod secure-pod exists in ancient namespace",
-          "verificationScriptFile": "q14_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Container runAsNonRoot is true",
-          "verificationScriptFile": "q14_s2_validate_runasnonroot.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Container readOnlyRootFilesystem is true",
-          "verificationScriptFile": "q14_s3_validate_readonlyrootfs.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "4",
-          "description": "Container allowPrivilegeEscalation is false",
-          "verificationScriptFile": "q14_s4_validate_privesc.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "Container drops ALL capabilities",
-          "verificationScriptFile": "q14_s5_validate_drop_all.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "default",
-      "machineHostname": "ckad9977",
-      "question": "Create a ClusterRole named `monitor-viewer`.\n\n1. It should have permissions to `get`, `list`, and `watch` all `pods` and `services` cluster-wide.\n2. Create another ClusterRole named `aggregated-monitor` that uses aggregation labels to automatically inherit the rules from `monitor-viewer`.\n3. Add the required label to `monitor-viewer` so it gets aggregated into `aggregated-monitor`.",
-      "concepts": [
-        "rbac",
-        "clusterrole",
-        "aggregation"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ClusterRole monitor-viewer exists",
-          "verificationScriptFile": "q15_s1_validate_clusterrole_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "ClusterRole monitor-viewer has labels",
-          "verificationScriptFile": "q15_s2_validate_labels.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "ClusterRole aggregated-monitor has an aggregationRule",
-          "verificationScriptFile": "q15_s3_validate_aggregationrule.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "eden",
-      "machineHostname": "ckad9977",
-      "question": "Create a ResourceQuota named `priority-quota` in the `eden` namespace.\n\n1. Configure it to limit the total number of pods to `5` and total `requests.cpu` to `2`.\n2. Apply a scope selector so that this quota ONLY applies to Pods that have the `PriorityClass` of `high-priority`. Use the scope `PriorityClassIn` with values `high-priority` (scopeName `PriorityClass`, operator `In`).",
-      "concepts": [
-        "resourcequota",
-        "priorityclass",
-        "scopes"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ResourceQuota priority-quota exists in eden namespace",
-          "verificationScriptFile": "q16_s1_validate_quota_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Quota hard limit pods is 5",
-          "verificationScriptFile": "q16_s2_validate_pods.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Quota hard limit requests.cpu is 2",
-          "verificationScriptFile": "q16_s3_validate_cpu.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Quota scopeSelector uses PriorityClass scope",
-          "verificationScriptFile": "q16_s4_validate_scope.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "matrix",
-      "machineHostname": "ckad9977",
-      "question": "Create a NetworkPolicy named `allow-named-port` in the `matrix` namespace.\n\n- It should apply to pods with the label `role=backend`.\n- It should allow incoming TCP traffic on the named port `api-port`.\n- It should only allow this traffic from pods in the `matrix` namespace with the label `role=frontend`.",
-      "concepts": [
-        "networkpolicy",
-        "named-ports",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy allow-named-port exists in matrix namespace",
-          "verificationScriptFile": "q17_s1_validate_netpol_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Ingress rule uses named port api-port",
-          "verificationScriptFile": "q17_s2_validate_named_port.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "cosmos",
-      "machineHostname": "ckad9977",
-      "question": "An Ingress named `cosmos-ingress` exists in the `cosmos` namespace.\n\nUpdate this Ingress to explicitly use the IngressClass named `nginx` by setting the `ingressClassName` field.\n\nEnsure the routing rule points traffic for `cosmos.local` to the service `cosmos-svc` on port `80`.",
-      "concepts": [
-        "ingress",
-        "networking",
-        "ingressclass"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Ingress cosmos-ingress exists in cosmos namespace",
-          "verificationScriptFile": "q18_s1_validate_ingress_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Ingress ingressClassName is nginx",
-          "verificationScriptFile": "q18_s2_validate_ingressclass.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Ingress backend service port is 80",
-          "verificationScriptFile": "q18_s3_validate_port.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "zenith",
-      "machineHostname": "ckad9977",
-      "question": "There is a service named `data-svc` in the `ancient` namespace.\n\nCreate a Pod named `dns-tester` in the `zenith` namespace using the `busybox:1.32` image. It should run a sleep command (`sleep 3600`).\n\nCreate a file at `/tmp/exam/course/19/fqdn.txt` containing the Fully Qualified Domain Name (FQDN) that the `dns-tester` pod can use to reach the `data-svc` service in the `ancient` namespace.",
-      "concepts": [
-        "dns",
-        "services",
-        "fqdn"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod dns-tester exists in zenith namespace",
-          "verificationScriptFile": "q19_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "fqdn.txt contains data-svc.ancient.svc.cluster.local",
-          "verificationScriptFile": "q19_s2_validate_fqdn.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "nexus",
-      "machineHostname": "ckad9977",
-      "question": "Create a NetworkPolicy named `isolate-namespace` in the `nexus` namespace.\n\n- It should apply to ALL pods in the `nexus` namespace.\n- It should allow all incoming traffic from pods within the `nexus` namespace.\n- It should explicitly block all incoming traffic from pods in ANY OTHER namespace.\n- It should allow all outgoing (egress) traffic.",
-      "concepts": [
-        "networkpolicy",
-        "isolation",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy isolate-namespace exists in nexus namespace",
-          "verificationScriptFile": "q20_s1_validate_netpol_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "policyTypes includes Ingress and Egress",
-          "verificationScriptFile": "q20_s2_validate_policytypes.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "podSelector is empty (applies to all pods)",
-          "verificationScriptFile": "q20_s3_validate_podselector.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    }
-  ]
+    ]
 }

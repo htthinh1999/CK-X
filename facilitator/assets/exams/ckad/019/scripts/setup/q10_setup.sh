@@ -1,20 +1,16 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace outpost --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-kubectl apply -f - <<'EOF' >/dev/null 2>&1 || true
-apiVersion: v1
-kind: Pod
-metadata:
-  name: secure-app
-  namespace: outpost
-spec:
-  containers:
-  - name: app
-    # Shell-less, distroless-style image whose entrypoint runs forever
-    # (gcr.io/distroless/static has no binaries at all, so `sleep` could never start).
-    image: registry.k8s.io/pause:3.9
-EOF
+kubectl create namespace garrison --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+mkdir -p /tmp/exam/course/10
+# Create the battle-chart if not present (default nginx chart)
+if [ ! -d /tmp/exam/course/10/battle-chart ]; then
+  helm create /tmp/exam/course/10/battle-chart >/dev/null 2>&1 || true
+fi
+# Pre-install the battle-web release with replicaCount=1 (student upgrades to 3)
+helm status battle-web -n garrison >/dev/null 2>&1 || \
+  helm install battle-web /tmp/exam/course/10/battle-chart -n garrison --set replicaCount=1 --wait --timeout 120s >/dev/null 2>&1 || \
+  helm install battle-web /tmp/exam/course/10/battle-chart -n garrison --set replicaCount=1 >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 10"
 exit 0

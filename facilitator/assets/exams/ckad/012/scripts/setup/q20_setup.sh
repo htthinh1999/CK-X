@@ -1,26 +1,21 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace stronghold --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-mkdir -p /tmp/exam/course/20
-cat > /tmp/exam/course/20/sidecar-pod.yaml <<'EOF'
-# Complete this Pod spec to add a sidecar container
-# The main container writes logs, the sidecar reads them via a shared volume
-apiVersion: v1
-kind: Pod
-metadata:
-  name: logger-app
-  namespace: stronghold
-spec:
-  containers:
-  - name: app
-    image: busybox:1.36
-    command: ["sh", "-c", "while true; do echo \"$(date) - App running\" >> /var/log/app.log; sleep 5; done"]
-    # TODO: Add volumeMount for shared-logs at /var/log
-  # TODO: Add sidecar container named 'log-reader'
-  #   image: busybox:1.36
-  #   command: tail -f /var/log/app.log
-  #   mount shared-logs at /var/log
-  # TODO: Add shared volume 'shared-logs' of type emptyDir
+mkdir -p /tmp/exam/course/20/image
+cat > /tmp/exam/course/20/image/Dockerfile <<'EOF'
+FROM nginx:1.25-alpine@sha256:516475cc129da42866742567714ddc681e5eed7b9ee0b9e9c015e464b4221a00
+LABEL maintainer="ckad-exam"
+LABEL app="oni-app"
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 80
 EOF
+cat > /tmp/exam/course/20/image/index.html <<'EOF'
+<!DOCTYPE html>
+<html>
+<head><title>Oni App</title></head>
+<body><h1>Oni App v1.0</h1></body>
+</html>
+EOF
+docker rm -f registry >/dev/null 2>&1 || true
+docker run -d -p 5000:5000 --restart=always --name registry registry:2 >/dev/null 2>&1 || true
 echo "Setup complete for Question 20"
 exit 0

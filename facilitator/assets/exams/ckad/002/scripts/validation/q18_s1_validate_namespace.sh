@@ -1,11 +1,13 @@
 #!/bin/bash
 
-# Check if the namespace exists
-kubectl get namespace crd-demo &> /dev/null
-if [[ $? -eq 0 ]]; then
-  echo "✅ Namespace 'crd-demo' exists"
-  exit 0
+# Validate that the jobs namespace exists
+NS=$(kubectl get namespace jobs -o jsonpath='{.metadata.name}' 2>/dev/null)
+
+if [[ "$NS" == "jobs" ]]; then
+    # Namespace exists
+    exit 0
 else
-  echo "❌ Namespace 'crd-demo' not found"
-  exit 1
+    # Namespace does not exist
+    echo "Namespace 'jobs' does not exist"
+    exit 1
 fi 

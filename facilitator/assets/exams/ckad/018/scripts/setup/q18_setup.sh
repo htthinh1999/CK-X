@@ -1,49 +1,32 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace lyric --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
-kubectl delete ingress multi-tls-ingress -n lyric --ignore-not-found=true 2>/dev/null || true
+kubectl create namespace tempo --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
 kubectl apply -f - <<'EOF'
 apiVersion: v1
 kind: Service
 metadata:
-  name: app1-svc
-  namespace: lyric
+  name: external-db-svc
+  namespace: tempo
 spec:
   ports:
-  - port: 80
-  selector:
-    app: app1
+  - port: 3306
 ---
-apiVersion: v1
-kind: Service
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
 metadata:
-  name: app2-svc
-  namespace: lyric
-spec:
-  ports:
-  - port: 80
-  selector:
-    app: app2
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: app1-tls
-  namespace: lyric
-type: kubernetes.io/tls
-data:
-  tls.crt: base64crt
-  tls.key: base64key
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: app2-tls
-  namespace: lyric
-type: kubernetes.io/tls
-data:
-  tls.crt: base64crt
-  tls.key: base64key
+  name: external-db-slice
+  namespace: tempo
+  labels:
+    kubernetes.io/service-name: external-db-svc
+addressType: IPv4
+ports:
+- name: mysql
+  port: 3306
+endpoints:
+- addresses:
+  - "192.168.1.100"
+  - "192.168.1.101"
 EOF
+mkdir -p /tmp/exam/course/18
 echo "Setup complete for Question 18"
 exit 0

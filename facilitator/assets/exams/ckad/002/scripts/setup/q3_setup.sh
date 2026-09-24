@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Delete the app-namespace namespace if it exists
-echo "Setting up environment for Question 3 (Deployment)..."
-kubectl delete namespace app-namespace --ignore-not-found=true
+# Delete the pod-concepts namespace if it exists
+echo "Setting up environment for Question 3 (Multi-Container Pod)..."
+kubectl delete namespace pod-concepts --ignore-not-found=true
 
 # Wait for deletion to complete
 sleep 2

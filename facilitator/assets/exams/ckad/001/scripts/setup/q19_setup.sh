@@ -1,57 +1,17 @@
 #!/bin/bash
 
-# Setup for Question 19: Create an Ingress resource
+# Setup for Question 19: Install Helm and deploy Bitnami Nginx
 
-# Create the networking namespace if it doesn't exist already
-if ! kubectl get namespace networking &> /dev/null; then
-    kubectl create namespace networking
+# Create the web namespace if it doesn't exist already
+if ! kubectl get namespace web &> /dev/null; then
+    kubectl create namespace web
 fi
 
-# Delete any existing Ingress with the same name
-kubectl delete ingress api-ingress -n networking --ignore-not-found=true
+# Delete any existing helm installations of nginx
+if command -v helm &> /dev/null; then
+    helm uninstall nginx -n web --ignore-not-found
+fi
 
-# Create a service to be used by the Ingress
-kubectl delete service api-service -n networking --ignore-not-found=true
-kubectl delete deployment api-backend -n networking --ignore-not-found=true
-
-# Create a deployment for the API service
-cat <<EOF | kubectl apply -f -
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: api-backend
-  namespace: networking
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: api
-  template:
-    metadata:
-      labels:
-        app: api
-    spec:
-      containers:
-      - name: api
-        image: nginx
-        ports:
-        - containerPort: 80
-EOF
-
-# Create a service for the API deployment
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  name: api-service
-  namespace: networking
-spec:
-  selector:
-    app: api
-  ports:
-  - port: 80
-    targetPort: 80
-EOF
-
-echo "Setup complete for Question 19: Created service 'api-service' for the Ingress resource"
+echo "Setup complete for Question 19: Environment ready for installing Helm and deploying Bitnami Nginx"
+echo "Note: The candidate should add the Bitnami repo if not already present: helm repo add bitnami https://charts.bitnami.com/bitnami"
 exit 0 

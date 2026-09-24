@@ -1,12 +1,38 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace flare --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace aurora --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 mkdir -p /tmp/exam/course/13
-if [ ! -f /tmp/exam/course/13/tls.crt ] || [ ! -f /tmp/exam/course/13/tls.key ]; then
-  openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /tmp/exam/course/13/tls.key \
-    -out /tmp/exam/course/13/tls.crt \
-    -subj "/CN=web.flare.example.com" >/dev/null 2>&1 || true
-fi
+kubectl apply -f - >/dev/null 2>&1 <<'EOF' || true
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: backups.ckad.example.com
+spec:
+  group: ckad.example.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                schedule:
+                  type: string
+                retentionDays:
+                  type: integer
+                storageLocation:
+                  type: string
+  scope: Namespaced
+  names:
+    plural: backups
+    singular: backup
+    kind: Backup
+    shortNames:
+      - bk
+EOF
 echo "Setup complete for Question 13"
 exit 0

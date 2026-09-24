@@ -1,24 +1,24 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace fang --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace jungle --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 kubectl apply -f - >/dev/null 2>&1 <<'YAML' || true
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: safe-deploy
-  namespace: fang
+  name: critical-app
+  namespace: jungle
   labels:
-    app: safe-deploy
+    app: critical-app
     exam: ckad-simulation3
 spec:
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
-      app: safe-deploy
+      app: critical-app
   template:
     metadata:
       labels:
-        app: safe-deploy
+        app: critical-app
     spec:
       containers:
       - name: nginx

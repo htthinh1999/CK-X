@@ -1,61 +1,80 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=calibration
+NS=almanac
+DIR=/home/candidate/exam/q14
+
 kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+rm -rf "$DIR" && mkdir -p "$DIR"
 
-# Reset: the new ConfigMap is created by the student
-kubectl -n "$NS" delete configmap optics-v2 --ignore-not-found >/dev/null 2>&1 || true
+cat > "$DIR/almanac.env" <<'EOF'
+# Almanac service runtime settings
+# one KEY=value per line; lines starting with # are comments
 
-cat <<'YAML' | kubectl apply -f - >/dev/null 2>&1 || true
+SUNRISE_SOURCE=usno
+TIDE_TABLE=pacific-north
+MOON_PHASE_API=v2
+FORECAST_WINDOW=72h
+EOF
+
+# Reset student-created objects (idempotent re-runs)
+kubectl -n "$NS" delete pod almanac-reader --ignore-not-found --wait=false >/dev/null 2>&1 || true
+kubectl -n "$NS" delete configmap sky-settings --ignore-not-found >/dev/null 2>&1 || true
+
+kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' || true
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: optics-v1
-  namespace: calibration
-data:
-  FOCAL_LENGTH: "1200"
-  APERTURE: "f8"
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: lens-calibrator
-  namespace: calibration
+  name: ephemeris-2019
+  namespace: almanac
   labels:
-    app: lens-calibrator
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: lens-calibrator
-  template:
-    metadata:
-      labels:
-        app: lens-calibrator
-    spec:
-      containers:
-        - name: calibrator
-          image: nginx:1.25
-          ports:
-            - containerPort: 80
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-            limits:
-              cpu: 100m
-              memory: 128Mi
-          volumeMounts:
-            - name: optics
-              mountPath: /etc/lens
-              readOnly: true
-      volumes:
-        - name: optics
-          configMap:
-            name: optics-v1
+    kind: ephemeris
+    stale: "true"
+data:
+  epoch: "2019"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ephemeris-2020
+  namespace: almanac
+  labels:
+    kind: ephemeris
+    stale: "true"
+data:
+  epoch: "2020"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tide-tables-legacy
+  namespace: almanac
+  labels:
+    kind: tides
+    stale: "true"
+data:
+  region: pacific
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ephemeris-2025
+  namespace: almanac
+  labels:
+    kind: ephemeris
+    stale: "false"
+data:
+  epoch: "2025"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: observer-roster
+  namespace: almanac
+  labels:
+    team: night-shift
+data:
+  lead: vega
 YAML
-
-kubectl -n "$NS" rollout status deployment/lens-calibrator --timeout=120s >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 14"
 exit 0

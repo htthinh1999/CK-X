@@ -1,28 +1,27 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace bulwark --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl create namespace bastion --dry-run=client -o yaml | kubectl apply -f - || true
 kubectl apply -f - <<'YAML'
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: v1-service
-  namespace: bulwark
+  name: worker-deploy
+  namespace: bastion
 spec:
-  ports:
-  - port: 80
+  replicas: 1
   selector:
-    app: v1
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: v2-service
-  namespace: bulwark
-spec:
-  ports:
-  - port: 80
-  selector:
-    app: v2
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.24.0
+      - name: redis
+        image: redis:6.2
 YAML
 echo "Setup complete for Question 18"
 exit 0

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Check if the namespace exists
-kubectl get namespace helm-basics &> /dev/null
+kubectl get namespace custom-columns-demo &> /dev/null
 if [[ $? -eq 0 ]]; then
-  echo "✅ Namespace 'helm-basics' exists"
+  echo "✅ Namespace 'custom-columns-demo' exists"
   exit 0
 else
-  echo "❌ Namespace 'helm-basics' not found"
+  echo "❌ Namespace 'custom-columns-demo' not found"
   exit 1
 fi 

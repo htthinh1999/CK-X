@@ -1,7 +1,8 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace abyss --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+# File-based: student saves `kubectl top nodes` output.
+mkdir -p /tmp/exam/course/19 || true
 
 echo "Setup complete for Question 19"
 exit 0

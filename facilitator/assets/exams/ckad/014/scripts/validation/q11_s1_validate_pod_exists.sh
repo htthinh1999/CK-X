@@ -1,9 +1,9 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-if kubectl get pod logger -n lunar >/dev/null 2>&1; then
-  echo "Success: pod logger exists in lunar"
+if kubectl get pod legacy-app -n eclipse >/dev/null 2>&1; then
+  echo "Success: pod legacy-app exists in eclipse"
   exit 0
 else
-  echo "Error: pod logger not found in lunar"
+  echo "Error: pod legacy-app not found in eclipse"
   exit 1
 fi

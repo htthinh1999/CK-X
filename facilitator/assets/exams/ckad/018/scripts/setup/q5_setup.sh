@@ -1,24 +1,19 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace chorus --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
-helm uninstall wisdom-app -n chorus 2>/dev/null || true
-mkdir -p /tmp/exam/course/5/chart/templates
-cat > /tmp/exam/course/5/chart/Chart.yaml <<'EOF'
-apiVersion: v2
-name: wisdom-app
-version: 0.1.0
-dependencies:
-  - name: nginx
-    version: 15.1.0
-    repository: https://charts.bitnami.com/bitnami
+kubectl create namespace aria --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
+kubectl delete pod heavy-worker -n aria --ignore-not-found=true 2>/dev/null || true
+kubectl apply -f - <<'EOF'
+apiVersion: v1
+kind: Pod
+metadata:
+  name: heavy-worker
+  namespace: aria
+spec:
+  containers:
+  - name: main
+    image: busybox
+    command: ["sleep", "3600"]
 EOF
-cat > /tmp/exam/course/5/chart/values.yaml <<'EOF'
-replicaCount: 1
-service:
-  port: 80
-EOF
-cat > /tmp/exam/course/5/values.yaml <<'EOF'
-# override values here
-EOF
+mkdir -p /tmp/exam/course/5
 echo "Setup complete for Question 5"
 exit 0

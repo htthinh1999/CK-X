@@ -1,6 +1,7 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace thicket --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-mkdir -p /tmp/exam/course/2 2>/dev/null || true
+kubectl create namespace grove --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl delete pod nginx -n grove --ignore-not-found=true >/dev/null 2>&1 || true
+kubectl delete service nginx -n grove --ignore-not-found=true >/dev/null 2>&1 || true
 echo "Setup complete for Question 2"
 exit 0

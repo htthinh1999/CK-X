@@ -34,107 +34,7 @@ kubectl get ep web -n harvest
 
 ---
 
-## Question 2 | Convert Service to NodePort (5 points)
-
-> Server: `ssh ckad9999`
-
-```bash
-kubectl patch svc app-svc -n grain -p '{"spec":{"type":"NodePort"}}'
-```
-
-Or use edit:
-
-```bash
-kubectl edit svc app-svc -n grain
-# Change spec.type from ClusterIP to NodePort
-```
-
----
-
-## Question 3 | Deployment with Service (6 points)
-
-> Server: `ssh ckad9999`
-
-```bash
-# Create Deployment
-kubectl create deployment backend --image=nginx:1.25 --replicas=3 --port=8080 -n rice
-
-# Expose Deployment
-kubectl expose deployment backend --port=6262 --target-port=8080 -n rice
-```
-
----
-
-## Question 4 | Readiness Probe HTTP (5 points)
-
-> Server: `ssh ckad9999`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: ready-pod
-  namespace: field
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.25
-    ports:
-    - containerPort: 80
-    readinessProbe:
-      httpGet:
-        path: /
-        port: 80
-```
-
----
-
-## Question 5 | Liveness Probe with Delay (5 points)
-
-> Server: `ssh ckad9999`
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: live-pod
-  namespace: shrine
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.25
-    livenessProbe:
-      exec:
-        command:
-        - ls
-      initialDelaySeconds: 5
-      periodSeconds: 10
-```
-
----
-
-## Question 6 | LimitRange for Namespace (6 points)
-
-> Server: `ssh ckad9999`
-
-```yaml
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: pod-limits
-  namespace: blessing
-spec:
-  limits:
-  - max:
-      memory: "500Mi"
-    min:
-      memory: "100Mi"
-    type: Pod
-```
-
----
-
-## Question 7 | ResourceQuota with Requests and Limits (6 points)
+## Question 2 | ResourceQuota with Requests and Limits (6 points)
 
 > Server: `ssh ckad9988`
 
@@ -161,7 +61,24 @@ spec:
 
 ---
 
-## Question 8 | Pod within ResourceQuota (5 points)
+## Question 3 | Convert Service to NodePort (5 points)
+
+> Server: `ssh ckad9999`
+
+```bash
+kubectl patch svc app-svc -n grain -p '{"spec":{"type":"NodePort"}}'
+```
+
+Or use edit:
+
+```bash
+kubectl edit svc app-svc -n grain
+# Change spec.type from ClusterIP to NodePort
+```
+
+---
+
+## Question 4 | Pod within ResourceQuota (5 points)
 
 > Server: `ssh ckad9988`
 
@@ -186,30 +103,32 @@ spec:
 
 ---
 
-## Question 9 | Security Context with Capabilities (6 points)
+## Question 5 | Deployment with Service (6 points)
 
 > Server: `ssh ckad9999`
 
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: cap-pod
-  namespace: golden
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.25
-    securityContext:
-      capabilities:
-        add:
-        - NET_ADMIN
-        - SYS_TIME
+```bash
+# Create Deployment
+kubectl create deployment backend --image=nginx:1.25 --replicas=3 --port=8080 -n rice
+
+# Expose Deployment
+kubectl expose deployment backend --port=6262 --target-port=8080 -n rice
 ```
 
 ---
 
-## Question 10 | Shared Volume Between Containers (6 points)
+## Question 6 | Helm List Releases (4 points)
+
+> Server: `ssh ckad9977`
+
+```bash
+mkdir -p /tmp/exam/course/6
+helm list -A > /tmp/exam/course/6/releases.txt
+```
+
+---
+
+## Question 7 | Shared Volume Between Containers (6 points)
 
 > Server: `ssh ckad9988`
 
@@ -240,72 +159,31 @@ spec:
 
 ---
 
-## Question 11 | Annotations (4 points)
+## Question 8 | Readiness Probe HTTP (5 points)
 
-> Server: `ssh ckad9988`
+> Server: `ssh ckad9999`
 
-```bash
-kubectl run annotated-pod --image=nginx:1.25 --restart=Never -n prosperity
-kubectl annotate pod annotated-pod owner=marketing -n prosperity
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ready-pod
+  namespace: field
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.25
+    ports:
+    - containerPort: 80
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 80
 ```
 
 ---
 
-## Question 12 | Labels Selection (5 points)
-
-> Server: `ssh ckad9988`
-
-```bash
-# Create pods
-kubectl run pod1 --image=nginx:1.25 --restart=Never -n harvest
-kubectl run pod2 --image=nginx:1.25 --restart=Never -n harvest
-kubectl run pod3 --image=nginx:1.25 --restart=Never -n harvest
-
-# Label pods
-kubectl label pod pod1 pod2 env=prod -n harvest
-kubectl label pod pod3 env=dev -n harvest
-
-# List and save
-mkdir -p /tmp/exam/course/12
-kubectl get pods -n harvest -l env=prod > /tmp/exam/course/12/pods.txt
-```
-
----
-
-## Question 13 | Helm Add Repository (4 points)
-
-> Server: `ssh ckad9988`
-
-```bash
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
-```
-
----
-
-## Question 14 | Helm Show Values (5 points)
-
-> Server: `ssh ckad9988`
-
-```bash
-mkdir -p /tmp/exam/course/14
-helm show values bitnami/nginx | head -50 > /tmp/exam/course/14/values.txt
-```
-
----
-
-## Question 15 | Helm List Releases (4 points)
-
-> Server: `ssh ckad9977`
-
-```bash
-mkdir -p /tmp/exam/course/15
-helm list -A > /tmp/exam/course/15/releases.txt
-```
-
----
-
-## Question 16 | Canary Deployment Setup (6 points)
+## Question 9 | Canary Deployment Setup (6 points)
 
 > Server: `ssh ckad9977`
 
@@ -374,7 +252,18 @@ spec:
 
 ---
 
-## Question 17 | emptyDir Volume for Data Sharing (5 points)
+## Question 10 | Annotations (4 points)
+
+> Server: `ssh ckad9988`
+
+```bash
+kubectl run annotated-pod --image=nginx:1.25 --restart=Never -n prosperity
+kubectl annotate pod annotated-pod owner=marketing -n prosperity
+```
+
+---
+
+## Question 11 | emptyDir Volume for Data Sharing (5 points)
 
 > Server: `ssh ckad9977`
 
@@ -405,25 +294,125 @@ spec:
 
 ---
 
-## Question 18 | Pod DNS Resolution (5 points)
+## Question 12 | Labels Selection (5 points)
+
+> Server: `ssh ckad9988`
+
+```bash
+# Create pods
+kubectl run pod1 --image=nginx:1.25 --restart=Never -n harvest
+kubectl run pod2 --image=nginx:1.25 --restart=Never -n harvest
+kubectl run pod3 --image=nginx:1.25 --restart=Never -n harvest
+
+# Label pods
+kubectl label pod pod1 pod2 env=prod -n harvest
+kubectl label pod pod3 env=dev -n harvest
+
+# List and save
+mkdir -p /tmp/exam/course/12
+kubectl get pods -n harvest -l env=prod > /tmp/exam/course/12/pods.txt
+```
+
+---
+
+## Question 13 | Liveness Probe with Delay (5 points)
+
+> Server: `ssh ckad9999`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: live-pod
+  namespace: shrine
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.25
+    livenessProbe:
+      exec:
+        command:
+        - ls
+      initialDelaySeconds: 5
+      periodSeconds: 10
+```
+
+---
+
+## Question 14 | Helm Add Repository (4 points)
+
+> Server: `ssh ckad9988`
+
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+```
+
+---
+
+## Question 15 | LimitRange for Namespace (6 points)
+
+> Server: `ssh ckad9999`
+
+```yaml
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: pod-limits
+  namespace: blessing
+spec:
+  limits:
+  - max:
+      memory: "500Mi"
+    min:
+      memory: "100Mi"
+    type: Pod
+```
+
+---
+
+## Question 16 | Pod DNS Resolution (5 points)
 
 > Server: `ssh ckad9977`
 
 ```bash
-mkdir -p /tmp/exam/course/18
-kubectl run busybox --rm -it --restart=Never --image=busybox:1.36 -n field -- nslookup web-svc.field.svc.cluster.local | grep -A1 "Name:" | tail -1 | awk '{print $2}' > /tmp/exam/course/18/dns.txt
+mkdir -p /tmp/exam/course/16
+kubectl run busybox --rm -it --restart=Never --image=busybox:1.36 -n field -- nslookup web-svc.field.svc.cluster.local | grep -A1 "Name:" | tail -1 | awk '{print $2}' > /tmp/exam/course/16/dns.txt
 ```
 
 Or (save the full lookup output):
 
 ```bash
-mkdir -p /tmp/exam/course/18
-kubectl run busybox --rm -it --restart=Never --image=busybox:1.36 -n field -- sh -c 'nslookup web-svc' > /tmp/exam/course/18/dns.txt
+mkdir -p /tmp/exam/course/16
+kubectl run busybox --rm -it --restart=Never --image=busybox:1.36 -n field -- sh -c 'nslookup web-svc' > /tmp/exam/course/16/dns.txt
 ```
 
 ---
 
-## Question 19 | Network Policy Allow Specific Label (6 points)
+## Question 17 | Security Context with Capabilities (6 points)
+
+> Server: `ssh ckad9999`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cap-pod
+  namespace: golden
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.25
+    securityContext:
+      capabilities:
+        add:
+        - NET_ADMIN
+        - SYS_TIME
+```
+
+---
+
+## Question 18 | Network Policy Allow Specific Label (6 points)
 
 > Server: `ssh ckad9977`
 
@@ -444,6 +433,17 @@ spec:
     - podSelector:
         matchLabels:
           access: "true"
+```
+
+---
+
+## Question 19 | Helm Show Values (5 points)
+
+> Server: `ssh ckad9988`
+
+```bash
+mkdir -p /tmp/exam/course/19
+helm show values bitnami/nginx | head -50 > /tmp/exam/course/19/values.txt
 ```
 
 ---

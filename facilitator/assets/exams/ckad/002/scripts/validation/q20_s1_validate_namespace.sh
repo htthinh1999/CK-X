@@ -1,11 +1,13 @@
 #!/bin/bash
 
-# Check if namespace exists
-NS_EXISTS=$(kubectl get namespace pod-configuration --no-headers --output=name 2>/dev/null | wc -l)
-if [[ "$NS_EXISTS" -eq 1 ]]; then
-  echo "✅ Namespace 'pod-configuration' exists"
-  exit 0
+# Validate that the init-containers namespace exists
+NS=$(kubectl get namespace init-containers -o jsonpath='{.metadata.name}' 2>/dev/null)
+
+if [[ "$NS" == "init-containers" ]]; then
+    # Namespace exists
+    exit 0
 else
-  echo "❌ Namespace 'pod-configuration' not found"
-  exit 1
+    # Namespace does not exist
+    echo "Namespace 'init-containers' does not exist"
+    exit 1
 fi 

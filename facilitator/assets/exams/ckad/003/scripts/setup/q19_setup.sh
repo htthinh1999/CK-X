@@ -1,7 +1,7 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace blaze --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
+mkdir -p /tmp/exam/course/19
 
 echo "Setup complete for Question 19"
 exit 0

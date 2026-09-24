@@ -1,31 +1,22 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace tempest --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-mkdir -p /tmp/exam/course/4
+kubectl create namespace mistral --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 kubectl apply -f - <<'EOF' >/dev/null 2>&1 || true
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: tempest-app
-  namespace: tempest
+  name: memory-hog
+  namespace: mistral
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: tempest
-  template:
-    metadata:
-      labels:
-        app: tempest
-    spec:
-      containers:
-      - name: main
-        image: nginx:1.22
-        ports:
-        - containerPort: 80
-        env:
-        - name: WIND_FORCE
-          value: "high"
+  containers:
+  - name: hog
+    image: polynya/stress
+    args: ["--vm", "1", "--vm-bytes", "150M", "--vm-hang", "1"]
+    resources:
+      requests:
+        memory: "64Mi"
+      limits:
+        memory: "64Mi"
 EOF
 echo "Setup complete for Question 4"
 exit 0

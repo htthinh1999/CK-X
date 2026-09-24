@@ -1,489 +1,217 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "harmony",
-      "machineHostname": "ckad9999",
-      "question": "You have been asked to build an application container image. A directory has been provided at `/tmp/exam/course/1/app` with the application source code.\n\nCreate a `Dockerfile` at `/tmp/exam/course/1/Dockerfile` to build an image named `localhost:5000/benzaiten-wisdom:v1` using `nginx:alpine` as the base image.\n\nCopy the contents of the `app` directory into `/usr/share/nginx/html/` in the container.\n\nBuild the image and push it to the local registry at `localhost:5000`.\n\nThen create a pod named `wisdom-server` in the `harmony` namespace using this image.",
-      "concepts": [
-        "docker",
-        "images",
-        "pods"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Pod wisdom-server exists in harmony with the benzaiten-wisdom image",
-          "verificationScriptFile": "q1_s1_validate_pod_image.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "melody",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `ambassador-pod` in the `melody` namespace.\n\nThe Pod should run a main application container using image `busybox` running `sleep 3600`.\n\nIt should also run a sidecar ambassador container using image `haproxy:2.4-alpine`.\n\nThe ambassador should proxy traffic from `localhost:8080` to an external service. A ConfigMap named `haproxy-config` has already been created in the `melody` namespace containing the HAProxy configuration. Mount this ConfigMap to `/usr/local/etc/haproxy/haproxy.cfg` in the ambassador container.",
-      "concepts": [
-        "pods",
-        "sidecar",
-        "configmaps"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod ambassador-pod exists in melody",
-          "verificationScriptFile": "q2_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "1",
+            "namespace": "lyric",
+            "machineHostname": "ckad9988",
+            "question": "A base kustomize configuration is at `/tmp/exam/course/1/base`.\n\nCreate an overlay for a `production` environment at `/tmp/exam/course/1/overlays/production`.\n\nThe overlay should:\n\n1. Change the namespace to `lyric`\n2. Apply a common label `env: production` to all resources\n3. Update the replicas of the deployment `app-deploy` to 4\n\nApply the overlay to the cluster using Kustomize.",
+            "concepts": ["kustomize", "overlays", "deployments"],
+            "verification": [
+                { "id": "1", "description": "Deployment app-deploy exists in lyric", "verificationScriptFile": "q1_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 4 },
+                { "id": "2", "description": "Deployment app-deploy has 4 replicas", "verificationScriptFile": "q1_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "ConfigMap haproxy-config is mounted as a volume in the pod",
-          "verificationScriptFile": "q2_s2_validate_configmap_mounted.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "rhythm",
-      "machineHostname": "ckad9999",
-      "question": "Create a Job named `data-cleanup` in the `rhythm` namespace.\n\nThe Job should run a single container using the `busybox` image and execute the command `echo \"Cleaning up old records\"; sleep 5`.\n\nConfigure the Job to automatically delete itself 10 seconds after it finishes successfully.",
-      "concepts": [
-        "jobs",
-        "ttl"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Job data-cleanup exists in rhythm",
-          "verificationScriptFile": "q3_s1_validate_job_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "2",
+            "namespace": "harmony",
+            "machineHostname": "ckad9999",
+            "question": "You have been asked to build an application container image. A directory has been provided at `/tmp/exam/course/2/app` with the application source code.\n\nCreate a `Dockerfile` at `/tmp/exam/course/2/Dockerfile` to build an image named `localhost:5000/benzaiten-wisdom:v1` using `nginx:alpine` as the base image.\n\nCopy the contents of the `app` directory into `/usr/share/nginx/html/` in the container.\n\nBuild the image and push it to the local registry at `localhost:5000`.\n\nThen create a pod named `wisdom-server` in the `harmony` namespace using this image.",
+            "concepts": ["docker", "images", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod wisdom-server exists in harmony with the benzaiten-wisdom image", "verificationScriptFile": "q2_s1_validate_pod_image.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Job has ttlSecondsAfterFinished set to 10",
-          "verificationScriptFile": "q3_s2_validate_ttl.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "cadence",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `shared-process-pod` in the `cadence` namespace.\n\nThe Pod should run two containers:\n\n1. `app-container` using image `nginx:alpine`\n2. `debug-container` using image `busybox` running the command `sleep 3600`\n\nEnable process namespace sharing between the containers in this Pod so the `debug-container` can see processes running in the `app-container`.",
-      "concepts": [
-        "pods",
-        "shareProcessNamespace"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod shared-process-pod exists in cadence",
-          "verificationScriptFile": "q4_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "3",
+            "namespace": "tempo",
+            "machineHostname": "ckad9988",
+            "question": "A Pod named `metrics-pod` exists in the `tempo` namespace but is stuck in `ContainerCreating`.\n\nIdentify the cause of the issue and fix it. The pod should be running. Do not change the image or basic pod structure, but create or fix any missing dependencies. (Hint: Missing ConfigMap).",
+            "concepts": ["debugging", "pods", "configmaps"],
+            "verification": [
+                { "id": "1", "description": "Pod metrics-pod is Running in tempo", "verificationScriptFile": "q3_s1_validate_pod_running.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
         },
         {
-          "id": "2",
-          "description": "shareProcessNamespace is enabled on the pod",
-          "verificationScriptFile": "q4_s2_validate_share_process.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "chorus",
-      "machineHostname": "ckad9999",
-      "question": "A Helm chart is located at `/tmp/exam/course/5/chart`. It has a dependency on a subchart.\n\nFirst, update the chart dependencies.\n\nThen, create a values file at `/tmp/exam/course/5/values.yaml` to set `replicaCount: 3` and `service.port: 8080`.\n\nInstall the chart as a release named `wisdom-app` in the `chorus` namespace using the values file.",
-      "concepts": [
-        "helm",
-        "releases"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Helm release wisdom-app exists in chorus",
-          "verificationScriptFile": "q5_s1_validate_release_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "4",
+            "namespace": "sonata",
+            "machineHostname": "ckad9977",
+            "question": "Create a ServiceAccount named `vault-accessor` in the `sonata` namespace.\n\nCreate a token for this ServiceAccount with a duration of 1 hour (3600 seconds) using the TokenRequest API (via kubectl).\n\nSave the raw token string to `/tmp/exam/course/4/token.txt`.",
+            "concepts": ["serviceaccounts", "tokens", "rbac"],
+            "verification": [
+                { "id": "1", "description": "File /tmp/exam/course/15/token.txt exists and is non-empty", "verificationScriptFile": "q4_s1_validate_token_file.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Release has custom replicaCount value set",
-          "verificationScriptFile": "q5_s2_validate_values.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "sonata",
-      "machineHostname": "ckad9999",
-      "question": "Create a Deployment named `rolling-deploy` in the `sonata` namespace with 5 replicas using the `nginx:1.24-alpine` image.\n\nConfigure the deployment strategy to be a RollingUpdate. Set `maxSurge` to `40%` and `maxUnavailable` to `20%`.\n\nAfter creation, update the image to `nginx:1.25-alpine` and record the rollout in the deployment's history.",
-      "concepts": [
-        "deployments",
-        "rollingupdate",
-        "rollout"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment rolling-deploy exists in sonata",
-          "verificationScriptFile": "q6_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "5",
+            "namespace": "aria",
+            "machineHostname": "ckad9988",
+            "question": "Use the `kubectl` raw API to query the metrics API server.\n\nFind the memory usage of the pod `heavy-worker` in the `aria` namespace.\n\nWrite the memory usage (in Ki or Mi, exactly as output by the API) to `/tmp/exam/course/5/metrics.txt`.",
+            "concepts": ["metrics", "observability"],
+            "verification": [
+                { "id": "1", "description": "File /tmp/exam/course/10/metrics.txt exists and is non-empty", "verificationScriptFile": "q5_s1_validate_metrics_file.sh", "expectedOutput": "0", "weightage": 6 }
+            ]
         },
         {
-          "id": "2",
-          "description": "RollingUpdate strategy has maxSurge=40% and maxUnavailable=20%",
-          "verificationScriptFile": "q6_s2_validate_strategy.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "verse",
-      "machineHostname": "ckad9999",
-      "question": "A Deployment named `legacy-app` exists in the `verse` namespace. It was updated multiple times and the latest version is failing.\n\nUndo the rollout and rollback to exactly revision 2.",
-      "concepts": [
-        "deployments",
-        "rollback"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment legacy-app rollout undone (deployment present)",
-          "verificationScriptFile": "q7_s1_validate_rollback.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "lyric",
-      "machineHostname": "ckad9988",
-      "question": "A base kustomize configuration is at `/tmp/exam/course/8/base`.\n\nCreate an overlay for a `production` environment at `/tmp/exam/course/8/overlays/production`.\n\nThe overlay should:\n\n1. Change the namespace to `lyric`\n2. Apply a common label `env: production` to all resources\n3. Update the replicas of the deployment `app-deploy` to 4\n\nApply the overlay to the cluster using Kustomize.",
-      "concepts": [
-        "kustomize",
-        "overlays",
-        "deployments"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment app-deploy exists in lyric",
-          "verificationScriptFile": "q8_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 4
+            "id": "6",
+            "namespace": "chorus",
+            "machineHostname": "ckad9977",
+            "question": "Create a NetworkPolicy named `port-range-allow` in the `chorus` namespace.\n\nIt should apply to pods with the label `role: backend`.\n\nAllow INGRESS traffic on TCP ports 3000 through 3010 from any pod in the `chorus` namespace.",
+            "concepts": ["networkpolicy", "ingress", "ports"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy port-range-allow exists in chorus", "verificationScriptFile": "q6_s1_validate_netpol_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Ingress rule has endPort 3010", "verificationScriptFile": "q6_s2_validate_port_range.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Deployment app-deploy has 4 replicas",
-          "verificationScriptFile": "q8_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "tempo",
-      "machineHostname": "ckad9988",
-      "question": "A Pod named `metrics-pod` exists in the `tempo` namespace but is stuck in `ContainerCreating`.\n\nIdentify the cause of the issue and fix it. The pod should be running. Do not change the image or basic pod structure, but create or fix any missing dependencies. (Hint: Missing ConfigMap).",
-      "concepts": [
-        "debugging",
-        "pods",
-        "configmaps"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod metrics-pod is Running in tempo",
-          "verificationScriptFile": "q9_s1_validate_pod_running.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "aria",
-      "machineHostname": "ckad9988",
-      "question": "Use the `kubectl` raw API to query the metrics API server.\n\nFind the memory usage of the pod `heavy-worker` in the `aria` namespace.\n\nWrite the memory usage (in Ki or Mi, exactly as output by the API) to `/tmp/exam/course/10/metrics.txt`.",
-      "concepts": [
-        "metrics",
-        "observability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File /tmp/exam/course/10/metrics.txt exists and is non-empty",
-          "verificationScriptFile": "q10_s1_validate_metrics_file.sh",
-          "expectedOutput": "0",
-          "weightage": 6
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "harmony",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `health-check` in the `harmony` namespace using image `nginx:alpine`.\n\nConfigure a Liveness probe that sends an HTTP GET request to `/healthz` on port 80, starting 5 seconds after the container starts, with a period of 10 seconds.\n\nConfigure a Readiness probe that sends an HTTP GET request to `/ready` on port 80, with an initial delay of 10 seconds and period of 5 seconds.",
-      "concepts": [
-        "probes",
-        "pods",
-        "liveness"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod health-check exists in harmony",
-          "verificationScriptFile": "q11_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "7",
+            "namespace": "harmony",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `health-check` in the `harmony` namespace using image `nginx:alpine`.\n\nConfigure a Liveness probe that sends an HTTP GET request to `/healthz` on port 80, starting 5 seconds after the container starts, with a period of 10 seconds.\n\nConfigure a Readiness probe that sends an HTTP GET request to `/ready` on port 80, with an initial delay of 10 seconds and period of 5 seconds.",
+            "concepts": ["probes", "pods", "liveness"],
+            "verification": [
+                { "id": "1", "description": "Pod health-check exists in harmony", "verificationScriptFile": "q7_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod has both liveness and readiness probes configured", "verificationScriptFile": "q7_s2_validate_probes.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod has both liveness and readiness probes configured",
-          "verificationScriptFile": "q11_s2_validate_probes.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "melody",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `projected-pod` in the `melody` namespace using image `busybox`, command `sleep 3600`.\n\nUse a projected volume named `all-in-one` mounted at `/etc/projected`.\n\nThe volume should project:\n\n1. A Downward API volume projecting the pod's labels into a file named `pod-labels.txt`\n2. A ConfigMap named `info-cm` projecting its contents\n3. A Secret named `info-secret` projecting its contents\n\n(The ConfigMap and Secret already exist).",
-      "concepts": [
-        "volumes",
-        "projected",
-        "downwardapi"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod projected-pod exists in melody",
-          "verificationScriptFile": "q12_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "8",
+            "namespace": "verse",
+            "machineHostname": "ckad9977",
+            "question": "Create a NetworkPolicy named `egress-external-only` in the `verse` namespace.\n\nIt should apply to pods with the label `role: egress-app`.\n\nAllow EGRESS traffic to the CIDR `10.0.0.0/8`, but explicitly deny/exclude traffic to the smaller CIDR `10.200.0.0/16`.\n\n(Note: Do this using an `except` block in the policy).",
+            "concepts": ["networkpolicy", "egress", "ipblock"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy egress-external-only exists in verse", "verificationScriptFile": "q8_s1_validate_netpol_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Egress ipBlock has an except block", "verificationScriptFile": "q8_s2_validate_except.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Projected volume has downwardAPI, configMap and secret sources",
-          "verificationScriptFile": "q12_s2_validate_projected_sources.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "rhythm",
-      "machineHostname": "ckad9988",
-      "question": "A binary file is provided at `/tmp/exam/course/13/data.bin`.\n\nCreate a ConfigMap named `binary-config` in the `rhythm` namespace containing this file as binary data.",
-      "concepts": [
-        "configmaps",
-        "binarydata"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ConfigMap binary-config in rhythm has binary data",
-          "verificationScriptFile": "q13_s1_validate_binary_configmap.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "cadence",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `selinux-pod` in the `cadence` namespace using image `busybox` and command `sleep 3600`.\n\nConfigure the Pod's SecurityContext to set the SELinux options:\n`level: \"s0:c123,c456\"`",
-      "concepts": [
-        "securitycontext",
-        "selinux",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod selinux-pod exists in cadence",
-          "verificationScriptFile": "q14_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "9",
+            "namespace": "melody",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `ambassador-pod` in the `melody` namespace.\n\nThe Pod should run a main application container using image `busybox` running `sleep 3600`.\n\nIt should also run a sidecar ambassador container using image `haproxy:2.4-alpine`.\n\nThe ambassador should proxy traffic from `localhost:8080` to an external service. A ConfigMap named `haproxy-config` has already been created in the `melody` namespace containing the HAProxy configuration. Mount this ConfigMap to `/usr/local/etc/haproxy/haproxy.cfg` in the ambassador container.",
+            "concepts": ["pods", "sidecar", "configmaps"],
+            "verification": [
+                { "id": "1", "description": "Pod ambassador-pod exists in melody", "verificationScriptFile": "q9_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "ConfigMap haproxy-config is mounted as a volume in the pod", "verificationScriptFile": "q9_s2_validate_configmap_mounted.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "SELinux level is set to s0:c123,c456",
-          "verificationScriptFile": "q14_s2_validate_selinux.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "sonata",
-      "machineHostname": "ckad9977",
-      "question": "Create a ServiceAccount named `vault-accessor` in the `sonata` namespace.\n\nCreate a token for this ServiceAccount with a duration of 1 hour (3600 seconds) using the TokenRequest API (via kubectl).\n\nSave the raw token string to `/tmp/exam/course/15/token.txt`.",
-      "concepts": [
-        "serviceaccounts",
-        "tokens",
-        "rbac"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File /tmp/exam/course/15/token.txt exists and is non-empty",
-          "verificationScriptFile": "q15_s1_validate_token_file.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "chorus",
-      "machineHostname": "ckad9977",
-      "question": "Create a NetworkPolicy named `port-range-allow` in the `chorus` namespace.\n\nIt should apply to pods with the label `role: backend`.\n\nAllow INGRESS traffic on TCP ports 3000 through 3010 from any pod in the `chorus` namespace.",
-      "concepts": [
-        "networkpolicy",
-        "ingress",
-        "ports"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy port-range-allow exists in chorus",
-          "verificationScriptFile": "q16_s1_validate_netpol_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "10",
+            "namespace": "melody",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `projected-pod` in the `melody` namespace using image `busybox`, command `sleep 3600`.\n\nUse a projected volume named `all-in-one` mounted at `/etc/projected`.\n\nThe volume should project:\n\n1. A Downward API volume projecting the pod's labels into a file named `pod-labels.txt`\n2. A ConfigMap named `info-cm` projecting its contents\n3. A Secret named `info-secret` projecting its contents\n\n(The ConfigMap and Secret already exist).",
+            "concepts": ["volumes", "projected", "downwardapi"],
+            "verification": [
+                { "id": "1", "description": "Pod projected-pod exists in melody", "verificationScriptFile": "q10_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Projected volume has downwardAPI, configMap and secret sources", "verificationScriptFile": "q10_s2_validate_projected_sources.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Ingress rule has endPort 3010",
-          "verificationScriptFile": "q16_s2_validate_port_range.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "verse",
-      "machineHostname": "ckad9977",
-      "question": "Create a NetworkPolicy named `egress-external-only` in the `verse` namespace.\n\nIt should apply to pods with the label `role: egress-app`.\n\nAllow EGRESS traffic to the CIDR `10.0.0.0/8`, but explicitly deny/exclude traffic to the smaller CIDR `10.200.0.0/16`.\n\n(Note: Do this using an `except` block in the policy).",
-      "concepts": [
-        "networkpolicy",
-        "egress",
-        "ipblock"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy egress-external-only exists in verse",
-          "verificationScriptFile": "q17_s1_validate_netpol_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "11",
+            "namespace": "rhythm",
+            "machineHostname": "ckad9999",
+            "question": "Create a Job named `data-cleanup` in the `rhythm` namespace.\n\nThe Job should run a single container using the `busybox` image and execute the command `echo \"Cleaning up old records\"; sleep 5`.\n\nConfigure the Job to automatically delete itself 10 seconds after it finishes successfully.",
+            "concepts": ["jobs", "ttl"],
+            "verification": [
+                { "id": "1", "description": "Job data-cleanup exists in rhythm", "verificationScriptFile": "q11_s1_validate_job_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Job has ttlSecondsAfterFinished set to 10", "verificationScriptFile": "q11_s2_validate_ttl.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Egress ipBlock has an except block",
-          "verificationScriptFile": "q17_s2_validate_except.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "lyric",
-      "machineHostname": "ckad9977",
-      "question": "Create an Ingress named `multi-tls-ingress` in the `lyric` namespace.\n\nRoute requests for `app1.benzaiten.dojo` to service `app1-svc` on port 80.\n\nRoute requests for `app2.benzaiten.dojo` to service `app2-svc` on port 80.\n\nConfigure TLS for both hosts. Use the existing secret `app1-tls` for `app1.benzaiten.dojo` and `app2-tls` for `app2.benzaiten.dojo`.\n\n(The services and secrets already exist).",
-      "concepts": [
-        "ingress",
-        "tls",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Ingress multi-tls-ingress exists in lyric",
-          "verificationScriptFile": "q18_s1_validate_ingress_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "12",
+            "namespace": "rhythm",
+            "machineHostname": "ckad9988",
+            "question": "A binary file is provided at `/tmp/exam/course/12/data.bin`.\n\nCreate a ConfigMap named `binary-config` in the `rhythm` namespace containing this file as binary data.",
+            "concepts": ["configmaps", "binarydata"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap binary-config in rhythm has binary data", "verificationScriptFile": "q12_s1_validate_binary_configmap.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Ingress TLS references both app1-tls and app2-tls",
-          "verificationScriptFile": "q18_s2_validate_tls.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "tempo",
-      "machineHostname": "ckad9977",
-      "question": "Find the EndpointSlice for the Service `external-db-svc` in the `tempo` namespace.\n\nExtract the IPv4 addresses from this EndpointSlice and write them to `/tmp/exam/course/19/endpoints.txt`, one address per line.",
-      "concepts": [
-        "endpointslice",
-        "services",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File /tmp/exam/course/19/endpoints.txt exists and is non-empty",
-          "verificationScriptFile": "q19_s1_validate_endpoints_file.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "aria",
-      "machineHostname": "ckad9977",
-      "question": "Create a Deployment named `local-app` in the `aria` namespace with 3 replicas using image `nginx:alpine`.\n\nCreate a NodePort service named `local-app-svc` exposing the deployment on port 80.\n\nConfigure the service to use `Local` for `externalTrafficPolicy` to preserve client source IPs.",
-      "concepts": [
-        "services",
-        "nodeport",
-        "deployments"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service local-app-svc exists in aria",
-          "verificationScriptFile": "q20_s1_validate_service_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "13",
+            "namespace": "cadence",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `shared-process-pod` in the `cadence` namespace.\n\nThe Pod should run two containers:\n\n1. `app-container` using image `nginx:alpine`\n2. `debug-container` using image `busybox` running the command `sleep 3600`\n\nEnable process namespace sharing between the containers in this Pod so the `debug-container` can see processes running in the `app-container`.",
+            "concepts": ["pods", "shareProcessNamespace"],
+            "verification": [
+                { "id": "1", "description": "Pod shared-process-pod exists in cadence", "verificationScriptFile": "q13_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "shareProcessNamespace is enabled on the pod", "verificationScriptFile": "q13_s2_validate_share_process.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Service externalTrafficPolicy is Local",
-          "verificationScriptFile": "q20_s2_validate_traffic_policy.sh",
-          "expectedOutput": "0",
-          "weightage": 4
+            "id": "14",
+            "namespace": "cadence",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `selinux-pod` in the `cadence` namespace using image `busybox` and command `sleep 3600`.\n\nConfigure the Pod's SecurityContext to set the SELinux options:\n`level: \"s0:c123,c456\"`",
+            "concepts": ["securitycontext", "selinux", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod selinux-pod exists in cadence", "verificationScriptFile": "q14_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "SELinux level is set to s0:c123,c456", "verificationScriptFile": "q14_s2_validate_selinux.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "chorus",
+            "machineHostname": "ckad9999",
+            "question": "A Helm chart is located at `/tmp/exam/course/15/chart`. It has a dependency on a subchart.\n\nFirst, update the chart dependencies.\n\nThen, create a values file at `/tmp/exam/course/15/values.yaml` to set `replicaCount: 3` and `service.port: 8080`.\n\nInstall the chart as a release named `wisdom-app` in the `chorus` namespace using the values file.",
+            "concepts": ["helm", "releases"],
+            "verification": [
+                { "id": "1", "description": "Helm release wisdom-app exists in chorus", "verificationScriptFile": "q15_s1_validate_release_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Release has custom replicaCount value set", "verificationScriptFile": "q15_s2_validate_values.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "lyric",
+            "machineHostname": "ckad9977",
+            "question": "Create an Ingress named `multi-tls-ingress` in the `lyric` namespace.\n\nRoute requests for `app1.benzaiten.dojo` to service `app1-svc` on port 80.\n\nRoute requests for `app2.benzaiten.dojo` to service `app2-svc` on port 80.\n\nConfigure TLS for both hosts. Use the existing secret `app1-tls` for `app1.benzaiten.dojo` and `app2-tls` for `app2.benzaiten.dojo`.\n\n(The services and secrets already exist).",
+            "concepts": ["ingress", "tls", "networking"],
+            "verification": [
+                { "id": "1", "description": "Ingress multi-tls-ingress exists in lyric", "verificationScriptFile": "q16_s1_validate_ingress_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Ingress TLS references both app1-tls and app2-tls", "verificationScriptFile": "q16_s2_validate_tls.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "sonata",
+            "machineHostname": "ckad9999",
+            "question": "Create a Deployment named `rolling-deploy` in the `sonata` namespace with 5 replicas using the `nginx:1.24-alpine` image.\n\nConfigure the deployment strategy to be a RollingUpdate. Set `maxSurge` to `40%` and `maxUnavailable` to `20%`.\n\nAfter creation, update the image to `nginx:1.25-alpine` and record the rollout in the deployment's history.",
+            "concepts": ["deployments", "rollingupdate", "rollout"],
+            "verification": [
+                { "id": "1", "description": "Deployment rolling-deploy exists in sonata", "verificationScriptFile": "q17_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "RollingUpdate strategy has maxSurge=40% and maxUnavailable=20%", "verificationScriptFile": "q17_s2_validate_strategy.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "tempo",
+            "machineHostname": "ckad9977",
+            "question": "Find the EndpointSlice for the Service `external-db-svc` in the `tempo` namespace.\n\nExtract the IPv4 addresses from this EndpointSlice and write them to `/tmp/exam/course/18/endpoints.txt`, one address per line.",
+            "concepts": ["endpointslice", "services", "networking"],
+            "verification": [
+                { "id": "1", "description": "File /tmp/exam/course/19/endpoints.txt exists and is non-empty", "verificationScriptFile": "q18_s1_validate_endpoints_file.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "verse",
+            "machineHostname": "ckad9999",
+            "question": "A Deployment named `legacy-app` exists in the `verse` namespace. It was updated multiple times and the latest version is failing.\n\nUndo the rollout and rollback to exactly revision 2.",
+            "concepts": ["deployments", "rollback"],
+            "verification": [
+                { "id": "1", "description": "Deployment legacy-app rollout undone (deployment present)", "verificationScriptFile": "q19_s1_validate_rollback.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "aria",
+            "machineHostname": "ckad9977",
+            "question": "Create a Deployment named `local-app` in the `aria` namespace with 3 replicas using image `nginx:alpine`.\n\nCreate a NodePort service named `local-app-svc` exposing the deployment on port 80.\n\nConfigure the service to use `Local` for `externalTrafficPolicy` to preserve client source IPs.",
+            "concepts": ["services", "nodeport", "deployments"],
+            "verification": [
+                { "id": "1", "description": "Service local-app-svc exists in aria", "verificationScriptFile": "q20_s1_validate_service_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Service externalTrafficPolicy is Local", "verificationScriptFile": "q20_s2_validate_traffic_policy.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

@@ -1,9 +1,7 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-
-mkdir -p /tmp/exam/course/15 || true
-chown -R candidate:candidate /tmp/exam 2>/dev/null || true
+kubectl create namespace blessing --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 15"
 exit 0

@@ -1,585 +1,230 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "ocean",
-      "machineHostname": "ckad9999",
-      "question": "There is a `Dockerfile` located at `/tmp/exam/course/1/Dockerfile` that builds a simple Go application. Currently, it uses a single-stage build resulting in a large image.\n\nModify the `Dockerfile` to use a multi-stage build to reduce the final image size:\n\n1. Use `golang:1.20-alpine` as the builder stage and name the stage `builder`.\n2. Build the go application with `go build -o app main.go` inside the builder stage.\n3. Use `alpine:3.18` as the final image stage.\n4. Copy the built `app` binary from the `builder` stage to `/app/app` in the final image.\n5. Set the working directory to `/app` and the command to run `./app`.",
-      "concepts": [
-        "dockerfile",
-        "multi-stage-build",
-        "images"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Dockerfile uses a builder stage (AS builder)",
-          "verificationScriptFile": "q1_s1_validate_builder_stage.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "1",
+            "namespace": "trench",
+            "machineHostname": "ckad9988",
+            "question": "Create a Kustomize configuration in `/tmp/exam/course/1/` to generate a Deployment and a Service.\n\n1. Create a basic Deployment named `app-deploy` and a Service named `app-svc` in separate YAML files within the directory.\n2. In the `kustomization.yaml` file, add `commonLabels`:\n   - `env: production`\n   - `team: alpha`\n3. Add `commonAnnotations`:\n   - `release: v1.0.0`\n4. Apply the Kustomize directory to the `trench` namespace.",
+            "concepts": ["kustomize", "deployments", "services"],
+            "verification": [
+                { "id": "1", "description": "Deployment app-deploy exists in trench", "verificationScriptFile": "q1_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Label env=production applied to app-deploy", "verificationScriptFile": "q1_s2_validate_label_env.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Annotation release=v1.0.0 applied to app-deploy", "verificationScriptFile": "q1_s3_validate_annotation_release.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "Service app-svc exists in trench", "verificationScriptFile": "q1_s4_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Dockerfile copies the artifact from the builder stage (COPY --from=builder)",
-          "verificationScriptFile": "q1_s2_validate_copy_from_builder.sh",
-          "expectedOutput": "0",
-          "weightage": 3
+            "id": "2",
+            "namespace": "ocean",
+            "machineHostname": "ckad9999",
+            "question": "There is a `Dockerfile` located at `/tmp/exam/course/2/Dockerfile` that builds a simple Go application. Currently, it uses a single-stage build resulting in a large image.\n\nModify the `Dockerfile` to use a multi-stage build to reduce the final image size:\n\n1. Use `golang:1.20-alpine` as the builder stage and name the stage `builder`.\n2. Build the go application with `go build -o app main.go` inside the builder stage.\n3. Use `alpine:3.18` as the final image stage.\n4. Copy the built `app` binary from the `builder` stage to `/app/app` in the final image.\n5. Set the working directory to `/app` and the command to run `./app`.",
+            "concepts": ["dockerfile", "multi-stage-build", "images"],
+            "verification": [
+                { "id": "1", "description": "Dockerfile uses a builder stage (AS builder)", "verificationScriptFile": "q2_s1_validate_builder_stage.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Dockerfile copies the artifact from the builder stage (COPY --from=builder)", "verificationScriptFile": "q2_s2_validate_copy_from_builder.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "3",
+            "namespace": "reef",
+            "machineHostname": "ckad9977",
+            "question": "There is a Pod named `target-pod` in the `reef` namespace running a simple web server.\n\n1. Attach an ephemeral container named `debug-container` to the `target-pod`.\n2. Use the `busybox` image for the ephemeral container.\n3. Ensure the ephemeral container is successfully attached and running (it doesn't need to run indefinitely, just be added).",
+            "concepts": ["ephemeral-containers", "debugging", "pods"],
+            "verification": [
+                { "id": "1", "description": "Ephemeral container attached to target-pod", "verificationScriptFile": "q3_s1_validate_ephemeral_container.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "4",
+            "namespace": "tide",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `log-generator` in the `tide` namespace that implements the sidecar pattern for log forwarding.\n\n1. The main container should be named `app`, use the `busybox` image, and run the command: `sh -c 'while true; do echo \"$(date) - Application log\" >> /var/log/app/app.log; sleep 5; done'`.\n2. The sidecar container should be named `sidecar`, use the `busybox` image, and run the command: `sh -c 'tail -f /var/log/app/app.log'`.\n3. Use an `emptyDir` volume named `shared-logs` to share the `/var/log/app` directory between the two containers.",
+            "concepts": ["pods", "sidecar", "volumes"],
+            "verification": [
+                { "id": "1", "description": "Pod log-generator exists in tide", "verificationScriptFile": "q4_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod has at least 2 containers (sidecar present)", "verificationScriptFile": "q4_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Shared-logs emptyDir volume exists", "verificationScriptFile": "q4_s3_validate_shared_emptydir.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "wave",
+            "machineHostname": "ckad9988",
+            "question": "There is a Pod named `backend-pod` in the `wave` namespace that is stuck in `ErrImagePull` or `ImagePullBackOff`.\n\nTroubleshoot and fix the issue. The Pod is attempting to pull an image from an incorrect registry. Update the Pod to pull the correct image `nginx:alpine` from the standard Docker Hub registry. Note: You may need to recreate the pod to fix it.",
+            "concepts": ["pods", "troubleshooting", "images"],
+            "verification": [
+                { "id": "1", "description": "Pod backend-pod image corrected to nginx:alpine", "verificationScriptFile": "q5_s1_validate_image.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Pod is no longer in ErrImagePull (phase Running or Pending)", "verificationScriptFile": "q5_s2_validate_pod_phase.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "lagoon",
+            "machineHostname": "ckad9977",
+            "question": "1. Create a Deployment named `critical-app` in the `lagoon` namespace using `nginx` with `3` replicas and label `tier: critical`.\n2. Create a PodDisruptionBudget named `critical-pdb` in the `lagoon` namespace.\n3. Configure the PDB to target the pods of the `critical-app` deployment.\n4. Ensure that at least `2` pods are always available during voluntary disruptions (`minAvailable: 2`).",
+            "concepts": ["deployments", "poddisruptionbudget", "availability"],
+            "verification": [
+                { "id": "1", "description": "Deployment critical-app exists in lagoon", "verificationScriptFile": "q6_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "PodDisruptionBudget critical-pdb exists in lagoon", "verificationScriptFile": "q6_s2_validate_pdb_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "PDB minAvailable is 2", "verificationScriptFile": "q6_s3_validate_min_available.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "coral",
+            "machineHostname": "ckad9999",
+            "question": "Create a CronJob named `data-sync` in the `coral` namespace.\n\n1. The job should run a container named `sync` using the `busybox` image.\n2. The container should execute the command: `echo \"Syncing data...\"`.\n3. Schedule the CronJob to run every 10 minutes (`*/10 * * * *`).\n4. Set the `failedJobsHistoryLimit` to `5`.\n5. Create the CronJob in a `suspend`ed state (so it doesn't run immediately).",
+            "concepts": ["cronjobs", "jobs", "scheduling"],
+            "verification": [
+                { "id": "1", "description": "CronJob data-sync exists in coral", "verificationScriptFile": "q7_s1_validate_cronjob_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Schedule is */10 * * * *", "verificationScriptFile": "q7_s2_validate_schedule.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "failedJobsHistoryLimit is 5", "verificationScriptFile": "q7_s3_validate_failed_history_limit.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "CronJob is suspended (suspend=true)", "verificationScriptFile": "q7_s4_validate_suspend.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "depths",
+            "machineHostname": "ckad9988",
+            "question": "Analyze the cluster events in the `depths` namespace.\n\n1. Extract all Warning events in the `depths` namespace.\n2. Save the output of the events to the file `/tmp/exam/course/8/events.txt`.\n3. The format of the output should be standard `kubectl get events` output.",
+            "concepts": ["events", "observability", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "File /tmp/exam/course/10/events.txt exists and is non-empty", "verificationScriptFile": "q8_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "Warning events present in events.txt", "verificationScriptFile": "q8_s2_validate_warning_events.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "trench",
+            "machineHostname": "ckad9977",
+            "question": "1. Create a default deny-all NetworkPolicy named `deny-all` in the `trench` namespace that blocks all Ingress and Egress traffic for all pods in the namespace.\n2. Create another NetworkPolicy named `allow-web` in the `trench` namespace that selects pods with label `role: web` and allows Ingress traffic to them on TCP port `80` from any source, and allows all Egress traffic from them.",
+            "concepts": ["networkpolicy", "ingress", "egress"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy deny-all exists in trench", "verificationScriptFile": "q9_s1_validate_deny_all.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "NetworkPolicy allow-web exists in trench", "verificationScriptFile": "q9_s2_validate_allow_web.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "ocean",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `grpc-checker` in the `ocean` namespace.\n\n1. Use the image `nginx:1.24` and configure a gRPC liveness probe (this will naturally fail as nginx doesn't run grpc on port 80, but configure it anyway for the syntax).\n2. Configure a `livenessProbe` of type `grpc` on port `8080`.\n3. Set the `initialDelaySeconds` to `5` and `periodSeconds` to `10`.",
+            "concepts": ["pods", "probes", "grpc"],
+            "verification": [
+                { "id": "1", "description": "Pod grpc-checker exists in ocean", "verificationScriptFile": "q10_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "gRPC liveness probe configured on port 8080", "verificationScriptFile": "q10_s2_validate_grpc_probe.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "wave",
+            "machineHostname": "ckad9977",
+            "question": "There is a Service named `mesh-service` in the `wave` namespace, but it has no endpoints.\n\nTroubleshoot the issue and fix the Service or its corresponding pods so that `mesh-service` has at least one active endpoint. The intended pod `mesh-pod` is in the same namespace but the service selector does not match the pod labels. Fix the service selector to match the pod's label `app: mesh-app`.",
+            "concepts": ["services", "endpoints", "troubleshooting"],
+            "verification": [
+                { "id": "1", "description": "Service mesh-service has at least one active endpoint", "verificationScriptFile": "q11_s1_validate_endpoints.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "abyss",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `batch-worker` in the `abyss` namespace designed for a batch processing task.\n\n1. The Pod should have a single container named `worker` using the `busybox` image.\n2. The container should execute: `sh -c 'echo \"Processing batch\"; exit 1'`.\n3. Set the Pod's `restartPolicy` to `OnFailure`.\n4. Ensure the Pod gets scheduled.",
+            "concepts": ["pods", "restartpolicy", "jobs"],
+            "verification": [
+                { "id": "1", "description": "Pod batch-worker exists in abyss", "verificationScriptFile": "q12_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "restartPolicy is OnFailure", "verificationScriptFile": "q12_s2_validate_restart_policy.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "13",
+            "namespace": "tide",
+            "machineHostname": "ckad9988",
+            "question": "1. A directory `/tmp/exam/course/13/config-files/` contains some configuration files.\n2. Create a ConfigMap named `app-config-dir` in the `tide` namespace from this directory.\n3. Create a Pod named `config-consumer` using the `alpine` image in the `tide` namespace.\n4. Mount the ConfigMap `app-config-dir` to the path `/etc/config` within the Pod.\n5. Set the Pod command to `sleep 3600`.",
+            "concepts": ["configmaps", "volumes", "pods"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap app-config-dir exists in tide", "verificationScriptFile": "q13_s1_validate_configmap_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod config-consumer mounts the ConfigMap at /etc/config", "verificationScriptFile": "q13_s2_validate_mount_path.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "current",
+            "machineHostname": "ckad9999",
+            "question": "A Helm release named `ocean-api` was deployed in the `current` namespace. However, it is failing and no longer needed.\n\nUninstall the Helm release `ocean-api` from the `current` namespace and ensure that all its resources and history are completely purged.",
+            "concepts": ["helm", "deployment"],
+            "verification": [
+                { "id": "1", "description": "Helm release ocean-api is uninstalled from current", "verificationScriptFile": "q14_s1_validate_helm_uninstalled.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "depths",
+            "machineHostname": "ckad9977",
+            "question": "Create a Service named `multi-port-svc` in the `depths` namespace.\n\n1. The service should expose two ports.\n2. Port 1: Name `http`, Port `80`, TargetPort `8080`, Protocol `TCP`.\n3. Port 2: Name `dns`, Port `53`, TargetPort `5353`, Protocol `UDP`.\n4. The service should select pods with the label `app: multi-app`.",
+            "concepts": ["services", "multi-port", "networking"],
+            "verification": [
+                { "id": "1", "description": "Service multi-port-svc exists in depths", "verificationScriptFile": "q15_s1_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Port 80 protocol is TCP", "verificationScriptFile": "q15_s2_validate_port80_tcp.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Port 53 protocol is UDP", "verificationScriptFile": "q15_s3_validate_port53_udp.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "reef",
+            "machineHostname": "ckad9999",
+            "question": "Create a Deployment named `web-deploy` in the `reef` namespace.\n\n1. The Deployment should have `4` replicas.\n2. Use the `nginx:1.23` image.\n3. Configure the rolling update strategy:\n   - `maxSurge` should be set to `50%`.\n   - `maxUnavailable` should be set to `25%`.",
+            "concepts": ["deployments", "rollingupdate", "strategy"],
+            "verification": [
+                { "id": "1", "description": "Deployment web-deploy exists in reef", "verificationScriptFile": "q16_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "maxSurge is 50%", "verificationScriptFile": "q16_s2_validate_maxsurge.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "maxUnavailable is 25%", "verificationScriptFile": "q16_s3_validate_maxunavailable.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "coral",
+            "machineHostname": "ckad9988",
+            "question": "Create a generic Secret named `db-credentials` in the `coral` namespace.\n\n1. The secret should contain two key-value pairs:\n   - `username`: `admin`\n   - `password`: `supersecretpassword`\n2. Create a Pod named `secret-env-pod` in the `coral` namespace using the `nginx` image.\n3. Expose the `username` as an environment variable `DB_USER` and `password` as `DB_PASS` in the Pod.",
+            "concepts": ["secrets", "environment", "pods"],
+            "verification": [
+                { "id": "1", "description": "Secret db-credentials exists in coral", "verificationScriptFile": "q17_s1_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod exposes DB_USER->username and DB_PASS->password from the secret", "verificationScriptFile": "q17_s2_validate_env_vars.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "lagoon",
+            "machineHostname": "ckad9999",
+            "question": "There is an existing Deployment named `api-server` in the `lagoon` namespace.\n\n1. Record the rollout history for this Deployment by updating its image to `nginx:1.24` and then `nginx:1.25`. Make sure the cause of the rollout is recorded in the history.\n2. Roll back the Deployment to the specific revision that was using the `nginx:1.24` image.",
+            "concepts": ["deployments", "rollout", "rollback"],
+            "verification": [
+                { "id": "1", "description": "Deployment api-server rolled back to nginx:1.24", "verificationScriptFile": "q18_s1_validate_rollback_image.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "abyss",
+            "machineHostname": "ckad9988",
+            "question": "1. Create a Pod named `secure-pod` in the `abyss` namespace using the `busybox` image and command `sleep 3600`.\n2. Configure the Pod's `securityContext` so that it runs as `runAsUser: 1000` and `runAsGroup: 3000`.\n3. Ensure `allowPrivilegeEscalation` is set to `false` for the container.\n4. Create a NetworkPolicy named `secure-policy` in the `abyss` namespace that selects the `secure-pod` (via a label `app: secure`) and denies all ingress traffic to it, but allows all egress traffic. You must add the label `app: secure` to the pod.",
+            "concepts": ["securitycontext", "networkpolicy", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod secure-pod runAsUser is 1000", "verificationScriptFile": "q19_s1_validate_run_as_user.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Container allowPrivilegeEscalation is false", "verificationScriptFile": "q19_s2_validate_priv_escalation.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "NetworkPolicy secure-policy exists in abyss", "verificationScriptFile": "q19_s3_validate_netpol_exists.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "ocean",
+            "machineHostname": "ckad9977",
+            "question": "Create an Ingress named `rewrite-ingress` in the `ocean` namespace.\n\n1. Route requests for host `susanoo.com` and path `/api(/|$)(.*)` to the service `api-service` on port `80`.\n2. Use the `nginx` ingress class.\n3. Add the necessary NGINX Ingress Controller annotation to rewrite the target URL path. The path should be rewritten to `/$2`.",
+            "concepts": ["ingress", "annotations", "networking"],
+            "verification": [
+                { "id": "1", "description": "Ingress rewrite-ingress exists in ocean", "verificationScriptFile": "q20_s1_validate_ingress_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Ingress host is susanoo.com", "verificationScriptFile": "q20_s2_validate_host.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "rewrite-target annotation is /$2", "verificationScriptFile": "q20_s3_validate_rewrite_annotation.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "tide",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `log-generator` in the `tide` namespace that implements the sidecar pattern for log forwarding.\n\n1. The main container should be named `app`, use the `busybox` image, and run the command: `sh -c 'while true; do echo \"$(date) - Application log\" >> /var/log/app/app.log; sleep 5; done'`.\n2. The sidecar container should be named `sidecar`, use the `busybox` image, and run the command: `sh -c 'tail -f /var/log/app/app.log'`.\n3. Use an `emptyDir` volume named `shared-logs` to share the `/var/log/app` directory between the two containers.",
-      "concepts": [
-        "pods",
-        "sidecar",
-        "volumes"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod log-generator exists in tide",
-          "verificationScriptFile": "q2_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod has at least 2 containers (sidecar present)",
-          "verificationScriptFile": "q2_s2_validate_container_count.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Shared-logs emptyDir volume exists",
-          "verificationScriptFile": "q2_s3_validate_shared_emptydir.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "coral",
-      "machineHostname": "ckad9999",
-      "question": "Create a CronJob named `data-sync` in the `coral` namespace.\n\n1. The job should run a container named `sync` using the `busybox` image.\n2. The container should execute the command: `echo \"Syncing data...\"`.\n3. Schedule the CronJob to run every 10 minutes (`*/10 * * * *`).\n4. Set the `failedJobsHistoryLimit` to `5`.\n5. Create the CronJob in a `suspend`ed state (so it doesn't run immediately).",
-      "concepts": [
-        "cronjobs",
-        "jobs",
-        "scheduling"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "CronJob data-sync exists in coral",
-          "verificationScriptFile": "q3_s1_validate_cronjob_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Schedule is */10 * * * *",
-          "verificationScriptFile": "q3_s2_validate_schedule.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "failedJobsHistoryLimit is 5",
-          "verificationScriptFile": "q3_s3_validate_failed_history_limit.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "4",
-          "description": "CronJob is suspended (suspend=true)",
-          "verificationScriptFile": "q3_s4_validate_suspend.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "abyss",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `batch-worker` in the `abyss` namespace designed for a batch processing task.\n\n1. The Pod should have a single container named `worker` using the `busybox` image.\n2. The container should execute: `sh -c 'echo \"Processing batch\"; exit 1'`.\n3. Set the Pod's `restartPolicy` to `OnFailure`.\n4. Ensure the Pod gets scheduled.",
-      "concepts": [
-        "pods",
-        "restartpolicy",
-        "jobs"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod batch-worker exists in abyss",
-          "verificationScriptFile": "q4_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        },
-        {
-          "id": "2",
-          "description": "restartPolicy is OnFailure",
-          "verificationScriptFile": "q4_s2_validate_restart_policy.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "current",
-      "machineHostname": "ckad9999",
-      "question": "A Helm release named `ocean-api` was deployed in the `current` namespace. However, it is failing and no longer needed.\n\nUninstall the Helm release `ocean-api` from the `current` namespace and ensure that all its resources and history are completely purged.",
-      "concepts": [
-        "helm",
-        "deployment"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Helm release ocean-api is uninstalled from current",
-          "verificationScriptFile": "q5_s1_validate_helm_uninstalled.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "reef",
-      "machineHostname": "ckad9999",
-      "question": "Create a Deployment named `web-deploy` in the `reef` namespace.\n\n1. The Deployment should have `4` replicas.\n2. Use the `nginx:1.23` image.\n3. Configure the rolling update strategy:\n   - `maxSurge` should be set to `50%`.\n   - `maxUnavailable` should be set to `25%`.",
-      "concepts": [
-        "deployments",
-        "rollingupdate",
-        "strategy"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment web-deploy exists in reef",
-          "verificationScriptFile": "q6_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "maxSurge is 50%",
-          "verificationScriptFile": "q6_s2_validate_maxsurge.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "maxUnavailable is 25%",
-          "verificationScriptFile": "q6_s3_validate_maxunavailable.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "lagoon",
-      "machineHostname": "ckad9999",
-      "question": "There is an existing Deployment named `api-server` in the `lagoon` namespace.\n\n1. Record the rollout history for this Deployment by updating its image to `nginx:1.24` and then `nginx:1.25`. Make sure the cause of the rollout is recorded in the history.\n2. Roll back the Deployment to the specific revision that was using the `nginx:1.24` image.",
-      "concepts": [
-        "deployments",
-        "rollout",
-        "rollback"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment api-server rolled back to nginx:1.24",
-          "verificationScriptFile": "q7_s1_validate_rollback_image.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "trench",
-      "machineHostname": "ckad9988",
-      "question": "Create a Kustomize configuration in `/tmp/exam/course/8/` to generate a Deployment and a Service.\n\n1. Create a basic Deployment named `app-deploy` and a Service named `app-svc` in separate YAML files within the directory.\n2. In the `kustomization.yaml` file, add `commonLabels`:\n   - `env: production`\n   - `team: alpha`\n3. Add `commonAnnotations`:\n   - `release: v1.0.0`\n4. Apply the Kustomize directory to the `trench` namespace.",
-      "concepts": [
-        "kustomize",
-        "deployments",
-        "services"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment app-deploy exists in trench",
-          "verificationScriptFile": "q8_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Label env=production applied to app-deploy",
-          "verificationScriptFile": "q8_s2_validate_label_env.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Annotation release=v1.0.0 applied to app-deploy",
-          "verificationScriptFile": "q8_s3_validate_annotation_release.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "4",
-          "description": "Service app-svc exists in trench",
-          "verificationScriptFile": "q8_s4_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "wave",
-      "machineHostname": "ckad9988",
-      "question": "There is a Pod named `backend-pod` in the `wave` namespace that is stuck in `ErrImagePull` or `ImagePullBackOff`.\n\nTroubleshoot and fix the issue. The Pod is attempting to pull an image from an incorrect registry. Update the Pod to pull the correct image `nginx:alpine` from the standard Docker Hub registry. Note: You may need to recreate the pod to fix it.",
-      "concepts": [
-        "pods",
-        "troubleshooting",
-        "images"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod backend-pod image corrected to nginx:alpine",
-          "verificationScriptFile": "q9_s1_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        },
-        {
-          "id": "2",
-          "description": "Pod is no longer in ErrImagePull (phase Running or Pending)",
-          "verificationScriptFile": "q9_s2_validate_pod_phase.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "depths",
-      "machineHostname": "ckad9988",
-      "question": "Analyze the cluster events in the `depths` namespace.\n\n1. Extract all Warning events in the `depths` namespace.\n2. Save the output of the events to the file `/tmp/exam/course/10/events.txt`.\n3. The format of the output should be standard `kubectl get events` output.",
-      "concepts": [
-        "events",
-        "observability",
-        "troubleshooting"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File /tmp/exam/course/10/events.txt exists and is non-empty",
-          "verificationScriptFile": "q10_s1_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        },
-        {
-          "id": "2",
-          "description": "Warning events present in events.txt",
-          "verificationScriptFile": "q10_s2_validate_warning_events.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "ocean",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `grpc-checker` in the `ocean` namespace.\n\n1. Use the image `nginx:1.24` and configure a gRPC liveness probe (this will naturally fail as nginx doesn't run grpc on port 80, but configure it anyway for the syntax).\n2. Configure a `livenessProbe` of type `grpc` on port `8080`.\n3. Set the `initialDelaySeconds` to `5` and `periodSeconds` to `10`.",
-      "concepts": [
-        "pods",
-        "probes",
-        "grpc"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod grpc-checker exists in ocean",
-          "verificationScriptFile": "q11_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "gRPC liveness probe configured on port 8080",
-          "verificationScriptFile": "q11_s2_validate_grpc_probe.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "tide",
-      "machineHostname": "ckad9988",
-      "question": "1. A directory `/tmp/exam/course/12/config-files/` contains some configuration files.\n2. Create a ConfigMap named `app-config-dir` in the `tide` namespace from this directory.\n3. Create a Pod named `config-consumer` using the `alpine` image in the `tide` namespace.\n4. Mount the ConfigMap `app-config-dir` to the path `/etc/config` within the Pod.\n5. Set the Pod command to `sleep 3600`.",
-      "concepts": [
-        "configmaps",
-        "volumes",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ConfigMap app-config-dir exists in tide",
-          "verificationScriptFile": "q12_s1_validate_configmap_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod config-consumer mounts the ConfigMap at /etc/config",
-          "verificationScriptFile": "q12_s2_validate_mount_path.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "coral",
-      "machineHostname": "ckad9988",
-      "question": "Create a generic Secret named `db-credentials` in the `coral` namespace.\n\n1. The secret should contain two key-value pairs:\n   - `username`: `admin`\n   - `password`: `supersecretpassword`\n2. Create a Pod named `secret-env-pod` in the `coral` namespace using the `nginx` image.\n3. Expose the `username` as an environment variable `DB_USER` and `password` as `DB_PASS` in the Pod.",
-      "concepts": [
-        "secrets",
-        "environment",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Secret db-credentials exists in coral",
-          "verificationScriptFile": "q13_s1_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod exposes DB_USER->username and DB_PASS->password from the secret",
-          "verificationScriptFile": "q13_s2_validate_env_vars.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "abyss",
-      "machineHostname": "ckad9988",
-      "question": "1. Create a Pod named `secure-pod` in the `abyss` namespace using the `busybox` image and command `sleep 3600`.\n2. Configure the Pod's `securityContext` so that it runs as `runAsUser: 1000` and `runAsGroup: 3000`.\n3. Ensure `allowPrivilegeEscalation` is set to `false` for the container.\n4. Create a NetworkPolicy named `secure-policy` in the `abyss` namespace that selects the `secure-pod` (via a label `app: secure`) and denies all ingress traffic to it, but allows all egress traffic. You must add the label `app: secure` to the pod.",
-      "concepts": [
-        "securitycontext",
-        "networkpolicy",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod secure-pod runAsUser is 1000",
-          "verificationScriptFile": "q14_s1_validate_run_as_user.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Container allowPrivilegeEscalation is false",
-          "verificationScriptFile": "q14_s2_validate_priv_escalation.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "NetworkPolicy secure-policy exists in abyss",
-          "verificationScriptFile": "q14_s3_validate_netpol_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "reef",
-      "machineHostname": "ckad9977",
-      "question": "There is a Pod named `target-pod` in the `reef` namespace running a simple web server.\n\n1. Attach an ephemeral container named `debug-container` to the `target-pod`.\n2. Use the `busybox` image for the ephemeral container.\n3. Ensure the ephemeral container is successfully attached and running (it doesn't need to run indefinitely, just be added).",
-      "concepts": [
-        "ephemeral-containers",
-        "debugging",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Ephemeral container attached to target-pod",
-          "verificationScriptFile": "q15_s1_validate_ephemeral_container.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "lagoon",
-      "machineHostname": "ckad9977",
-      "question": "1. Create a Deployment named `critical-app` in the `lagoon` namespace using `nginx` with `3` replicas and label `tier: critical`.\n2. Create a PodDisruptionBudget named `critical-pdb` in the `lagoon` namespace.\n3. Configure the PDB to target the pods of the `critical-app` deployment.\n4. Ensure that at least `2` pods are always available during voluntary disruptions (`minAvailable: 2`).",
-      "concepts": [
-        "deployments",
-        "poddisruptionbudget",
-        "availability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment critical-app exists in lagoon",
-          "verificationScriptFile": "q16_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "PodDisruptionBudget critical-pdb exists in lagoon",
-          "verificationScriptFile": "q16_s2_validate_pdb_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "PDB minAvailable is 2",
-          "verificationScriptFile": "q16_s3_validate_min_available.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "trench",
-      "machineHostname": "ckad9977",
-      "question": "1. Create a default deny-all NetworkPolicy named `deny-all` in the `trench` namespace that blocks all Ingress and Egress traffic for all pods in the namespace.\n2. Create another NetworkPolicy named `allow-web` in the `trench` namespace that selects pods with label `role: web` and allows Ingress traffic to them on TCP port `80` from any source, and allows all Egress traffic from them.",
-      "concepts": [
-        "networkpolicy",
-        "ingress",
-        "egress"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy deny-all exists in trench",
-          "verificationScriptFile": "q17_s1_validate_deny_all.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        },
-        {
-          "id": "2",
-          "description": "NetworkPolicy allow-web exists in trench",
-          "verificationScriptFile": "q17_s2_validate_allow_web.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "wave",
-      "machineHostname": "ckad9977",
-      "question": "There is a Service named `mesh-service` in the `wave` namespace, but it has no endpoints.\n\nTroubleshoot the issue and fix the Service or its corresponding pods so that `mesh-service` has at least one active endpoint. The intended pod `mesh-pod` is in the same namespace but the service selector does not match the pod labels. Fix the service selector to match the pod's label `app: mesh-app`.",
-      "concepts": [
-        "services",
-        "endpoints",
-        "troubleshooting"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service mesh-service has at least one active endpoint",
-          "verificationScriptFile": "q18_s1_validate_endpoints.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "depths",
-      "machineHostname": "ckad9977",
-      "question": "Create a Service named `multi-port-svc` in the `depths` namespace.\n\n1. The service should expose two ports.\n2. Port 1: Name `http`, Port `80`, TargetPort `8080`, Protocol `TCP`.\n3. Port 2: Name `dns`, Port `53`, TargetPort `5353`, Protocol `UDP`.\n4. The service should select pods with the label `app: multi-app`.",
-      "concepts": [
-        "services",
-        "multi-port",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service multi-port-svc exists in depths",
-          "verificationScriptFile": "q19_s1_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Port 80 protocol is TCP",
-          "verificationScriptFile": "q19_s2_validate_port80_tcp.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Port 53 protocol is UDP",
-          "verificationScriptFile": "q19_s3_validate_port53_udp.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "ocean",
-      "machineHostname": "ckad9977",
-      "question": "Create an Ingress named `rewrite-ingress` in the `ocean` namespace.\n\n1. Route requests for host `susanoo.com` and path `/api(/|$)(.*)` to the service `api-service` on port `80`.\n2. Use the `nginx` ingress class.\n3. Add the necessary NGINX Ingress Controller annotation to rewrite the target URL path. The path should be rewritten to `/$2`.",
-      "concepts": [
-        "ingress",
-        "annotations",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Ingress rewrite-ingress exists in ocean",
-          "verificationScriptFile": "q20_s1_validate_ingress_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Ingress host is susanoo.com",
-          "verificationScriptFile": "q20_s2_validate_host.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "rewrite-target annotation is /$2",
-          "verificationScriptFile": "q20_s3_validate_rewrite_annotation.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    }
-  ]
+    ]
 }

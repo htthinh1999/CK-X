@@ -1,18 +1,18 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace strike --dry-run=client -o yaml | kubectl apply -f - || true
-mkdir -p /tmp/exam/course/10
-rm -f /tmp/exam/course/10/events.txt 2>/dev/null || true
+kubectl create namespace flash --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl delete pod data-processor -n flash --ignore-not-found=true >/dev/null 2>&1 || true
 kubectl apply -f - <<'YAML'
 apiVersion: v1
 kind: Pod
 metadata:
-  name: broken-pod
-  namespace: strike
+  name: data-processor
+  namespace: flash
 spec:
   containers:
-  - name: broken
-    image: non-existent-image-12345
+  - name: processor
+    image: busybox
+    command: ["sh", "-c", "echo Starting...; sleep 2; exit 1"]
 YAML
 echo "Setup complete for Question 10"
 exit 0

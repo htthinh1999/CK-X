@@ -1,755 +1,255 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "zeus",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `titan-alpha` in namespace `zeus` with the following specifications:\n\n- Image: `nginx:1.21`\n- Add a label `app=titan`\n- Configure pod anti-affinity to prefer not scheduling on nodes that already have pods with label `app=titan`\n\nThe anti-affinity should use `preferredDuringSchedulingIgnoredDuringExecution` with weight `100` and topology key `kubernetes.io/hostname`.",
-      "concepts": [
-        "pods",
-        "affinity",
-        "scheduling"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Pod titan-alpha exists",
-          "verificationScriptFile": "q1_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "1",
+            "namespace": "poseidon",
+            "machineHostname": "ckad9977",
+            "question": "Create an Ingress named `path-ingress` in namespace `poseidon` that:\n\n- Routes `/api` to service `api-svc` on port 8080\n- Routes `/web` to service `web-svc` on port 80\n- Uses pathType `Prefix` for both paths\n\nNote: Pre-existing services `api-svc` and `web-svc` are already created.",
+            "concepts": ["ingress", "networking"],
+            "verification": [
+                { "id": "1", "description": "Ingress path-ingress exists", "verificationScriptFile": "q1_s1_validate_ingress_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "/api routes to api-svc", "verificationScriptFile": "q1_s2_validate_api_path.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "/web routes to web-svc", "verificationScriptFile": "q1_s3_validate_web_path.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Label app=titan is set",
-          "verificationScriptFile": "q1_s2_validate_label.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "2",
+            "namespace": "zeus",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `titan-alpha` in namespace `zeus` with the following specifications:\n\n- Image: `nginx:1.21`\n- Add a label `app=titan`\n- Configure pod anti-affinity to prefer not scheduling on nodes that already have pods with label `app=titan`\n\nThe anti-affinity should use `preferredDuringSchedulingIgnoredDuringExecution` with weight `100` and topology key `kubernetes.io/hostname`.",
+            "concepts": ["pods", "affinity", "scheduling"],
+            "verification": [
+                { "id": "1", "description": "Pod titan-alpha exists", "verificationScriptFile": "q2_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Label app=titan is set", "verificationScriptFile": "q2_s2_validate_label.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Image is nginx:1.21", "verificationScriptFile": "q2_s3_validate_image.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Pod anti-affinity configured", "verificationScriptFile": "q2_s4_validate_antiaffinity.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
         },
         {
-          "id": "3",
-          "description": "Image is nginx:1.21",
-          "verificationScriptFile": "q1_s3_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "3",
+            "namespace": "hades",
+            "machineHostname": "ckad9977",
+            "question": "Create a Pod named `token-pod` in namespace `hades` with:\n\n- Image: `nginx:1.21`\n- Container name: `app`\n- A projected volume named `token-volume` containing:\n  - ServiceAccount token with audience `api` and expiration `3600` seconds\n  - Mounted at `/var/run/secrets/tokens`",
+            "concepts": ["volumes", "serviceaccounts", "security"],
+            "verification": [
+                { "id": "1", "description": "Pod token-pod exists", "verificationScriptFile": "q3_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Projected volume configured", "verificationScriptFile": "q3_s2_validate_projected_volume.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Mount path is /var/run/secrets/tokens", "verificationScriptFile": "q3_s3_validate_mount_path.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "4",
-          "description": "Pod anti-affinity configured",
-          "verificationScriptFile": "q1_s4_validate_antiaffinity.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "4",
+            "namespace": "olympus",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `ambassador-pod` in namespace `olympus` with an ambassador pattern:\n\n- Main container `app`: image `nginx:1.21`, exposes port 80\n- Sidecar container `proxy`: image `envoyproxy/envoy:v1.28-latest`\n- Add environment variable `ENVOY_UID=0` to the proxy container\n\nBoth containers should be in the same Pod to share the network namespace.",
+            "concepts": ["multi-container", "sidecar", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod ambassador-pod exists", "verificationScriptFile": "q4_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Two containers configured", "verificationScriptFile": "q4_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Container app uses nginx:1.21", "verificationScriptFile": "q4_s3_validate_app_image.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Container proxy uses envoy image", "verificationScriptFile": "q4_s4_validate_proxy_image.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "ares",
+            "machineHostname": "ckad9977",
+            "question": "Create a CronJob named `scheduled-task` in namespace `ares` with:\n\n- Schedule: `*/5 * * * *` (every 5 minutes)\n- Image: `busybox:1.36`\n- Command: `echo \"Task executed at $(date)\"`\n- Concurrency policy: `Forbid`\n- Successful jobs history limit: `3`\n- Failed jobs history limit: `1`",
+            "concepts": ["cronjobs", "batch", "scheduling"],
+            "verification": [
+                { "id": "1", "description": "CronJob scheduled-task exists", "verificationScriptFile": "q5_s1_validate_cronjob_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Concurrency policy is Forbid", "verificationScriptFile": "q5_s2_validate_concurrency.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Schedule is */5 * * * *", "verificationScriptFile": "q5_s3_validate_schedule.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "successfulJobsHistoryLimit is 3", "verificationScriptFile": "q5_s4_validate_history_limit.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "athena",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `athena`:\n\n1. Create a ConfigMap named `app-config` with:\n- A literal key `LOG_LEVEL=debug`\n- A literal key `MAX_CONNECTIONS=100`\n\n2. Create a Pod named `config-reader` using image `busybox:1.36` that:\n- Mounts the ConfigMap as a volume at `/etc/config`\n- Runs command `sleep 3600`\n- Container name: `reader`",
+            "concepts": ["configmaps", "volumes", "pods"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap app-config exists", "verificationScriptFile": "q6_s1_validate_configmap_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "LOG_LEVEL=debug is set", "verificationScriptFile": "q6_s2_validate_log_level.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "MAX_CONNECTIONS=100 is set", "verificationScriptFile": "q6_s3_validate_max_connections.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Pod config-reader exists", "verificationScriptFile": "q6_s4_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "ConfigMap mounted at /etc/config", "verificationScriptFile": "q6_s5_validate_mount_path.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "hera",
+            "machineHostname": "ckad9977",
+            "question": "Create a PodDisruptionBudget named `app-pdb` in namespace `hera` that:\n\n- Selects pods with label `app=critical`\n- Ensures at least `2` pods are always available during voluntary disruptions",
+            "concepts": ["poddisruptionbudget", "availability"],
+            "verification": [
+                { "id": "1", "description": "PDB app-pdb exists", "verificationScriptFile": "q7_s1_validate_pdb_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "minAvailable is 2", "verificationScriptFile": "q7_s2_validate_min_available.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Selector app=critical correct", "verificationScriptFile": "q7_s3_validate_selector.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "artemis",
+            "machineHostname": "ckad9988",
+            "question": "Create a Job named `retry-job` in namespace `artemis` with:\n\n- Image: `busybox:1.36`\n- Command: `sh -c \"exit 1\"` (simulates failure)\n- Backoff limit: `3`\n- Restart policy: `Never`\n\nThe job should attempt to run 3 times before being marked as failed.",
+            "concepts": ["jobs", "batch"],
+            "verification": [
+                { "id": "1", "description": "Job retry-job exists", "verificationScriptFile": "q8_s1_validate_job_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "backoffLimit is 3", "verificationScriptFile": "q8_s2_validate_backofflimit.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "restartPolicy is Never", "verificationScriptFile": "q8_s3_validate_restart_policy.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "hermes",
+            "machineHostname": "ckad9999",
+            "question": "Create a Service of type `ExternalName` in namespace `hermes`:\n\n- Name: `external-api`\n- External name: `api.external-service.com`\n\nThis service should allow pods in the namespace to access the external API using the internal DNS name `external-api.hermes.svc.cluster.local`.",
+            "concepts": ["services", "networking", "dns"],
+            "verification": [
+                { "id": "1", "description": "Service external-api exists", "verificationScriptFile": "q9_s1_validate_service_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Service type is ExternalName", "verificationScriptFile": "q9_s2_validate_svc_type.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "externalName is api.external-service.com", "verificationScriptFile": "q9_s3_validate_external_name.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "olympus",
+            "machineHostname": "ckad9977",
+            "question": "Create a Deployment named `annotated-app` in namespace `olympus` with:\n\n- Image: `nginx:1.21`\n- Replicas: `2`\n- Container name: `web`\n- Add annotation `kubernetes.io/change-cause: \"Initial deployment\"` to the deployment\n- Add annotation `prometheus.io/scrape: \"true\"` to the pod template",
+            "concepts": ["deployments", "annotations"],
+            "verification": [
+                { "id": "1", "description": "Deployment annotated-app exists", "verificationScriptFile": "q10_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment annotation exists", "verificationScriptFile": "q10_s2_validate_deploy_annotation.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod template annotation correct", "verificationScriptFile": "q10_s3_validate_pod_annotation.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Replicas is 2", "verificationScriptFile": "q10_s4_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "apollo",
+            "machineHostname": "ckad9999",
+            "question": "In namespace `apollo`:\n\n1. Create a LimitRange named `resource-limits` with the following constraints for containers:\n- Default CPU limit: `500m`\n- Default memory limit: `256Mi`\n- Default CPU request: `100m`\n- Default memory request: `64Mi`\n\n2. Create a Pod named `limited-pod` with image `nginx:1.21` (without specifying any resource requests/limits) to verify the defaults are applied.\n- Container name: `app`",
+            "concepts": ["limitrange", "resources", "pods"],
+            "verification": [
+                { "id": "1", "description": "LimitRange resource-limits exists", "verificationScriptFile": "q11_s1_validate_limitrange_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Default CPU limit is 500m", "verificationScriptFile": "q11_s2_validate_default_cpu.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Default memory limit is 256Mi", "verificationScriptFile": "q11_s3_validate_default_memory.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Pod limited-pod exists", "verificationScriptFile": "q11_s4_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "hera",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `hera`:\n\n1. Create a docker-registry Secret named `registry-creds` with:\n- Docker server: `docker.io`\n- Username: `myuser`\n- Password: `mypassword`\n- Email: `user@example.com`\n\n2. Create a Pod named `private-app` with image `nginx:1.21` that uses this secret as an `imagePullSecret`.\n- Container name: `app`",
+            "concepts": ["secrets", "pods", "security"],
+            "verification": [
+                { "id": "1", "description": "Secret registry-creds exists", "verificationScriptFile": "q12_s1_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Secret type is docker-registry", "verificationScriptFile": "q12_s2_validate_secret_type.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod private-app exists", "verificationScriptFile": "q12_s3_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "imagePullSecret configured", "verificationScriptFile": "q12_s4_validate_pull_secret.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "13",
+            "namespace": "hades",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `secure-app` in namespace `hades` with:\n\n- Image: `nginx:1.21`\n- Container name: `nginx`\n- Read-only root filesystem enabled\n- A writable emptyDir volume mounted at `/tmp`\n- A writable emptyDir volume mounted at `/var/cache/nginx`\n- A writable emptyDir volume mounted at `/var/run`\n\nThe pod should be able to run nginx successfully despite the read-only root filesystem.",
+            "concepts": ["securitycontext", "volumes", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod secure-app exists", "verificationScriptFile": "q13_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "readOnlyRootFilesystem enabled", "verificationScriptFile": "q13_s2_validate_readonly_fs.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Three emptyDir volumes configured", "verificationScriptFile": "q13_s3_validate_emptydir_volumes.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "zeus",
+            "machineHostname": "ckad9988",
+            "question": "Create a Pod named `adapter-pod` in namespace `zeus` implementing the adapter pattern:\n\n- Main container `app`: image `busybox:1.36`, command `sh -c \"while true; do echo $(date): log message >> /var/log/app.log; sleep 5; done\"`\n- Adapter container `log-adapter`: image `busybox:1.36`, command `sh -c \"tail -f /var/log/app.log | sed 's/^/[ADAPTED] /'\"`\n\nBoth containers share an emptyDir volume named `logs` mounted at `/var/log`.",
+            "concepts": ["multi-container", "adapter", "volumes"],
+            "verification": [
+                { "id": "1", "description": "Pod adapter-pod exists", "verificationScriptFile": "q14_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Two containers configured", "verificationScriptFile": "q14_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Shared emptyDir volume exists", "verificationScriptFile": "q14_s3_validate_emptydir_volume.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "poseidon",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `multi-init` in namespace `poseidon` with:\n\n- Main container: `app` using image `nginx:1.21`\n- Init container 1: `init-config` using image `busybox:1.36` that creates file `/work/config.txt` with content `initialized`\n- Init container 2: `init-permissions` using image `busybox:1.36` that runs `chmod 644 /work/config.txt`\n\nAll containers should share an emptyDir volume named `workdir` mounted at `/work`.",
+            "concepts": ["initcontainers", "volumes", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod multi-init exists", "verificationScriptFile": "q15_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Two init containers configured", "verificationScriptFile": "q15_s2_validate_init_count.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Main container app exists", "verificationScriptFile": "q15_s3_validate_main_container.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Shared volume workdir exists", "verificationScriptFile": "q15_s4_validate_volume.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "athena",
+            "machineHostname": "ckad9988",
+            "question": "Create a NetworkPolicy named `egress-policy` in namespace `athena` that:\n\n- Applies to pods with label `app=restricted`\n- Allows egress traffic only to:\n  - Pods with label `app=database` on port 5432\n  - External IP block `10.0.0.0/8` on port 443\n\nDeny all other egress traffic.",
+            "concepts": ["networkpolicy", "networking", "security"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy egress-policy exists", "verificationScriptFile": "q16_s1_validate_netpol_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Egress policy type configured", "verificationScriptFile": "q16_s2_validate_egress_type.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Pod selector app=restricted correct", "verificationScriptFile": "q16_s3_validate_pod_selector.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "artemis",
+            "machineHostname": "ckad9977",
+            "question": "Create a Pod named `shared-pid` in namespace `artemis` with:\n\n- Enable `shareProcessNamespace: true`\n- Container 1 `app`: image `nginx:1.21`\n- Container 2 `debug`: image `busybox:1.36`, command `sleep 3600`\n\nThe debug container should be able to see processes from the app container using `ps aux`.",
+            "concepts": ["multi-container", "pods", "processnamespace"],
+            "verification": [
+                { "id": "1", "description": "Pod shared-pid exists", "verificationScriptFile": "q17_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "shareProcessNamespace enabled", "verificationScriptFile": "q17_s2_validate_share_pid.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Two containers configured", "verificationScriptFile": "q17_s3_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "hermes",
+            "machineHostname": "ckad9988",
+            "question": "In namespace `hermes`:\n\n1. Create a ServiceAccount named `deployment-manager`\n2. Create a Role named `deploy-role` that allows:\n- `get`, `list`, `watch`, `create`, `update`, `delete` on Deployments\n- `get`, `list` on Pods\n3. Create a RoleBinding named `deploy-binding` to bind the role to the service account",
+            "concepts": ["rbac", "security", "serviceaccounts"],
+            "verification": [
+                { "id": "1", "description": "ServiceAccount deployment-manager exists", "verificationScriptFile": "q18_s1_validate_serviceaccount.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Role deploy-role exists", "verificationScriptFile": "q18_s2_validate_role.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "RoleBinding deploy-binding exists", "verificationScriptFile": "q18_s3_validate_rolebinding.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "ares",
+            "machineHostname": "ckad9999",
+            "question": "A Deployment named `battle-app` exists in namespace `ares` with 3 replicas using image `nginx:1.20`.\n\n1. Update the image to `nginx:1.21`\n2. Immediately pause the rollout after starting the update\n3. Save the rollout status to `/tmp/exam/course/19/rollout-status.txt`\n\nHint: Use `kubectl rollout pause` and `kubectl rollout status`.",
+            "concepts": ["deployments", "rollout"],
+            "verification": [
+                { "id": "1", "description": "Deployment battle-app exists", "verificationScriptFile": "q19_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Rollout is paused", "verificationScriptFile": "q19_s2_validate_paused.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Rollout status saved to file", "verificationScriptFile": "q19_s3_validate_status_file.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "apollo",
+            "machineHostname": "ckad9988",
+            "question": "Create a Deployment named `rolling-app` in namespace `apollo` with:\n\n- Image: `nginx:1.21`\n- Replicas: `4`\n- Container name: `web`\n- Rolling update strategy with:\n  - Max surge: `25%`\n  - Max unavailable: `1`\n- Add label `version=v1` to pod template",
+            "concepts": ["deployments", "rollingupdate"],
+            "verification": [
+                { "id": "1", "description": "Deployment rolling-app exists", "verificationScriptFile": "q20_s1_validate_deployment_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Replicas is 4", "verificationScriptFile": "q20_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Strategy is RollingUpdate", "verificationScriptFile": "q20_s3_validate_strategy.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "maxSurge is 25%", "verificationScriptFile": "q20_s4_validate_maxsurge.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "Label version=v1 correct", "verificationScriptFile": "q20_s5_validate_version_label.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "athena",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `athena`:\n\n1. Create a ConfigMap named `app-config` with:\n- A literal key `LOG_LEVEL=debug`\n- A literal key `MAX_CONNECTIONS=100`\n\n2. Create a Pod named `config-reader` using image `busybox:1.36` that:\n- Mounts the ConfigMap as a volume at `/etc/config`\n- Runs command `sleep 3600`\n- Container name: `reader`",
-      "concepts": [
-        "configmaps",
-        "volumes",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ConfigMap app-config exists",
-          "verificationScriptFile": "q2_s1_validate_configmap_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "LOG_LEVEL=debug is set",
-          "verificationScriptFile": "q2_s2_validate_log_level.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "MAX_CONNECTIONS=100 is set",
-          "verificationScriptFile": "q2_s3_validate_max_connections.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Pod config-reader exists",
-          "verificationScriptFile": "q2_s4_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "ConfigMap mounted at /etc/config",
-          "verificationScriptFile": "q2_s5_validate_mount_path.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "hermes",
-      "machineHostname": "ckad9999",
-      "question": "Create a Service of type `ExternalName` in namespace `hermes`:\n\n- Name: `external-api`\n- External name: `api.external-service.com`\n\nThis service should allow pods in the namespace to access the external API using the internal DNS name `external-api.hermes.svc.cluster.local`.",
-      "concepts": [
-        "services",
-        "networking",
-        "dns"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service external-api exists",
-          "verificationScriptFile": "q3_s1_validate_service_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Service type is ExternalName",
-          "verificationScriptFile": "q3_s2_validate_svc_type.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "externalName is api.external-service.com",
-          "verificationScriptFile": "q3_s3_validate_external_name.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "apollo",
-      "machineHostname": "ckad9999",
-      "question": "In namespace `apollo`:\n\n1. Create a LimitRange named `resource-limits` with the following constraints for containers:\n- Default CPU limit: `500m`\n- Default memory limit: `256Mi`\n- Default CPU request: `100m`\n- Default memory request: `64Mi`\n\n2. Create a Pod named `limited-pod` with image `nginx:1.21` (without specifying any resource requests/limits) to verify the defaults are applied.\n- Container name: `app`",
-      "concepts": [
-        "limitrange",
-        "resources",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "LimitRange resource-limits exists",
-          "verificationScriptFile": "q4_s1_validate_limitrange_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Default CPU limit is 500m",
-          "verificationScriptFile": "q4_s2_validate_default_cpu.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Default memory limit is 256Mi",
-          "verificationScriptFile": "q4_s3_validate_default_memory.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Pod limited-pod exists",
-          "verificationScriptFile": "q4_s4_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "hades",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `secure-app` in namespace `hades` with:\n\n- Image: `nginx:1.21`\n- Container name: `nginx`\n- Read-only root filesystem enabled\n- A writable emptyDir volume mounted at `/tmp`\n- A writable emptyDir volume mounted at `/var/cache/nginx`\n- A writable emptyDir volume mounted at `/var/run`\n\nThe pod should be able to run nginx successfully despite the read-only root filesystem.",
-      "concepts": [
-        "securitycontext",
-        "volumes",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod secure-app exists",
-          "verificationScriptFile": "q5_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "readOnlyRootFilesystem enabled",
-          "verificationScriptFile": "q5_s2_validate_readonly_fs.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Three emptyDir volumes configured",
-          "verificationScriptFile": "q5_s3_validate_emptydir_volumes.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "poseidon",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `multi-init` in namespace `poseidon` with:\n\n- Main container: `app` using image `nginx:1.21`\n- Init container 1: `init-config` using image `busybox:1.36` that creates file `/work/config.txt` with content `initialized`\n- Init container 2: `init-permissions` using image `busybox:1.36` that runs `chmod 644 /work/config.txt`\n\nAll containers should share an emptyDir volume named `workdir` mounted at `/work`.",
-      "concepts": [
-        "initcontainers",
-        "volumes",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod multi-init exists",
-          "verificationScriptFile": "q6_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Two init containers configured",
-          "verificationScriptFile": "q6_s2_validate_init_count.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Main container app exists",
-          "verificationScriptFile": "q6_s3_validate_main_container.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Shared volume workdir exists",
-          "verificationScriptFile": "q6_s4_validate_volume.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "ares",
-      "machineHostname": "ckad9999",
-      "question": "A Deployment named `battle-app` exists in namespace `ares` with 3 replicas using image `nginx:1.20`.\n\n1. Update the image to `nginx:1.21`\n2. Immediately pause the rollout after starting the update\n3. Save the rollout status to `/tmp/exam/course/7/rollout-status.txt`\n\nHint: Use `kubectl rollout pause` and `kubectl rollout status`.",
-      "concepts": [
-        "deployments",
-        "rollout"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment battle-app exists",
-          "verificationScriptFile": "q7_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Rollout is paused",
-          "verificationScriptFile": "q7_s2_validate_paused.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Rollout status saved to file",
-          "verificationScriptFile": "q7_s3_validate_status_file.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "olympus",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `ambassador-pod` in namespace `olympus` with an ambassador pattern:\n\n- Main container `app`: image `nginx:1.21`, exposes port 80\n- Sidecar container `proxy`: image `envoyproxy/envoy:v1.28-latest`\n- Add environment variable `ENVOY_UID=0` to the proxy container\n\nBoth containers should be in the same Pod to share the network namespace.",
-      "concepts": [
-        "multi-container",
-        "sidecar",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod ambassador-pod exists",
-          "verificationScriptFile": "q8_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Two containers configured",
-          "verificationScriptFile": "q8_s2_validate_container_count.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Container app uses nginx:1.21",
-          "verificationScriptFile": "q8_s3_validate_app_image.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Container proxy uses envoy image",
-          "verificationScriptFile": "q8_s4_validate_proxy_image.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "artemis",
-      "machineHostname": "ckad9988",
-      "question": "Create a Job named `retry-job` in namespace `artemis` with:\n\n- Image: `busybox:1.36`\n- Command: `sh -c \"exit 1\"` (simulates failure)\n- Backoff limit: `3`\n- Restart policy: `Never`\n\nThe job should attempt to run 3 times before being marked as failed.",
-      "concepts": [
-        "jobs",
-        "batch"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Job retry-job exists",
-          "verificationScriptFile": "q9_s1_validate_job_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "backoffLimit is 3",
-          "verificationScriptFile": "q9_s2_validate_backofflimit.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "restartPolicy is Never",
-          "verificationScriptFile": "q9_s3_validate_restart_policy.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "hera",
-      "machineHostname": "ckad9988",
-      "question": "In namespace `hera`:\n\n1. Create a docker-registry Secret named `registry-creds` with:\n- Docker server: `docker.io`\n- Username: `myuser`\n- Password: `mypassword`\n- Email: `user@example.com`\n\n2. Create a Pod named `private-app` with image `nginx:1.21` that uses this secret as an `imagePullSecret`.\n- Container name: `app`",
-      "concepts": [
-        "secrets",
-        "pods",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Secret registry-creds exists",
-          "verificationScriptFile": "q10_s1_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Secret type is docker-registry",
-          "verificationScriptFile": "q10_s2_validate_secret_type.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Pod private-app exists",
-          "verificationScriptFile": "q10_s3_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "4",
-          "description": "imagePullSecret configured",
-          "verificationScriptFile": "q10_s4_validate_pull_secret.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "zeus",
-      "machineHostname": "ckad9988",
-      "question": "Create a Pod named `adapter-pod` in namespace `zeus` implementing the adapter pattern:\n\n- Main container `app`: image `busybox:1.36`, command `sh -c \"while true; do echo $(date): log message >> /var/log/app.log; sleep 5; done\"`\n- Adapter container `log-adapter`: image `busybox:1.36`, command `sh -c \"tail -f /var/log/app.log | sed 's/^/[ADAPTED] /'\"`\n\nBoth containers share an emptyDir volume named `logs` mounted at `/var/log`.",
-      "concepts": [
-        "multi-container",
-        "adapter",
-        "volumes"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod adapter-pod exists",
-          "verificationScriptFile": "q11_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Two containers configured",
-          "verificationScriptFile": "q11_s2_validate_container_count.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Shared emptyDir volume exists",
-          "verificationScriptFile": "q11_s3_validate_emptydir_volume.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "athena",
-      "machineHostname": "ckad9988",
-      "question": "Create a NetworkPolicy named `egress-policy` in namespace `athena` that:\n\n- Applies to pods with label `app=restricted`\n- Allows egress traffic only to:\n  - Pods with label `app=database` on port 5432\n  - External IP block `10.0.0.0/8` on port 443\n\nDeny all other egress traffic.",
-      "concepts": [
-        "networkpolicy",
-        "networking",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy egress-policy exists",
-          "verificationScriptFile": "q12_s1_validate_netpol_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Egress policy type configured",
-          "verificationScriptFile": "q12_s2_validate_egress_type.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Pod selector app=restricted correct",
-          "verificationScriptFile": "q12_s3_validate_pod_selector.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "hermes",
-      "machineHostname": "ckad9988",
-      "question": "In namespace `hermes`:\n\n1. Create a ServiceAccount named `deployment-manager`\n2. Create a Role named `deploy-role` that allows:\n- `get`, `list`, `watch`, `create`, `update`, `delete` on Deployments\n- `get`, `list` on Pods\n3. Create a RoleBinding named `deploy-binding` to bind the role to the service account",
-      "concepts": [
-        "rbac",
-        "security",
-        "serviceaccounts"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ServiceAccount deployment-manager exists",
-          "verificationScriptFile": "q13_s1_validate_serviceaccount.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Role deploy-role exists",
-          "verificationScriptFile": "q13_s2_validate_role.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "RoleBinding deploy-binding exists",
-          "verificationScriptFile": "q13_s3_validate_rolebinding.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "apollo",
-      "machineHostname": "ckad9988",
-      "question": "Create a Deployment named `rolling-app` in namespace `apollo` with:\n\n- Image: `nginx:1.21`\n- Replicas: `4`\n- Container name: `web`\n- Rolling update strategy with:\n  - Max surge: `25%`\n  - Max unavailable: `1`\n- Add label `version=v1` to pod template",
-      "concepts": [
-        "deployments",
-        "rollingupdate"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment rolling-app exists",
-          "verificationScriptFile": "q14_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Replicas is 4",
-          "verificationScriptFile": "q14_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Strategy is RollingUpdate",
-          "verificationScriptFile": "q14_s3_validate_strategy.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "maxSurge is 25%",
-          "verificationScriptFile": "q14_s4_validate_maxsurge.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "Label version=v1 correct",
-          "verificationScriptFile": "q14_s5_validate_version_label.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "poseidon",
-      "machineHostname": "ckad9977",
-      "question": "Create an Ingress named `path-ingress` in namespace `poseidon` that:\n\n- Routes `/api` to service `api-svc` on port 8080\n- Routes `/web` to service `web-svc` on port 80\n- Uses pathType `Prefix` for both paths\n\nNote: Pre-existing services `api-svc` and `web-svc` are already created.",
-      "concepts": [
-        "ingress",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Ingress path-ingress exists",
-          "verificationScriptFile": "q15_s1_validate_ingress_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "/api routes to api-svc",
-          "verificationScriptFile": "q15_s2_validate_api_path.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "/web routes to web-svc",
-          "verificationScriptFile": "q15_s3_validate_web_path.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "hades",
-      "machineHostname": "ckad9977",
-      "question": "Create a Pod named `token-pod` in namespace `hades` with:\n\n- Image: `nginx:1.21`\n- Container name: `app`\n- A projected volume named `token-volume` containing:\n  - ServiceAccount token with audience `api` and expiration `3600` seconds\n  - Mounted at `/var/run/secrets/tokens`",
-      "concepts": [
-        "volumes",
-        "serviceaccounts",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod token-pod exists",
-          "verificationScriptFile": "q16_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Projected volume configured",
-          "verificationScriptFile": "q16_s2_validate_projected_volume.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Mount path is /var/run/secrets/tokens",
-          "verificationScriptFile": "q16_s3_validate_mount_path.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "ares",
-      "machineHostname": "ckad9977",
-      "question": "Create a CronJob named `scheduled-task` in namespace `ares` with:\n\n- Schedule: `*/5 * * * *` (every 5 minutes)\n- Image: `busybox:1.36`\n- Command: `echo \"Task executed at $(date)\"`\n- Concurrency policy: `Forbid`\n- Successful jobs history limit: `3`\n- Failed jobs history limit: `1`",
-      "concepts": [
-        "cronjobs",
-        "batch",
-        "scheduling"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "CronJob scheduled-task exists",
-          "verificationScriptFile": "q17_s1_validate_cronjob_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Concurrency policy is Forbid",
-          "verificationScriptFile": "q17_s2_validate_concurrency.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Schedule is */5 * * * *",
-          "verificationScriptFile": "q17_s3_validate_schedule.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "successfulJobsHistoryLimit is 3",
-          "verificationScriptFile": "q17_s4_validate_history_limit.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "hera",
-      "machineHostname": "ckad9977",
-      "question": "Create a PodDisruptionBudget named `app-pdb` in namespace `hera` that:\n\n- Selects pods with label `app=critical`\n- Ensures at least `2` pods are always available during voluntary disruptions",
-      "concepts": [
-        "poddisruptionbudget",
-        "availability"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "PDB app-pdb exists",
-          "verificationScriptFile": "q18_s1_validate_pdb_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "minAvailable is 2",
-          "verificationScriptFile": "q18_s2_validate_min_available.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Selector app=critical correct",
-          "verificationScriptFile": "q18_s3_validate_selector.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "olympus",
-      "machineHostname": "ckad9977",
-      "question": "Create a Deployment named `annotated-app` in namespace `olympus` with:\n\n- Image: `nginx:1.21`\n- Replicas: `2`\n- Container name: `web`\n- Add annotation `kubernetes.io/change-cause: \"Initial deployment\"` to the deployment\n- Add annotation `prometheus.io/scrape: \"true\"` to the pod template",
-      "concepts": [
-        "deployments",
-        "annotations"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment annotated-app exists",
-          "verificationScriptFile": "q19_s1_validate_deployment_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Deployment annotation exists",
-          "verificationScriptFile": "q19_s2_validate_deploy_annotation.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Pod template annotation correct",
-          "verificationScriptFile": "q19_s3_validate_pod_annotation.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Replicas is 2",
-          "verificationScriptFile": "q19_s4_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "artemis",
-      "machineHostname": "ckad9977",
-      "question": "Create a Pod named `shared-pid` in namespace `artemis` with:\n\n- Enable `shareProcessNamespace: true`\n- Container 1 `app`: image `nginx:1.21`\n- Container 2 `debug`: image `busybox:1.36`, command `sleep 3600`\n\nThe debug container should be able to see processes from the app container using `ps aux`.",
-      "concepts": [
-        "multi-container",
-        "pods",
-        "processnamespace"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod shared-pid exists",
-          "verificationScriptFile": "q20_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "shareProcessNamespace enabled",
-          "verificationScriptFile": "q20_s2_validate_share_pid.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Two containers configured",
-          "verificationScriptFile": "q20_s3_validate_container_count.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    }
-  ]
+    ]
 }

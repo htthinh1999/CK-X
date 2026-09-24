@@ -1,81 +1,47 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace lagoon --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace shell --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+mkdir -p /tmp/exam/course/8
 kubectl apply -f - <<'EOF' >/dev/null 2>&1 || true
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-v1
-  namespace: lagoon
+  name: backend-deploy
+  namespace: shell
   labels:
-    app: api
-    version: v1
+    app: backend
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
-      app: api
-      version: v1
+      app: backend
   template:
     metadata:
       labels:
-        app: api
-        version: v1
+        app: backend
     spec:
       containers:
-      - name: api
+      - name: nginx
         image: nginx:1.21
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-v1-svc
-  namespace: lagoon
+  name: backend-svc
+  namespace: shell
 spec:
+  type: ClusterIP
   selector:
-    app: api
-    version: v1
-  ports:
-  - port: 80
-    targetPort: 80
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: api-v2
-  namespace: lagoon
-  labels:
-    app: api
-    version: v2
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: api
-      version: v2
-  template:
-    metadata:
-      labels:
-        app: api
-        version: v2
-    spec:
-      containers:
-      - name: api
-        image: nginx:1.22
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: api-v2-svc
-  namespace: lagoon
-spec:
-  selector:
-    app: api
-    version: v2
+    app: backend
   ports:
   - port: 80
     targetPort: 80

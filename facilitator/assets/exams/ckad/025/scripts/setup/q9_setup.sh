@@ -1,57 +1,24 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace antenna --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+NS=survey
+DIR=/home/candidate/exam/q9
 
-# Deployment with a NAMED container port (rx-http) and a NodePort Service whose
-# targetPort refers to a port name that does not exist (http) -> no endpoints.
-kubectl apply -f - <<'YAML' || true
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: dish-receiver
-  namespace: antenna
-  labels:
-    app: dish-receiver
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: dish-receiver
-  template:
-    metadata:
-      labels:
-        app: dish-receiver
-    spec:
-      containers:
-        - name: receiver
-          image: nginx:1.25
-          ports:
-            - name: rx-http
-              containerPort: 80
-          resources:
-            requests:
-              cpu: 20m
-              memory: 32Mi
-            limits:
-              cpu: 100m
-              memory: 64Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: dish-receiver
-  namespace: antenna
-spec:
-  type: NodePort
-  selector:
-    app: dish-receiver
-  ports:
-    - name: feed
-      protocol: TCP
-      port: 8080
-      targetPort: http
-      nodePort: 31313
-YAML
+kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+rm -rf "$DIR" && mkdir -p "$DIR"
+
+# Fresh pods so the creation order below is authoritative (no-op on first run)
+kubectl -n "$NS" delete pod --all --grace-period=1 --wait=true --timeout=60s >/dev/null 2>&1 || true
+
+# Created one per second, deliberately NOT in alphabetical order
+kubectl -n "$NS" run quasar   --image=nginx:1.25 --labels=role=receiver >/dev/null 2>&1 || true
+sleep 1
+kubectl -n "$NS" run aurora   --image=busybox:1.36 --labels=role=logger --command -- sleep 86400 >/dev/null 2>&1 || true
+sleep 1
+kubectl -n "$NS" run nebula   --image=redis:7-alpine --labels=role=cache >/dev/null 2>&1 || true
+sleep 1
+kubectl -n "$NS" run borealis --image=registry.k8s.io/pause:3.9 --labels=role=placeholder >/dev/null 2>&1 || true
+sleep 1
+kubectl -n "$NS" run meridian --image=nginx:1.25 --labels=role=receiver >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 9"
 exit 0

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Delete the resources namespace if it exists
-echo "Setting up environment for Question 5 (Resource Limits)..."
-kubectl delete namespace resources --ignore-not-found=true
+# Delete the batch namespace if it exists
+echo "Setting up environment for Question 5 (CronJob)..."
+kubectl delete namespace batch --ignore-not-found=true
 
 # Wait for deletion to complete
 sleep 2

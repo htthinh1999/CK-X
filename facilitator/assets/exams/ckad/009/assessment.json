@@ -1,659 +1,242 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "grove",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod with image `nginx:1.25` called `nginx` in namespace `grove` and expose its port `80`.\n\nThe `--expose` flag should create both the Pod and a ClusterIP Service named `nginx` on port `80`.\n\nHint: use `kubectl run` with the `--port` and `--expose` flags.",
-      "concepts": [
-        "pods",
-        "services"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Pod nginx exists in namespace grove",
-          "verificationScriptFile": "q1_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "1",
+            "namespace": "root",
+            "machineHostname": "ckad9988",
+            "question": "Create a Deployment named `app-deploy` in namespace `root` with:\n- Image: `nginx:1.18.0`\n- Replicas: `3`\n- Container port: `80`\n- Label: `app=app-deploy`\n\nDo NOT create a Service.\n\nHint: use the `kubectl create deployment` command.",
+            "concepts": ["deployments", "application-design"],
+            "verification": [
+                { "id": "1", "description": "Deployment app-deploy exists in namespace root", "verificationScriptFile": "q1_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment app-deploy has 3 or 5 replicas", "verificationScriptFile": "q1_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Deployment app-deploy uses image nginx:1.18", "verificationScriptFile": "q1_s3_validate_image.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "4", "description": "Container port 80 configured", "verificationScriptFile": "q1_s4_validate_port.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Pod nginx has containerPort 80 configured",
-          "verificationScriptFile": "q1_s2_validate_pod_port.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "2",
+            "namespace": "grove",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod with image `nginx:1.25` called `nginx` in namespace `grove` and expose its port `80`.\n\nThe `--expose` flag should create both the Pod and a ClusterIP Service named `nginx` on port `80`.\n\nHint: use `kubectl run` with the `--port` and `--expose` flags.",
+            "concepts": ["pods", "services"],
+            "verification": [
+                { "id": "1", "description": "Pod nginx exists in namespace grove", "verificationScriptFile": "q2_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Pod nginx has containerPort 80 configured", "verificationScriptFile": "q2_s2_validate_pod_port.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Service nginx exists in namespace grove", "verificationScriptFile": "q2_s3_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Service nginx has port 80", "verificationScriptFile": "q2_s4_validate_svc_port.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "3",
-          "description": "Service nginx exists in namespace grove",
-          "verificationScriptFile": "q1_s3_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "3",
+            "namespace": "glade",
+            "machineHostname": "ckad9977",
+            "question": "Perform the following:\n\n1. Create a file `/tmp/exam/course/3/config.txt` with content:\n\n`foo3=lili`\n`foo4=lele`\n\n2. Create a ConfigMap named `file-config` in namespace `glade` from this file.\n\nHint: use `kubectl create configmap --from-file`.",
+            "concepts": ["configmaps", "configuration"],
+            "verification": [
+                { "id": "1", "description": "File /tmp/exam/course/15/config.txt exists and is not empty", "verificationScriptFile": "q3_s1_validate_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "ConfigMap file-config exists in namespace glade", "verificationScriptFile": "q3_s2_validate_cm_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "ConfigMap file-config content includes foo3/lili", "verificationScriptFile": "q3_s3_validate_cm_content.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "4",
-          "description": "Service nginx has port 80",
-          "verificationScriptFile": "q1_s4_validate_svc_port.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "4",
+            "namespace": "root",
+            "machineHostname": "ckad9988",
+            "question": "The Deployment `app-deploy` from Question 1 exists in namespace `root`.\n\nScale the Deployment to `5` replicas.\n\nHint: use the `kubectl scale` command.",
+            "concepts": ["deployments", "scaling"],
+            "verification": [
+                { "id": "1", "description": "Deployment app-deploy exists in namespace root", "verificationScriptFile": "q4_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment app-deploy scaled to 5 replicas", "verificationScriptFile": "q4_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "meadow",
+            "machineHostname": "ckad9977",
+            "question": "Perform the following in namespace `meadow`:\n\n1. Create a ConfigMap named `env-config` with values `var6=val6` and `var7=val7`.\n2. Create a Pod named `env-pod` with image `nginx:1.25` that loads ALL keys from this ConfigMap as environment variables (use `envFrom`).\n\nHint: use `envFrom.configMapRef` in the Pod spec.",
+            "concepts": ["configmaps", "pods", "environment-variables"],
+            "verification": [
+                { "id": "1", "description": "ConfigMap env-config exists in namespace meadow", "verificationScriptFile": "q5_s1_validate_cm_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Pod env-pod exists in namespace meadow", "verificationScriptFile": "q5_s2_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Pod env-pod uses envFrom configMapRef env-config", "verificationScriptFile": "q5_s3_validate_envfrom.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "thicket",
+            "machineHostname": "ckad9999",
+            "question": "Perform the following in namespace `thicket`:\n\n1. Create a Pod named `web` with image `nginx:1.25`.\n2. Get the Pod's IP address and save it to `/tmp/exam/course/6/pod-ip.txt`.\n3. Verify connectivity by running a temporary `busybox:1.36` Pod that wgets the IP.\n\nHint: use `kubectl get pod -o wide` or `-o jsonpath` to get the IP.",
+            "concepts": ["pods", "services-networking"],
+            "verification": [
+                { "id": "1", "description": "Pod web exists in namespace thicket", "verificationScriptFile": "q6_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "File /tmp/exam/course/2/pod-ip.txt exists and is not empty", "verificationScriptFile": "q6_s2_validate_file_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "File contains a valid IPv4 address", "verificationScriptFile": "q6_s3_validate_ip_format.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "root",
+            "machineHostname": "ckad9988",
+            "question": "Create a HorizontalPodAutoscaler for Deployment `app-deploy` in namespace `root` with:\n- Minimum replicas: `5`\n- Maximum replicas: `10`\n- Target CPU utilization: `80%`\n\nHint: use the `kubectl autoscale deployment` command.\n\nNote: the HPA needs metrics-server to read CPU usage; scoring checks the HPA spec only.",
+            "concepts": ["autoscaling", "hpa", "deployments"],
+            "verification": [
+                { "id": "1", "description": "HPA app-deploy exists in namespace root", "verificationScriptFile": "q7_s1_validate_hpa_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "HPA minReplicas is 5", "verificationScriptFile": "q7_s2_validate_min.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "HPA maxReplicas is 10", "verificationScriptFile": "q7_s3_validate_max.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "HPA target CPU utilization is 80%", "verificationScriptFile": "q7_s4_validate_cpu.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "glade",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `logger` in namespace `glade` with image `busybox:1.36` that runs the command:\n\n`i=0; while true; do echo \"$i: $(date)\"; i=$((i+1)); sleep 1; done`\n\nAfter the Pod is running, save the first 10 lines of its logs to `/tmp/exam/course/8/logs.txt`.\n\nHint: use `kubectl logs` to get Pod logs.",
+            "concepts": ["pods", "observability", "logging"],
+            "verification": [
+                { "id": "1", "description": "Pod logger exists in namespace glade", "verificationScriptFile": "q8_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod logger runs a loop command (contains while or echo)", "verificationScriptFile": "q8_s2_validate_command.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "File /tmp/exam/course/3/logs.txt exists and is not empty", "verificationScriptFile": "q8_s3_validate_logs_file.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "bark",
+            "machineHostname": "ckad9988",
+            "question": "A Deployment `pause-deploy` exists in namespace `bark` with image `nginx:1.18.0`.\n\n1. Pause the rollout of the Deployment.\n2. Update the image to `nginx:1.19.0`.\n3. Verify that no new rollout started (check rollout history).\n4. Resume the rollout.\n5. Verify the image was updated to `nginx:1.19.0`.\n\nHint: use `kubectl rollout pause` and `kubectl rollout resume`.",
+            "concepts": ["deployments", "rollout"],
+            "verification": [
+                { "id": "1", "description": "Deployment pause-deploy exists in namespace bark", "verificationScriptFile": "q9_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Deployment pause-deploy image updated to nginx:1.19", "verificationScriptFile": "q9_s2_validate_image.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "fern",
+            "machineHostname": "ckad9977",
+            "question": "Perform the following:\n\n1. Create a file `/tmp/exam/course/10/username` with content `admin`.\n2. Create a Secret named `file-secret` in namespace `fern` from this file.\n\nHint: use `kubectl create secret generic --from-file`.",
+            "concepts": ["secrets", "configuration"],
+            "verification": [
+                { "id": "1", "description": "File /tmp/exam/course/17/username exists and is not empty", "verificationScriptFile": "q10_s1_validate_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Secret file-secret exists in namespace fern", "verificationScriptFile": "q10_s2_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Secret file-secret key username decodes to admin", "verificationScriptFile": "q10_s3_validate_secret_content.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "meadow",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `debug-pod` in namespace `meadow` with image `busybox:1.36` that runs the command `ls /notexist`.\n\n1. Get the Pod's logs and save them to `/tmp/exam/course/11/error.txt`.\n2. The file should contain the error message.\n\nHint: use `kubectl logs` to see the error output.",
+            "concepts": ["pods", "observability", "debugging"],
+            "verification": [
+                { "id": "1", "description": "Pod debug-pod exists in namespace meadow", "verificationScriptFile": "q11_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod debug-pod command/args references /notexist", "verificationScriptFile": "q11_s2_validate_command.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "File /tmp/exam/course/4/error.txt exists and is not empty", "verificationScriptFile": "q11_s3_validate_error_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Error file captures the not-found error message", "verificationScriptFile": "q11_s4_validate_error_content.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "moss",
+            "machineHostname": "ckad9977",
+            "question": "Perform the following in namespace `moss`:\n\n1. Create a Secret named `api-secret` with key `API_KEY=LmLHbYhsgWZwNifiqaRorH8T`.\n2. Create a Pod named `api-pod` with image `nginx:1.25` that loads this key into an environment variable called `API_KEY`.\n\nHint: use `env.valueFrom.secretKeyRef` in the Pod spec.",
+            "concepts": ["secrets", "pods", "environment-variables"],
+            "verification": [
+                { "id": "1", "description": "Secret api-secret exists in namespace moss", "verificationScriptFile": "q12_s1_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Pod api-pod exists in namespace moss", "verificationScriptFile": "q12_s2_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Pod api-pod env references secretKeyRef api-secret", "verificationScriptFile": "q12_s3_validate_secret_env.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "13",
+            "namespace": "hollow",
+            "machineHostname": "ckad9988",
+            "question": "Create a Job named `deadline-job` in namespace `hollow` that:\n- Uses image `busybox:1.36`\n- Runs the command: `while true; do echo hello; sleep 10; done`\n- Should be automatically terminated if it takes more than `30` seconds\n\nHint: use the `spec.activeDeadlineSeconds` field.",
+            "concepts": ["jobs", "batch"],
+            "verification": [
+                { "id": "1", "description": "Job deadline-job exists in namespace hollow", "verificationScriptFile": "q13_s1_validate_job_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Job deadline-job has activeDeadlineSeconds 30", "verificationScriptFile": "q13_s2_validate_deadline.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "fern",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `gpu-pod` in namespace `fern` with image `nginx:1.25` that will be scheduled on a Node with the label `accelerator=nvidia`. Use `nodeSelector` to achieve this.\n\nNote: the Pod may remain `Pending` if no node has this label - that is expected.\n\nHint: use `spec.nodeSelector` in the Pod YAML.",
+            "concepts": ["pods", "scheduling", "nodeselector"],
+            "verification": [
+                { "id": "1", "description": "Pod gpu-pod exists in namespace fern", "verificationScriptFile": "q14_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod gpu-pod has nodeSelector accelerator=nvidia", "verificationScriptFile": "q14_s2_validate_nodeselector.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "grove",
+            "machineHostname": "ckad9988",
+            "question": "Create a CronJob named `deadline-cron` in namespace `grove` that:\n- Uses image `busybox:1.36`\n- Runs every minute (`* * * * *`)\n- Executes: `date; echo Hello from CronJob`\n- Should be terminated if it takes more than `17` seconds to start after its scheduled time\n\nHint: use the `spec.startingDeadlineSeconds` field.",
+            "concepts": ["cronjobs", "batch"],
+            "verification": [
+                { "id": "1", "description": "CronJob deadline-cron exists in namespace grove", "verificationScriptFile": "q15_s1_validate_cronjob_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "CronJob deadline-cron has startingDeadlineSeconds 17", "verificationScriptFile": "q15_s2_validate_deadline.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "moss",
+            "machineHostname": "ckad9999",
+            "question": "Create a Pod named `tolerate-pod` in namespace `moss` with image `nginx:1.25` that tolerates the taint `tier=frontend:NoSchedule`.\n\nThe Pod should have a toleration with:\n- key: `tier`\n- value: `frontend`\n- effect: `NoSchedule`\n- operator: `Equal`\n\nHint: use `spec.tolerations` in the Pod YAML.",
+            "concepts": ["pods", "scheduling", "tolerations"],
+            "verification": [
+                { "id": "1", "description": "Pod tolerate-pod exists in namespace moss", "verificationScriptFile": "q16_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Toleration key is tier", "verificationScriptFile": "q16_s2_validate_tol_key.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Toleration value is frontend", "verificationScriptFile": "q16_s3_validate_tol_value.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Toleration effect is NoSchedule", "verificationScriptFile": "q16_s4_validate_tol_effect.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "root",
+            "machineHostname": "ckad9977",
+            "question": "Perform the following in namespace `root`:\n\n1. Create a ServiceAccount named `app-sa`.\n2. Create a Pod named `sa-pod` with image `nginx:1.25` that uses this ServiceAccount.\n\nHint: use `spec.serviceAccountName` in the Pod spec.",
+            "concepts": ["serviceaccounts", "pods", "security"],
+            "verification": [
+                { "id": "1", "description": "ServiceAccount app-sa exists in namespace root", "verificationScriptFile": "q17_s1_validate_sa_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod sa-pod exists in namespace root", "verificationScriptFile": "q17_s2_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod sa-pod uses serviceAccountName app-sa", "verificationScriptFile": "q17_s3_validate_sa_name.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "thicket",
+            "machineHostname": "ckad9988",
+            "question": "Perform the following in namespace `thicket`:\n\n1. Create a CronJob named `source-cron` with image `busybox:1.36`, schedule `*/5 * * * *`, command `echo \"source job\"`.\n2. Create a Job named `manual-job` from this CronJob.\n\nHint: use `kubectl create job --from=cronjob/NAME`.",
+            "concepts": ["cronjobs", "jobs"],
+            "verification": [
+                { "id": "1", "description": "CronJob source-cron exists in namespace thicket", "verificationScriptFile": "q18_s1_validate_cronjob_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Job manual-job exists in namespace thicket", "verificationScriptFile": "q18_s2_validate_job_exists.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "canopy",
+            "machineHostname": "ckad9999",
+            "question": "Create a Job named `parallel-job` in namespace `canopy` that:\n- Uses image `busybox:1.36`\n- Runs the command: `echo hello; sleep 5; echo world`\n- Runs `5` Pods in parallel (parallelism)\n\nHint: use the `spec.parallelism` field.",
+            "concepts": ["jobs", "batch"],
+            "verification": [
+                { "id": "1", "description": "Job parallel-job exists in namespace canopy", "verificationScriptFile": "q19_s1_validate_job_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Job parallel-job has parallelism 5", "verificationScriptFile": "q19_s2_validate_parallelism.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "bark",
+            "machineHostname": "ckad9977",
+            "question": "Perform the following in namespace `bark`:\n\n1. Create a Pod named `copy-pod` with image `busybox:1.36` and command `sleep 3600`.\n2. Copy `/etc/passwd` from the Pod to `/tmp/exam/course/20/passwd`.\n\nHint: use the `kubectl cp` command.",
+            "concepts": ["pods", "observability", "kubectl-cp"],
+            "verification": [
+                { "id": "1", "description": "Pod copy-pod exists in namespace bark", "verificationScriptFile": "q20_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "File /tmp/exam/course/20/passwd exists and is not empty", "verificationScriptFile": "q20_s2_validate_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Copied passwd file contains a root entry", "verificationScriptFile": "q20_s3_validate_content.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "thicket",
-      "machineHostname": "ckad9999",
-      "question": "Perform the following in namespace `thicket`:\n\n1. Create a Pod named `web` with image `nginx:1.25`.\n2. Get the Pod's IP address and save it to `/tmp/exam/course/2/pod-ip.txt`.\n3. Verify connectivity by running a temporary `busybox:1.36` Pod that wgets the IP.\n\nHint: use `kubectl get pod -o wide` or `-o jsonpath` to get the IP.",
-      "concepts": [
-        "pods",
-        "services-networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod web exists in namespace thicket",
-          "verificationScriptFile": "q2_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "File /tmp/exam/course/2/pod-ip.txt exists and is not empty",
-          "verificationScriptFile": "q2_s2_validate_file_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "File contains a valid IPv4 address",
-          "verificationScriptFile": "q2_s3_validate_ip_format.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "glade",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `logger` in namespace `glade` with image `busybox:1.36` that runs the command:\n\n`i=0; while true; do echo \"$i: $(date)\"; i=$((i+1)); sleep 1; done`\n\nAfter the Pod is running, save the first 10 lines of its logs to `/tmp/exam/course/3/logs.txt`.\n\nHint: use `kubectl logs` to get Pod logs.",
-      "concepts": [
-        "pods",
-        "observability",
-        "logging"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod logger exists in namespace glade",
-          "verificationScriptFile": "q3_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod logger runs a loop command (contains while or echo)",
-          "verificationScriptFile": "q3_s2_validate_command.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "File /tmp/exam/course/3/logs.txt exists and is not empty",
-          "verificationScriptFile": "q3_s3_validate_logs_file.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "meadow",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `debug-pod` in namespace `meadow` with image `busybox:1.36` that runs the command `ls /notexist`.\n\n1. Get the Pod's logs and save them to `/tmp/exam/course/4/error.txt`.\n2. The file should contain the error message.\n\nHint: use `kubectl logs` to see the error output.",
-      "concepts": [
-        "pods",
-        "observability",
-        "debugging"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod debug-pod exists in namespace meadow",
-          "verificationScriptFile": "q4_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod debug-pod command/args references /notexist",
-          "verificationScriptFile": "q4_s2_validate_command.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "File /tmp/exam/course/4/error.txt exists and is not empty",
-          "verificationScriptFile": "q4_s3_validate_error_file.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Error file captures the not-found error message",
-          "verificationScriptFile": "q4_s4_validate_error_content.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "fern",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `gpu-pod` in namespace `fern` with image `nginx:1.25` that will be scheduled on a Node with the label `accelerator=nvidia`. Use `nodeSelector` to achieve this.\n\nNote: the Pod may remain `Pending` if no node has this label - that is expected.\n\nHint: use `spec.nodeSelector` in the Pod YAML.",
-      "concepts": [
-        "pods",
-        "scheduling",
-        "nodeselector"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod gpu-pod exists in namespace fern",
-          "verificationScriptFile": "q5_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod gpu-pod has nodeSelector accelerator=nvidia",
-          "verificationScriptFile": "q5_s2_validate_nodeselector.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "moss",
-      "machineHostname": "ckad9999",
-      "question": "Create a Pod named `tolerate-pod` in namespace `moss` with image `nginx:1.25` that tolerates the taint `tier=frontend:NoSchedule`.\n\nThe Pod should have a toleration with:\n- key: `tier`\n- value: `frontend`\n- effect: `NoSchedule`\n- operator: `Equal`\n\nHint: use `spec.tolerations` in the Pod YAML.",
-      "concepts": [
-        "pods",
-        "scheduling",
-        "tolerations"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod tolerate-pod exists in namespace moss",
-          "verificationScriptFile": "q6_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Toleration key is tier",
-          "verificationScriptFile": "q6_s2_validate_tol_key.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Toleration value is frontend",
-          "verificationScriptFile": "q6_s3_validate_tol_value.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Toleration effect is NoSchedule",
-          "verificationScriptFile": "q6_s4_validate_tol_effect.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "root",
-      "machineHostname": "ckad9988",
-      "question": "Create a Deployment named `app-deploy` in namespace `root` with:\n- Image: `nginx:1.18.0`\n- Replicas: `3`\n- Container port: `80`\n- Label: `app=app-deploy`\n\nDo NOT create a Service.\n\nHint: use the `kubectl create deployment` command.",
-      "concepts": [
-        "deployments",
-        "application-design"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment app-deploy exists in namespace root",
-          "verificationScriptFile": "q7_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Deployment app-deploy has 3 or 5 replicas",
-          "verificationScriptFile": "q7_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Deployment app-deploy uses image nginx:1.18",
-          "verificationScriptFile": "q7_s3_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "4",
-          "description": "Container port 80 configured",
-          "verificationScriptFile": "q7_s4_validate_port.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "root",
-      "machineHostname": "ckad9988",
-      "question": "The Deployment `app-deploy` from Question 7 exists in namespace `root`.\n\nScale the Deployment to `5` replicas.\n\nHint: use the `kubectl scale` command.",
-      "concepts": [
-        "deployments",
-        "scaling"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment app-deploy exists in namespace root",
-          "verificationScriptFile": "q8_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Deployment app-deploy scaled to 5 replicas",
-          "verificationScriptFile": "q8_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "root",
-      "machineHostname": "ckad9988",
-      "question": "Create a HorizontalPodAutoscaler for Deployment `app-deploy` in namespace `root` with:\n- Minimum replicas: `5`\n- Maximum replicas: `10`\n- Target CPU utilization: `80%`\n\nHint: use the `kubectl autoscale deployment` command.\n\nNote: the HPA needs metrics-server to read CPU usage; scoring checks the HPA spec only.",
-      "concepts": [
-        "autoscaling",
-        "hpa",
-        "deployments"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "HPA app-deploy exists in namespace root",
-          "verificationScriptFile": "q9_s1_validate_hpa_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "HPA minReplicas is 5",
-          "verificationScriptFile": "q9_s2_validate_min.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "HPA maxReplicas is 10",
-          "verificationScriptFile": "q9_s3_validate_max.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "HPA target CPU utilization is 80%",
-          "verificationScriptFile": "q9_s4_validate_cpu.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "bark",
-      "machineHostname": "ckad9988",
-      "question": "A Deployment `pause-deploy` exists in namespace `bark` with image `nginx:1.18.0`.\n\n1. Pause the rollout of the Deployment.\n2. Update the image to `nginx:1.19.0`.\n3. Verify that no new rollout started (check rollout history).\n4. Resume the rollout.\n5. Verify the image was updated to `nginx:1.19.0`.\n\nHint: use `kubectl rollout pause` and `kubectl rollout resume`.",
-      "concepts": [
-        "deployments",
-        "rollout"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment pause-deploy exists in namespace bark",
-          "verificationScriptFile": "q10_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Deployment pause-deploy image updated to nginx:1.19",
-          "verificationScriptFile": "q10_s2_validate_image.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "canopy",
-      "machineHostname": "ckad9999",
-      "question": "Create a Job named `parallel-job` in namespace `canopy` that:\n- Uses image `busybox:1.36`\n- Runs the command: `echo hello; sleep 5; echo world`\n- Runs `5` Pods in parallel (parallelism)\n\nHint: use the `spec.parallelism` field.",
-      "concepts": [
-        "jobs",
-        "batch"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Job parallel-job exists in namespace canopy",
-          "verificationScriptFile": "q11_s1_validate_job_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Job parallel-job has parallelism 5",
-          "verificationScriptFile": "q11_s2_validate_parallelism.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "hollow",
-      "machineHostname": "ckad9988",
-      "question": "Create a Job named `deadline-job` in namespace `hollow` that:\n- Uses image `busybox:1.36`\n- Runs the command: `while true; do echo hello; sleep 10; done`\n- Should be automatically terminated if it takes more than `30` seconds\n\nHint: use the `spec.activeDeadlineSeconds` field.",
-      "concepts": [
-        "jobs",
-        "batch"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Job deadline-job exists in namespace hollow",
-          "verificationScriptFile": "q12_s1_validate_job_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Job deadline-job has activeDeadlineSeconds 30",
-          "verificationScriptFile": "q12_s2_validate_deadline.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "grove",
-      "machineHostname": "ckad9988",
-      "question": "Create a CronJob named `deadline-cron` in namespace `grove` that:\n- Uses image `busybox:1.36`\n- Runs every minute (`* * * * *`)\n- Executes: `date; echo Hello from CronJob`\n- Should be terminated if it takes more than `17` seconds to start after its scheduled time\n\nHint: use the `spec.startingDeadlineSeconds` field.",
-      "concepts": [
-        "cronjobs",
-        "batch"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "CronJob deadline-cron exists in namespace grove",
-          "verificationScriptFile": "q13_s1_validate_cronjob_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "CronJob deadline-cron has startingDeadlineSeconds 17",
-          "verificationScriptFile": "q13_s2_validate_deadline.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "thicket",
-      "machineHostname": "ckad9988",
-      "question": "Perform the following in namespace `thicket`:\n\n1. Create a CronJob named `source-cron` with image `busybox:1.36`, schedule `*/5 * * * *`, command `echo \"source job\"`.\n2. Create a Job named `manual-job` from this CronJob.\n\nHint: use `kubectl create job --from=cronjob/NAME`.",
-      "concepts": [
-        "cronjobs",
-        "jobs"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "CronJob source-cron exists in namespace thicket",
-          "verificationScriptFile": "q14_s1_validate_cronjob_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Job manual-job exists in namespace thicket",
-          "verificationScriptFile": "q14_s2_validate_job_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "glade",
-      "machineHostname": "ckad9977",
-      "question": "Perform the following:\n\n1. Create a file `/tmp/exam/course/15/config.txt` with content:\n\n`foo3=lili`\n`foo4=lele`\n\n2. Create a ConfigMap named `file-config` in namespace `glade` from this file.\n\nHint: use `kubectl create configmap --from-file`.",
-      "concepts": [
-        "configmaps",
-        "configuration"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File /tmp/exam/course/15/config.txt exists and is not empty",
-          "verificationScriptFile": "q15_s1_validate_file.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "ConfigMap file-config exists in namespace glade",
-          "verificationScriptFile": "q15_s2_validate_cm_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "ConfigMap file-config content includes foo3/lili",
-          "verificationScriptFile": "q15_s3_validate_cm_content.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "meadow",
-      "machineHostname": "ckad9977",
-      "question": "Perform the following in namespace `meadow`:\n\n1. Create a ConfigMap named `env-config` with values `var6=val6` and `var7=val7`.\n2. Create a Pod named `env-pod` with image `nginx:1.25` that loads ALL keys from this ConfigMap as environment variables (use `envFrom`).\n\nHint: use `envFrom.configMapRef` in the Pod spec.",
-      "concepts": [
-        "configmaps",
-        "pods",
-        "environment-variables"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ConfigMap env-config exists in namespace meadow",
-          "verificationScriptFile": "q16_s1_validate_cm_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Pod env-pod exists in namespace meadow",
-          "verificationScriptFile": "q16_s2_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Pod env-pod uses envFrom configMapRef env-config",
-          "verificationScriptFile": "q16_s3_validate_envfrom.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "fern",
-      "machineHostname": "ckad9977",
-      "question": "Perform the following:\n\n1. Create a file `/tmp/exam/course/17/username` with content `admin`.\n2. Create a Secret named `file-secret` in namespace `fern` from this file.\n\nHint: use `kubectl create secret generic --from-file`.",
-      "concepts": [
-        "secrets",
-        "configuration"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File /tmp/exam/course/17/username exists and is not empty",
-          "verificationScriptFile": "q17_s1_validate_file.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Secret file-secret exists in namespace fern",
-          "verificationScriptFile": "q17_s2_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Secret file-secret key username decodes to admin",
-          "verificationScriptFile": "q17_s3_validate_secret_content.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "moss",
-      "machineHostname": "ckad9977",
-      "question": "Perform the following in namespace `moss`:\n\n1. Create a Secret named `api-secret` with key `API_KEY=LmLHbYhsgWZwNifiqaRorH8T`.\n2. Create a Pod named `api-pod` with image `nginx:1.25` that loads this key into an environment variable called `API_KEY`.\n\nHint: use `env.valueFrom.secretKeyRef` in the Pod spec.",
-      "concepts": [
-        "secrets",
-        "pods",
-        "environment-variables"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Secret api-secret exists in namespace moss",
-          "verificationScriptFile": "q18_s1_validate_secret_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Pod api-pod exists in namespace moss",
-          "verificationScriptFile": "q18_s2_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Pod api-pod env references secretKeyRef api-secret",
-          "verificationScriptFile": "q18_s3_validate_secret_env.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "root",
-      "machineHostname": "ckad9977",
-      "question": "Perform the following in namespace `root`:\n\n1. Create a ServiceAccount named `app-sa`.\n2. Create a Pod named `sa-pod` with image `nginx:1.25` that uses this ServiceAccount.\n\nHint: use `spec.serviceAccountName` in the Pod spec.",
-      "concepts": [
-        "serviceaccounts",
-        "pods",
-        "security"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ServiceAccount app-sa exists in namespace root",
-          "verificationScriptFile": "q19_s1_validate_sa_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod sa-pod exists in namespace root",
-          "verificationScriptFile": "q19_s2_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Pod sa-pod uses serviceAccountName app-sa",
-          "verificationScriptFile": "q19_s3_validate_sa_name.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "bark",
-      "machineHostname": "ckad9977",
-      "question": "Perform the following in namespace `bark`:\n\n1. Create a Pod named `copy-pod` with image `busybox:1.36` and command `sleep 3600`.\n2. Copy `/etc/passwd` from the Pod to `/tmp/exam/course/20/passwd`.\n\nHint: use the `kubectl cp` command.",
-      "concepts": [
-        "pods",
-        "observability",
-        "kubectl-cp"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod copy-pod exists in namespace bark",
-          "verificationScriptFile": "q20_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "File /tmp/exam/course/20/passwd exists and is not empty",
-          "verificationScriptFile": "q20_s2_validate_file.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Copied passwd file contains a root entry",
-          "verificationScriptFile": "q20_s3_validate_content.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    }
-  ]
+    ]
 }

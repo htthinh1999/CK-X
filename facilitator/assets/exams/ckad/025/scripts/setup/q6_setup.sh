@@ -1,79 +1,131 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=almanac
-DIR=/home/candidate/exam/q6
+NS=relay
 
 kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
-rm -rf "$DIR" && mkdir -p "$DIR"
 
-cat > "$DIR/almanac.env" <<'EOF'
-# Almanac service runtime settings
-# one KEY=value per line; lines starting with # are comments
-
-SUNRISE_SOURCE=usno
-TIDE_TABLE=pacific-north
-MOON_PHASE_API=v2
-FORECAST_WINDOW=72h
-EOF
-
-# Reset student-created objects (idempotent re-runs)
-kubectl -n "$NS" delete pod almanac-reader --ignore-not-found --wait=false >/dev/null 2>&1 || true
-kubectl -n "$NS" delete configmap sky-settings --ignore-not-found >/dev/null 2>&1 || true
+# No policies at start
+kubectl -n "$NS" delete networkpolicy --all >/dev/null 2>&1 || true
 
 kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' || true
-apiVersion: v1
-kind: ConfigMap
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: ephemeris-2019
-  namespace: almanac
+  name: collector
+  namespace: relay
   labels:
-    kind: ephemeris
-    stale: "true"
-data:
-  epoch: "2019"
+    app: collector
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: collector
+  template:
+    metadata:
+      labels:
+        app: collector
+    spec:
+      containers:
+        - name: collector
+          image: busybox:1.36
+          command: ["sh", "-c", "sleep 86400"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: Pod
 metadata:
-  name: ephemeris-2020
-  namespace: almanac
+  name: archive
+  namespace: relay
   labels:
-    kind: ephemeris
-    stale: "true"
-data:
-  epoch: "2020"
+    app: archive
+spec:
+  containers:
+    - name: redis
+      image: redis:7-alpine
+      ports:
+        - containerPort: 6379
+      resources:
+        requests:
+          cpu: 20m
+          memory: 32Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: Service
 metadata:
-  name: tide-tables-legacy
-  namespace: almanac
-  labels:
-    kind: tides
-    stale: "true"
-data:
-  region: pacific
+  name: archive
+  namespace: relay
+spec:
+  selector:
+    app: archive
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: 6379
+      protocol: TCP
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: Pod
 metadata:
-  name: ephemeris-2025
-  namespace: almanac
+  name: webcache
+  namespace: relay
   labels:
-    kind: ephemeris
-    stale: "false"
-data:
-  epoch: "2025"
+    app: webcache
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.25
+      ports:
+        - containerPort: 80
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: Service
 metadata:
-  name: observer-roster
-  namespace: almanac
+  name: webcache
+  namespace: relay
+spec:
+  selector:
+    app: webcache
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dashboard
+  namespace: relay
   labels:
-    team: night-shift
-data:
-  lead: vega
+    app: dashboard
+spec:
+  containers:
+    - name: ui
+      image: busybox:1.36
+      command: ["sh", "-c", "sleep 86400"]
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+        limits:
+          cpu: 50m
+          memory: 32Mi
 YAML
 
 echo "Setup complete for Question 6"

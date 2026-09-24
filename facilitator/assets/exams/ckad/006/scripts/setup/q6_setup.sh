@@ -4,37 +4,23 @@ kubectl apply -f - <<'EOF' >/dev/null 2>&1 || true
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-app
+  name: api-server
   namespace: default
 spec:
-  replicas: 5
+  replicas: 2
   selector:
     matchLabels:
-      app: webapp
-      version: v1
+      app: api
   template:
     metadata:
       labels:
-        app: webapp
-        version: v1
+        app: api
     spec:
       containers:
-        - name: web
-          image: nginx:latest
+        - name: api
+          image: nginx:alpine
           ports:
-            - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: web-service
-  namespace: default
-spec:
-  selector:
-    app: webapp
-  ports:
-    - port: 80
-      targetPort: 80
+            - containerPort: 9090
 EOF
 echo "Setup complete for Question 6"
 exit 0

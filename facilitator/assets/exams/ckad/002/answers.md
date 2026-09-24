@@ -2,6 +2,8 @@
 
 This document contains solutions for all questions in the CKAD-002 lab
 
+---
+
 ## Question 1: Core Concepts
 
 > Server: `ssh ckad9999`
@@ -37,7 +39,38 @@ spec:
 EOF
 ```
 
-## Question 2: Multi-container Pods
+---
+
+## Question 2 - Helm Basics
+
+> Server: `ssh ckad9977`
+
+The task is to perform basic Helm operations including creating a namespace, adding a repository, installing a chart, and saving release notes.
+
+```bash
+# Step 1: Create the namespace
+kubectl create namespace helm-basics
+
+# Step 2: Add the Bitnami repository
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+
+# Step 3: Install the nginx chart
+helm install nginx-release bitnami/nginx --namespace helm-basics
+
+# Step 4: Save the release notes to a file
+helm get notes nginx-release --namespace helm-basics > /tmp/release-notes.txt
+```
+
+These commands:
+1. Create a namespace called `helm-basics`
+2. Add the Bitnami Helm chart repository and update it to get the latest charts
+3. Install the nginx chart from Bitnami in the helm-basics namespace with the release name "nginx-release"
+4. Save the release notes to /tmp/release-notes.txt using the `helm get notes` command
+
+---
+
+## Question 3: Multi-container Pods
 
 > Server: `ssh ckad9999`
 
@@ -81,7 +114,95 @@ spec:
 EOF
 ```
 
-## Question 3: Pod Design - Deployment & Service
+---
+
+## Question 4: Health Checks
+
+> Server: `ssh ckad9977`
+
+Create a Pod with multiple health probes:
+
+```bash
+# Create namespace
+kubectl create namespace health-checks
+
+# Create Pod with startup, liveness, and readiness probes
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: health-checks
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: health-check-pod
+  namespace: health-checks
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    startupProbe:
+      httpGet:
+        path: /
+        port: 80
+      initialDelaySeconds: 10
+      periodSeconds: 3
+      failureThreshold: 3
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 80
+      initialDelaySeconds: 15
+      periodSeconds: 5
+      failureThreshold: 3
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 80
+      initialDelaySeconds: 5
+      periodSeconds: 3
+      failureThreshold: 3
+EOF
+```
+
+---
+
+## Question 5: Pod Design - CronJob
+
+> Server: `ssh ckad9988`
+
+Create a CronJob:
+
+```bash
+# Ensure namespace exists
+kubectl get namespace pod-design || kubectl create namespace pod-design
+
+# Create CronJob
+cat <<EOF | kubectl apply -f -
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-job
+  namespace: pod-design
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 100
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: busybox
+            command: ['sh', '-c', 'echo Backup started: $(date); sleep 30; echo Backup completed: $(date)']
+          restartPolicy: OnFailure
+EOF
+```
+
+---
+
+## Question 6: Pod Design - Deployment & Service
 
 > Server: `ssh ckad9999`
 
@@ -140,7 +261,79 @@ spec:
 EOF
 ```
 
-## Question 4: Configuration - ConfigMaps & Secrets
+---
+
+## Question 7: Troubleshooting a Deployment
+
+> Server: `ssh ckad9988`
+
+Fix a broken deployment (assuming it's already created but not working):
+
+```bash
+# First check what's wrong with the deployment
+kubectl describe deployment broken-deployment -n troubleshooting
+
+# Common fixes might include:
+
+# Fix 1: Correct the image if it's incorrect
+kubectl set image deployment/broken-deployment nginx=nginx:1.19 -n troubleshooting
+
+# Fix 2: If resource requests are too high
+kubectl patch deployment broken-deployment -n troubleshooting --patch '{"spec":{"template":{"spec":{"containers":[{"name":"nginx","resources":{"requests":{"cpu":"100m","memory":"128Mi"},"limits":{"cpu":"200m","memory":"256Mi"}}}]}}}}'
+
+# Fix 3: If there's a configuration issue in the pod template
+kubectl edit deployment broken-deployment -n troubleshooting
+
+# Fix 4: If a network policy is blocking traffic
+kubectl get networkpolicies -n troubleshooting
+kubectl delete networkpolicy restrictive-policy -n troubleshooting
+
+# Verify the fix
+kubectl rollout status deployment/broken-deployment -n troubleshooting
+```
+
+---
+
+## Question 8: Pod Lifecycle
+
+> Server: `ssh ckad9977`
+
+Create a Pod with lifecycle hooks:
+
+```bash
+# Create namespace
+kubectl create namespace pod-lifecycle
+
+# Create Pod with lifecycle hooks
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pod-lifecycle
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lifecycle-pod
+  namespace: pod-lifecycle
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    lifecycle:
+      postStart:
+        exec:
+          command: ["/bin/sh", "-c", "echo 'Welcome to the pod!' > /usr/share/nginx/html/welcome.txt"]
+      preStop:
+        exec:
+          command: ["/bin/sh", "-c", "sleep 10"]
+  terminationGracePeriodSeconds: 30
+EOF
+```
+
+---
+
+## Question 9: Configuration - ConfigMaps & Secrets
 
 > Server: `ssh ckad9999`
 
@@ -186,264 +379,7 @@ spec:
 EOF
 ```
 
-## Question 5: Observability - Probes & Resource Limits
-
-> Server: `ssh ckad9999`
-
-Create a pod with liveness/readiness probes and resource limits:
-
-```bash
-# Create namespace
-kubectl create namespace observability
-
-# Create pod with probes and resource limits
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: observability
 ---
-apiVersion: v1
-kind: Pod
-metadata:
-  name: probes-pod
-  namespace: observability
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
-    livenessProbe:
-      httpGet:
-        path: /healthz
-        port: 80
-      initialDelaySeconds: 10
-      periodSeconds: 5
-    readinessProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 3
-EOF
-```
-
-## Question 6: Services - Different Service Types
-
-> Server: `ssh ckad9999`
-
-Create deployment with different service types:
-
-```bash
-# Create namespace
-kubectl create namespace services
-
-# Create deployment and three different services
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: services
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: web-app
-  namespace: services
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: web
-  template:
-    metadata:
-      labels:
-        app: web
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:alpine
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: web-svc-cluster
-  namespace: services
-spec:
-  selector:
-    app: web
-  ports:
-  - port: 80
-    targetPort: 80
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: web-svc-nodeport
-  namespace: services
-spec:
-  selector:
-    app: web
-  ports:
-  - port: 80
-    targetPort: 80
-    nodePort: 30080
-  type: NodePort
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: web-svc-lb
-  namespace: services
-spec:
-  selector:
-    app: web
-  ports:
-  - port: 80
-    targetPort: 80
-  type: LoadBalancer
-EOF
-```
-
-## Question 7: State - PV, PVC, and StatefulApp
-
-> Server: `ssh ckad9999`
-
-Set up persistent storage for MySQL:
-
-```bash
-# Create namespace
-kubectl create namespace state
-
-# Create PV, PVC, and MySQL pod
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: state
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: db-pv
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  hostPath:
-    path: /mnt/data
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: db-pvc
-  namespace: state
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 500Mi
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: db-pod
-  namespace: state
-spec:
-  containers:
-  - name: mysql
-    image: mysql:5.7
-    env:
-    - name: MYSQL_ROOT_PASSWORD
-      value: rootpassword
-    - name: MYSQL_DATABASE
-      value: mydb
-    - name: MYSQL_USER
-      value: myuser
-    - name: MYSQL_PASSWORD
-      value: mypassword
-    volumeMounts:
-    - name: mysql-storage
-      mountPath: /var/lib/mysql
-  volumes:
-  - name: mysql-storage
-    persistentVolumeClaim:
-      claimName: db-pvc
-EOF
-```
-
-## Question 8: Pod Design - CronJob
-
-> Server: `ssh ckad9988`
-
-Create a CronJob:
-
-```bash
-# Ensure namespace exists
-kubectl get namespace pod-design || kubectl create namespace pod-design
-
-# Create CronJob
-cat <<EOF | kubectl apply -f -
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: backup-job
-  namespace: pod-design
-spec:
-  schedule: "*/5 * * * *"
-  jobTemplate:
-    spec:
-      activeDeadlineSeconds: 100
-      template:
-        spec:
-          containers:
-          - name: backup
-            image: busybox
-            command: ['sh', '-c', 'echo Backup started: $(date); sleep 30; echo Backup completed: $(date)']
-          restartPolicy: OnFailure
-EOF
-```
-
-## Question 9: Troubleshooting a Deployment
-
-> Server: `ssh ckad9988`
-
-Fix a broken deployment (assuming it's already created but not working):
-
-```bash
-# First check what's wrong with the deployment
-kubectl describe deployment broken-deployment -n troubleshooting
-
-# Common fixes might include:
-
-# Fix 1: Correct the image if it's incorrect
-kubectl set image deployment/broken-deployment nginx=nginx:1.19 -n troubleshooting
-
-# Fix 2: If resource requests are too high
-kubectl patch deployment broken-deployment -n troubleshooting --patch '{"spec":{"template":{"spec":{"containers":[{"name":"nginx","resources":{"requests":{"cpu":"100m","memory":"128Mi"},"limits":{"cpu":"200m","memory":"256Mi"}}}]}}}}'
-
-# Fix 3: If there's a configuration issue in the pod template
-kubectl edit deployment broken-deployment -n troubleshooting
-
-# Fix 4: If a network policy is blocking traffic
-kubectl get networkpolicies -n troubleshooting
-kubectl delete networkpolicy restrictive-policy -n troubleshooting
-
-# Verify the fix
-kubectl rollout status deployment/broken-deployment -n troubleshooting
-```
 
 ## Question 10: Networking - NetworkPolicy
 
@@ -532,280 +468,59 @@ spec:
 EOF
 ```
 
-## Question 11: Security Context
+---
 
-> Server: `ssh ckad9988`
+## Question 11: Observability - Probes & Resource Limits
 
-Create a Pod with security configurations:
+> Server: `ssh ckad9999`
+
+Create a pod with liveness/readiness probes and resource limits:
 
 ```bash
 # Create namespace
-kubectl create namespace security
+kubectl create namespace observability
 
-# Create secure pod
+# Create pod with probes and resource limits
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: security
+  name: observability
 ---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: secure-app
-  namespace: security
-spec:
-  securityContext:
-    runAsUser: 1000
-    runAsNonRoot: true
-  containers:
-  - name: nginx
-    image: nginx:alpine
-    securityContext:
-      capabilities:
-        drop: ["ALL"]
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-EOF
-```
-
-## Question 12: Docker Basics
-
-> Server: `ssh ckad9988`
-
-Create a simple Docker image and run it:
-
-```bash
-# Create the Dockerfile
-cat > /tmp/Dockerfile << 'EOF'
-FROM nginx:alpine
-COPY index.html /usr/share/nginx/html/
-EXPOSE 80
-EOF
-
-# Create the HTML file
-cat > /tmp/index.html << 'EOF'
-<!DOCTYPE html>
-<html>
-<body>
-<h1>Hello from CKAD Docker Question!</h1>
-</body>
-</html>
-EOF
-
-# Build the Docker image
-docker build -t my-nginx:v1 -f /tmp/Dockerfile /tmp
-
-# Run the container
-docker run -d --name my-web -p 8080:80 my-nginx:v1
-
-# Verify the container is running
-docker ps | grep my-web
-```
-
-## Question 13: Jobs
-
-> Server: `ssh ckad9988`
-
-Create a Job with specific configurations:
-
-```bash
-# Create namespace
-kubectl create namespace jobs
-
-# Create Job
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: jobs
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: data-processor
-  namespace: jobs
-spec:
-  backoffLimit: 4
-  activeDeadlineSeconds: 30
-  template:
-    spec:
-      containers:
-      - name: processor
-        image: busybox
-        command: ['sh', '-c', 'for i in $(seq 1 5); do echo Processing item $i; sleep 2; done']
-      restartPolicy: Never
-EOF
-```
-
-## Question 14: Init Containers
-
-> Server: `ssh ckad9988`
-
-Create a Pod with init container and service:
-
-```bash
-# Create namespace
-kubectl create namespace init-containers
-
-# Create Pod with init container and Service
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: init-containers
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: myservice
-  namespace: init-containers
-spec:
-  selector:
-    app: myservice
-  ports:
-  - port: 80
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: app-with-init
-  namespace: init-containers
-spec:
-  containers:
-  - name: main-container
-    image: nginx
-    volumeMounts:
-    - name: log-volume
-      mountPath: /shared
-  initContainers:
-  - name: sidecar-container
-    image: busybox
-    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done']
-    volumeMounts:
-    - name: log-volume
-      mountPath: /shared
-  volumes:
-  - name: log-volume
-    emptyDir: {}
-EOF
-```
-
-## Question 15 - Helm Basics
-
-> Server: `ssh ckad9977`
-
-The task is to perform basic Helm operations including creating a namespace, adding a repository, installing a chart, and saving release notes.
-
-```bash
-# Step 1: Create the namespace
-kubectl create namespace helm-basics
-
-# Step 2: Add the Bitnami repository
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
-
-# Step 3: Install the nginx chart
-helm install nginx-release bitnami/nginx --namespace helm-basics
-
-# Step 4: Save the release notes to a file
-helm get notes nginx-release --namespace helm-basics > /tmp/release-notes.txt
-```
-
-These commands:
-1. Create a namespace called `helm-basics`
-2. Add the Bitnami Helm chart repository and update it to get the latest charts
-3. Install the nginx chart from Bitnami in the helm-basics namespace with the release name "nginx-release"
-4. Save the release notes to /tmp/release-notes.txt using the `helm get notes` command
-
-## Question 16: Health Checks
-
-> Server: `ssh ckad9977`
-
-Create a Pod with multiple health probes:
-
-```bash
-# Create namespace
-kubectl create namespace health-checks
-
-# Create Pod with startup, liveness, and readiness probes
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: health-checks
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: health-check-pod
-  namespace: health-checks
+  name: probes-pod
+  namespace: observability
 spec:
   containers:
   - name: nginx
     image: nginx
-    startupProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 10
-      periodSeconds: 3
-      failureThreshold: 3
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
     livenessProbe:
       httpGet:
-        path: /
+        path: /healthz
         port: 80
-      initialDelaySeconds: 15
+      initialDelaySeconds: 10
       periodSeconds: 5
-      failureThreshold: 3
     readinessProbe:
       httpGet:
         path: /
         port: 80
       initialDelaySeconds: 5
       periodSeconds: 3
-      failureThreshold: 3
 EOF
 ```
 
-## Question 17: Pod Lifecycle
-
-> Server: `ssh ckad9977`
-
-Create a Pod with lifecycle hooks:
-
-```bash
-# Create namespace
-kubectl create namespace pod-lifecycle
-
-# Create Pod with lifecycle hooks
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: pod-lifecycle
 ---
-apiVersion: v1
-kind: Pod
-metadata:
-  name: lifecycle-pod
-  namespace: pod-lifecycle
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-    lifecycle:
-      postStart:
-        exec:
-          command: ["/bin/sh", "-c", "echo 'Welcome to the pod!' > /usr/share/nginx/html/welcome.txt"]
-      preStop:
-        exec:
-          command: ["/bin/sh", "-c", "sleep 10"]
-  terminationGracePeriodSeconds: 30
-EOF
-```
 
-## Question 18: Custom Resource Definitions
+## Question 12: Custom Resource Definitions
 
 > Server: `ssh ckad9977`
 
@@ -866,7 +581,130 @@ kubectl get crd applications.training.ckad.io
 kubectl get application -n crd-demo
 ```
 
-## Question 19: Custom Column Output
+---
+
+## Question 13: Services - Different Service Types
+
+> Server: `ssh ckad9999`
+
+Create deployment with different service types:
+
+```bash
+# Create namespace
+kubectl create namespace services
+
+# Create deployment and three different services
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: services
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  namespace: services
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc-cluster
+  namespace: services
+spec:
+  selector:
+    app: web
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc-nodeport
+  namespace: services
+spec:
+  selector:
+    app: web
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc-lb
+  namespace: services
+spec:
+  selector:
+    app: web
+  ports:
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer
+EOF
+```
+
+---
+
+## Question 14: Security Context
+
+> Server: `ssh ckad9988`
+
+Create a Pod with security configurations:
+
+```bash
+# Create namespace
+kubectl create namespace security
+
+# Create secure pod
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: security
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-app
+  namespace: security
+spec:
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true
+  containers:
+  - name: nginx
+    image: nginx:alpine
+    securityContext:
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+EOF
+```
+
+---
+
+## Question 15: Custom Column Output
 
 > Server: `ssh ckad9977`
 
@@ -911,7 +749,154 @@ This solution creates two output files:
 1. `/tmp/pod-images.txt` - Shows all pods with their names, namespaces, and primary container images
 2. `/tmp/all-container-images.txt` - Shows all pods with all container images, properly handling multi-container pods
 
-## Question 20: Pod Configuration
+---
+
+## Question 16: Docker Basics
+
+> Server: `ssh ckad9988`
+
+Create a simple Docker image and run it:
+
+```bash
+# Create the Dockerfile
+cat > /tmp/Dockerfile << 'EOF'
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/
+EXPOSE 80
+EOF
+
+# Create the HTML file
+cat > /tmp/index.html << 'EOF'
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Hello from CKAD Docker Question!</h1>
+</body>
+</html>
+EOF
+
+# Build the Docker image
+docker build -t my-nginx:v1 -f /tmp/Dockerfile /tmp
+
+# Run the container
+docker run -d --name my-web -p 8080:80 my-nginx:v1
+
+# Verify the container is running
+docker ps | grep my-web
+```
+
+---
+
+## Question 17: State - PV, PVC, and StatefulApp
+
+> Server: `ssh ckad9999`
+
+Set up persistent storage for MySQL:
+
+```bash
+# Create namespace
+kubectl create namespace state
+
+# Create PV, PVC, and MySQL pod
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: state
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: db-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+  namespace: state
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db-pod
+  namespace: state
+spec:
+  containers:
+  - name: mysql
+    image: mysql:5.7
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: rootpassword
+    - name: MYSQL_DATABASE
+      value: mydb
+    - name: MYSQL_USER
+      value: myuser
+    - name: MYSQL_PASSWORD
+      value: mypassword
+    volumeMounts:
+    - name: mysql-storage
+      mountPath: /var/lib/mysql
+  volumes:
+  - name: mysql-storage
+    persistentVolumeClaim:
+      claimName: db-pvc
+EOF
+```
+
+---
+
+## Question 18: Jobs
+
+> Server: `ssh ckad9988`
+
+Create a Job with specific configurations:
+
+```bash
+# Create namespace
+kubectl create namespace jobs
+
+# Create Job
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jobs
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-processor
+  namespace: jobs
+spec:
+  backoffLimit: 4
+  activeDeadlineSeconds: 30
+  template:
+    spec:
+      containers:
+      - name: processor
+        image: busybox
+        command: ['sh', '-c', 'for i in $(seq 1 5); do echo Processing item $i; sleep 2; done']
+      restartPolicy: Never
+EOF
+```
+
+---
+
+## Question 19: Pod Configuration
 
 > Server: `ssh ckad9977`
 
@@ -1006,3 +991,58 @@ This solution demonstrates:
    - Environment variables from Secret (API_KEY, API_SECRET)
    - Mounting the ConfigMap as a volume at /etc/app-config
 4. Verification commands to ensure everything is working correctly 
+
+---
+
+## Question 20: Init Containers
+
+> Server: `ssh ckad9988`
+
+Create a Pod with init container and service:
+
+```bash
+# Create namespace
+kubectl create namespace init-containers
+
+# Create Pod with init container and Service
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: init-containers
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myservice
+  namespace: init-containers
+spec:
+  selector:
+    app: myservice
+  ports:
+  - port: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-with-init
+  namespace: init-containers
+spec:
+  containers:
+  - name: main-container
+    image: nginx
+    volumeMounts:
+    - name: log-volume
+      mountPath: /shared
+  initContainers:
+  - name: sidecar-container
+    image: busybox
+    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done']
+    volumeMounts:
+    - name: log-volume
+      mountPath: /shared
+  volumes:
+  - name: log-volume
+    emptyDir: {}
+EOF
+```

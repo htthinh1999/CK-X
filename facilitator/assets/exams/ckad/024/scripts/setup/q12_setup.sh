@@ -1,97 +1,63 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace dockhands --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace manifest --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
-# Start clean: recreate the six Pods so earlier label/annotation changes are gone.
-kubectl -n dockhands delete pod stevedore-1 stevedore-2 stevedore-3 lasher-1 lasher-2 clerk-1 \
-  --ignore-not-found --wait=true --timeout=60s >/dev/null 2>&1 || true
-
-kubectl apply -f - <<'YAML' || true
-apiVersion: v1
-kind: Pod
+# Working Deployment (pods: app=manifest-api, tier=backend, nginx on port 80 "http")
+# and a broken Service: wrong selector value AND wrong targetPort -> no endpoints.
+kubectl -n manifest delete service manifest-api --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n manifest apply -f - >/dev/null 2>&1 <<'YAML' || true
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: stevedore-1
-  namespace: dockhands
+  name: manifest-api
+  namespace: manifest
   labels:
-    role: stevedore
-    crew: alpha
+    app: manifest-api
 spec:
-  containers:
-    - name: main
-      image: registry.k8s.io/pause:3.9
+  replicas: 2
+  selector:
+    matchLabels:
+      app: manifest-api
+  template:
+    metadata:
+      labels:
+        app: manifest-api
+        tier: backend
+    spec:
+      containers:
+        - name: api
+          image: nginx:1.25
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi
 ---
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
-  name: stevedore-2
-  namespace: dockhands
+  name: manifest-api
+  namespace: manifest
   labels:
-    role: stevedore
-    crew: alpha
-    onboarding: pending
+    app: manifest-api
 spec:
-  containers:
-    - name: main
-      image: registry.k8s.io/pause:3.9
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stevedore-3
-  namespace: dockhands
-  labels:
-    role: stevedore
-    crew: bravo
-    onboarding: pending
-spec:
-  containers:
-    - name: main
-      image: registry.k8s.io/pause:3.9
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: lasher-1
-  namespace: dockhands
-  labels:
-    role: lasher
-    crew: alpha
-    onboarding: batch-7
-spec:
-  containers:
-    - name: main
-      image: registry.k8s.io/pause:3.9
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: lasher-2
-  namespace: dockhands
-  labels:
-    role: lasher
-    crew: bravo
-    onboarding: pending
-  annotations:
-    safety.example.com/certified: expired
-spec:
-  containers:
-    - name: main
-      image: registry.k8s.io/pause:3.9
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: clerk-1
-  namespace: dockhands
-  labels:
-    role: clerk
-    shift: day
-    onboarding: pending
-spec:
-  containers:
-    - name: main
-      image: registry.k8s.io/pause:3.9
+  type: ClusterIP
+  selector:
+    app: manifest-app
+    tier: backend
+  ports:
+    - name: web
+      protocol: TCP
+      port: 8080
+      targetPort: 8081
 YAML
+
+kubectl -n manifest rollout status deployment/manifest-api --timeout=120s >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 12"
 exit 0

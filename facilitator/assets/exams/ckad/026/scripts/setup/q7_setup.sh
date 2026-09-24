@@ -1,200 +1,126 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=junction
-D=/home/candidate/exam/q7
+NS=fares
+DIR=/home/candidate/exam/q7
 
 kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
-rm -rf "$D"
-mkdir -p "$D"
+# Start from a clean state (idempotent re-runs)
+kubectl -n "$NS" delete deployment fare-board --ignore-not-found --timeout=60s >/dev/null 2>&1 || true
+kubectl -n "$NS" delete configmap fare-table fare-table-2025 fare-notes board-style --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n "$NS" delete pod -l app=fare-board --grace-period=1 --ignore-not-found --wait=false >/dev/null 2>&1 || true
+rm -rf "$DIR" && mkdir -p "$DIR"
 
-# Reset: remove everything a previous attempt may have changed
-kubectl -n "$NS" delete deployment junction-blue junction-green junction-smoke junction-ticker \
-  --ignore-not-found --wait=false >/dev/null 2>&1 || true
-kubectl -n "$NS" delete service junction junction-preview --ignore-not-found >/dev/null 2>&1 || true
-kubectl -n "$NS" delete pod junction-debug --ignore-not-found --grace-period=0 --force >/dev/null 2>&1 || true
-kubectl -n "$NS" delete configmap junction-cutover --ignore-not-found >/dev/null 2>&1 || true
-
-cat <<'YAML' | kubectl apply -f - >/dev/null
+# Old fare table (what the running Pods will keep showing)
+kubectl -n "$NS" apply -f - >/dev/null 2>&1 <<'YAML' || true
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: junction-cutover
-  namespace: junction
+  name: fare-table
+  namespace: fares
+  labels:
+    app: fare-board
 data:
-  plan.txt: |
-    1. bring green up to the size of blue
-    2. move the junction Service to green
-    3. drain blue (keep the Deployment for rollback)
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: junction-blue
-  namespace: junction
-  labels:
-    app: junction
-    slot: blue
-spec:
-  replicas: 4
-  selector:
-    matchLabels:
-      app: junction
-      tier: web
-      slot: blue
-  template:
-    metadata:
-      labels:
-        app: junction
-        tier: web
-        slot: blue
-    spec:
-      containers:
-      - name: web
-        image: nginx:1.25
-        ports:
-        - name: http
-          containerPort: 80
-        resources:
-          requests:
-            cpu: 10m
-            memory: 16Mi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: junction-green
-  namespace: junction
-  labels:
-    app: junction
-    slot: green
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app: junction
-      tier: web
-      slot: green
-  template:
-    metadata:
-      labels:
-        app: junction
-        tier: web
-        slot: green
-    spec:
-      containers:
-      - name: web
-        image: nginx:1.26
-        ports:
-        - name: web
-          containerPort: 80
-        resources:
-          requests:
-            cpu: 10m
-            memory: 16Mi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: junction-smoke
-  namespace: junction
-  labels:
-    app: junction
-    slot: green
-    tier: smoke
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: junction
-      tier: smoke
-      slot: green
-  template:
-    metadata:
-      labels:
-        app: junction
-        tier: smoke
-        slot: green
-    spec:
-      containers:
-      - name: web
-        image: nginx:1.26
-        ports:
-        - name: http
-          containerPort: 80
-        resources:
-          requests:
-            cpu: 10m
-            memory: 16Mi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: junction-ticker
-  namespace: junction
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: ticker
-  template:
-    metadata:
-      labels:
-        app: ticker
-        tier: web
-    spec:
-      containers:
-      - name: ticker
-        image: busybox:1.36
-        command: ["sh", "-c", "while true; do date; sleep 30; done"]
+  peak.txt: |
+    PEAK 3.10
+  offpeak.txt: |
+    OFFPEAK 2.20
+  night.txt: |
+    NIGHT 3.80
 ---
 apiVersion: v1
-kind: Pod
+kind: ConfigMap
 metadata:
-  name: junction-debug
-  namespace: junction
+  name: fare-table-2025
+  namespace: fares
   labels:
-    app: junction
-    tier: debug
-spec:
-  containers:
-  - name: shell
-    image: busybox:1.36
-    command: ["sh", "-c", "sleep 36000"]
+    app: fare-board
+    archived: "true"
+data:
+  peak.txt: |
+    PEAK 2.95
+  offpeak.txt: |
+    OFFPEAK 2.05
+  night.txt: |
+    NIGHT 3.50
 ---
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: junction
-  namespace: junction
-spec:
-  selector:
-    app: junction
-    tier: web
-    slot: blue
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: http
+  name: fare-notes
+  namespace: fares
+data:
+  notes.txt: |
+    Fares are reviewed every quarter by the tariff office.
 ---
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: junction-preview
-  namespace: junction
+  name: board-style
+  namespace: fares
+data:
+  board.css: |
+    body { font-family: monospace; background: #002b36; color: #fdf6e3; }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fare-board
+  namespace: fares
+  labels:
+    app: fare-board
 spec:
+  replicas: 2
   selector:
-    app: junction
-    slot: green
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 80
+    matchLabels:
+      app: fare-board
+  template:
+    metadata:
+      labels:
+        app: fare-board
+    spec:
+      containers:
+        - name: board
+          image: nginx:1.25
+          ports:
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - name: fares
+              mountPath: /usr/share/nginx/html/fares/current.txt
+              subPath: peak.txt
+            - name: fares
+              mountPath: /usr/share/nginx/html/fares/offpeak.txt
+              subPath: offpeak.txt
+            - name: style
+              mountPath: /usr/share/nginx/html/style
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+      volumes:
+        - name: fares
+          configMap:
+            name: fare-table
+        - name: style
+          configMap:
+            name: board-style
 YAML
 
-kubectl -n "$NS" rollout status deployment/junction-blue --timeout=120s >/dev/null 2>&1 || true
+kubectl -n "$NS" rollout status deployment/fare-board --timeout=120s >/dev/null 2>&1 || true
+kubectl -n "$NS" wait pod -l app=fare-board --for=condition=Ready --timeout=60s >/dev/null 2>&1 || true
+sleep 2
+
+# The tariff office has published new fares since the Pods started
+kubectl -n "$NS" create configmap fare-table \
+  --from-literal=peak.txt=$'PEAK 3.60\n' \
+  --from-literal=offpeak.txt=$'OFFPEAK 2.40\n' \
+  --from-literal=night.txt=$'NIGHT 4.00\n' \
+  --dry-run=client -o yaml \
+  | kubectl label --local -f - app=fare-board -o yaml \
+  | kubectl -n "$NS" apply -f - >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 7"
 exit 0

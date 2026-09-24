@@ -1,30 +1,29 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace tornado --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace mistral --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 kubectl apply -f - <<'EOF' >/dev/null 2>&1 || true
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
-  name: api-svc
-  namespace: tornado
+  name: mistral-db
+  namespace: mistral
 spec:
+  serviceName: "mistral-db-headless"
+  replicas: 1
   selector:
-    app: api
-  ports:
-  - port: 8080
-    targetPort: 8080
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: web-svc
-  namespace: tornado
-spec:
-  selector:
-    app: web
-  ports:
-  - port: 80
-    targetPort: 80
+    matchLabels:
+      app: mistral-db
+  template:
+    metadata:
+      labels:
+        app: mistral-db
+    spec:
+      containers:
+      - name: db
+        image: mysql:5.7
+        env:
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
+          value: "1"
 EOF
 echo "Setup complete for Question 18"
 exit 0

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Delete the pod-configuration namespace if it exists
-echo "Setting up environment for Question 20 (Pod Configuration)..."
-kubectl delete namespace pod-configuration --ignore-not-found=true
+# Delete the init-containers namespace if it exists
+echo "Setting up environment for Question 20 (Init Containers)..."
+kubectl delete namespace init-containers --ignore-not-found=true
 
 # Wait for deletion to complete
 sleep 2

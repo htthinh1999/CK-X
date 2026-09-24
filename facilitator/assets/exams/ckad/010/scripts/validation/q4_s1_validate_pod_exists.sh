@@ -1,9 +1,9 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-if kubectl get pod ready-pod -n field >/dev/null 2>&1; then
-  echo "Success: Pod ready-pod exists in field"
+if kubectl get pod quota-pod -n fortune >/dev/null 2>&1; then
+  echo "Success: Pod quota-pod exists in fortune"
   exit 0
 else
-  echo "Error: Pod ready-pod not found in field"
+  echo "Error: Pod quota-pod not found in fortune"
   exit 1
 fi

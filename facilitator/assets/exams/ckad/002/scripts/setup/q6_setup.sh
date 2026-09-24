@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Delete the services namespace if it exists
-echo "Setting up environment for Question 6 (Services)..."
-kubectl delete namespace services --ignore-not-found=true
+# Delete the app-namespace namespace if it exists
+echo "Setting up environment for Question 6 (Deployment)..."
+kubectl delete namespace app-namespace --ignore-not-found=true
 
 # Wait for deletion to complete
 sleep 2

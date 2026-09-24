@@ -1,32 +1,23 @@
 #!/bin/bash
 
-# Setup for Question 12: Create a Pod with liveness and readiness probes
+# Setup for Question 12: Create a CronJob for log cleaning
 
 # Create the workloads namespace if it doesn't exist already
 if ! kubectl get namespace workloads &> /dev/null; then
     kubectl create namespace workloads
 fi
 
-# Delete any existing Pod with the same name
-kubectl delete pod health-pod -n workloads --ignore-not-found=true
+# Delete any existing CronJob with the same name
+kubectl delete cronjob log-cleaner -n workloads --ignore-not-found=true
 
-# Create an index.html and healthz endpoint for testing the probes
-cat <<EOF > /tmp/index.html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>CKAD Exam</title>
-</head>
-<body>
-    <h1>Welcome to the CKAD Practice Exam!</h1>
-</body>
-</html>
-EOF
+# Create a directory with some sample log files for demonstration
+mkdir -p /tmp/var/log
+touch /tmp/var/log/test1.log
+touch /tmp/var/log/test2.log
+touch /tmp/var/log/app.log
+touch /tmp/var/log/system.log
 
-cat <<EOF > /tmp/healthz
-OK
-EOF
-
-echo "Setup complete for Question 12: Environment ready for creating Pod 'health-pod' with liveness and readiness probes"
-echo "Note: In a real environment, you would need to set up files at /healthz in the container."
+echo "Setup complete for Question 12: Environment ready for creating CronJob 'log-cleaner'"
+echo "Note: In a real environment, log files would be on the host system. These sample files"
+echo "      are for demonstration only and won't actually be accessible from the CronJob."
 exit 0 

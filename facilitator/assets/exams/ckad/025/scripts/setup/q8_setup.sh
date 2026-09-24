@@ -1,53 +1,61 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace dome --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+NS=calibration
+kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
-# Deployment whose readiness probe points at the wrong port and path:
-# its Pods run but never become Ready.
-kubectl apply -f - <<'YAML' || true
+# Reset: the new ConfigMap is created by the student
+kubectl -n "$NS" delete configmap optics-v2 --ignore-not-found >/dev/null 2>&1 || true
+
+cat <<'YAML' | kubectl apply -f - >/dev/null 2>&1 || true
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: optics-v1
+  namespace: calibration
+data:
+  FOCAL_LENGTH: "1200"
+  APERTURE: "f8"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: skyview
-  namespace: dome
+  name: lens-calibrator
+  namespace: calibration
   labels:
-    app: skyview
+    app: lens-calibrator
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: skyview
+      app: lens-calibrator
   template:
     metadata:
       labels:
-        app: skyview
+        app: lens-calibrator
     spec:
       containers:
-        - name: web
+        - name: calibrator
           image: nginx:1.25
           ports:
-            - name: http
-              containerPort: 80
-          readinessProbe:
-            httpGet:
-              path: /healthz
-              port: 8080
-            initialDelaySeconds: 3
-            periodSeconds: 5
-            failureThreshold: 2
-          livenessProbe:
-            tcpSocket:
-              port: 80
-            initialDelaySeconds: 10
-            periodSeconds: 15
+            - containerPort: 80
           resources:
             requests:
-              cpu: 20m
-              memory: 32Mi
+              cpu: 10m
+              memory: 16Mi
             limits:
               cpu: 100m
-              memory: 64Mi
+              memory: 128Mi
+          volumeMounts:
+            - name: optics
+              mountPath: /etc/lens
+              readOnly: true
+      volumes:
+        - name: optics
+          configMap:
+            name: optics-v1
 YAML
+
+kubectl -n "$NS" rollout status deployment/lens-calibrator --timeout=120s >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 8"
 exit 0

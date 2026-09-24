@@ -1,30 +1,25 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace wave --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace lagoon --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 kubectl apply -f - >/dev/null 2>&1 <<'EOF'
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: mesh-pod
-  namespace: wave
-  labels:
-    app: mesh-app
+  name: api-server
+  namespace: lagoon
 spec:
-  containers:
-  - name: app
-    image: nginx:alpine
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mesh-service
-  namespace: wave
-spec:
-  ports:
-  - port: 80
-    targetPort: 80
+  replicas: 2
   selector:
-    app: wrong-label
+    matchLabels:
+      app: api-server
+  template:
+    metadata:
+      labels:
+        app: api-server
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
 EOF
 echo "Setup complete for Question 18"
 exit 0

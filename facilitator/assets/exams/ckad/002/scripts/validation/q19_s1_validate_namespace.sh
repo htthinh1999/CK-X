@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Check if the namespace exists
-kubectl get namespace custom-columns-demo &> /dev/null
-if [[ $? -eq 0 ]]; then
-  echo "✅ Namespace 'custom-columns-demo' exists"
+# Check if namespace exists
+NS_EXISTS=$(kubectl get namespace pod-configuration --no-headers --output=name 2>/dev/null | wc -l)
+if [[ "$NS_EXISTS" -eq 1 ]]; then
+  echo "✅ Namespace 'pod-configuration' exists"
   exit 0
 else
-  echo "❌ Namespace 'custom-columns-demo' not found"
+  echo "❌ Namespace 'pod-configuration' not found"
   exit 1
 fi 

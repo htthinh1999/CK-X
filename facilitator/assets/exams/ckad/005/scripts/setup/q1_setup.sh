@@ -1,5 +1,5 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-mkdir -p /tmp/exam/course/1
+kubectl create namespace fang --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 echo "Setup complete for Question 1"
 exit 0

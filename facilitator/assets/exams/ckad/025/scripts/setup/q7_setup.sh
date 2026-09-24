@@ -1,28 +1,57 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace vault --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace antenna --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
-D=/home/candidate/exam/q7
-rm -rf "$D"
-mkdir -p "$D"
-
-# Reset objects the student creates (idempotent re-runs)
-kubectl -n vault delete pod cert-loader --ignore-not-found --wait=false >/dev/null 2>&1 || true
-kubectl -n vault delete secret observatory-tls --ignore-not-found >/dev/null 2>&1 || true
-
-cat > "$D/signing.key" <<'EOF'
------BEGIN OBSERVATORY SIGNING KEY-----
-b2JzZXJ2YXRvcnktc2lnbmluZy1rZXktcHJhY3RpY2Utb25seS0wMQ==
-dGVsZXNjb3BlLWFycmF5LW5vcnRoLXJpZGdlLWtleS1tYXRlcmlhbA==
------END OBSERVATORY SIGNING KEY-----
-EOF
-
-cat > "$D/ca.crt" <<'EOF'
------BEGIN CERTIFICATE-----
-b2JzZXJ2YXRvcnktcm9vdC1jYS1wcmFjdGljZS1vbmx5LTIwMjY=
-Y249T2JzZXJ2YXRvcnkgUm9vdCBDQSxvPU5vcnRoIFJpZGdl
------END CERTIFICATE-----
-EOF
+# Deployment with a NAMED container port (rx-http) and a NodePort Service whose
+# targetPort refers to a port name that does not exist (http) -> no endpoints.
+kubectl apply -f - <<'YAML' || true
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dish-receiver
+  namespace: antenna
+  labels:
+    app: dish-receiver
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dish-receiver
+  template:
+    metadata:
+      labels:
+        app: dish-receiver
+    spec:
+      containers:
+        - name: receiver
+          image: nginx:1.25
+          ports:
+            - name: rx-http
+              containerPort: 80
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dish-receiver
+  namespace: antenna
+spec:
+  type: NodePort
+  selector:
+    app: dish-receiver
+  ports:
+    - name: feed
+      protocol: TCP
+      port: 8080
+      targetPort: http
+      nodePort: 31313
+YAML
 
 echo "Setup complete for Question 7"
 exit 0

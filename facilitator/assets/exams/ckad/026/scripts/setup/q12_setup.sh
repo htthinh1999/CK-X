@@ -1,155 +1,58 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=routes
-D=/home/candidate/exam/q12
+NS=dispatch
+DIR=/home/candidate/exam/q12
+APP="$DIR/app"
 
 kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
-# Reset: remove every workload, Service and ConfigMap a previous run or attempt created
-kubectl -n "$NS" delete deployment --all --wait=false >/dev/null 2>&1 || true
-kubectl -n "$NS" delete service --all >/dev/null 2>&1 || true
-for cm in $(kubectl -n "$NS" get configmap -o name 2>/dev/null | grep -v '^configmap/kube-root-ca.crt$'); do
-  kubectl -n "$NS" delete "$cm" --ignore-not-found >/dev/null 2>&1 || true
+# Start from a clean state (idempotent re-runs)
+kubectl -n "$NS" delete deployment dispatch-board --ignore-not-found >/dev/null 2>&1 || true
+rm -rf "$DIR" && mkdir -p "$APP"
+
+cat > "$APP/Dockerfile" <<'EOF'
+# Dispatch board front page
+ARG BASE_TAG=1.25
+ARG DISPATCH_ZONE=central
+
+FROM nginx:${BASE_TAG}
+
+ARG BUILD_NO=100
+
+LABEL transit.dispatch/zone="${DISPATCH_ZONE}" \
+      transit.dispatch/build="${BUILD_NO}" \
+      transit.dispatch/release="${DISPATCH_ZONE}-${BUILD_NO}"
+
+COPY index.html /usr/share/nginx/html/index.html
+RUN sed -i "s/__ZONE__/${DISPATCH_ZONE}/; s/__BUILD__/${BUILD_NO}/" /usr/share/nginx/html/index.html
+EOF
+
+cat > "$APP/index.html" <<'EOF'
+<!DOCTYPE html>
+<html>
+<head><title>Dispatch Board</title></head>
+<body>
+<h1>Dispatch Board</h1>
+<p id="release">zone=__ZONE__ build=__BUILD__</p>
+</body>
+</html>
+EOF
+
+# Fresh local registry (drops anything pushed by a previous attempt)
+docker rm -f -v registry >/dev/null 2>&1 || true
+docker rmi -f localhost:5000/dispatch-board:2.3 localhost:5000/dispatch-board:2.2 >/dev/null 2>&1 || true
+docker run -d -p 5000:5000 --restart=always --name registry registry:2 >/dev/null 2>&1 || true
+for i in $(seq 1 30); do
+  curl -sf --max-time 2 http://localhost:5000/v2/ >/dev/null 2>&1 && break
+  sleep 1
 done
 
-rm -rf "$D"
-mkdir -p "$D/base" "$D/overlays/staging"
-
-cat > "$D/base/kustomization.yaml" <<'EOF'
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- deployment.yaml
-- service.yaml
-configMapGenerator:
-- name: route-settings
-  literals:
-  - ROUTE_MODE=standard
-  - MAX_STOPS=40
-  - FEED_URL=http://feed.routes.internal/v2
-EOF
-
-cat > "$D/base/deployment.yaml" <<'EOF'
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: route-board
-  labels:
-    app: route-board
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: route-board
-  template:
-    metadata:
-      labels:
-        app: route-board
-    spec:
-      containers:
-      - name: web
-        image: nginx:1.25
-        ports:
-        - containerPort: 80
-        envFrom:
-        - configMapRef:
-            name: route-settings
-      - name: feed-sync
-        image: busybox:1.36
-        command: ["sh", "-c", "while true; do cat /etc/route/FEED_URL; echo; sleep 300; done"]
-        volumeMounts:
-        - name: settings
-          mountPath: /etc/route
-      volumes:
-      - name: settings
-        configMap:
-          name: route-settings
-EOF
-
-cat > "$D/base/service.yaml" <<'EOF'
-apiVersion: v1
-kind: Service
-metadata:
-  name: route-board
-  labels:
-    app: route-board
-spec:
-  selector:
-    app: route-board
-  ports:
-  - name: http
-    port: 80
-    targetPort: 80
-EOF
-
-cat > "$D/overlays/staging/kustomization.yaml" <<'EOF'
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- ../../base
-namespace: routes
-namePrefix: staging-
-labels:
-- pairs:
-    env: staging
-  includeSelectors: true
-configMapGenerator:
-- name: route-settings
-  behavior: replace
-  literals:
-  - ROUTE_MODE=test
-  - MAX_STOPS=5
-patches:
-- path: web-limits.yaml
-EOF
-
-cat > "$D/overlays/staging/web-limits.yaml" <<'EOF'
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: route-board
-spec:
-  template:
-    spec:
-      containers:
-      - name: web
-        resources:
-          limits:
-            memory: 64Mi
-EOF
-
-# The staging overlay is live in the same namespace
-kubectl apply -k "$D/overlays/staging" >/dev/null
-
-# An older hand-made copy that still carries the base label
-cat <<'YAML' | kubectl apply -f - >/dev/null
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: route-board-legacy
-  namespace: routes
-  labels:
-    app: route-board
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: route-board
-      release: legacy
-  template:
-    metadata:
-      labels:
-        app: route-board
-        release: legacy
-    spec:
-      containers:
-      - name: web
-        image: nginx:1.25
-        ports:
-        - containerPort: 80
-YAML
-
-kubectl -n "$NS" rollout status deployment/staging-route-board --timeout=120s >/dev/null 2>&1 || true
+# The previous release (2.2) is already published; warm the base image cache
+if timeout 300 docker pull nginx:1.25 >/dev/null 2>&1; then
+  docker tag nginx:1.25 localhost:5000/dispatch-board:2.2 >/dev/null 2>&1 \
+    && timeout 120 docker push localhost:5000/dispatch-board:2.2 >/dev/null 2>&1 || true
+  docker rmi localhost:5000/dispatch-board:2.2 >/dev/null 2>&1 || true
+fi
 
 echo "Setup complete for Question 12"
 exit 0

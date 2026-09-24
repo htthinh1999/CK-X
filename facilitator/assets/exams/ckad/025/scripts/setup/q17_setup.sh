@@ -1,58 +1,107 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=spectro
-kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace orbit --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
-# Reset: no namespace defaults, fresh Deployment
-kubectl -n "$NS" delete limitrange --all >/dev/null 2>&1 || true
-kubectl -n "$NS" delete deployment prism --ignore-not-found >/dev/null 2>&1 || true
+D=/home/candidate/exam/q17
+rm -rf "$D"
+mkdir -p "$D/telemetry"
 
-# Quota that forces every container to declare cpu/memory requests and limits
-cat <<'YAML' | kubectl apply -f - >/dev/null 2>&1 || true
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: spectro-budget
-  namespace: spectro
-spec:
-  hard:
-    pods: "6"
-    requests.cpu: 400m
-    requests.memory: 512Mi
-    limits.cpu: "1"
-    limits.memory: 1Gi
-YAML
-
-# Let the quota controller populate the quota status (bounded)
-for i in $(seq 1 20); do
-  [ -n "$(kubectl -n "$NS" get resourcequota spectro-budget -o jsonpath='{.status.hard.pods}' 2>/dev/null)" ] && break
-  sleep 1
-done
-
-# Deployment without any resources: its pods are rejected by the quota
-cat <<'YAML' | kubectl apply -f - >/dev/null 2>&1 || true
+cat > "$D/telemetry/deployment.yaml" <<'YAML'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prism
-  namespace: spectro
+  name: telemetry
   labels:
-    app: prism
+    app: telemetry
+    track: stable
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: prism
+      app: telemetry
+      track: stable
   template:
     metadata:
       labels:
-        app: prism
+        app: telemetry
+        track: stable
     spec:
       containers:
-        - name: analyzer
+        - name: web
           image: nginx:1.25
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi
+YAML
+
+cat > "$D/telemetry/service.yaml" <<'YAML'
+apiVersion: v1
+kind: Service
+metadata:
+  name: telemetry
+  labels:
+    app: telemetry
+spec:
+  selector:
+    app: telemetry
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+YAML
+
+cat > "$D/telemetry/kustomization.yaml" <<'YAML'
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: orbit
+resources:
+  - deployment.yaml
+  - service.yaml
+YAML
+
+# Stable app (managed by the kustomization above)
+kubectl apply -k "$D/telemetry" || true
+
+# Canary running the candidate image, NOT part of the kustomization
+kubectl apply -f - <<'YAML' || true
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telemetry-canary
+  namespace: orbit
+  labels:
+    app: telemetry
+    track: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telemetry
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: telemetry
+        track: canary
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.26
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi
 YAML
 
 echo "Setup complete for Question 17"

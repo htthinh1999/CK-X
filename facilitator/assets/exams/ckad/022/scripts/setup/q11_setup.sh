@@ -1,17 +1,6 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace apex --dry-run=client -o yaml | kubectl apply -f - || true
-kubectl apply -f - <<'EOF' || true
-apiVersion: v1
-kind: Pod
-metadata:
-  name: distroless-pod
-  namespace: apex
-spec:
-  containers:
-  - name: main
-    image: gcr.io/distroless/static
-    command: ["/ko-app/example"]
-EOF
+kubectl create namespace pinnacle --dry-run=client -o yaml | kubectl apply -f - || true
+mkdir -p /tmp/exam/course/11
 echo "Setup complete for Question 11"
 exit 0

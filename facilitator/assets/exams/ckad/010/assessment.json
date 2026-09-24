@@ -1,651 +1,241 @@
 {
-  "questions": [
-    {
-      "id": "1",
-      "namespace": "harvest",
-      "machineHostname": "ckad9999",
-      "question": "Work in namespace `harvest`.\n\n1. Create a Pod named `web` with image `nginx:1.25` in namespace `harvest`, exposing port `80`.\n2. Create a ClusterIP Service named `web` that exposes the Pod on port `80`.\n3. Verify the Service has endpoints.\n\nHint: use `kubectl run --expose` or create the resources separately.",
-      "concepts": [
-        "services",
-        "pods",
-        "endpoints"
-      ],
-      "verification": [
+    "questions": [
         {
-          "id": "1",
-          "description": "Pod `web` exists in namespace `harvest`",
-          "verificationScriptFile": "q1_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "1",
+            "namespace": "harvest",
+            "machineHostname": "ckad9999",
+            "question": "Work in namespace `harvest`.\n\n1. Create a Pod named `web` with image `nginx:1.25` in namespace `harvest`, exposing port `80`.\n2. Create a ClusterIP Service named `web` that exposes the Pod on port `80`.\n3. Verify the Service has endpoints.\n\nHint: use `kubectl run --expose` or create the resources separately.",
+            "concepts": ["services", "pods", "endpoints"],
+            "verification": [
+                { "id": "1", "description": "Pod `web` exists in namespace `harvest`", "verificationScriptFile": "q1_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Service `web` exists in namespace `harvest`", "verificationScriptFile": "q1_s2_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Service `web` has endpoints", "verificationScriptFile": "q1_s3_validate_endpoints.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "2",
-          "description": "Service `web` exists in namespace `harvest`",
-          "verificationScriptFile": "q1_s2_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
+            "id": "2",
+            "namespace": "fortune",
+            "machineHostname": "ckad9988",
+            "question": "Work in namespace `fortune`.\n\nCreate a ResourceQuota named `compute-quota` in namespace `fortune` with:\n- Hard requests: `cpu=1`, `memory=1Gi`\n- Hard limits: `cpu=2`, `memory=2Gi`\n\nHint: use `requests.cpu`, `requests.memory`, `limits.cpu`, `limits.memory`.",
+            "concepts": ["resourcequota", "resources"],
+            "verification": [
+                { "id": "1", "description": "ResourceQuota `compute-quota` exists in namespace `fortune`", "verificationScriptFile": "q2_s1_validate_quota_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Hard requests.cpu is 1", "verificationScriptFile": "q2_s2_validate_req_cpu.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Hard requests.memory is 1Gi", "verificationScriptFile": "q2_s3_validate_req_mem.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Hard limits.cpu is 2", "verificationScriptFile": "q2_s4_validate_lim_cpu.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "Hard limits.memory is 2Gi", "verificationScriptFile": "q2_s5_validate_lim_mem.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
         },
         {
-          "id": "3",
-          "description": "Service `web` has endpoints",
-          "verificationScriptFile": "q1_s3_validate_endpoints.sh",
-          "expectedOutput": "0",
-          "weightage": 1
+            "id": "3",
+            "namespace": "grain",
+            "machineHostname": "ckad9999",
+            "question": "A ClusterIP Service `app-svc` already exists in namespace `grain`.\n\nConvert this Service to type `NodePort`.\n\nHint: use `kubectl edit` or `kubectl patch`.",
+            "concepts": ["services", "nodeport"],
+            "verification": [
+                { "id": "1", "description": "Service `app-svc` exists in namespace `grain`", "verificationScriptFile": "q3_s1_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Service `app-svc` type is `NodePort`", "verificationScriptFile": "q3_s2_validate_svc_type.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
+        },
+        {
+            "id": "4",
+            "namespace": "fortune",
+            "machineHostname": "ckad9988",
+            "question": "Namespace `fortune` has a ResourceQuota.\n\nCreate a Pod named `quota-pod` in namespace `fortune` with:\n- Image: `nginx:1.25`\n- Resource requests: `cpu=0.5`, `memory=512Mi`\n- Resource limits: `cpu=1`, `memory=1Gi`\n\nHint: the ResourceQuota requires Pods to specify requests and limits.",
+            "concepts": ["pods", "resources", "resourcequota"],
+            "verification": [
+                { "id": "1", "description": "Pod `quota-pod` exists in namespace `fortune`", "verificationScriptFile": "q4_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod `quota-pod` has resource requests set", "verificationScriptFile": "q4_s2_validate_requests_set.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod `quota-pod` has resource limits set", "verificationScriptFile": "q4_s3_validate_limits_set.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "5",
+            "namespace": "rice",
+            "machineHostname": "ckad9999",
+            "question": "Work in namespace `rice`.\n\n1. Create a Deployment named `backend` in namespace `rice` with image `nginx:1.25` and `3` replicas, exposing port `8080`.\n2. Create a Service named `backend` that exposes the Deployment on port `6262` targeting port `8080`.\n\nHint: use `kubectl create deployment` and `kubectl expose`.",
+            "concepts": ["deployments", "services"],
+            "verification": [
+                { "id": "1", "description": "Deployment `backend` exists in namespace `rice`", "verificationScriptFile": "q5_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Deployment `backend` has 3 replicas", "verificationScriptFile": "q5_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Service `backend` exists in namespace `rice`", "verificationScriptFile": "q5_s3_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Service `backend` port is 6262", "verificationScriptFile": "q5_s4_validate_svc_port.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "Service `backend` targetPort is 8080", "verificationScriptFile": "q5_s5_validate_svc_targetport.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "6",
+            "namespace": "default",
+            "machineHostname": "ckad9977",
+            "question": "List all Helm releases across all namespaces and save the output to `/tmp/exam/course/6/releases.txt`.\n\nHint: use `helm list -A`.",
+            "concepts": ["helm", "releases"],
+            "verification": [
+                { "id": "1", "description": "File `/tmp/exam/course/15/releases.txt` saved and not empty", "verificationScriptFile": "q6_s1_validate_file.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
+        },
+        {
+            "id": "7",
+            "namespace": "bounty",
+            "machineHostname": "ckad9988",
+            "question": "Work in namespace `bounty`.\n\nCreate a Pod named `shared-pod` in namespace `bounty` with two containers:\n\nContainer 1:\n- Name: `writer`\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Mount emptyDir volume at `/data`\n\nContainer 2:\n- Name: `reader`\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Mount same emptyDir volume at `/data`\n\nBoth containers must share the same `emptyDir` volume named `shared-data`.\n\nHint: use `spec.volumes` and `volumeMounts` in each container.",
+            "concepts": ["multi-container", "volumes", "emptydir"],
+            "verification": [
+                { "id": "1", "description": "Pod `shared-pod` exists in namespace `bounty`", "verificationScriptFile": "q7_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod `shared-pod` has at least 2 containers", "verificationScriptFile": "q7_s2_validate_two_containers.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "emptyDir volume `shared-data` configured", "verificationScriptFile": "q7_s3_validate_emptydir_vol.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "8",
+            "namespace": "field",
+            "machineHostname": "ckad9999",
+            "question": "Work in namespace `field`.\n\nCreate a Pod named `ready-pod` in namespace `field` with image `nginx:1.25` that includes:\n- Container port: `80`\n- HTTP readiness probe on path `/` on port `80`\n\nHint: use `spec.containers[].readinessProbe.httpGet`.",
+            "concepts": ["probes", "readiness"],
+            "verification": [
+                { "id": "1", "description": "Pod `ready-pod` exists in namespace `field`", "verificationScriptFile": "q8_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Readiness probe httpGet path is `/`", "verificationScriptFile": "q8_s2_validate_probe_path.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Readiness probe httpGet port is 80", "verificationScriptFile": "q8_s3_validate_probe_port.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "9",
+            "namespace": "grain",
+            "machineHostname": "ckad9977",
+            "question": "Set up a canary deployment in namespace `grain`:\n\n1. Create Deployment `app-v1` with image `nginx:1.18.0`, `3` replicas, labels `app=myapp` and `version=v1`.\n2. Create Deployment `app-v2` with image `nginx:1.19.0`, `1` replica, labels `app=myapp` and `version=v2`.\n3. Create a Service `app` that selects Pods with label `app=myapp` (both versions).\n\nThis achieves a 75%-25% traffic split.\n\nHint: the Service selector should only match on `app=myapp`, not version.",
+            "concepts": ["deployments", "canary", "services"],
+            "verification": [
+                { "id": "1", "description": "Deployment `app-v1` exists in namespace `grain`", "verificationScriptFile": "q9_s1_validate_v1_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Deployment `app-v1`: 3 replicas, image nginx:1.18.0, label app=myapp", "verificationScriptFile": "q9_s2_validate_v1_config.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Deployment `app-v2` exists in namespace `grain`", "verificationScriptFile": "q9_s3_validate_v2_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Deployment `app-v2`: 1 replica, image nginx:1.19.0, label app=myapp", "verificationScriptFile": "q9_s4_validate_v2_config.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "5", "description": "Service `app` exists in namespace `grain`", "verificationScriptFile": "q9_s5_validate_svc_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "6", "description": "Service `app` selector is app=myapp", "verificationScriptFile": "q9_s6_validate_svc_selector.sh", "expectedOutput": "0", "weightage": 1 }
+            ]
+        },
+        {
+            "id": "10",
+            "namespace": "prosperity",
+            "machineHostname": "ckad9988",
+            "question": "Work in namespace `prosperity`.\n\n1. Create a Pod named `annotated-pod` with image `nginx:1.25` in namespace `prosperity`.\n2. Add the annotation `owner=marketing` to the Pod.\n\nHint: use `kubectl annotate` or add `metadata.annotations` in YAML.",
+            "concepts": ["annotations", "pods"],
+            "verification": [
+                { "id": "1", "description": "Pod `annotated-pod` exists in namespace `prosperity`", "verificationScriptFile": "q10_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod has annotation owner=marketing", "verificationScriptFile": "q10_s2_validate_annotation.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "11",
+            "namespace": "rice",
+            "machineHostname": "ckad9977",
+            "question": "Work in namespace `rice`.\n\nCreate a Pod named `data-pod` in namespace `rice` with:\n- Two containers: `producer` and `consumer`\n- Both use image `busybox:1.36` with command `sleep 3600`\n- Both mount an emptyDir volume at `/shared`\n- Volume name: `data-volume`\n\nHint: use `spec.volumes` with `emptyDir: {}`.",
+            "concepts": ["multi-container", "volumes", "emptydir"],
+            "verification": [
+                { "id": "1", "description": "Pod `data-pod` exists in namespace `rice`", "verificationScriptFile": "q11_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Containers `producer` and `consumer` present", "verificationScriptFile": "q11_s2_validate_containers.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "emptyDir volume `data-volume` exists", "verificationScriptFile": "q11_s3_validate_emptydir_vol.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "12",
+            "namespace": "harvest",
+            "machineHostname": "ckad9988",
+            "question": "Work in namespace `harvest`.\n\n1. Create 3 Pods in namespace `harvest`: `pod1`, `pod2`, `pod3` all with image `nginx:1.25`.\n2. Label `pod1` and `pod2` with `env=prod`.\n3. Label `pod3` with `env=dev`.\n4. List all Pods with label `env=prod` and save the output to `/tmp/exam/course/12/pods.txt`.\n\nHint: use `kubectl get pods -l env=prod`.",
+            "concepts": ["labels", "selectors", "pods"],
+            "verification": [
+                { "id": "1", "description": "At least 2 Pods with label env=prod in `harvest`", "verificationScriptFile": "q12_s1_validate_prod_pods.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "At least 1 Pod with label env=dev in `harvest`", "verificationScriptFile": "q12_s2_validate_dev_pod.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "File `/tmp/exam/course/12/pods.txt` saved and not empty", "verificationScriptFile": "q12_s3_validate_file.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "13",
+            "namespace": "shrine",
+            "machineHostname": "ckad9999",
+            "question": "Work in namespace `shrine`.\n\nCreate a Pod named `live-pod` in namespace `shrine` with image `nginx:1.25` that includes:\n- Liveness probe that executes the command `ls`\n- Initial delay: `5` seconds\n- Period: `10` seconds\n\nHint: use `spec.containers[].livenessProbe.exec`.",
+            "concepts": ["probes", "liveness"],
+            "verification": [
+                { "id": "1", "description": "Pod `live-pod` exists in namespace `shrine`", "verificationScriptFile": "q13_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Liveness probe exec command includes `ls`", "verificationScriptFile": "q13_s2_validate_exec_cmd.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Liveness probe initialDelaySeconds is 5", "verificationScriptFile": "q13_s3_validate_initial_delay.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "4", "description": "Liveness probe periodSeconds is 10", "verificationScriptFile": "q13_s4_validate_period.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "14",
+            "namespace": "default",
+            "machineHostname": "ckad9988",
+            "question": "Add the Bitnami Helm repository to your Helm configuration:\n- Name: `bitnami`\n- URL: `https://charts.bitnami.com/bitnami`\n\nHint: use `helm repo add`.",
+            "concepts": ["helm", "repositories"],
+            "verification": [
+                { "id": "1", "description": "Bitnami Helm repo added", "verificationScriptFile": "q14_s1_validate_helm_repo.sh", "expectedOutput": "0", "weightage": 4 }
+            ]
+        },
+        {
+            "id": "15",
+            "namespace": "blessing",
+            "machineHostname": "ckad9999",
+            "question": "Work in namespace `blessing`.\n\nCreate a LimitRange named `pod-limits` in namespace `blessing` that limits Pod memory to:\n- Maximum: `500Mi`\n- Minimum: `100Mi`\n\nHint: use `kind: LimitRange` with `spec.limits` of `type: Pod`.",
+            "concepts": ["limitrange", "resources"],
+            "verification": [
+                { "id": "1", "description": "LimitRange `pod-limits` exists in namespace `blessing`", "verificationScriptFile": "q15_s1_validate_limitrange_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "LimitRange max memory is 500Mi", "verificationScriptFile": "q15_s2_validate_max_mem.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "LimitRange min memory is 100Mi", "verificationScriptFile": "q15_s3_validate_min_mem.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "16",
+            "namespace": "field",
+            "machineHostname": "ckad9977",
+            "question": "A Service named `web-svc` already exists in namespace `field`.\n\nFrom a temporary `busybox:1.36` Pod, resolve the DNS name of this Service and save the IP to `/tmp/exam/course/16/dns.txt`.\n\nHint: use `nslookup web-svc.field.svc.cluster.local`.",
+            "concepts": ["dns", "services", "networking"],
+            "verification": [
+                { "id": "1", "description": "File `/tmp/exam/course/18/dns.txt` saved and not empty", "verificationScriptFile": "q16_s1_validate_file.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "17",
+            "namespace": "golden",
+            "machineHostname": "ckad9999",
+            "question": "Work in namespace `golden`.\n\nCreate a Pod named `cap-pod` in namespace `golden` with image `nginx:1.25` that adds the capabilities:\n- `NET_ADMIN`\n- `SYS_TIME`\n\nHint: use `securityContext.capabilities.add` at the container level.",
+            "concepts": ["securitycontext", "capabilities"],
+            "verification": [
+                { "id": "1", "description": "Pod `cap-pod` exists in namespace `golden`", "verificationScriptFile": "q17_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Container adds NET_ADMIN capability", "verificationScriptFile": "q17_s2_validate_net_admin.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Container adds SYS_TIME capability", "verificationScriptFile": "q17_s3_validate_sys_time.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "18",
+            "namespace": "shrine",
+            "machineHostname": "ckad9977",
+            "question": "Work in namespace `shrine`.\n\nCreate a NetworkPolicy named `db-policy` in namespace `shrine` that:\n- Applies to Pods with label `app=db`\n- Only allows ingress traffic from Pods with label `access=true`\n\nHint: use `spec.podSelector` and `spec.ingress.from.podSelector`.",
+            "concepts": ["networkpolicy", "networking"],
+            "verification": [
+                { "id": "1", "description": "NetworkPolicy `db-policy` exists in namespace `shrine`", "verificationScriptFile": "q18_s1_validate_np_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "NetworkPolicy podSelector is app=db", "verificationScriptFile": "q18_s2_validate_pod_selector.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "3", "description": "Ingress allowed from podSelector access=true", "verificationScriptFile": "q18_s3_validate_ingress_from.sh", "expectedOutput": "0", "weightage": 2 }
+            ]
+        },
+        {
+            "id": "19",
+            "namespace": "default",
+            "machineHostname": "ckad9988",
+            "question": "Get the values of the `bitnami/nginx` Helm chart and save them to `/tmp/exam/course/19/values.txt`.\n\nOnly save the first 50 lines.\n\nThis uses the `bitnami` repository you add in Question 14 (same server), so do that one first.\n\nHint: use `helm show values`.",
+            "concepts": ["helm", "values"],
+            "verification": [
+                { "id": "1", "description": "File `/tmp/exam/course/14/values.txt` saved and not empty", "verificationScriptFile": "q19_s1_validate_file.sh", "expectedOutput": "0", "weightage": 5 }
+            ]
+        },
+        {
+            "id": "20",
+            "namespace": "blessing",
+            "machineHostname": "ckad9977",
+            "question": "Work in namespace `blessing`.\n\n1. Create a ServiceAccount named `token-sa` in namespace `blessing`.\n2. Generate an API token for this ServiceAccount and save it to `/tmp/exam/course/20/token.txt`.\n\nHint: use `kubectl create token`.",
+            "concepts": ["serviceaccount", "rbac", "tokens"],
+            "verification": [
+                { "id": "1", "description": "ServiceAccount `token-sa` exists in namespace `blessing`", "verificationScriptFile": "q20_s1_validate_sa_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "File `/tmp/exam/course/20/token.txt` saved and not empty", "verificationScriptFile": "q20_s2_validate_file.sh", "expectedOutput": "0", "weightage": 3 }
+            ]
         }
-      ]
-    },
-    {
-      "id": "2",
-      "namespace": "grain",
-      "machineHostname": "ckad9999",
-      "question": "A ClusterIP Service `app-svc` already exists in namespace `grain`.\n\nConvert this Service to type `NodePort`.\n\nHint: use `kubectl edit` or `kubectl patch`.",
-      "concepts": [
-        "services",
-        "nodeport"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Service `app-svc` exists in namespace `grain`",
-          "verificationScriptFile": "q2_s1_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Service `app-svc` type is `NodePort`",
-          "verificationScriptFile": "q2_s2_validate_svc_type.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "namespace": "rice",
-      "machineHostname": "ckad9999",
-      "question": "Work in namespace `rice`.\n\n1. Create a Deployment named `backend` in namespace `rice` with image `nginx:1.25` and `3` replicas, exposing port `8080`.\n2. Create a Service named `backend` that exposes the Deployment on port `6262` targeting port `8080`.\n\nHint: use `kubectl create deployment` and `kubectl expose`.",
-      "concepts": [
-        "deployments",
-        "services"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment `backend` exists in namespace `rice`",
-          "verificationScriptFile": "q3_s1_validate_deploy_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Deployment `backend` has 3 replicas",
-          "verificationScriptFile": "q3_s2_validate_replicas.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Service `backend` exists in namespace `rice`",
-          "verificationScriptFile": "q3_s3_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Service `backend` port is 6262",
-          "verificationScriptFile": "q3_s4_validate_svc_port.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "Service `backend` targetPort is 8080",
-          "verificationScriptFile": "q3_s5_validate_svc_targetport.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "namespace": "field",
-      "machineHostname": "ckad9999",
-      "question": "Work in namespace `field`.\n\nCreate a Pod named `ready-pod` in namespace `field` with image `nginx:1.25` that includes:\n- Container port: `80`\n- HTTP readiness probe on path `/` on port `80`\n\nHint: use `spec.containers[].readinessProbe.httpGet`.",
-      "concepts": [
-        "probes",
-        "readiness"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `ready-pod` exists in namespace `field`",
-          "verificationScriptFile": "q4_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Readiness probe httpGet path is `/`",
-          "verificationScriptFile": "q4_s2_validate_probe_path.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Readiness probe httpGet port is 80",
-          "verificationScriptFile": "q4_s3_validate_probe_port.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "namespace": "shrine",
-      "machineHostname": "ckad9999",
-      "question": "Work in namespace `shrine`.\n\nCreate a Pod named `live-pod` in namespace `shrine` with image `nginx:1.25` that includes:\n- Liveness probe that executes the command `ls`\n- Initial delay: `5` seconds\n- Period: `10` seconds\n\nHint: use `spec.containers[].livenessProbe.exec`.",
-      "concepts": [
-        "probes",
-        "liveness"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `live-pod` exists in namespace `shrine`",
-          "verificationScriptFile": "q5_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Liveness probe exec command includes `ls`",
-          "verificationScriptFile": "q5_s2_validate_exec_cmd.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Liveness probe initialDelaySeconds is 5",
-          "verificationScriptFile": "q5_s3_validate_initial_delay.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Liveness probe periodSeconds is 10",
-          "verificationScriptFile": "q5_s4_validate_period.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "namespace": "blessing",
-      "machineHostname": "ckad9999",
-      "question": "Work in namespace `blessing`.\n\nCreate a LimitRange named `pod-limits` in namespace `blessing` that limits Pod memory to:\n- Maximum: `500Mi`\n- Minimum: `100Mi`\n\nHint: use `kind: LimitRange` with `spec.limits` of `type: Pod`.",
-      "concepts": [
-        "limitrange",
-        "resources"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "LimitRange `pod-limits` exists in namespace `blessing`",
-          "verificationScriptFile": "q6_s1_validate_limitrange_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "LimitRange max memory is 500Mi",
-          "verificationScriptFile": "q6_s2_validate_max_mem.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "LimitRange min memory is 100Mi",
-          "verificationScriptFile": "q6_s3_validate_min_mem.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "namespace": "fortune",
-      "machineHostname": "ckad9988",
-      "question": "Work in namespace `fortune`.\n\nCreate a ResourceQuota named `compute-quota` in namespace `fortune` with:\n- Hard requests: `cpu=1`, `memory=1Gi`\n- Hard limits: `cpu=2`, `memory=2Gi`\n\nHint: use `requests.cpu`, `requests.memory`, `limits.cpu`, `limits.memory`.",
-      "concepts": [
-        "resourcequota",
-        "resources"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ResourceQuota `compute-quota` exists in namespace `fortune`",
-          "verificationScriptFile": "q7_s1_validate_quota_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Hard requests.cpu is 1",
-          "verificationScriptFile": "q7_s2_validate_req_cpu.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Hard requests.memory is 1Gi",
-          "verificationScriptFile": "q7_s3_validate_req_mem.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Hard limits.cpu is 2",
-          "verificationScriptFile": "q7_s4_validate_lim_cpu.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "Hard limits.memory is 2Gi",
-          "verificationScriptFile": "q7_s5_validate_lim_mem.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "namespace": "fortune",
-      "machineHostname": "ckad9988",
-      "question": "Namespace `fortune` has a ResourceQuota.\n\nCreate a Pod named `quota-pod` in namespace `fortune` with:\n- Image: `nginx:1.25`\n- Resource requests: `cpu=0.5`, `memory=512Mi`\n- Resource limits: `cpu=1`, `memory=1Gi`\n\nHint: the ResourceQuota requires Pods to specify requests and limits.",
-      "concepts": [
-        "pods",
-        "resources",
-        "resourcequota"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `quota-pod` exists in namespace `fortune`",
-          "verificationScriptFile": "q8_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod `quota-pod` has resource requests set",
-          "verificationScriptFile": "q8_s2_validate_requests_set.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Pod `quota-pod` has resource limits set",
-          "verificationScriptFile": "q8_s3_validate_limits_set.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "namespace": "golden",
-      "machineHostname": "ckad9999",
-      "question": "Work in namespace `golden`.\n\nCreate a Pod named `cap-pod` in namespace `golden` with image `nginx:1.25` that adds the capabilities:\n- `NET_ADMIN`\n- `SYS_TIME`\n\nHint: use `securityContext.capabilities.add` at the container level.",
-      "concepts": [
-        "securitycontext",
-        "capabilities"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `cap-pod` exists in namespace `golden`",
-          "verificationScriptFile": "q9_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Container adds NET_ADMIN capability",
-          "verificationScriptFile": "q9_s2_validate_net_admin.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Container adds SYS_TIME capability",
-          "verificationScriptFile": "q9_s3_validate_sys_time.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "namespace": "bounty",
-      "machineHostname": "ckad9988",
-      "question": "Work in namespace `bounty`.\n\nCreate a Pod named `shared-pod` in namespace `bounty` with two containers:\n\nContainer 1:\n- Name: `writer`\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Mount emptyDir volume at `/data`\n\nContainer 2:\n- Name: `reader`\n- Image: `busybox:1.36`\n- Command: `sleep 3600`\n- Mount same emptyDir volume at `/data`\n\nBoth containers must share the same `emptyDir` volume named `shared-data`.\n\nHint: use `spec.volumes` and `volumeMounts` in each container.",
-      "concepts": [
-        "multi-container",
-        "volumes",
-        "emptydir"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `shared-pod` exists in namespace `bounty`",
-          "verificationScriptFile": "q10_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod `shared-pod` has at least 2 containers",
-          "verificationScriptFile": "q10_s2_validate_two_containers.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "emptyDir volume `shared-data` configured",
-          "verificationScriptFile": "q10_s3_validate_emptydir_vol.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "11",
-      "namespace": "prosperity",
-      "machineHostname": "ckad9988",
-      "question": "Work in namespace `prosperity`.\n\n1. Create a Pod named `annotated-pod` with image `nginx:1.25` in namespace `prosperity`.\n2. Add the annotation `owner=marketing` to the Pod.\n\nHint: use `kubectl annotate` or add `metadata.annotations` in YAML.",
-      "concepts": [
-        "annotations",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `annotated-pod` exists in namespace `prosperity`",
-          "verificationScriptFile": "q11_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "Pod has annotation owner=marketing",
-          "verificationScriptFile": "q11_s2_validate_annotation.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "namespace": "harvest",
-      "machineHostname": "ckad9988",
-      "question": "Work in namespace `harvest`.\n\n1. Create 3 Pods in namespace `harvest`: `pod1`, `pod2`, `pod3` all with image `nginx:1.25`.\n2. Label `pod1` and `pod2` with `env=prod`.\n3. Label `pod3` with `env=dev`.\n4. List all Pods with label `env=prod` and save the output to `/tmp/exam/course/12/pods.txt`.\n\nHint: use `kubectl get pods -l env=prod`.",
-      "concepts": [
-        "labels",
-        "selectors",
-        "pods"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "At least 2 Pods with label env=prod in `harvest`",
-          "verificationScriptFile": "q12_s1_validate_prod_pods.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "At least 1 Pod with label env=dev in `harvest`",
-          "verificationScriptFile": "q12_s2_validate_dev_pod.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "File `/tmp/exam/course/12/pods.txt` saved and not empty",
-          "verificationScriptFile": "q12_s3_validate_file.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "13",
-      "namespace": "default",
-      "machineHostname": "ckad9988",
-      "question": "Add the Bitnami Helm repository to your Helm configuration:\n- Name: `bitnami`\n- URL: `https://charts.bitnami.com/bitnami`\n\nHint: use `helm repo add`.",
-      "concepts": [
-        "helm",
-        "repositories"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Bitnami Helm repo added",
-          "verificationScriptFile": "q13_s1_validate_helm_repo.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "14",
-      "namespace": "default",
-      "machineHostname": "ckad9988",
-      "question": "Get the values of the `bitnami/nginx` Helm chart and save them to `/tmp/exam/course/14/values.txt`.\n\nOnly save the first 50 lines.\n\nThis uses the `bitnami` repository you add in Question 13 (same server), so do that one first.\n\nHint: use `helm show values`.",
-      "concepts": [
-        "helm",
-        "values"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File `/tmp/exam/course/14/values.txt` saved and not empty",
-          "verificationScriptFile": "q14_s1_validate_file.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "15",
-      "namespace": "default",
-      "machineHostname": "ckad9977",
-      "question": "List all Helm releases across all namespaces and save the output to `/tmp/exam/course/15/releases.txt`.\n\nHint: use `helm list -A`.",
-      "concepts": [
-        "helm",
-        "releases"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File `/tmp/exam/course/15/releases.txt` saved and not empty",
-          "verificationScriptFile": "q15_s1_validate_file.sh",
-          "expectedOutput": "0",
-          "weightage": 4
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "namespace": "grain",
-      "machineHostname": "ckad9977",
-      "question": "Set up a canary deployment in namespace `grain`:\n\n1. Create Deployment `app-v1` with image `nginx:1.18.0`, `3` replicas, labels `app=myapp` and `version=v1`.\n2. Create Deployment `app-v2` with image `nginx:1.19.0`, `1` replica, labels `app=myapp` and `version=v2`.\n3. Create a Service `app` that selects Pods with label `app=myapp` (both versions).\n\nThis achieves a 75%-25% traffic split.\n\nHint: the Service selector should only match on `app=myapp`, not version.",
-      "concepts": [
-        "deployments",
-        "canary",
-        "services"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Deployment `app-v1` exists in namespace `grain`",
-          "verificationScriptFile": "q16_s1_validate_v1_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Deployment `app-v1`: 3 replicas, image nginx:1.18.0, label app=myapp",
-          "verificationScriptFile": "q16_s2_validate_v1_config.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "3",
-          "description": "Deployment `app-v2` exists in namespace `grain`",
-          "verificationScriptFile": "q16_s3_validate_v2_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "4",
-          "description": "Deployment `app-v2`: 1 replica, image nginx:1.19.0, label app=myapp",
-          "verificationScriptFile": "q16_s4_validate_v2_config.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "5",
-          "description": "Service `app` exists in namespace `grain`",
-          "verificationScriptFile": "q16_s5_validate_svc_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "6",
-          "description": "Service `app` selector is app=myapp",
-          "verificationScriptFile": "q16_s6_validate_svc_selector.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "namespace": "rice",
-      "machineHostname": "ckad9977",
-      "question": "Work in namespace `rice`.\n\nCreate a Pod named `data-pod` in namespace `rice` with:\n- Two containers: `producer` and `consumer`\n- Both use image `busybox:1.36` with command `sleep 3600`\n- Both mount an emptyDir volume at `/shared`\n- Volume name: `data-volume`\n\nHint: use `spec.volumes` with `emptyDir: {}`.",
-      "concepts": [
-        "multi-container",
-        "volumes",
-        "emptydir"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "Pod `data-pod` exists in namespace `rice`",
-          "verificationScriptFile": "q17_s1_validate_pod_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 1
-        },
-        {
-          "id": "2",
-          "description": "Containers `producer` and `consumer` present",
-          "verificationScriptFile": "q17_s2_validate_containers.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "emptyDir volume `data-volume` exists",
-          "verificationScriptFile": "q17_s3_validate_emptydir_vol.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "namespace": "field",
-      "machineHostname": "ckad9977",
-      "question": "A Service named `web-svc` already exists in namespace `field`.\n\nFrom a temporary `busybox:1.36` Pod, resolve the DNS name of this Service and save the IP to `/tmp/exam/course/18/dns.txt`.\n\nHint: use `nslookup web-svc.field.svc.cluster.local`.",
-      "concepts": [
-        "dns",
-        "services",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "File `/tmp/exam/course/18/dns.txt` saved and not empty",
-          "verificationScriptFile": "q18_s1_validate_file.sh",
-          "expectedOutput": "0",
-          "weightage": 5
-        }
-      ]
-    },
-    {
-      "id": "19",
-      "namespace": "shrine",
-      "machineHostname": "ckad9977",
-      "question": "Work in namespace `shrine`.\n\nCreate a NetworkPolicy named `db-policy` in namespace `shrine` that:\n- Applies to Pods with label `app=db`\n- Only allows ingress traffic from Pods with label `access=true`\n\nHint: use `spec.podSelector` and `spec.ingress.from.podSelector`.",
-      "concepts": [
-        "networkpolicy",
-        "networking"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "NetworkPolicy `db-policy` exists in namespace `shrine`",
-          "verificationScriptFile": "q19_s1_validate_np_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "NetworkPolicy podSelector is app=db",
-          "verificationScriptFile": "q19_s2_validate_pod_selector.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "3",
-          "description": "Ingress allowed from podSelector access=true",
-          "verificationScriptFile": "q19_s3_validate_ingress_from.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        }
-      ]
-    },
-    {
-      "id": "20",
-      "namespace": "blessing",
-      "machineHostname": "ckad9977",
-      "question": "Work in namespace `blessing`.\n\n1. Create a ServiceAccount named `token-sa` in namespace `blessing`.\n2. Generate an API token for this ServiceAccount and save it to `/tmp/exam/course/20/token.txt`.\n\nHint: use `kubectl create token`.",
-      "concepts": [
-        "serviceaccount",
-        "rbac",
-        "tokens"
-      ],
-      "verification": [
-        {
-          "id": "1",
-          "description": "ServiceAccount `token-sa` exists in namespace `blessing`",
-          "verificationScriptFile": "q20_s1_validate_sa_exists.sh",
-          "expectedOutput": "0",
-          "weightage": 2
-        },
-        {
-          "id": "2",
-          "description": "File `/tmp/exam/course/20/token.txt` saved and not empty",
-          "verificationScriptFile": "q20_s2_validate_file.sh",
-          "expectedOutput": "0",
-          "weightage": 3
-        }
-      ]
-    }
-  ]
+    ]
 }

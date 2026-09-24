@@ -1,42 +1,23 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace refuge --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl create namespace shield --dry-run=client -o yaml | kubectl apply -f - || true
 kubectl apply -f - <<'YAML'
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: CronJob
 metadata:
-  name: api-server
-  namespace: refuge
+  name: backup-cj
+  namespace: shield
 spec:
-  replicas: 5
-  selector:
-    matchLabels:
-      app: api-server
-  template:
-    metadata:
-      labels:
-        app: api-server
+  schedule: "*/10 * * * *"
+  jobTemplate:
     spec:
-      containers:
-      - name: api
-        image: nginx:alpine
-        resources:
-          requests:
-            cpu: 100m
----
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: api-hpa
-  namespace: refuge
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: wrong-deployment
-  minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 50
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: busybox
+            command: ["echo", "backup"]
+          restartPolicy: OnFailure
 YAML
 echo "Setup complete for Question 6"
 exit 0

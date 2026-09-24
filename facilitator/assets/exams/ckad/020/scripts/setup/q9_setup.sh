@@ -1,23 +1,25 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace cosmos --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl create namespace origin --dry-run=client -o yaml | kubectl apply -f - || true
 
-# Pre-create the broken stuck-pod (init container intentionally exits 1)
+# Pre-create the Secret and ConfigMap the projected volume references
 kubectl apply -f - <<'EOF'
 apiVersion: v1
-kind: Pod
+kind: Secret
 metadata:
-  name: stuck-pod
-  namespace: cosmos
-spec:
-  initContainers:
-  - name: init-setup
-    image: busybox:1.32
-    command: ['sh', '-c', 'exit 1']
-  containers:
-  - name: main-app
-    image: nginx:alpine
+  name: my-secret
+  namespace: origin
+stringData:
+  username: admin
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-config
+  namespace: origin
+data:
+  app.properties: "key=value"
 EOF
 
 echo "Setup complete for Question 9"

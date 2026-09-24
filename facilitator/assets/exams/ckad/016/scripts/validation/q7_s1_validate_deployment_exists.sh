@@ -1,6 +1,6 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-if kubectl get deployment backend-v2 -n spark >/dev/null 2>&1; then
-  echo "Success: deployment backend-v2 exists"; exit 0
+if kubectl get deployment api-worker -n charge >/dev/null 2>&1; then
+  echo "Success: deployment api-worker exists in charge"; exit 0
 fi
-echo "Error: deployment backend-v2 not found in spark"; exit 1
+echo "Error: deployment api-worker not found in charge"; exit 1

@@ -1,66 +1,22 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace yard --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+kubectl create namespace berth --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
+# Reset: remove any releases of this question.
+for r in tugboat pilot-legacy harbormaster; do
+  helm uninstall "$r" -n berth >/dev/null 2>&1 || true
+done
+
+# Local chart (no repositories): helm create + pin the nginx tag to 1.25.
 rm -rf /home/candidate/exam/q10 && mkdir -p /home/candidate/exam/q10
+(cd /home/candidate/exam/q10 && helm create dockyard >/dev/null 2>&1) || true
+sed -i 's/^\(  tag: \)""/\1"1.25"/' /home/candidate/exam/q10/dockyard/values.yaml 2>/dev/null || true
 
-# start clean: the student creates the HPA
-kubectl -n yard delete hpa forklift-hpa --ignore-not-found >/dev/null 2>&1 || true
+CHART=/home/candidate/exam/q10/dockyard
+helm install tugboat "$CHART" -n berth --set podAnnotations.owner=berth-ops >/dev/null 2>&1 || true
+helm install pilot-legacy "$CHART" -n berth >/dev/null 2>&1 || true
 
-kubectl apply -f - <<'YAML' || true
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: forklift
-  namespace: yard
-  labels:
-    app: forklift
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: forklift
-  template:
-    metadata:
-      labels:
-        app: forklift
-    spec:
-      containers:
-        - name: web
-          image: nginx:1.25
-          ports:
-            - containerPort: 80
-          resources:
-            requests:
-              cpu: 50m
-              memory: 32Mi
-            limits:
-              cpu: 100m
-              memory: 64Mi
-YAML
-
-# legacy manifest: autoscaling/v2beta2 is no longer served, so applying it fails
-cat > /home/candidate/exam/q10/forklift-hpa.yaml <<'YAML'
-apiVersion: autoscaling/v2beta2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: forklift-hpa
-  namespace: yard
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: forklift
-  minReplicas: 1
-  maxReplicas: 3
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 80
-YAML
+kubectl -n berth wait --for=condition=Available deployment --all --timeout=120s >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 10"
 exit 0

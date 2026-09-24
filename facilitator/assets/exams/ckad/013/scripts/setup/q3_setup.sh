@@ -1,5 +1,18 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace corona --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
+mkdir -p /tmp/exam/course/3/image
+cat > /tmp/exam/course/3/image/Dockerfile <<'EOF'
+FROM nginx:1.25-alpine
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+EOF
+cat > /tmp/exam/course/3/image/index.html <<'EOF'
+<!DOCTYPE html>
+<html>
+<head><title>Solar App</title></head>
+<body><h1>Welcome to Solar App v1.0</h1></body>
+</html>
+EOF
 echo "Setup complete for Question 3"
 exit 0

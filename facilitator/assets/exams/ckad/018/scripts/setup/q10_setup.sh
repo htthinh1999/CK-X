@@ -1,19 +1,23 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-kubectl create namespace aria --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
-kubectl delete pod heavy-worker -n aria --ignore-not-found=true 2>/dev/null || true
+kubectl create namespace melody --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
+kubectl delete pod projected-pod -n melody --ignore-not-found=true 2>/dev/null || true
 kubectl apply -f - <<'EOF'
 apiVersion: v1
-kind: Pod
+kind: ConfigMap
 metadata:
-  name: heavy-worker
-  namespace: aria
-spec:
-  containers:
-  - name: main
-    image: busybox
-    command: ["sleep", "3600"]
+  name: info-cm
+  namespace: melody
+data:
+  info.txt: "config data"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: info-secret
+  namespace: melody
+stringData:
+  secret.txt: "secret data"
 EOF
-mkdir -p /tmp/exam/course/10
 echo "Setup complete for Question 10"
 exit 0

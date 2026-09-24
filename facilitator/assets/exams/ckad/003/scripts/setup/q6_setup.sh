@@ -1,23 +1,11 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace flame --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
-kubectl apply -f - <<'EOF' || true
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-settings
-  namespace: flame
-  labels:
-    exam: ckad-simulation1
-data:
-  database.host: "db.flame.svc.cluster.local"
-  database.port: "5432"
-  cache.host: "redis.flame.svc.cluster.local"
-  cache.port: "6379"
-  log.level: "info"
-  app.name: "phoenix-app"
-EOF
+kubectl create namespace flare --dry-run=client -o yaml | kubectl apply -f - 2>/dev/null || true
+mkdir -p /tmp/exam/course/6
+helm repo add bitnami https://charts.bitnami.com/bitnami 2>/dev/null || true
+helm repo update 2>/dev/null || true
+helm status phoenix-web -n flare >/dev/null 2>&1 || helm install phoenix-web bitnami/nginx -n flare --set service.type=ClusterIP --set replicaCount=1 --wait --timeout 120s 2>/dev/null || true
 
 echo "Setup complete for Question 6"
 exit 0

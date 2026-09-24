@@ -1,32 +1,40 @@
 #!/bin/bash
 
-# Validate that the web-app deployment exists
-DEPLOYMENT=$(kubectl get deployment web-app -n services -o jsonpath='{.metadata.name}' 2>/dev/null)
+# Validate that the frontend deployment exists
+DEPLOYMENT=$(kubectl get deployment frontend -n pod-design -o jsonpath='{.metadata.name}' 2>/dev/null)
 
-if [[ "$DEPLOYMENT" == "web-app" ]]; then
+if [[ "$DEPLOYMENT" == "frontend" ]]; then
     # Deployment exists, now check specs
     
     # Check image
-    IMAGE=$(kubectl get deployment web-app -n services -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
+    IMAGE=$(kubectl get deployment frontend -n pod-design -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
     
-    # Check replicas
-    REPLICAS=$(kubectl get deployment web-app -n services -o jsonpath='{.spec.replicas}' 2>/dev/null)
+    # Check labels
+    APP_LABEL=$(kubectl get deployment frontend -n pod-design -o jsonpath='{.metadata.labels.app}' 2>/dev/null)
+    TIER_LABEL=$(kubectl get deployment frontend -n pod-design -o jsonpath='{.metadata.labels.tier}' 2>/dev/null)
     
     # Check pod labels
-    APP_LABEL=$(kubectl get deployment web-app -n services -o jsonpath='{.spec.template.metadata.labels.app}' 2>/dev/null)
+    POD_APP_LABEL=$(kubectl get deployment frontend -n pod-design -o jsonpath='{.spec.template.metadata.labels.app}' 2>/dev/null)
+    POD_TIER_LABEL=$(kubectl get deployment frontend -n pod-design -o jsonpath='{.spec.template.metadata.labels.tier}' 2>/dev/null)
     
-    if [[ "$IMAGE" == "nginx:alpine" && "$REPLICAS" == "3" && "$APP_LABEL" == "web" ]]; then
-        # Deployment is configured correctly
+    if [[ "$IMAGE" == "nginx:1.19.0" && 
+          "$APP_LABEL" == "frontend" && 
+          "$TIER_LABEL" == "frontend" && 
+          "$POD_APP_LABEL" == "frontend" && 
+          "$POD_TIER_LABEL" == "frontend" ]]; then
+        # All specifications are correct
         exit 0
     else
-        echo "Deployment 'web-app' is not configured correctly."
-        echo "Found image: $IMAGE (expected: nginx:alpine)"
-        echo "Found replicas: $REPLICAS (expected: 3)"
-        echo "Found app label: $APP_LABEL (expected: web)"
+        echo "Deployment 'frontend' does not have correct specifications."
+        echo "Found image: $IMAGE (expected: nginx:1.19.0)"
+        echo "Found deployment app label: $APP_LABEL (expected: frontend)"
+        echo "Found deployment tier label: $TIER_LABEL (expected: frontend)"
+        echo "Found pod app label: $POD_APP_LABEL (expected: frontend)"
+        echo "Found pod tier label: $POD_TIER_LABEL (expected: frontend)"
         exit 1
     fi
 else
     # Deployment does not exist
-    echo "Deployment 'web-app' does not exist in the 'services' namespace"
+    echo "Deployment 'frontend' does not exist in the 'pod-design' namespace"
     exit 1
 fi 

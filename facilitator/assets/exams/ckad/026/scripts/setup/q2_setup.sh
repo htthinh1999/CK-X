@@ -1,111 +1,200 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-NS=depot
-DIR=/home/candidate/exam/q2
+NS=junction
+D=/home/candidate/exam/q2
 
 kubectl create namespace "$NS" --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1 || true
 
-# Start from a clean state (idempotent re-runs)
-kubectl -n "$NS" delete deployment --all --ignore-not-found --wait=false >/dev/null 2>&1 || true
-kubectl -n "$NS" delete pod --all --grace-period=0 --force --ignore-not-found >/dev/null 2>&1 || true
-rm -rf "$DIR" && mkdir -p "$DIR"
+rm -rf "$D"
+mkdir -p "$D"
 
-# The depot node is the (first) worker node; fall back to the only node.
-NODE=$(kubectl get nodes -l '!node-role.kubernetes.io/control-plane' -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
-[ -n "$NODE" ] || NODE=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+# Reset: remove everything a previous attempt may have changed
+kubectl -n "$NS" delete deployment junction-blue junction-green junction-smoke junction-ticker \
+  --ignore-not-found --wait=false >/dev/null 2>&1 || true
+kubectl -n "$NS" delete service junction junction-preview --ignore-not-found >/dev/null 2>&1 || true
+kubectl -n "$NS" delete pod junction-debug --ignore-not-found --grace-period=0 --force >/dev/null 2>&1 || true
+kubectl -n "$NS" delete configmap junction-cutover --ignore-not-found >/dev/null 2>&1 || true
 
-# Reset depot labels/taints on every node, then mark the depot node
-for n in $(kubectl get nodes -o jsonpath='{.items[*].metadata.name}' 2>/dev/null); do
-  kubectl label node "$n" transit.io/pool- transit.io/lane- >/dev/null 2>&1 || true
-  kubectl taint node "$n" dedicated- >/dev/null 2>&1 || true
-  [ "$n" != "$NODE" ] && kubectl label node "$n" transit.io/lane=freight-a --overwrite >/dev/null 2>&1
-done
-kubectl label node "$NODE" transit.io/pool=depot transit.io/lane=freight-b --overwrite >/dev/null 2>&1 || true
-kubectl taint node "$NODE" dedicated=depot:NoSchedule --overwrite >/dev/null 2>&1 || true
-
-kubectl apply -f - >/dev/null <<'EOF'
+cat <<'YAML' | kubectl apply -f - >/dev/null
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: junction-cutover
+  namespace: junction
+data:
+  plan.txt: |
+    1. bring green up to the size of blue
+    2. move the junction Service to green
+    3. drain blue (keep the Deployment for rollback)
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wagon-sorter
-  namespace: depot
-  labels: {app: wagon-sorter, team: yard}
+  name: junction-blue
+  namespace: junction
+  labels:
+    app: junction
+    slot: blue
 spec:
-  replicas: 3
+  replicas: 4
   selector:
-    matchLabels: {app: wagon-sorter}
+    matchLabels:
+      app: junction
+      tier: web
+      slot: blue
   template:
     metadata:
-      labels: {app: wagon-sorter, team: yard}
+      labels:
+        app: junction
+        tier: web
+        slot: blue
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: transit.io/pool
-                operator: In
-                values: ["depot"]
-              - key: transit.io/lane
-                operator: In
-                values: ["freight-a"]
-      tolerations:
-      - key: dedicated
-        operator: Equal
-        value: depot
-        effect: NoExecute
       containers:
-      - name: sorter
+      - name: web
         image: nginx:1.25
         ports:
-        - containerPort: 80
+        - name: http
+          containerPort: 80
         resources:
-          requests: {cpu: 20m, memory: 32Mi}
+          requests:
+            cpu: 10m
+            memory: 16Mi
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wagon-counter
-  namespace: depot
-  labels: {app: wagon-counter, team: yard}
-spec:
-  replicas: 2
-  selector:
-    matchLabels: {app: wagon-counter}
-  template:
-    metadata:
-      labels: {app: wagon-counter, team: yard}
-    spec:
-      containers:
-      - name: counter
-        image: nginx:1.25
-        resources:
-          requests: {cpu: 10m, memory: 16Mi}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: wagon-sorter-legacy
-  namespace: depot
-  labels: {app: wagon-sorter-legacy, team: yard}
-  annotations:
-    transit.io/retired: "true"
+  name: junction-green
+  namespace: junction
+  labels:
+    app: junction
+    slot: green
 spec:
   replicas: 0
   selector:
-    matchLabels: {app: wagon-sorter-legacy}
+    matchLabels:
+      app: junction
+      tier: web
+      slot: green
   template:
     metadata:
-      labels: {app: wagon-sorter-legacy, team: yard}
+      labels:
+        app: junction
+        tier: web
+        slot: green
     spec:
-      nodeSelector:
-        transit.io/lane: freight-a
       containers:
-      - name: sorter
-        image: nginx:1.25
-EOF
+      - name: web
+        image: nginx:1.26
+        ports:
+        - name: web
+          containerPort: 80
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: junction-smoke
+  namespace: junction
+  labels:
+    app: junction
+    slot: green
+    tier: smoke
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: junction
+      tier: smoke
+      slot: green
+  template:
+    metadata:
+      labels:
+        app: junction
+        tier: smoke
+        slot: green
+    spec:
+      containers:
+      - name: web
+        image: nginx:1.26
+        ports:
+        - name: http
+          containerPort: 80
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: junction-ticker
+  namespace: junction
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticker
+  template:
+    metadata:
+      labels:
+        app: ticker
+        tier: web
+    spec:
+      containers:
+      - name: ticker
+        image: busybox:1.36
+        command: ["sh", "-c", "while true; do date; sleep 30; done"]
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: junction-debug
+  namespace: junction
+  labels:
+    app: junction
+    tier: debug
+spec:
+  containers:
+  - name: shell
+    image: busybox:1.36
+    command: ["sh", "-c", "sleep 36000"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: junction
+  namespace: junction
+spec:
+  selector:
+    app: junction
+    tier: web
+    slot: blue
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: junction-preview
+  namespace: junction
+spec:
+  selector:
+    app: junction
+    slot: green
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+YAML
 
-kubectl -n "$NS" rollout status deployment/wagon-counter --timeout=120s >/dev/null 2>&1 || true
+kubectl -n "$NS" rollout status deployment/junction-blue --timeout=120s >/dev/null 2>&1 || true
 
 echo "Setup complete for Question 2"
 exit 0

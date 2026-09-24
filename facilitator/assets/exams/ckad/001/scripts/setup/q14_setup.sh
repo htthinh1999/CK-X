@@ -1,17 +1,32 @@
 #!/bin/bash
 
-# Setup for Question 14: Install Helm and deploy Bitnami Nginx
+# Setup for Question 14: Create a Pod with liveness and readiness probes
 
-# Create the web namespace if it doesn't exist already
-if ! kubectl get namespace web &> /dev/null; then
-    kubectl create namespace web
+# Create the workloads namespace if it doesn't exist already
+if ! kubectl get namespace workloads &> /dev/null; then
+    kubectl create namespace workloads
 fi
 
-# Delete any existing helm installations of nginx
-if command -v helm &> /dev/null; then
-    helm uninstall nginx -n web --ignore-not-found
-fi
+# Delete any existing Pod with the same name
+kubectl delete pod health-pod -n workloads --ignore-not-found=true
 
-echo "Setup complete for Question 14: Environment ready for installing Helm and deploying Bitnami Nginx"
-echo "Note: The candidate should add the Bitnami repo if not already present: helm repo add bitnami https://charts.bitnami.com/bitnami"
+# Create an index.html and healthz endpoint for testing the probes
+cat <<EOF > /tmp/index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CKAD Exam</title>
+</head>
+<body>
+    <h1>Welcome to the CKAD Practice Exam!</h1>
+</body>
+</html>
+EOF
+
+cat <<EOF > /tmp/healthz
+OK
+EOF
+
+echo "Setup complete for Question 14: Environment ready for creating Pod 'health-pod' with liveness and readiness probes"
+echo "Note: In a real environment, you would need to set up files at /healthz in the container."
 exit 0 

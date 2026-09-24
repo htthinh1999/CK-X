@@ -1,6 +1,6 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-if kubectl get deploy critical-app -n lagoon >/dev/null 2>&1; then
-  echo "Success: deployment critical-app exists in lagoon"; exit 0
+if kubectl get deploy web-deploy -n reef >/dev/null 2>&1; then
+  echo "Success: deployment web-deploy exists in reef"; exit 0
 fi
-echo "Error: deployment critical-app not found in lagoon"; exit 1
+echo "Error: deployment web-deploy not found in reef"; exit 1

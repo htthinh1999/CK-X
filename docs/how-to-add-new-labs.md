@@ -270,6 +270,9 @@ and the lab behaves as a normal single-server lab.
   server names are the pre-provisioned pool: `ckad9999`, `ckad9988`, `ckad9977`.
 - In `assessment.json`, set each question's `machineHostname` to one of the
   declared server names.
+- Order the questions so that consecutive questions use **different** servers
+  (as in the real exam, where almost every task is on another instance). Keep
+  chained questions on the same server, in their original relative order.
 
 **One host == one cluster == one context.** Each server is bound to exactly one
 cluster, and that cluster is its shell's default (and only) context. The

@@ -17,7 +17,7 @@ for file in "${required_files[@]}"; do
     echo "Chart structure is incomplete"
     exit 1
   fi
-fi
+done
 
 # Check for Helm chart helper files
 if [ ! -f "webapp/templates/_helpers.tpl" ] || [ ! -f "webapp/templates/NOTES.txt" ]; then

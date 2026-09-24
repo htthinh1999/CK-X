@@ -1,52 +1,39 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 
-kubectl create namespace genesis --dry-run=client -o yaml | kubectl apply -f - || true
+kubectl create namespace cosmos --dry-run=client -o yaml | kubectl apply -f - || true
 
-# Pre-create the backend-api deployment and service in genesis
+# Pre-create cosmos-svc and cosmos-ingress (ingress missing ingressClassName and wrong port 8080)
 kubectl apply -f - <<'EOF'
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: backend-api
-  namespace: genesis
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: backend-api
-  template:
-    metadata:
-      labels:
-        app: backend-api
-    spec:
-      containers:
-      - name: api
-        image: nginx:alpine
-        ports:
-        - containerPort: 80
----
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-api
-  namespace: genesis
+  name: cosmos-svc
+  namespace: cosmos
 spec:
   selector:
-    app: backend-api
+    app: cosmos
   ports:
-  - port: 8080
-    targetPort: 80
+  - port: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cosmos-ingress
+  namespace: cosmos
+spec:
+  rules:
+  - host: cosmos.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cosmos-svc
+            port:
+              number: 8080
 EOF
-
-# Course dir + starter skeleton for the check script
-mkdir -p /tmp/exam/course/11
-cat > /tmp/exam/course/11/check.sh <<'EOF'
-#!/bin/bash
-# TODO: Complete this script per the task instructions
-EOF
-chmod +x /tmp/exam/course/11/check.sh
-touch /tmp/exam/course/11/health.log
 
 echo "Setup complete for Question 11"
 exit 0
