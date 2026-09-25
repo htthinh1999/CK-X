@@ -24,6 +24,7 @@ A powerful Kubernetes certification practice environment that provides a realist
 - **Smart evaluation system** with real-time solution verification
 - **Docker-based deployment** for easy setup and consistent environment
 - **Timed exam mode** with real exam-like conditions and countdown timer 
+- **Fresh servers every session**: terminating a session recreates the exam jumphosts (`ckad9999` / `ckad9988` / `ckad9977`) from their images, so no file or system change carries over to the next session
 
 ## Installation
 

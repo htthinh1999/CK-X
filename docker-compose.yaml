@@ -180,6 +180,32 @@ services:
       timeout: 5s
       retries: 3
 
+  # Resets the exam jumphosts (ckad9999 / ckad9988 / ckad9977) to a pristine
+  # state when a session is terminated, by recreating their containers from the
+  # image: every file and system change from the session is discarded, named
+  # volumes are kept. Internal only (no ports published); it holds the Docker
+  # socket and only ever recreates the services listed in RESET_SERVICES.
+  resetter:
+    image: ck-x-simulator-resetter:latest
+    pull_policy: build
+    build:
+      context: ./resetter
+    environment:
+      - RESET_SERVICES=jumphost,jumphost-2,jumphost-3
+    volumes:
+      # Rootless Docker: set DOCKER_SOCKET to your socket path, e.g. $XDG_RUNTIME_DIR/docker.sock
+      - ${DOCKER_SOCKET:-/var/run/docker.sock}:/var/run/docker.sock
+    expose:
+      - "3000"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
+    networks:
+      - ckx-network
+
   # Remote Terminal Service
   remote-terminal:
     image: nishanb/ck-x-simulator-remote-terminal:latest
@@ -279,10 +305,12 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - TRACK_METRICS=true # based on the environment variable TRACK_METRICS, the facilitator will send metrics to the metric server
+      - RESETTER_URL=http://resetter:3000 # resets the jumphosts when a session is terminated
     restart: unless-stopped
     depends_on:
       - jumphost
       - redis
+      - resetter
     networks:
       - ckx-network
     deploy:

@@ -94,6 +94,11 @@ docker compose up -d --build
    - Check logs: `docker compose logs -f`
    - Ensure sufficient system resources
 
+5. **Jumphosts not reset after "Terminate session"**
+   - The `resetter` service recreates the jumphost containers and needs the Docker socket (`/var/run/docker.sock`, mounted by `docker-compose.yaml`).
+   - Rootless Docker: start the stack with `DOCKER_SOCKET=$XDG_RUNTIME_DIR/docker.sock docker compose up -d --build`.
+   - Check `docker compose logs resetter`. If it can't reach Docker, the facilitator falls back to a best-effort cleanup over SSH.
+
 ### Getting Help
 
 If you encounter issues:

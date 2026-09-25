@@ -13,6 +13,7 @@ const redisClient = require('../utils/redisClient');
 const logger = require('../utils/logger');
 const remoteDesktopService = require('./remoteDesktopService');
 const MetricService = require('./metricService');
+const resetService = require('./resetService');
 
 /**
  * Resolve which SSH server a question runs on and which cluster it targets.
@@ -220,6 +221,11 @@ async function cleanupExamEnvironment(examId) {
     logger.info('Command : cleanup-exam-env, host: jumphost, result', { exitCode: result.exitCode });
     logger.info(result.stdout);
 
+    // Now that the clusters are gone, reset every jumphost to a pristine state
+    // (recreated from its image), so files and system changes made during this
+    // session never carry over into the next one.
+    const reset = await resetService.resetJumphosts();
+    logger.info('Jumphost reset', reset);
 
     if (result.exitCode !== 0) {
       logger.error('Failed to clean up exam environment', {
@@ -264,7 +270,11 @@ async function cleanupExamEnvironment(examId) {
     };
   } catch (error) {
     logger.error('Error cleaning up exam environment', { error: error.message });
-    
+
+    // Still reset the jumphosts so no state leaks into the next session
+    // (resetJumphosts never throws).
+    await resetService.resetJumphosts();
+
     // Update exam status to CLEANUP_FAILED
     await redisClient.persistExamStatus(examId, 'CLEANUP_FAILED');
     
