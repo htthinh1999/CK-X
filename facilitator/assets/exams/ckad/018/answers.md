@@ -412,9 +412,12 @@ kubectl set image deployment/rolling-deploy nginx=nginx:1.25-alpine -n sonata --
 
 ```bash
 mkdir -p /tmp/exam/course/18
-kubectl get endpointslice -n tempo -l kubernetes.io/service-name=external-db-svc \
-  -o jsonpath='{.items[*].endpoints[*].addresses[*]}' | tr ' ' '\n' > /tmp/exam/course/18/endpoints.txt
+kubectl get endpointslice external-db-slice -n tempo \
+  -o jsonpath='{range .endpoints[*]}{range .addresses[*]}{@}{"\n"}{end}{end}' > /tmp/exam/course/18/endpoints.txt
+cat /tmp/exam/course/18/endpoints.txt
 ```
+
+An EndpointSlice is its own object with its own name (`external-db-slice`); it is linked to its Service through the `kubernetes.io/service-name=external-db-svc` label, so `kubectl get endpointslice -n tempo -l kubernetes.io/service-name=external-db-svc` finds it too.
 
 ---
 

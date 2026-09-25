@@ -53,7 +53,7 @@
             "question": "Extract the latest events from the `zenith` namespace and output them to a file at `/tmp/exam/course/5/events.txt`.\n\nUse `custom-columns` output format to display only the event `TYPE`, `REASON`, and `MESSAGE`.\n\nEnsure the output has the exact headers `TYPE`, `REASON`, and `MESSAGE`.",
             "concepts": ["events", "observability", "custom-columns"],
             "verification": [
-                { "id": "1", "description": "File /tmp/exam/course/10/events.txt exists", "verificationScriptFile": "q5_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "File /tmp/exam/course/5/events.txt exists", "verificationScriptFile": "q5_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "File header contains TYPE, REASON and MESSAGE columns", "verificationScriptFile": "q5_s2_validate_headers.sh", "expectedOutput": "0", "weightage": 3 }
             ]
         },
@@ -75,7 +75,7 @@
             "question": "There is a deployment `backend-api` in the `genesis` namespace that is exposing an API internally on port `8080`.\n\n1. Create a script at `/tmp/exam/course/7/check.sh` that sets up a temporary port-forwarding to the `backend-api` service on local port `9999` mapping to the service port `8080`.\n2. The script should use `curl` to fetch `http://localhost:9999/health`, append the output to `/tmp/exam/course/7/health.log`, and then terminate the port-forward process.\n\n(You don't need to actually run the script in the background for grading, but ensure it contains the correct commands to perform this sequence).",
             "concepts": ["port-forward", "services", "debugging"],
             "verification": [
-                { "id": "1", "description": "Script /tmp/exam/course/11/check.sh exists", "verificationScriptFile": "q7_s1_validate_script_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "Script /tmp/exam/course/7/check.sh exists", "verificationScriptFile": "q7_s1_validate_script_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Script contains kubectl port-forward svc/backend-api 9999:8080", "verificationScriptFile": "q7_s2_validate_portforward_cmd.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "3", "description": "Script contains curl to http://localhost:9999/health", "verificationScriptFile": "q7_s3_validate_curl_cmd.sh", "expectedOutput": "0", "weightage": 2 }
             ]

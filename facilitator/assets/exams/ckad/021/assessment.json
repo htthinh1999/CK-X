@@ -118,7 +118,7 @@
             "question": "Find the Pod in the `helm` namespace with the label `tier=backend` that is consuming the most CPU. Write the name of this Pod to `/tmp/exam/course/11/cpu-usage.txt`.\n\nNote: In this simulated environment, write the pod name `backend-pod-2` to the file.",
             "concepts": ["observability", "metrics", "pods"],
             "verification": [
-                { "id": "1", "description": "/tmp/exam/course/10/cpu-usage.txt contains a backend pod name", "verificationScriptFile": "q11_s1_validate_cpu_file.sh", "expectedOutput": "0", "weightage": 6 }
+                { "id": "1", "description": "/tmp/exam/course/11/cpu-usage.txt contains a backend pod name", "verificationScriptFile": "q11_s1_validate_cpu_file.sh", "expectedOutput": "0", "weightage": 6 }
             ]
         },
         {
@@ -184,7 +184,7 @@
             "concepts": ["serviceaccounts", "rbac", "security"],
             "verification": [
                 { "id": "1", "description": "ServiceAccount vault-sa exists in shield namespace", "verificationScriptFile": "q17_s1_validate_sa_exists.sh", "expectedOutput": "0", "weightage": 3 },
-                { "id": "2", "description": "Token saved to /tmp/exam/course/13/token.txt looks valid", "verificationScriptFile": "q17_s2_validate_token_file.sh", "expectedOutput": "0", "weightage": 3 }
+                { "id": "2", "description": "Token saved to /tmp/exam/course/17/token.txt looks valid", "verificationScriptFile": "q17_s2_validate_token_file.sh", "expectedOutput": "0", "weightage": 3 }
             ]
         },
         {

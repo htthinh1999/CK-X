@@ -52,7 +52,7 @@
                 { "id": "3", "description": "backoffLimit is 2", "verificationScriptFile": "q4_s3_validate_backoff.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "4", "description": "Uses busybox image", "verificationScriptFile": "q4_s4_validate_image.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "5", "description": "Container name is processor", "verificationScriptFile": "q4_s5_validate_container_name.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "6", "description": "YAML saved to /tmp/exam/course/3/job.yaml", "verificationScriptFile": "q4_s6_validate_yaml_file.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "6", "description": "YAML saved to /tmp/exam/course/4/job.yaml", "verificationScriptFile": "q4_s6_validate_yaml_file.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {

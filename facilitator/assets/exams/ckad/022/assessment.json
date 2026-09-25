@@ -73,8 +73,8 @@
             "question": "Extract the logs from the `triumph-app` pod in the `triumph` namespace.\n\nFind all lines containing `ERROR` and save them to `/tmp/exam/course/7/logs.txt`.",
             "concepts": ["logging", "observability"],
             "verification": [
-                { "id": "1", "description": "File /tmp/exam/course/10/logs.txt exists", "verificationScriptFile": "q7_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
-                { "id": "2", "description": "File /tmp/exam/course/10/logs.txt contains ERROR lines", "verificationScriptFile": "q7_s2_validate_error_content.sh", "expectedOutput": "0", "weightage": 3 }
+                { "id": "1", "description": "File /tmp/exam/course/7/logs.txt exists", "verificationScriptFile": "q7_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "2", "description": "File /tmp/exam/course/7/logs.txt contains ERROR lines", "verificationScriptFile": "q7_s2_validate_error_content.sh", "expectedOutput": "0", "weightage": 3 }
             ]
         },
         {
@@ -169,7 +169,7 @@
             "question": "Create a Pod `dns-test` in `triumph`.\n\nRun a command to lookup the SRV record for the `kubernetes.default` service and save the output to `/tmp/exam/course/16/dns-output.txt`.",
             "concepts": ["dns", "networking", "services"],
             "verification": [
-                { "id": "1", "description": "File /tmp/exam/course/20/dns-output.txt exists", "verificationScriptFile": "q16_s1_validate_dns_output.sh", "expectedOutput": "0", "weightage": 6 }
+                { "id": "1", "description": "File /tmp/exam/course/16/dns-output.txt exists", "verificationScriptFile": "q16_s1_validate_dns_output.sh", "expectedOutput": "0", "weightage": 6 }
             ]
         },
         {

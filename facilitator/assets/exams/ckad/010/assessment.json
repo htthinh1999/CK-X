@@ -70,7 +70,7 @@
             "question": "List all Helm releases across all namespaces and save the output to `/tmp/exam/course/6/releases.txt`.\n\nHint: use `helm list -A`.",
             "concepts": ["helm", "releases"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/15/releases.txt` saved and not empty", "verificationScriptFile": "q6_s1_validate_file.sh", "expectedOutput": "0", "weightage": 4 }
+                { "id": "1", "description": "File `/tmp/exam/course/6/releases.txt` saved and not empty", "verificationScriptFile": "q6_s1_validate_file.sh", "expectedOutput": "0", "weightage": 4 }
             ]
         },
         {
@@ -189,7 +189,7 @@
             "question": "A Service named `web-svc` already exists in namespace `field`.\n\nFrom a temporary `busybox:1.36` Pod, resolve the DNS name of this Service and save the IP to `/tmp/exam/course/16/dns.txt`.\n\nHint: use `nslookup web-svc.field.svc.cluster.local`.",
             "concepts": ["dns", "services", "networking"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/18/dns.txt` saved and not empty", "verificationScriptFile": "q16_s1_validate_file.sh", "expectedOutput": "0", "weightage": 5 }
+                { "id": "1", "description": "File `/tmp/exam/course/16/dns.txt` saved and not empty", "verificationScriptFile": "q16_s1_validate_file.sh", "expectedOutput": "0", "weightage": 5 }
             ]
         },
         {
@@ -223,7 +223,7 @@
             "question": "Get the values of the `bitnami/nginx` Helm chart and save them to `/tmp/exam/course/19/values.txt`.\n\nOnly save the first 50 lines.\n\nThis uses the `bitnami` repository you add in Question 14 (same server), so do that one first.\n\nHint: use `helm show values`.",
             "concepts": ["helm", "values"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/14/values.txt` saved and not empty", "verificationScriptFile": "q19_s1_validate_file.sh", "expectedOutput": "0", "weightage": 5 }
+                { "id": "1", "description": "File `/tmp/exam/course/19/values.txt` saved and not empty", "verificationScriptFile": "q19_s1_validate_file.sh", "expectedOutput": "0", "weightage": 5 }
             ]
         },
         {

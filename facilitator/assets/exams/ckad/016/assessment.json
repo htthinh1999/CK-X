@@ -19,7 +19,7 @@
             "question": "Create a Dockerfile in `/tmp/exam/course/2/` that fulfills the following requirements:\n\n- Use `nginx:1.23-alpine` as the base image.\n- Add a `HEALTHCHECK` instruction that tests if the web server is responding.\n- The check should run the command `curl -f http://localhost/ || exit 1`.\n- Set the interval to `10s`, timeout to `3s`, and retries to `3`.\n- You do NOT need to build the image.",
             "concepts": ["docker", "healthcheck", "dockerfile"],
             "verification": [
-                { "id": "1", "description": "Dockerfile exists at /tmp/exam/course/1/Dockerfile", "verificationScriptFile": "q2_s1_validate_dockerfile_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "1", "description": "Dockerfile exists at /tmp/exam/course/2/Dockerfile", "verificationScriptFile": "q2_s1_validate_dockerfile_exists.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "2", "description": "Base image is nginx:1.23-alpine", "verificationScriptFile": "q2_s2_validate_base_image.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "3", "description": "HEALTHCHECK with --interval=10s and --timeout=3s", "verificationScriptFile": "q2_s3_validate_healthcheck_timing.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "4", "description": "HEALTHCHECK command is correct", "verificationScriptFile": "q2_s4_validate_healthcheck_cmd.sh", "expectedOutput": "0", "weightage": 1 }
@@ -139,7 +139,7 @@
             "question": "List all events in the `strike` namespace, sorted by their creation timestamp (oldest first).\nSave the output (which should include at least the time, type, reason, and object name) to `/tmp/exam/course/12/events.txt`.",
             "concepts": ["events", "observability", "kubectl"],
             "verification": [
-                { "id": "1", "description": "events.txt exists at /tmp/exam/course/10/events.txt", "verificationScriptFile": "q12_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "1", "description": "events.txt exists at /tmp/exam/course/12/events.txt", "verificationScriptFile": "q12_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
                 { "id": "2", "description": "events.txt is not empty", "verificationScriptFile": "q12_s2_validate_file_nonempty.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
@@ -150,7 +150,7 @@
             "question": "There is a Pod named `hidden-api` running in the `strike` namespace, listening on port `8080`.\nUse port-forwarding to forward local port `9090` to the pod's port `8080`.\nWhile the port-forward is running, use `curl` to fetch `http://localhost:9090/status`.\nSave the exact response body to `/tmp/exam/course/13/response.txt`.\n(Ensure you kill the port-forward process after obtaining the response.)",
             "concepts": ["port-forward", "networking", "kubectl"],
             "verification": [
-                { "id": "1", "description": "response.txt exists at /tmp/exam/course/20/response.txt", "verificationScriptFile": "q13_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "1", "description": "response.txt exists at /tmp/exam/course/13/response.txt", "verificationScriptFile": "q13_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
                 { "id": "2", "description": "response contains expected echo output (method/path/headers)", "verificationScriptFile": "q13_s2_validate_content.sh", "expectedOutput": "0", "weightage": 3 }
             ]
         },
@@ -174,7 +174,7 @@
             "question": "A helm chart is located at `/tmp/exam/course/15/chart`.\nRender the helm templates using the release name `thunder-web` and namespace `surge`.\nOverride the following values:\n\n- `replicaCount` to `3`\n- `image.tag` to `latest`\n\nSave the rendered output to `/tmp/exam/course/15/output.yaml`.\nDo NOT install the helm chart.",
             "concepts": ["helm", "templating"],
             "verification": [
-                { "id": "1", "description": "Rendered output file /tmp/exam/course/5/output.yaml exists", "verificationScriptFile": "q15_s1_validate_output_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "Rendered output file /tmp/exam/course/15/output.yaml exists", "verificationScriptFile": "q15_s1_validate_output_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Rendered output contains replicas: 3", "verificationScriptFile": "q15_s2_validate_replicas.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "3", "description": "Rendered output contains image nginx:latest", "verificationScriptFile": "q15_s3_validate_image_tag.sh", "expectedOutput": "0", "weightage": 2 }
             ]

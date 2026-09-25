@@ -23,7 +23,7 @@
                 { "id": "2", "description": "Role `deploy-role` exists in namespace `zenith`", "verificationScriptFile": "q2_s2_validate_role_exists.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "3", "description": "Role grants `get,list,create,update` on `deployments`", "verificationScriptFile": "q2_s3_validate_role_verbs.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "4", "description": "RoleBinding `deploy-rb` exists in namespace `zenith`", "verificationScriptFile": "q2_s4_validate_rolebinding_exists.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "5", "description": "File `/tmp/exam/course/15/auth-check.txt` contains `yes`", "verificationScriptFile": "q2_s5_validate_auth_file.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "5", "description": "File `/tmp/exam/course/2/auth-check.txt` contains `yes`", "verificationScriptFile": "q2_s5_validate_auth_file.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {
@@ -34,7 +34,7 @@
             "concepts": ["container-images", "docker", "application-build"],
             "verification": [
                 { "id": "1", "description": "Container image `solar-app:1.0` exists locally (`docker images`)", "verificationScriptFile": "q3_s1_validate_image_exists.sh", "expectedOutput": "0", "weightage": 3 },
-                { "id": "2", "description": "Image saved as tarball at `/tmp/exam/course/1/solar-app.tar`", "verificationScriptFile": "q3_s2_validate_tarball_exists.sh", "expectedOutput": "0", "weightage": 3 }
+                { "id": "2", "description": "Image saved as tarball at `/tmp/exam/course/3/solar-app.tar`", "verificationScriptFile": "q3_s2_validate_tarball_exists.sh", "expectedOutput": "0", "weightage": 3 }
             ]
         },
         {
@@ -158,7 +158,7 @@
             "question": "A Custom Resource Definition (CRD) has been installed in the cluster for managing backups.\n\n1. Discover the CRD with `kubectl get crd` and find the one related to backups.\n2. Save the CRD group (e.g. `ckad.example.com`) to `/tmp/exam/course/13/crd-group.txt`.\n3. Create a custom resource named `daily-backup` in namespace `aurora` with:\n- `apiVersion`: the CRD group + `/v1`\n- `kind`: `Backup`\n- `spec.schedule`: `\"0 2 * * *\"`\n- `spec.retentionDays`: `30`\n- `spec.storageLocation`: `\"s3://backups/daily\"`",
             "concepts": ["crd", "custom-resources"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/12/crd-group.txt` contains `ckad.example.com`", "verificationScriptFile": "q13_s1_validate_group_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "File `/tmp/exam/course/13/crd-group.txt` contains `ckad.example.com`", "verificationScriptFile": "q13_s1_validate_group_file.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Custom resource `Backup/daily-backup` exists in namespace `aurora`", "verificationScriptFile": "q13_s2_validate_backup_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "3", "description": "Backup spec has `schedule=0 2 * * *` and `retentionDays=30`", "verificationScriptFile": "q13_s3_validate_backup_spec.sh", "expectedOutput": "0", "weightage": 2 }
             ]
@@ -214,7 +214,7 @@
             "verification": [
                 { "id": "1", "description": "Service `dns-svc` selector is `app=dns-app`", "verificationScriptFile": "q17_s1_validate_svc_selector.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "2", "description": "Service `dns-svc` has endpoints", "verificationScriptFile": "q17_s2_validate_endpoints.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "File `/tmp/exam/course/20/dns-output.txt` exists", "verificationScriptFile": "q17_s3_validate_output_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "File `/tmp/exam/course/17/dns-output.txt` exists", "verificationScriptFile": "q17_s3_validate_output_file.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "4", "description": "File contains DNS resolution output", "verificationScriptFile": "q17_s4_validate_dns_content.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
@@ -251,7 +251,7 @@
             "question": "In namespace `solar`, Pod `stuck-pod` has been stuck in `Pending` state.\n\n1. Use `kubectl describe` and events to identify why the Pod is Pending.\n2. Save the `nodeSelector` key that causes the issue to `/tmp/exam/course/20/pending-reason.txt` (just the key name, e.g. `disktype`).\n3. Fix the Pod so it enters `Running` state (delete and recreate without the problematic nodeSelector, or label a node to match).",
             "concepts": ["troubleshooting", "scheduling", "nodeselector"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/10/pending-reason.txt` contains `disktype`", "verificationScriptFile": "q20_s1_validate_reason_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "File `/tmp/exam/course/20/pending-reason.txt` contains `disktype`", "verificationScriptFile": "q20_s1_validate_reason_file.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Pod `stuck-pod` is in `Running` state", "verificationScriptFile": "q20_s2_validate_pod_running.sh", "expectedOutput": "0", "weightage": 4 }
             ]
         }

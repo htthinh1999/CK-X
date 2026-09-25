@@ -218,7 +218,7 @@
             "question": "Investigate the `coredns` ConfigMap in the `kube-system` namespace. You need to add a custom DNS rewrite rule.\nModify the `coredns` ConfigMap so any DNS query for `hachiman.local` is rewritten to `hachiman.garrison.svc.cluster.local`.\n(Hint: use the `rewrite name exact hachiman.local hachiman.garrison.svc.cluster.local` plugin inside the Corefile block.)\nSave a copy of the modified ConfigMap to `/tmp/exam/course/19/coredns.yaml`.\nYou DO NOT need to restart the CoreDNS pods.",
             "concepts": ["coredns", "dns", "configmap"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/20/coredns.yaml` exists", "verificationScriptFile": "q19_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "File `/tmp/exam/course/19/coredns.yaml` exists", "verificationScriptFile": "q19_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Rewrite rule present in `coredns.yaml`", "verificationScriptFile": "q19_s2_validate_rewrite_rule.sh", "expectedOutput": "0", "weightage": 5 }
             ]
         },

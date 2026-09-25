@@ -20,7 +20,7 @@
             "question": "Use `kubectl explain` to explore the Kubernetes API documentation.\n\n1. Find the full path to document the `containers` field under Pod spec.\n2. Save the complete documentation output for `pod.spec.containers.resources` to `/tmp/exam/course/2/pod-spec-fields.txt`.\n\nThe output should show all available sub-fields and their descriptions.",
             "concepts": ["kubectl", "api-docs"],
             "verification": [
-                { "id": "1", "description": "File /tmp/exam/course/1/pod-spec-fields.txt exists", "verificationScriptFile": "q2_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "1", "description": "File /tmp/exam/course/2/pod-spec-fields.txt exists", "verificationScriptFile": "q2_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "2", "description": "File contains resources field documentation", "verificationScriptFile": "q2_s2_validate_file_content.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
@@ -193,9 +193,9 @@
             "question": "Use `kubectl top` to analyze resource usage:\n\n1. Get the CPU and memory usage of all pods in namespace `jungle`.\n2. Save the output to `/tmp/exam/course/14/pod-resources.txt`.\n3. Identify the pod consuming the most CPU and write its name to `/tmp/exam/course/14/top-cpu-pod.txt`.\n\nNote: `kubectl top` needs metrics-server. Without it the command returns an error; scoring does not depend on live metrics, only that the output files exist and have content.",
             "concepts": ["kubectl", "metrics", "observability"],
             "verification": [
-                { "id": "1", "description": "File /tmp/exam/course/13/pod-resources.txt exists", "verificationScriptFile": "q14_s1_validate_resources_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "1", "description": "File /tmp/exam/course/14/pod-resources.txt exists", "verificationScriptFile": "q14_s1_validate_resources_file.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "2", "description": "File has content", "verificationScriptFile": "q14_s2_validate_file_content.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "File /tmp/exam/course/13/top-cpu-pod.txt exists", "verificationScriptFile": "q14_s3_validate_topcpu_file.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "3", "description": "File /tmp/exam/course/14/top-cpu-pod.txt exists", "verificationScriptFile": "q14_s3_validate_topcpu_file.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {

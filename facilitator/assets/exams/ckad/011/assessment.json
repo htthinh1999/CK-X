@@ -7,7 +7,7 @@
             "question": "1. Create a file `/tmp/exam/course/1/config.env` with content:\n\n```\nDB_HOST=localhost\nDB_PORT=5432\n```\n\n2. Create a ConfigMap named `env-config` in namespace `voyage` from this .env file.\n\nHint: use `kubectl create configmap --from-env-file`.",
             "concepts": ["configmaps", "configuration"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/15/config.env` exists and is not empty", "verificationScriptFile": "q1_s1_validate_env_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "1", "description": "File `/tmp/exam/course/1/config.env` exists and is not empty", "verificationScriptFile": "q1_s1_validate_env_file.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "2", "description": "File contains keys `DB_HOST` and `DB_PORT`", "verificationScriptFile": "q1_s2_validate_env_content.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "3", "description": "ConfigMap `env-config` exists in namespace `voyage`", "verificationScriptFile": "q1_s3_validate_cm_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "4", "description": "ConfigMap has `DB_HOST=localhost` and `DB_PORT=5432`", "verificationScriptFile": "q1_s4_validate_cm_values.sh", "expectedOutput": "0", "weightage": 1 }
@@ -54,7 +54,7 @@
             "question": "A Deployment `history-deploy` exists in namespace `wave`.\n\nGet the details of revision `3` and save to `/tmp/exam/course/5/revision.txt`.\n\nHint: use `kubectl rollout history --revision`.",
             "concepts": ["deployments", "rollout", "observability"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/17/revision.txt` exists and is not empty", "verificationScriptFile": "q5_s1_validate_revision_file.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "1", "description": "File `/tmp/exam/course/5/revision.txt` exists and is not empty", "verificationScriptFile": "q5_s1_validate_revision_file.sh", "expectedOutput": "0", "weightage": 3 },
                 { "id": "2", "description": "File contains revision details (revision/Containers:/Image:)", "verificationScriptFile": "q5_s2_validate_revision_content.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
@@ -66,7 +66,7 @@
             "concepts": ["pods", "observability"],
             "verification": [
                 { "id": "1", "description": "Pod `inspect-pod` exists in namespace `abyss`", "verificationScriptFile": "q6_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "File `/tmp/exam/course/10/pod.yaml` exists and is not empty", "verificationScriptFile": "q6_s2_validate_yaml_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "File `/tmp/exam/course/6/pod.yaml` exists and is not empty", "verificationScriptFile": "q6_s2_validate_yaml_file.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "3", "description": "YAML file contains a Pod definition for `inspect-pod`", "verificationScriptFile": "q6_s3_validate_yaml_content.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
@@ -77,7 +77,7 @@
             "question": "Create a basic Helm chart named `sea-app` in `/tmp/exam/course/7/`.\n\nThe chart should be created with `helm create`.\n\nHint: use `helm create sea-app` from inside `/tmp/exam/course/7/`.",
             "concepts": ["helm", "charts"],
             "verification": [
-                { "id": "1", "description": "Chart directory `/tmp/exam/course/1/sea-app` exists", "verificationScriptFile": "q7_s1_validate_chart_dir.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "Chart directory `/tmp/exam/course/7/sea-app` exists", "verificationScriptFile": "q7_s1_validate_chart_dir.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "`Chart.yaml` exists in the chart", "verificationScriptFile": "q7_s2_validate_chart_yaml.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "3", "description": "`values.yaml` exists in the chart", "verificationScriptFile": "q7_s3_validate_values_yaml.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "4", "description": "`templates` directory exists in the chart", "verificationScriptFile": "q7_s4_validate_templates_dir.sh", "expectedOutput": "0", "weightage": 1 }
@@ -90,7 +90,7 @@
             "question": "A Pod named `problem-pod` exists in namespace `pearl` but is not running correctly.\n\n1. Describe the Pod.\n2. Save the Events section to `/tmp/exam/course/8/events.txt`.\n\nHint: use `kubectl describe pod` and capture the events.",
             "concepts": ["debugging", "events", "observability"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/11/events.txt` exists and is not empty", "verificationScriptFile": "q8_s1_validate_events_file.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "1", "description": "File `/tmp/exam/course/8/events.txt` exists and is not empty", "verificationScriptFile": "q8_s1_validate_events_file.sh", "expectedOutput": "0", "weightage": 3 },
                 { "id": "2", "description": "File contains event information (Events:/Type/Normal/Warning)", "verificationScriptFile": "q8_s2_validate_events_content.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
@@ -151,7 +151,7 @@
             "concepts": ["pods", "exec", "observability"],
             "verification": [
                 { "id": "1", "description": "Pod `exec-pod` exists in namespace `storm`", "verificationScriptFile": "q13_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "File `/tmp/exam/course/12/hostname.txt` exists and contains output", "verificationScriptFile": "q13_s2_validate_hostname_file.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "2", "description": "File `/tmp/exam/course/13/hostname.txt` exists and contains output", "verificationScriptFile": "q13_s2_validate_hostname_file.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {
@@ -172,7 +172,7 @@
             "question": "A Pod named `restart-pod` exists in namespace `harbor` and has been restarted.\n\nGet the logs from the previous container instance and save to `/tmp/exam/course/15/previous.txt`.\n\nHint: use `kubectl logs --previous`.",
             "concepts": ["logs", "debugging", "observability"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/13/previous.txt` exists and contains output", "verificationScriptFile": "q15_s1_validate_previous_file.sh", "expectedOutput": "0", "weightage": 5 }
+                { "id": "1", "description": "File `/tmp/exam/course/15/previous.txt` exists and contains output", "verificationScriptFile": "q15_s1_validate_previous_file.sh", "expectedOutput": "0", "weightage": 5 }
             ]
         },
         {
@@ -196,7 +196,7 @@
             "question": "Get the CPU and memory utilization of all Pods in namespace `storm` and save to `/tmp/exam/course/17/top-pods.txt`.\n\nNote: `kubectl top` needs metrics-server. Scoring does not depend on live metrics, only on the saved file.\n\nHint: use `kubectl top pods -n storm`.",
             "concepts": ["metrics", "observability"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/20/top-pods.txt` exists and is not empty", "verificationScriptFile": "q17_s1_validate_pods_file.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "1", "description": "File `/tmp/exam/course/17/top-pods.txt` exists and is not empty", "verificationScriptFile": "q17_s1_validate_pods_file.sh", "expectedOutput": "0", "weightage": 3 },
                 { "id": "2", "description": "File contains pod metrics (CPU/MEMORY/NAME)", "verificationScriptFile": "q17_s2_validate_pods_content.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
@@ -220,7 +220,7 @@
             "question": "Get the CPU and memory utilization of all nodes and save to `/tmp/exam/course/19/nodes.txt`.\n\nNote: `kubectl top` needs metrics-server. Scoring does not depend on live metrics, only on the saved file.\n\nHint: use `kubectl top nodes`.",
             "concepts": ["metrics", "observability"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/14/nodes.txt` exists and is not empty", "verificationScriptFile": "q19_s1_validate_nodes_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "File `/tmp/exam/course/19/nodes.txt` exists and is not empty", "verificationScriptFile": "q19_s1_validate_nodes_file.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "File contains node metrics (CPU/MEMORY/%)", "verificationScriptFile": "q19_s2_validate_nodes_content.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },

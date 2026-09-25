@@ -89,7 +89,7 @@
             "question": "Analyze the cluster events in the `depths` namespace.\n\n1. Extract all Warning events in the `depths` namespace.\n2. Save the output of the events to the file `/tmp/exam/course/8/events.txt`.\n3. The format of the output should be standard `kubectl get events` output.",
             "concepts": ["events", "observability", "troubleshooting"],
             "verification": [
-                { "id": "1", "description": "File /tmp/exam/course/10/events.txt exists and is non-empty", "verificationScriptFile": "q8_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
+                { "id": "1", "description": "File /tmp/exam/course/8/events.txt exists and is non-empty", "verificationScriptFile": "q8_s1_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 },
                 { "id": "2", "description": "Warning events present in events.txt", "verificationScriptFile": "q8_s2_validate_warning_events.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },

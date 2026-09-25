@@ -49,7 +49,7 @@
             "verification": [
                 { "id": "1", "description": "Deployment `health-app` has running Pods", "verificationScriptFile": "q4_s1_validate_running.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Liveness probe port is `80`", "verificationScriptFile": "q4_s2_validate_probe_port.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "3", "description": "Root cause saved to `/tmp/exam/course/15/root-cause.txt`", "verificationScriptFile": "q4_s3_validate_rootcause_file.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "3", "description": "Root cause saved to `/tmp/exam/course/4/root-cause.txt`", "verificationScriptFile": "q4_s3_validate_rootcause_file.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {
@@ -202,7 +202,7 @@
                 { "id": "1", "description": "Deployment `web-server` exists in namespace `citadel`", "verificationScriptFile": "q15_s1_validate_deploy_exists.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "2", "description": "Image is rolled back to `nginx:1.25`", "verificationScriptFile": "q15_s2_validate_image.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "3", "description": "Deployment `web-server` has running Pods", "verificationScriptFile": "q15_s3_validate_running.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "4", "description": "Rollout history saved to `/tmp/exam/course/13/rollout-history.txt`", "verificationScriptFile": "q15_s4_validate_history_file.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "4", "description": "Rollout history saved to `/tmp/exam/course/15/rollout-history.txt`", "verificationScriptFile": "q15_s4_validate_history_file.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {
@@ -265,7 +265,7 @@
             "concepts": ["docker", "images", "registry"],
             "verification": [
                 { "id": "1", "description": "Image `localhost:5000/oni-app:1.0` built locally", "verificationScriptFile": "q20_s1_validate_image_built.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "Tar archive exists at `/tmp/exam/course/7/oni-app.tar`", "verificationScriptFile": "q20_s2_validate_tar_exists.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Tar archive exists at `/tmp/exam/course/20/oni-app.tar`", "verificationScriptFile": "q20_s2_validate_tar_exists.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "3", "description": "Image pushed to registry `localhost:5000`", "verificationScriptFile": "q20_s3_validate_pushed.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         }

@@ -119,7 +119,7 @@
             "concepts": ["docker", "images", "build"],
             "verification": [
                 { "id": "1", "description": "Image my-app:1.0 exists", "verificationScriptFile": "q9_s1_validate_image_exists.sh", "expectedOutput": "0", "weightage": 4 },
-                { "id": "2", "description": "Tarball exists at /tmp/exam/course/5/my-app.tar", "verificationScriptFile": "q9_s2_validate_tarball.sh", "expectedOutput": "0", "weightage": 4 }
+                { "id": "2", "description": "Tarball exists at /tmp/exam/course/9/my-app.tar", "verificationScriptFile": "q9_s2_validate_tarball.sh", "expectedOutput": "0", "weightage": 4 }
             ]
         },
         {

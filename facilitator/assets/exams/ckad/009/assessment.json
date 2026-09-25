@@ -33,7 +33,7 @@
             "question": "Perform the following:\n\n1. Create a file `/tmp/exam/course/3/config.txt` with content:\n\n`foo3=lili`\n`foo4=lele`\n\n2. Create a ConfigMap named `file-config` in namespace `glade` from this file.\n\nHint: use `kubectl create configmap --from-file`.",
             "concepts": ["configmaps", "configuration"],
             "verification": [
-                { "id": "1", "description": "File /tmp/exam/course/15/config.txt exists and is not empty", "verificationScriptFile": "q3_s1_validate_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "File /tmp/exam/course/3/config.txt exists and is not empty", "verificationScriptFile": "q3_s1_validate_file.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "ConfigMap file-config exists in namespace glade", "verificationScriptFile": "q3_s2_validate_cm_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "3", "description": "ConfigMap file-config content includes foo3/lili", "verificationScriptFile": "q3_s3_validate_cm_content.sh", "expectedOutput": "0", "weightage": 1 }
             ]
@@ -69,7 +69,7 @@
             "concepts": ["pods", "services-networking"],
             "verification": [
                 { "id": "1", "description": "Pod web exists in namespace thicket", "verificationScriptFile": "q6_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "File /tmp/exam/course/2/pod-ip.txt exists and is not empty", "verificationScriptFile": "q6_s2_validate_file_exists.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "File /tmp/exam/course/6/pod-ip.txt exists and is not empty", "verificationScriptFile": "q6_s2_validate_file_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "3", "description": "File contains a valid IPv4 address", "verificationScriptFile": "q6_s3_validate_ip_format.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
@@ -95,7 +95,7 @@
             "verification": [
                 { "id": "1", "description": "Pod logger exists in namespace glade", "verificationScriptFile": "q8_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Pod logger runs a loop command (contains while or echo)", "verificationScriptFile": "q8_s2_validate_command.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "File /tmp/exam/course/3/logs.txt exists and is not empty", "verificationScriptFile": "q8_s3_validate_logs_file.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "3", "description": "File /tmp/exam/course/8/logs.txt exists and is not empty", "verificationScriptFile": "q8_s3_validate_logs_file.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {
@@ -116,7 +116,7 @@
             "question": "Perform the following:\n\n1. Create a file `/tmp/exam/course/10/username` with content `admin`.\n2. Create a Secret named `file-secret` in namespace `fern` from this file.\n\nHint: use `kubectl create secret generic --from-file`.",
             "concepts": ["secrets", "configuration"],
             "verification": [
-                { "id": "1", "description": "File /tmp/exam/course/17/username exists and is not empty", "verificationScriptFile": "q10_s1_validate_file.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "File /tmp/exam/course/10/username exists and is not empty", "verificationScriptFile": "q10_s1_validate_file.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Secret file-secret exists in namespace fern", "verificationScriptFile": "q10_s2_validate_secret_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "3", "description": "Secret file-secret key username decodes to admin", "verificationScriptFile": "q10_s3_validate_secret_content.sh", "expectedOutput": "0", "weightage": 1 }
             ]
@@ -130,7 +130,7 @@
             "verification": [
                 { "id": "1", "description": "Pod debug-pod exists in namespace meadow", "verificationScriptFile": "q11_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Pod debug-pod command/args references /notexist", "verificationScriptFile": "q11_s2_validate_command.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "File /tmp/exam/course/4/error.txt exists and is not empty", "verificationScriptFile": "q11_s3_validate_error_file.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "File /tmp/exam/course/11/error.txt exists and is not empty", "verificationScriptFile": "q11_s3_validate_error_file.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "4", "description": "Error file captures the not-found error message", "verificationScriptFile": "q11_s4_validate_error_content.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },

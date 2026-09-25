@@ -8,7 +8,7 @@
             "concepts": ["kustomize", "configmaps"],
             "verification": [
                 { "id": "1", "description": "ConfigMap `tornado-config` exists in namespace `tornado`", "verificationScriptFile": "q1_s1_validate_configmap.sh", "expectedOutput": "0", "weightage": 3 },
-                { "id": "2", "description": "File `/tmp/exam/course/8/kustomization.yaml` exists", "verificationScriptFile": "q1_s2_validate_kustomization_file.sh", "expectedOutput": "0", "weightage": 3 }
+                { "id": "2", "description": "File `/tmp/exam/course/1/kustomization.yaml` exists", "verificationScriptFile": "q1_s2_validate_kustomization_file.sh", "expectedOutput": "0", "weightage": 3 }
             ]
         },
         {
@@ -69,7 +69,7 @@
             "question": "Identify the top 3 pods in the `sirocco` namespace that are consuming the most memory.\nWrite the names of these pods (just the pod names, one per line) to `/tmp/exam/course/7/top-pods.txt`, sorted from highest memory consumption to lowest.",
             "concepts": ["observability", "metrics", "kubectl-top"],
             "verification": [
-                { "id": "1", "description": "File `/tmp/exam/course/10/top-pods.txt` exists with at least 3 lines", "verificationScriptFile": "q7_s1_validate_top_pods_file.sh", "expectedOutput": "0", "weightage": 5 }
+                { "id": "1", "description": "File `/tmp/exam/course/7/top-pods.txt` exists with at least 3 lines", "verificationScriptFile": "q7_s1_validate_top_pods_file.sh", "expectedOutput": "0", "weightage": 5 }
             ]
         },
         {
@@ -130,7 +130,7 @@
             "concepts": ["pods", "deployments", "debugging"],
             "verification": [
                 { "id": "1", "description": "Pod `tempest-debug` container command starts with `sleep`", "verificationScriptFile": "q13_s1_validate_pod_command.sh", "expectedOutput": "0", "weightage": 3 },
-                { "id": "2", "description": "File `/tmp/exam/course/4/pod.yaml` exists", "verificationScriptFile": "q13_s2_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 }
+                { "id": "2", "description": "File `/tmp/exam/course/13/pod.yaml` exists", "verificationScriptFile": "q13_s2_validate_file_exists.sh", "expectedOutput": "0", "weightage": 3 }
             ]
         },
         {
