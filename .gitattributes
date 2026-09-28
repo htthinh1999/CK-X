@@ -1,0 +1,19 @@
+# Always check out text files with LF line endings, also on Windows.
+# Scripts and configs run inside Linux containers; CRLF endings break them
+# (e.g. "#!/bin/sh\r: no such file or directory", "syntax error: unexpected end of file").
+* text=auto eol=lf
+
+# Binary / asset files: never touch
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.svg  -text
+*.gz   binary
+*.tgz  binary
+*.tar  binary
+*.zip  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary

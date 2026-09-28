@@ -79,6 +79,8 @@ COPY scripts/prepare-exam-env.sh /usr/local/bin/prepare-exam-env
 COPY scripts/cleanup-exam-env.sh /usr/local/bin/cleanup-exam-env
 
 # Make scripts executable
+# Strip Windows CRLF line endings (checkouts on Windows) so the scripts run in Linux
+RUN sed -i 's/\r$//' /usr/local/bin/prepare-exam-env /usr/local/bin/cleanup-exam-env
 RUN chmod +x /usr/local/bin/prepare-exam-env
 RUN chmod +x /usr/local/bin/cleanup-exam-env
 

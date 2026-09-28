@@ -85,7 +85,8 @@ COPY config/launcher-11/vscodium.desktop /headless/.config/xfce4/panel/launcher-
 
 # Copy startup script
 COPY startup.sh /usr/local/bin/startup.sh
-RUN chmod +x /usr/local/bin/startup.sh
+# Strip Windows CRLF line endings (checkouts on Windows) so the scripts run in Linux
+RUN sed -i 's/\r$//' /usr/local/bin/startup.sh /usr/local/bin/codium 2>/dev/null; chmod +x /usr/local/bin/startup.sh
 
 # Copy agent
 COPY agent.py /tmp/agent.py

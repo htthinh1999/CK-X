@@ -17,6 +17,10 @@ RUN npm install --omit=dev
 # Bundle app source
 COPY . .
 
+# Strip Windows CRLF line endings (checkouts on Windows) so the scripts run in Linux
+RUN find /usr/src/app/assets -type f -path '*/scripts/*' -exec sed -i 's/\r$//' {} + && \
+    sed -i 's/\r$//' /usr/src/app/entrypoint.sh
+
 # Create logs directory
 RUN mkdir -p logs
 
@@ -41,7 +45,7 @@ EXPOSE 3000
 COPY entrypoint.sh /home/nodeuser/entrypoint.sh
 
 # Make entrypoint.sh executable
-RUN chmod +x /home/nodeuser/entrypoint.sh
+RUN sed -i 's/\r$//' /home/nodeuser/entrypoint.sh && chmod +x /home/nodeuser/entrypoint.sh
 
 # Switch to non-root user
 USER nodeuser

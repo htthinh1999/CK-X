@@ -7,7 +7,8 @@ ARG TARGETARCH
 RUN apk add --no-cache curl
 # use our own to start kind cluster
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# Strip Windows CRLF line endings (checkouts on Windows) so the scripts run in Linux
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh && chmod +x /usr/local/bin/entrypoint.sh
 
 # persist existing entrypoint
 RUN cp /usr/local/bin/dockerd-entrypoint.sh /usr/local/bin/startup.sh
@@ -16,6 +17,7 @@ RUN cp /usr/local/bin/dockerd-entrypoint.sh /usr/local/bin/startup.sh
 COPY scripts/ /usr/local/bin/
 
 #make scripts executable
+RUN sed -i 's/\r$//' /usr/local/bin/env-setup /usr/local/bin/env-cleanup /usr/local/bin/k3d-install.sh
 RUN chmod +x /usr/local/bin/env-setup
 RUN chmod +x /usr/local/bin/env-cleanup
 RUN chmod +x /usr/local/bin/k3d-install.sh

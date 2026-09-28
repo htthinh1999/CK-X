@@ -99,6 +99,15 @@ docker compose up -d --build
    - Rootless Docker: start the stack with `DOCKER_SOCKET=$XDG_RUNTIME_DIR/docker.sock docker compose up -d --build`.
    - Check `docker compose logs resetter`. If it can't reach Docker, the facilitator falls back to a best-effort cleanup over SSH.
 
+6. **Windows: `exec ... entrypoint.sh: no such file or directory` or `syntax error: unexpected end of file`**
+   - Caused by Windows (CRLF) line endings in the shell scripts. The repository's `.gitattributes` makes Git check them out with LF, and the images strip CRLF while building.
+   - If you cloned before this fix, refresh your checkout once, then rebuild:
+     ```bash
+     git pull
+     git rm -rq --cached . && git reset --hard
+     docker compose up -d --build
+     ```
+
 ### Getting Help
 
 If you encounter issues:
