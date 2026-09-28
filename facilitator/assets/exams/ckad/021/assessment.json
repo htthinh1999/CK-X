@@ -125,7 +125,7 @@
             "id": "12",
             "namespace": "haven",
             "machineHostname": "ckad9999",
-            "question": "A Helm release named `guardian-app` is deployed in the `haven` namespace.\n\n1. Download its current values to `/tmp/exam/course/12/old-values.yaml`.\n2. Update the replica count to `3` and the image tag to `latest` in a new file `/tmp/exam/course/12/new-values.yaml`.\n3. Upgrade the release using `/tmp/exam/course/12/new-values.yaml` without changing other existing configurations (`--reuse-values`).",
+            "question": "A Helm release named `guardian-app` is deployed in the `haven` namespace. It was installed from the local chart at `/tmp/guardian-app`.\n\n1. Download its current values to `/tmp/exam/course/12/old-values.yaml`.\n2. Update the replica count to `3` and the image tag to `latest` in a new file `/tmp/exam/course/12/new-values.yaml`.\n3. Upgrade the release using `/tmp/exam/course/12/new-values.yaml` without changing other existing configurations (`--reuse-values`).",
             "concepts": ["helm", "deployments"],
             "verification": [
                 { "id": "1", "description": "Helm release guardian-app has replicaCount set to 3", "verificationScriptFile": "q12_s1_validate_replicas.sh", "expectedOutput": "0", "weightage": 3 },
