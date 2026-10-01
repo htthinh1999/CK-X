@@ -108,6 +108,11 @@ docker compose up -d --build
      docker compose up -d --build
      ```
 
+7. **`Cannot connect to the Docker daemon ... Is the docker daemon running?` on ckad9999 / ckad9988 / ckad9977**
+   - Each server runs its own Docker daemon. Older images did not start it again after a container restart (Docker Desktop restart, reboot), because of a stale `/var/run/docker.pid`.
+   - Rebuild so the servers get the fixed start script: `docker compose up -d --build`.
+   - Check with `docker compose logs jumphost-2` (or `jumphost`, `jumphost-3`).
+
 ### Getting Help
 
 If you encounter issues:
