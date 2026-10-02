@@ -404,7 +404,10 @@ spec:
   - name: log-adapter
     image: busybox:1.36
     restartPolicy: Always
-    command: ["sh", "-c", "tail -F /var/log/app.log | sed 's/^/[ADAPTED] /'"]
+    command:
+    - sh
+    - -c
+    - tail -F /var/log/app.log | awk '{print "[ADAPTED] " $0; fflush()}'
     volumeMounts:
     - name: logs
       mountPath: /var/log
@@ -421,6 +424,8 @@ spec:
 ```
 
 `log-adapter` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it (`tail -F` waits for `/var/log/app.log` to appear). Listing it under `containers` (the older pattern) also works and is graded the same.
+
+`fflush()` makes `awk` write each line at once. busybox `sed` and `grep` hold their output in a buffer when it isn't a terminal, so with them `kubectl logs adapter-pod -n zeus -c log-adapter` would stay empty for minutes.
 
 ---
 

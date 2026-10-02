@@ -212,6 +212,7 @@ Kubernetes documents sidecars as **native sidecars**: an entry in `spec.initCont
   Check running state in both `.status.containerStatuses` and `.status.initContainerStatuses`.
 - A native sidecar starts **before** the main container. If the sidecar reads a file that the main container creates, use `tail -F`, not `tail -f`. With `tail -f` the sidecar exits because the file doesn't exist yet, and the main container never starts.
 - Don't use a helper image that exits without a config (for example haproxy). Give it a ConfigMap, because a crashing native sidecar blocks the whole Pod.
+- Don't end a streaming pipe with busybox `sed` or `grep` (`tail -F f | sed ...`). They buffer their output when it isn't a terminal, so `kubectl logs` stays empty for minutes. Use `awk` with `fflush()`, for example `tail -F f | awk '/ERROR/ {print; fflush()}'`.
 
 ## Step 5: Create Answers File
 

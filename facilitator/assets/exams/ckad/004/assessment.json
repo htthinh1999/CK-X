@@ -168,7 +168,7 @@
             "id": "14",
             "namespace": "zeus",
             "machineHostname": "ckad9988",
-            "question": "Create a Pod named `adapter-pod` in namespace `zeus` implementing the adapter pattern:\n\n- Main container `app`: image `busybox:1.36`, command `sh -c \"while true; do echo $(date): log message >> /var/log/app.log; sleep 5; done\"`\n- Adapter container `log-adapter`: image `busybox:1.36`, command `sh -c \"tail -F /var/log/app.log | sed 's/^/[ADAPTED] /'\"`\n\nBoth containers share an emptyDir volume named `logs` mounted at `/var/log`.",
+            "question": "Create a Pod named `adapter-pod` in namespace `zeus` implementing the adapter pattern:\n\n- Main container `app`: image `busybox:1.36`, command `sh -c \"while true; do echo $(date): log message >> /var/log/app.log; sleep 5; done\"`\n- Adapter container `log-adapter`: image `busybox:1.36`, runs with `sh -c`: `tail -F /var/log/app.log | awk '{print \"[ADAPTED] \" $0; fflush()}'`\n\nBoth containers share an emptyDir volume named `logs` mounted at `/var/log`.",
             "concepts": ["multi-container", "adapter", "volumes"],
             "verification": [
                 { "id": "1", "description": "Pod adapter-pod exists", "verificationScriptFile": "q14_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },

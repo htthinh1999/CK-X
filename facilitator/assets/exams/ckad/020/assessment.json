@@ -111,7 +111,7 @@
             "id": "10",
             "namespace": "origin",
             "machineHostname": "ckad9999",
-            "question": "Create a Pod named `data-transformer` in the `origin` namespace implementing the Adapter pattern.\n\n- The Pod should have an `emptyDir` volume named `shared-data`.\n- Main container:\n  - Name: `app-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `while true; do echo \"$(date) - DATA\" >> /var/log/app.log; sleep 5; done`\n  - Volume mount: Mount `shared-data` at `/var/log`\n- Adapter container:\n  - Name: `adapter-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `tail -F /var/log/app.log | sed 's/DATA/TRANSFORMED_DATA/g' > /var/log/transformed.log`\n  - Volume mount: Mount `shared-data` at `/var/log`",
+            "question": "Create a Pod named `data-transformer` in the `origin` namespace implementing the Adapter pattern.\n\n- The Pod should have an `emptyDir` volume named `shared-data`.\n- Main container:\n  - Name: `app-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `while true; do echo \"$(date) - DATA\" >> /var/log/app.log; sleep 5; done`\n  - Volume mount: Mount `shared-data` at `/var/log`\n- Adapter container:\n  - Name: `adapter-container`\n  - Image: `busybox:1.32`\n  - Command: `sh`, `-c`, `tail -F /var/log/app.log | awk '{gsub(/DATA/, \"TRANSFORMED_DATA\"); print; fflush()}' > /var/log/transformed.log`\n  - Volume mount: Mount `shared-data` at `/var/log`",
             "concepts": ["pods", "multi-container", "volumes", "adapter-pattern"],
             "verification": [
                 { "id": "1", "description": "Pod data-transformer exists in origin namespace", "verificationScriptFile": "q10_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
