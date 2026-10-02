@@ -16,8 +16,10 @@ spec:
       image: busybox:1.36
       command: ["/bin/sh", "-c"]
       args: ["i=0; while true; do i=$((i+1)); echo \"$i: app processing request\"; sleep 3; done"]
+  initContainers:
     - name: sidecar
       image: busybox:1.36
+      restartPolicy: Always
       command: ["/bin/sh", "-c"]
       args: ["i=0; while true; do i=$((i+1)); echo \"$i: sidecar syncing data\"; sleep 5; done"]
 EOF

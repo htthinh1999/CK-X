@@ -1,11 +1,12 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
 # pick a live (not terminating) pod of the new template whose log-tail container is ready
+# (log-tail may be a regular container or a native sidecar: init container with restartPolicy Always)
 pod=$(kubectl -n winch get pods -l app=hoist-controller -o json 2>/dev/null | jq -r '
   [.items[]
    | select(.metadata.deletionTimestamp == null and .status.phase == "Running")
-   | select(any(.spec.containers[]; .name == "log-tail"))
-   | select(any(.status.containerStatuses[]?; .name == "log-tail" and .ready == true))
+   | select(any(.spec.containers[], ((.spec.initContainers // [])[] | select(.restartPolicy == "Always")); .name == "log-tail"))
+   | select(any(.status.containerStatuses[]?, .status.initContainerStatuses[]?; .name == "log-tail" and .ready == true))
    | .metadata.name] | first // empty')
 [ -n "$pod" ] || { echo "ERR: no running hoist-controller pod with a ready log-tail container"; exit 1; }
 out=$(kubectl -n winch logs "$pod" -c log-tail --tail=50 2>/dev/null)

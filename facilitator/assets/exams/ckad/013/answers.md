@@ -188,9 +188,11 @@ spec:
       volumeMounts:
         - name: log-volume
           mountPath: /var/log/nginx
+  initContainers:
     - name: log-shipper
       image: busybox:1.36
-      command: ["/bin/sh", "-c", "tail -f /var/log/nginx/access.log 2>/dev/null || sleep 3600"]
+      restartPolicy: Always
+      command: ["/bin/sh", "-c", "tail -F /var/log/nginx/access.log"]
       volumeMounts:
         - name: log-volume
           mountPath: /var/log/nginx
@@ -198,6 +200,8 @@ EOF
 
 kubectl get pod web-with-sidecar -n corona
 ```
+
+`log-shipper` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it (`tail -F` waits until nginx creates `access.log`). Listing it under `containers` (the older pattern) also works and is graded the same.
 
 ---
 

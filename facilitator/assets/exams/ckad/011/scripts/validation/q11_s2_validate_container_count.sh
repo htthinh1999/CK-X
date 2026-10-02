@@ -1,10 +1,12 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-count=$(kubectl get pod sidecar-pod -n abyss -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
+# containers + native sidecars (init containers with restartPolicy: Always)
+count=$(kubectl get pod sidecar-pod -n abyss -o json 2>/dev/null | jq '[.spec.containers[], ((.spec.initContainers // [])[] | select(.restartPolicy == "Always"))] | length' 2>/dev/null)
+count=${count:-0}
 if [ "$count" -ge 2 ] 2>/dev/null; then
-  echo "Success: Pod has $count containers"
+  echo "Success: Pod has $count containers (incl. native sidecars)"
   exit 0
 else
-  echo "Error: Pod has $count container(s), expected 2"
+  echo "Error: Pod has $count container(s) (incl. native sidecars), expected 2"
   exit 1
 fi

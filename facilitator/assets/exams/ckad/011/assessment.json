@@ -121,15 +121,15 @@
             "id": "11",
             "namespace": "abyss",
             "machineHostname": "ckad9977",
-            "question": "Create a Pod named `sidecar-pod` in namespace `abyss` with:\n\nContainer 1 (main):\n- Name: `app`\n- Image: `busybox:1.36`\n- Command: `while true; do echo \"$(date)\" >> /logs/app.log; sleep 5; done`\n- Mount volume at `/logs`\n\nContainer 2 (sidecar):\n- Name: `sidecar`\n- Image: `busybox:1.36`\n- Command: `tail -f /logs/app.log`\n- Mount same volume at `/logs`\n\nUse an emptyDir volume named `log-volume`.\n\nHint: sidecar pattern for log streaming.",
+            "question": "Create a Pod named `sidecar-pod` in namespace `abyss` with:\n\nContainer 1 (main):\n- Name: `app`\n- Image: `busybox:1.36`\n- Command: `while true; do echo \"$(date)\" >> /logs/app.log; sleep 5; done`\n- Mount volume at `/logs`\n\nContainer 2 (sidecar):\n- Name: `sidecar`\n- Image: `busybox:1.36`\n- Command: `tail -F /logs/app.log`\n- Mount same volume at `/logs`\n\nUse an emptyDir volume named `log-volume`.\n\nHint: sidecar pattern for log streaming.",
             "concepts": ["pods", "multi-container", "volumes", "emptydir"],
             "verification": [
                 { "id": "1", "description": "Pod `sidecar-pod` exists in namespace `abyss`", "verificationScriptFile": "q11_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "Pod has at least 2 containers", "verificationScriptFile": "q11_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "2", "description": "Pod has at least 2 containers (incl. native sidecars)", "verificationScriptFile": "q11_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "3", "description": "Container `app` exists", "verificationScriptFile": "q11_s3_validate_app_container.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "4", "description": "Container `sidecar` exists", "verificationScriptFile": "q11_s4_validate_sidecar_container.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "5", "description": "An emptyDir volume exists", "verificationScriptFile": "q11_s5_validate_emptydir.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "6", "description": "Volume is mounted at `/logs`", "verificationScriptFile": "q11_s6_validate_mount_path.sh", "expectedOutput": "0", "weightage": 1 }
+                { "id": "6", "description": "Volume is mounted at `/logs` in containers `app` and `sidecar`", "verificationScriptFile": "q11_s6_validate_mount_path.sh", "expectedOutput": "0", "weightage": 1 }
             ]
         },
         {

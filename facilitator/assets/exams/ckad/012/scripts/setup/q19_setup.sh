@@ -16,9 +16,10 @@ spec:
     image: busybox:1.36
     command: ["sh", "-c", "while true; do echo \"$(date) - App running\" >> /var/log/app.log; sleep 5; done"]
     # TODO: Add volumeMount for shared-logs at /var/log
-  # TODO: Add sidecar container named 'log-reader'
+  # TODO: Add sidecar container named 'log-reader' as a native sidecar
+  #   (an entry under spec.initContainers with restartPolicy: Always)
   #   image: busybox:1.36
-  #   command: tail -f /var/log/app.log
+  #   command: tail -F /var/log/app.log
   #   mount shared-logs at /var/log
   # TODO: Add shared volume 'shared-logs' of type emptyDir
 EOF

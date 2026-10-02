@@ -79,11 +79,11 @@
             "id": "7",
             "namespace": "corona",
             "machineHostname": "ckad9999",
-            "question": "Create a Pod named `web-with-sidecar` in namespace `corona` with a main container and a sidecar that ships logs:\n\n1. Main container named `app`: image `nginx:1.25`, mount the shared volume at `/var/log/nginx`.\n2. Sidecar container named `log-shipper`: image `busybox:1.36`, command `[\"/bin/sh\", \"-c\", \"tail -f /var/log/nginx/access.log 2>/dev/null || sleep 3600\"]`, mount the shared volume at `/var/log/nginx`.\n3. Use an `emptyDir` volume named `log-volume` shared between both containers.",
+            "question": "Create a Pod named `web-with-sidecar` in namespace `corona` with a main container and a sidecar that ships logs:\n\n1. Main container named `app`: image `nginx:1.25`, mount the shared volume at `/var/log/nginx`.\n2. Sidecar container named `log-shipper`: image `busybox:1.36`, command `[\"/bin/sh\", \"-c\", \"tail -F /var/log/nginx/access.log\"]`, mount the shared volume at `/var/log/nginx`.\n3. Use an `emptyDir` volume named `log-volume` shared between both containers.",
             "concepts": ["pods", "sidecar", "volumes"],
             "verification": [
                 { "id": "1", "description": "Pod `web-with-sidecar` exists in namespace `corona`", "verificationScriptFile": "q7_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "Pod has at least 2 containers", "verificationScriptFile": "q7_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod has at least 2 containers (incl. native sidecars)", "verificationScriptFile": "q7_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "3", "description": "Pod has an `emptyDir` volume configured", "verificationScriptFile": "q7_s3_validate_emptydir.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "4", "description": "Both containers mount the shared `log-volume` at `/var/log/nginx`", "verificationScriptFile": "q7_s4_validate_shared_mounts.sh", "expectedOutput": "0", "weightage": 2 }
             ]

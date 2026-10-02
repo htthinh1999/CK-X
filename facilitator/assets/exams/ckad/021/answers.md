@@ -108,6 +108,18 @@ metadata:
   name: logging-pod
   namespace: aegis
 spec:
+  initContainers:
+  - name: log-tailer
+    image: busybox:1.36
+    restartPolicy: Always
+    command: ["sh", "-c", "tail -F /var/log/app.log"]
+    volumeMounts:
+    - name: logs
+      mountPath: /var/log
+    resources:
+      limits:
+        cpu: "50m"
+        memory: "64Mi"
   containers:
   - name: app-container
     image: busybox:1.36
@@ -119,21 +131,13 @@ spec:
       requests:
         cpu: "100m"
         memory: "128Mi"
-  - name: log-tailer
-    image: busybox:1.36
-    command: ["sh", "-c", "tail -f /var/log/app.log"]
-    volumeMounts:
-    - name: logs
-      mountPath: /var/log
-    resources:
-      limits:
-        cpu: "50m"
-        memory: "64Mi"
   volumes:
   - name: logs
     emptyDir: {}
 EOF
 ```
+
+`log-tailer` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it, and `tail -F` waits until `app.log` exists. Listing it under `containers` (the older pattern) also works and is graded the same.
 
 ---
 

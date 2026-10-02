@@ -18,7 +18,7 @@
             "question": "In namespace `dev`, create a Pod named `sidecar-pod` with two containers sharing an `emptyDir` volume named `shared`:\n- container `main` (image `nginx:1.25`) mounting `shared` at `/usr/share/nginx/html`\n- container `sidecar` (image `busybox:1.36`, command `[\"sh\",\"-c\",\"sleep 3600\"]`) mounting `shared` at `/work`",
             "concepts": ["multi-container", "pods", "volumes", "multi-cluster"],
             "verification": [
-                { "id": "1", "description": "Pod sidecar-pod has two containers", "verificationScriptFile": "q2_s1_validate_containers.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "1", "description": "Pod sidecar-pod has two containers (a native sidecar counts)", "verificationScriptFile": "q2_s1_validate_containers.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Both containers share an emptyDir volume", "verificationScriptFile": "q2_s2_validate_shared_volume.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },

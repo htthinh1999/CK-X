@@ -116,12 +116,12 @@
             "id": "11",
             "namespace": "eclipse",
             "machineHostname": "ckad9999",
-            "question": "A developer wants to use the Ambassador pattern for a legacy application. Create a Pod named `legacy-app` in the `eclipse` namespace.\n\n1. Main container: Name it `backend`, use image `nginx:1.25`, and expose port 80.\n2. Ambassador container: Name it `proxy`, use image `haproxy:2.8-alpine`.\n\n(Note: we are just simulating the pattern, no advanced haproxy config is needed, just defining the two containers is sufficient).",
+            "question": "A developer wants to use the Ambassador pattern for a legacy application. Create a Pod named `legacy-app` in the `eclipse` namespace.\n\n1. Main container: Name it `backend`, use image `nginx:1.25`, and expose port 80.\n2. Ambassador container: Name it `proxy`, use image `haproxy:2.8-alpine`.\n\nThe ConfigMap `haproxy-config` in namespace `eclipse` already holds a minimal `haproxy.cfg` (listen on port 8080, forward to the backend on `127.0.0.1:80`). Mount it into the `proxy` container at `/usr/local/etc/haproxy`, so that haproxy finds its configuration file at `/usr/local/etc/haproxy/haproxy.cfg`.",
             "concepts": ["pods", "multi-container", "ambassador-pattern"],
             "verification": [
                 { "id": "1", "description": "Pod legacy-app exists in eclipse namespace", "verificationScriptFile": "q11_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "Backend container correct (backend nginx:1.25)", "verificationScriptFile": "q11_s2_validate_backend.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "3", "description": "Proxy container correct (proxy haproxy:2.8-alpine)", "verificationScriptFile": "q11_s3_validate_proxy.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "3", "description": "Proxy container correct (proxy haproxy:2.8-alpine) and mounts ConfigMap `haproxy-config` at `/usr/local/etc/haproxy`", "verificationScriptFile": "q11_s3_validate_proxy.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {
@@ -139,12 +139,12 @@
             "id": "13",
             "namespace": "lunar",
             "machineHostname": "ckad9988",
-            "question": "Create a Pod named `logger` in the `lunar` namespace.\n\nThe Pod should run a single container using the `busybox:1.36` image. It should run a script that outputs logs to `/var/log/app.log`: `sh -c 'while true; do echo \"App is running\" >> /var/log/app.log; sleep 5; done'`.\n\nConfigure a sidecar container in the same pod named `log-tailer` using `busybox:1.36` that reads from `/var/log/app.log` and outputs to stdout: `sh -c 'tail -f /var/log/app.log'`.\n\nUse an `emptyDir` volume to share the `/var/log` directory between the two containers.",
+            "question": "Create a Pod named `logger` in the `lunar` namespace.\n\nThe Pod should run a single container using the `busybox:1.36` image. It should run a script that outputs logs to `/var/log/app.log`: `sh -c 'while true; do echo \"App is running\" >> /var/log/app.log; sleep 5; done'`.\n\nConfigure a sidecar container in the same pod named `log-tailer` using `busybox:1.36` that reads from `/var/log/app.log` and outputs to stdout: `sh -c 'tail -F /var/log/app.log'`.\n\nUse an `emptyDir` volume to share the `/var/log` directory between the two containers.",
             "concepts": ["pods", "sidecar", "emptydir", "volumes"],
             "verification": [
                 { "id": "1", "description": "Pod logger exists in lunar namespace", "verificationScriptFile": "q13_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "2", "description": "emptyDir volume is used", "verificationScriptFile": "q13_s2_validate_emptydir.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "3", "description": "Pod has two containers", "verificationScriptFile": "q13_s3_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 }
+                { "id": "3", "description": "Pod has two containers (incl. native sidecars)", "verificationScriptFile": "q13_s3_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },
         {

@@ -51,20 +51,24 @@ spec:
   volumes:
     - name: shared
       emptyDir: {}
+  initContainers:
+    - name: sidecar
+      image: busybox:1.36
+      restartPolicy: Always
+      command: ["sh", "-c", "sleep 3600"]
+      volumeMounts:
+        - name: shared
+          mountPath: /work
   containers:
     - name: main
       image: nginx:1.25
       volumeMounts:
         - name: shared
           mountPath: /usr/share/nginx/html
-    - name: sidecar
-      image: busybox:1.36
-      command: ["sh", "-c", "sleep 3600"]
-      volumeMounts:
-        - name: shared
-          mountPath: /work
 YAML
 ```
+
+`sidecar` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it. Listing it under `containers` (the older pattern) also works and is graded the same.
 
 ---
 

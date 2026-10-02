@@ -201,6 +201,18 @@ else
 fi
 ```
 
+#### Sidecar questions
+
+Kubernetes documents sidecars as **native sidecars**: an entry in `spec.initContainers` with `restartPolicy: Always`. They have been on by default since 1.29 and stable since 1.33. Listing the sidecar under `containers` is the older pattern and still works.
+
+- Write the answer with the native form, and let the verification scripts accept both forms. Look containers up by name, never by index (`containers[1]`). For example, to list the app containers plus any native sidecars:
+  ```bash
+  kubectl get pod my-pod -n my-ns -o json | jq -r '[.spec.containers[], ((.spec.initContainers // [])[] | select(.restartPolicy == "Always"))][].name'
+  ```
+  Check running state in both `.status.containerStatuses` and `.status.initContainerStatuses`.
+- A native sidecar starts **before** the main container. If the sidecar reads a file that the main container creates, use `tail -F`, not `tail -f`. With `tail -f` the sidecar exits because the file doesn't exist yet, and the main container never starts.
+- Don't use a helper image that exits without a config (for example haproxy). Give it a ConfigMap, because a crashing native sidecar blocks the whole Pod.
+
 ## Step 5: Create Answers File
 
 Create an `answers.md` file containing solutions to your questions. This file will be displayed directly to students when they view the exam answers.

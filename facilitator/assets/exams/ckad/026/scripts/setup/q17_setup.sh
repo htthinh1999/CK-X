@@ -41,6 +41,20 @@ spec:
         app: kiosk
         tier: frontend
     spec:
+      initContainers:
+        - name: metrics            # native sidecar
+          image: busybox:1.36
+          restartPolicy: Always
+          command: ["sh", "-c", "mkdir -p /www && echo kiosk-metrics > /www/index.html && exec httpd -f -p 8081 -h /www"]
+          ports:
+            - name: metrics
+              containerPort: 8081
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              memory: 32Mi
       containers:
         - name: web
           image: nginx:1.25
@@ -53,18 +67,6 @@ spec:
               memory: 16Mi
             limits:
               memory: 64Mi
-        - name: metrics
-          image: busybox:1.36
-          command: ["sh", "-c", "mkdir -p /www && echo kiosk-metrics > /www/index.html && exec httpd -f -p 8081 -h /www"]
-          ports:
-            - name: metrics
-              containerPort: 8081
-          resources:
-            requests:
-              cpu: 5m
-              memory: 8Mi
-            limits:
-              memory: 32Mi
 ---
 apiVersion: apps/v1
 kind: Deployment

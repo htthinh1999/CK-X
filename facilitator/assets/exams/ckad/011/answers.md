@@ -189,10 +189,12 @@ spec:
     volumeMounts:
     - name: log-volume
       mountPath: /logs
+  initContainers:
   - name: sidecar
     image: busybox:1.36
+    restartPolicy: Always
     command: ["/bin/sh", "-c"]
-    args: ["tail -f /logs/app.log"]
+    args: ["tail -F /logs/app.log"]
     volumeMounts:
     - name: log-volume
       mountPath: /logs
@@ -201,6 +203,8 @@ spec:
     emptyDir: {}
 EOF
 ```
+
+`sidecar` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it (`tail -F` waits until `app` creates the file). Listing it under `containers` (the older pattern) also works and is graded the same.
 
 ---
 

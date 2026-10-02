@@ -450,9 +450,10 @@ kubectl -n winch patch deployment hoist-controller --type=strategic -p '
 spec:
   template:
     spec:
-      containers:
+      initContainers:
         - name: log-tail
           image: busybox:1.36
+          restartPolicy: Always
           command: ["sh", "-c", "tail -n +1 -F /var/log/hoist/cycles.log"]
           volumeMounts:
             - name: hoist-logs
@@ -463,7 +464,7 @@ sleep 10   # let the old pod finish terminating
 kubectl -n winch logs deployment/hoist-controller -c log-tail --tail=5
 ```
 
-A strategic merge patch merges `containers` by `name`, so the new `log-tail` entry is added next to `hoist` and `hoist` is left alone. You can also add the same container block to `/home/candidate/exam/q15/hoist-controller.yaml` and `kubectl apply` it. The sidecar reads the shared `emptyDir` and writes the lines to its own stdout, where `kubectl logs -c log-tail` can see them.
+A strategic merge patch merges `initContainers` (like `containers`) by `name`, so `log-tail` is added and `hoist` is left alone. `log-tail` is a native sidecar: an init container with `restartPolicy: Always` starts before `hoist` and keeps running next to it. Adding the same block under `containers` (the older pattern) also works and is graded the same. You can also add the block to `/home/candidate/exam/q15/hoist-controller.yaml` and `kubectl apply` it. The sidecar reads the shared `emptyDir` and writes the lines to its own stdout, where `kubectl logs -c log-tail` can see them.
 
 ---
 

@@ -298,29 +298,34 @@ spec:
   volumes:
   - name: shared-vol
     emptyDir: {}
-  containers:
-  - name: main
-    image: nginx:1.24
-    volumeMounts:
-    - name: shared-vol
-      mountPath: /var/log/nginx
+  initContainers:
   - name: sidecar
     image: busybox
+    restartPolicy: Always
     command: ["/bin/sh", "-c", "while true; do date >> /shared/time.log; sleep 5; done"]
     volumeMounts:
     - name: shared-vol
       mountPath: /shared
   - name: adapter
     image: fluentd
-    command: ["/bin/sh", "-c", "tail -f /var/log/shared/time.log"]
+    restartPolicy: Always
+    command: ["/bin/sh", "-c", "tail -F /var/log/shared/time.log"]
     volumeMounts:
     - name: shared-vol
       mountPath: /var/log/shared
+  containers:
+  - name: main
+    image: nginx:1.24
+    volumeMounts:
+    - name: shared-vol
+      mountPath: /var/log/nginx
 EOF
 kubectl apply -f /tmp/exam/course/9/multi-pod.yaml
 ```
 
 Three containers (`main`, `sidecar`, `adapter`) share one `emptyDir` volume mounted at different paths.
+
+`sidecar` and `adapter` are native sidecars: init containers with `restartPolicy: Always` start in order before `main` and keep running next to it, and `tail -F` waits until `time.log` exists. Listing them under `containers` (the older pattern) also works and is graded the same.
 
 ---
 
