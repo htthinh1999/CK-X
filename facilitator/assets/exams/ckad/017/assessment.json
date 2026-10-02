@@ -38,11 +38,11 @@
             "id": "4",
             "namespace": "tide",
             "machineHostname": "ckad9999",
-            "question": "Create a Pod named `log-generator` in the `tide` namespace that implements the sidecar pattern for log forwarding.\n\n1. The main container should be named `app`, use the `busybox` image, and run the command: `sh -c 'while true; do echo \"$(date) - Application log\" >> /var/log/app/app.log; sleep 5; done'`.\n2. The sidecar container should be named `sidecar`, use the `busybox` image, and run the command: `sh -c 'tail -f /var/log/app/app.log'`.\n3. Use an `emptyDir` volume named `shared-logs` to share the `/var/log/app` directory between the two containers.",
+            "question": "Create a Pod named `log-generator` in the `tide` namespace that implements the sidecar pattern for log forwarding.\n\n1. The main container should be named `app`, use the `busybox` image, and run the command: `sh -c 'while true; do echo \"$(date) - Application log\" >> /var/log/app/app.log; sleep 5; done'`.\n2. The sidecar container should be named `sidecar`, use the `busybox` image, and run the command: `sh -c 'tail -F /var/log/app/app.log'`.\n3. Use an `emptyDir` volume named `shared-logs` to share the `/var/log/app` directory between the two containers.",
             "concepts": ["pods", "sidecar", "volumes"],
             "verification": [
                 { "id": "1", "description": "Pod log-generator exists in tide", "verificationScriptFile": "q4_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "Pod has at least 2 containers (sidecar present)", "verificationScriptFile": "q4_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod has at least 2 containers incl. native sidecars (sidecar present)", "verificationScriptFile": "q4_s2_validate_container_count.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "3", "description": "Shared-logs emptyDir volume exists", "verificationScriptFile": "q4_s3_validate_shared_emptydir.sh", "expectedOutput": "0", "weightage": 2 }
             ]
         },

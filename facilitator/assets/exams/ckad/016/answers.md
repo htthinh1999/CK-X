@@ -79,16 +79,18 @@ metadata:
   name: thunder-logger
   namespace: thunder
 spec:
+  initContainers:
+  - name: error-tailer
+    image: busybox
+    restartPolicy: Always
+    command: ['sh', '-c', 'tail -F /var/log/app.log | grep ERROR']
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/log
   containers:
   - name: app-container
     image: busybox
     command: ['sh', '-c', 'while true; do echo "INFO: Processing request"; sleep 2; echo "ERROR: Connection timeout"; sleep 3; done > /var/log/app.log']
-    volumeMounts:
-    - name: log-volume
-      mountPath: /var/log
-  - name: error-tailer
-    image: busybox
-    command: ['sh', '-c', 'tail -f /var/log/app.log | grep ERROR']
     volumeMounts:
     - name: log-volume
       mountPath: /var/log
@@ -98,6 +100,8 @@ spec:
 EOF
 kubectl apply -f /tmp/exam/course/4/pod.yaml
 ```
+
+`error-tailer` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it (`tail -F` waits until the log file exists). Listing it under `containers` (the older pattern) also works and is graded the same.
 
 ---
 

@@ -80,16 +80,18 @@ metadata:
   name: log-generator
   namespace: tide
 spec:
+  initContainers:
+  - name: sidecar
+    image: busybox
+    restartPolicy: Always
+    command: ["sh", "-c", "tail -F /var/log/app/app.log"]
+    volumeMounts:
+    - name: shared-logs
+      mountPath: /var/log/app
   containers:
   - name: app
     image: busybox
     command: ["sh", "-c", "while true; do echo \"\$(date) - Application log\" >> /var/log/app/app.log; sleep 5; done"]
-    volumeMounts:
-    - name: shared-logs
-      mountPath: /var/log/app
-  - name: sidecar
-    image: busybox
-    command: ["sh", "-c", "tail -f /var/log/app/app.log"]
     volumeMounts:
     - name: shared-logs
       mountPath: /var/log/app
@@ -98,6 +100,8 @@ spec:
     emptyDir: {}
 EOF
 ```
+
+`sidecar` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it (`tail -F` waits until `app` creates the log file). Listing it under `containers` (the older pattern) also works and is graded the same.
 
 ---
 

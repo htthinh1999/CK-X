@@ -92,7 +92,7 @@
             "concepts": ["pods", "sidecar", "configmaps"],
             "verification": [
                 { "id": "1", "description": "Pod ambassador-pod exists in melody", "verificationScriptFile": "q9_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },
-                { "id": "2", "description": "ConfigMap haproxy-config is mounted as a volume in the pod", "verificationScriptFile": "q9_s2_validate_configmap_mounted.sh", "expectedOutput": "0", "weightage": 4 }
+                { "id": "2", "description": "ConfigMap haproxy-config is mounted into the haproxy ambassador at /usr/local/etc/haproxy/haproxy.cfg", "verificationScriptFile": "q9_s2_validate_configmap_mounted.sh", "expectedOutput": "0", "weightage": 4 }
             ]
         },
         {

@@ -42,7 +42,7 @@
             "id": "4",
             "namespace": "thunder",
             "machineHostname": "ckad9999",
-            "question": "Create a Pod named `thunder-logger` in the `thunder` namespace.\n\n- The main container should be named `app-container`, using the `busybox` image, and run the command: `sh -c 'while true; do echo \"INFO: Processing request\"; sleep 2; echo \"ERROR: Connection timeout\"; sleep 3; done > /var/log/app.log'`\n- Mount an `emptyDir` volume at `/var/log` for the main container.\n- Add a sidecar container named `error-tailer`, using the `busybox` image.\n- The sidecar should mount the same volume and run a command to tail the log file but ONLY output lines containing `ERROR` (e.g. `sh -c 'tail -f /var/log/app.log | grep ERROR'`).",
+            "question": "Create a Pod named `thunder-logger` in the `thunder` namespace.\n\n- The main container should be named `app-container`, using the `busybox` image, and run the command: `sh -c 'while true; do echo \"INFO: Processing request\"; sleep 2; echo \"ERROR: Connection timeout\"; sleep 3; done > /var/log/app.log'`\n- Mount an `emptyDir` volume at `/var/log` for the main container.\n- Add a sidecar container named `error-tailer`, using the `busybox` image.\n- The sidecar should mount the same volume and run a command to tail the log file but ONLY output lines containing `ERROR` (e.g. `sh -c 'tail -F /var/log/app.log | grep ERROR'`).",
             "concepts": ["pods", "sidecar", "volumes"],
             "verification": [
                 { "id": "1", "description": "Pod thunder-logger exists in thunder namespace", "verificationScriptFile": "q4_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 2 },

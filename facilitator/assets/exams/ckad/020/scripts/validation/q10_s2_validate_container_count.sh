@@ -1,6 +1,8 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-c_count=$(kubectl get pod data-transformer -n origin -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
+# count containers + native sidecars (init containers with restartPolicy: Always)
+c_count=$(kubectl get pod data-transformer -n origin -o json 2>/dev/null | jq '[.spec.containers[], ((.spec.initContainers // [])[] | select(.restartPolicy == "Always"))] | length' 2>/dev/null)
+c_count=${c_count:-0}
 if [ "$c_count" -ge 2 ]; then
   echo "Success: pod has $c_count containers"
   exit 0

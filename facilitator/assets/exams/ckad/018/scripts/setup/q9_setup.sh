@@ -11,13 +11,17 @@ metadata:
 data:
   haproxy.cfg: |
     global
-      daemon
       maxconn 256
     defaults
       mode http
       timeout connect 5000ms
       timeout client 50000ms
       timeout server 50000ms
+    frontend ambassador
+      bind 127.0.0.1:8080
+      default_backend external-service
+    backend external-service
+      server external example.com:80 init-addr last,libc,none
 EOF
 echo "Setup complete for Question 9"
 exit 0

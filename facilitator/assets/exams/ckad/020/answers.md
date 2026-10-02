@@ -266,6 +266,14 @@ spec:
   volumes:
   - name: shared-data
     emptyDir: {}
+  initContainers:
+  - name: adapter-container
+    image: busybox:1.32
+    restartPolicy: Always
+    command: ['sh', '-c', 'tail -F /var/log/app.log | sed "s/DATA/TRANSFORMED_DATA/g" > /var/log/transformed.log']
+    volumeMounts:
+    - name: shared-data
+      mountPath: /var/log
   containers:
   - name: app-container
     image: busybox:1.32
@@ -273,14 +281,10 @@ spec:
     volumeMounts:
     - name: shared-data
       mountPath: /var/log
-  - name: adapter-container
-    image: busybox:1.32
-    command: ['sh', '-c', 'tail -f /var/log/app.log | sed "s/DATA/TRANSFORMED_DATA/g" > /var/log/transformed.log']
-    volumeMounts:
-    - name: shared-data
-      mountPath: /var/log
 EOF
 ```
+
+`adapter-container` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it (`tail -F` waits until `app-container` creates the log file). Listing it under `containers` (the older pattern) also works and is graded the same.
 
 **Explanation:** The adapter pattern uses an `emptyDir` volume shared between both containers, mounted at `/var/log` in each.
 

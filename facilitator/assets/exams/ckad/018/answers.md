@@ -174,7 +174,7 @@ EOF
 
 ---
 
-## Question 9 | Adapter Sidecar Pattern
+## Question 9 | Ambassador Sidecar Pattern
 
 > Server: `ssh ckad9999`
 
@@ -186,22 +186,26 @@ metadata:
   name: ambassador-pod
   namespace: melody
 spec:
-  containers:
-  - name: main
-    image: busybox
-    command: ["sleep", "3600"]
+  initContainers:
   - name: ambassador
     image: haproxy:2.4-alpine
+    restartPolicy: Always
     volumeMounts:
     - name: config
       mountPath: /usr/local/etc/haproxy/haproxy.cfg
       subPath: haproxy.cfg
+  containers:
+  - name: main
+    image: busybox
+    command: ["sleep", "3600"]
   volumes:
   - name: config
     configMap:
       name: haproxy-config
 EOF
 ```
+
+`ambassador` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it, so the proxy on `localhost:8080` is ready when `main` starts. Listing it under `containers` (the older pattern) also works and is graded the same.
 
 ---
 
@@ -278,7 +282,7 @@ kubectl create configmap binary-config --from-file=data.bin=/tmp/exam/course/12/
 
 ---
 
-## Question 13 | Init Container with ConfigMap
+## Question 13 | Shared Process Namespace
 
 > Server: `ssh ckad9999`
 
@@ -387,7 +391,7 @@ EOF
 
 ---
 
-## Question 17 | Canary Deployment
+## Question 17 | RollingUpdate Strategy
 
 > Server: `ssh ckad9999`
 
