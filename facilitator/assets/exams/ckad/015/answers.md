@@ -117,18 +117,13 @@ kubectl get pod wind-logger -n gale -o yaml > /tmp/exam/wind.yaml
   - name: adapter
     image: busybox:1.31.1
     restartPolicy: Always
-    command:
-    - sh
-    - -c
-    - tail -F /var/log/wind.log | awk '{print "[WIND-LOG] " $0; fflush()}'
+    command: ["sh", "-c", "tail -F /var/log/wind.log | sed 's/^/[WIND-LOG] /'"]
     volumeMounts:
     - name: logs
       mountPath: /var/log
 ```
 
 `adapter` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it (`tail -F` waits until `app` creates the log file). Listing it under `containers` (the older pattern) also works and is graded the same.
-
-`fflush()` makes `awk` write each line at once. busybox `sed` and `grep` hold their output in a buffer when it isn't a terminal, so with them `kubectl logs wind-logger -n gale -c adapter` would stay empty for minutes.
 
 ```bash
 kubectl replace --force -f /tmp/exam/wind.yaml

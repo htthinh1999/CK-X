@@ -83,10 +83,7 @@ spec:
   - name: error-tailer
     image: busybox
     restartPolicy: Always
-    command:
-    - sh
-    - -c
-    - tail -F /var/log/app.log | awk '/ERROR/ {print; fflush()}'
+    command: ['sh', '-c', 'tail -F /var/log/app.log | grep ERROR']
     volumeMounts:
     - name: log-volume
       mountPath: /var/log
@@ -105,8 +102,6 @@ kubectl apply -f /tmp/exam/course/4/pod.yaml
 ```
 
 `error-tailer` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it (`tail -F` waits until the log file exists). Listing it under `containers` (the older pattern) also works and is graded the same.
-
-`awk '/ERROR/ {print; fflush()}'` prints only the `ERROR` lines, each one at once. `grep ERROR` filters the same lines, but busybox `grep` holds its output in a buffer when it isn't writing to a terminal, so `kubectl logs thunder-logger -n thunder -c error-tailer` would stay empty for minutes.
 
 ---
 

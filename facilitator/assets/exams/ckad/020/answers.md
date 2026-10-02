@@ -270,10 +270,7 @@ spec:
   - name: adapter-container
     image: busybox:1.32
     restartPolicy: Always
-    command:
-    - sh
-    - -c
-    - tail -F /var/log/app.log | awk '{gsub(/DATA/, "TRANSFORMED_DATA"); print; fflush()}' > /var/log/transformed.log
+    command: ['sh', '-c', 'tail -F /var/log/app.log | sed "s/DATA/TRANSFORMED_DATA/g" > /var/log/transformed.log']
     volumeMounts:
     - name: shared-data
       mountPath: /var/log
@@ -288,8 +285,6 @@ EOF
 ```
 
 `adapter-container` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it (`tail -F` waits until `app-container` creates the log file). Listing it under `containers` (the older pattern) also works and is graded the same.
-
-`fflush()` makes `awk` write each line to `transformed.log` at once. busybox `sed` holds its output in a buffer when it isn't writing to a terminal, so with `sed` the file would stay empty for minutes.
 
 **Explanation:** The adapter pattern uses an `emptyDir` volume shared between both containers, mounted at `/var/log` in each.
 
