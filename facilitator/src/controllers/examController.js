@@ -269,7 +269,11 @@ async function getExamStatus(req, res) {
       id: examId,
       status: examStatus || 'UNKNOWN',
       warmUpTimeInSeconds: examInfo.warmUpTimeInSeconds || 30,
-      message: examStatus === 'READY' ? 'Exam environment is ready' : 'Exam environment is being prepared'
+      message: examStatus === 'READY'
+        ? 'Exam environment is ready'
+        : examStatus === 'PREPARATION_FAILED'
+          ? 'Preparing the exam environment failed. The cause is in the logs: docker compose logs facilitator jumphost k8s-api-server'
+          : 'Exam environment is being prepared'
     });
   } catch (error) {
     logger.error('Error retrieving exam status', { error: error.message });

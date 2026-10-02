@@ -56,7 +56,10 @@ fi
 MULTI=0
 if [ -z "$CLUSTER_SPEC" ]; then
   # Legacy single-cluster path (unchanged)
-  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-setup $NUMBER_OF_NODES $CLUSTER_NAME"
+  if ! ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-setup $NUMBER_OF_NODES $CLUSTER_NAME"; then
+    log "ERROR: creating cluster '$CLUSTER_NAME' failed on k8s-api-server (details: docker compose logs k8s-api-server)"
+    exit 1
+  fi
 else
   # Multi-cluster path: create one cluster per "name:workers" pair, each on a
   # distinct API port (6443 + index).
@@ -76,7 +79,10 @@ else
     [ "$rest" != "$cworkers" ] && cserver=${rest#*:}
     cserver=${cserver:-ckad9999}             # server whose registry this cluster pulls from
     log "Creating cluster '$cname' (workers=$cworkers, index=$idx, registry host=$cserver)"
-    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-setup $cworkers $cname $idx $cserver"
+    if ! ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null candidate@k8s-api-server "env-setup $cworkers $cname $idx $cserver"; then
+      log "ERROR: creating cluster '$cname' failed on k8s-api-server (details: docker compose logs k8s-api-server)"
+      exit 1
+    fi
     idx=$((idx+1))
   done
   IFS=$OLDIFS
@@ -101,20 +107,33 @@ export KUBECONFIG=/home/candidate/.kube/kubeconfig
 
 sleep 5
 
-#wait till api-server is ready
+#wait till api-server is ready (at most 10 minutes per cluster, then fail instead of hanging)
+API_WAIT_ATTEMPTS=120   # x 5s
 if [ "$MULTI" = "1" ]; then
   # Multi-cluster: wait on EVERY cluster through its own per-cluster kubeconfig
   # (the merged file's current-context only covers one of them).
   for cname in $CLUSTER_NAMES; do
     kc=/home/candidate/.kube/kubeconfig-$cname
+    n=0
     until [ -f "$kc" ] && KUBECONFIG="$kc" kubectl get nodes > /dev/null 2>&1; do
+      n=$((n+1))
+      if [ "$n" -gt "$API_WAIT_ATTEMPTS" ]; then
+        log "ERROR: API server for cluster '$cname' not ready after 10 minutes (details: docker compose logs k8s-api-server)"
+        exit 1
+      fi
       log "API server for cluster '$cname' is not ready, retrying..."
       sleep 5
     done
     log "API server for cluster '$cname' is ready"
   done
 else
+  n=0
   while ! kubectl get nodes > /dev/null 2>&1; do
+    n=$((n+1))
+    if [ "$n" -gt "$API_WAIT_ATTEMPTS" ]; then
+      log "ERROR: API server not ready after 10 minutes (details: docker compose logs k8s-api-server)"
+      exit 1
+    fi
     log "API server is not ready, retrying..."
     sleep 5
   done

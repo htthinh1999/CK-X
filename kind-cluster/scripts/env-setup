@@ -123,15 +123,22 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') | └── Nodes:  $((NUM_WORKERS + 1)) (1 s
 if k3d cluster list | grep -q "^$CLUSTER_NAME "; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') | Cluster '$CLUSTER_NAME' already exists, skipping create"
 else
-    k3d cluster create --config /tmp/k3d-config.yaml
+    if ! k3d cluster create --config /tmp/k3d-config.yaml; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') | ERROR: creating k3d cluster '$CLUSTER_NAME' failed (see the k3d messages above)"
+        exit 1
+    fi
 fi
 
 # ===============================================================================
-#   Cluster Readiness Check
+#   Cluster Readiness Check (up to 5 minutes)
 # ===============================================================================
 CLUSTER_CHECK_COUNT=0
-while ! k3d cluster list | grep -q "$CLUSTER_NAME"; do
+while ! k3d cluster list | grep -q "^$CLUSTER_NAME "; do
     CLUSTER_CHECK_COUNT=$((CLUSTER_CHECK_COUNT+1))
+    if [ "$CLUSTER_CHECK_COUNT" -gt 60 ]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') | ERROR: k3d cluster '$CLUSTER_NAME' did not appear within 5 minutes"
+        exit 1
+    fi
     echo "$(date '+%Y-%m-%d %H:%M:%S') | [WAITING] K3d cluster '$CLUSTER_NAME' not ready yet... (attempt $CLUSTER_CHECK_COUNT)"
     sleep 5
 done

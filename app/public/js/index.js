@@ -62,6 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 // Redirect to exam page when ready
                                 window.location.href = `/exam.html?id=${data.id}`;
                             }
+                        }).catch(error => {
+                            hideLoadingOverlay();
+                            alert(error.message + '\n\nTo try again: click Start Exam and choose TERMINATE AND PROCEED.');
                         });
                     }
                 }
@@ -561,6 +564,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     // set warmup time in seconds
                     const warmUpTimeInSeconds = data.warmUpTimeInSeconds || 30;
 
+                    if (data.status === 'PREPARATION_FAILED') {
+                        // Preparation failed: stop polling, the caller shows the error
+                        reject(new Error(data.message || 'Preparing the exam environment failed.'));
+                        return;
+                    }
+
                     if (data.status === 'READY') {
                         // Set progress to 100% when ready
                         updateProgressBar(100);
@@ -622,7 +631,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Error starting exam:', error);
             hideLoadingOverlay();
-            alert('Failed to start exam: ' + error.message);
+            alert('Failed to start exam: ' + error.message + '\n\nTo try again: click Start Exam and choose TERMINATE AND PROCEED.');
         }
     }
 
