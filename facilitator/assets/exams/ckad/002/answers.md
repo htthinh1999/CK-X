@@ -93,6 +93,14 @@ metadata:
   name: multi-container-pod
   namespace: multi-container
 spec:
+  initContainers:
+  - name: sidecar-container
+    image: busybox
+    restartPolicy: Always
+    command: ['sh', '-c', 'while true; do echo $(date) >> /var/log/app.log; sleep 5; done']
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/log
   containers:
   - name: main-container
     image: nginx
@@ -102,17 +110,13 @@ spec:
     - name: log-volume
       mountPath: /var/log/nginx
       subPath: nginx
-  - name: sidecar-container
-    image: busybox
-    command: ['sh', '-c', 'while true; do echo $(date) >> /var/log/app.log; sleep 5; done']
-    volumeMounts:
-    - name: log-volume
-      mountPath: /var/log
   volumes:
   - name: log-volume
     emptyDir: {}
 EOF
 ```
+
+`sidecar-container` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it. Listing it under `containers` (the older pattern) also works and is graded the same.
 
 ---
 

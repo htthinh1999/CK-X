@@ -4,8 +4,8 @@
 POD=$(kubectl get pod multi-container-pod -n multi-container -o jsonpath='{.metadata.name}' 2>/dev/null)
 
 if [[ "$POD" == "multi-container-pod" ]]; then
-    # Pod exists, now check if it has two containers
-    CONTAINER_COUNT=$(kubectl get pod multi-container-pod -n multi-container -o jsonpath='{.spec.containers}' 2>/dev/null | jq '. | length')
+    # Pod exists, now check if it has two containers (app containers + native sidecars, i.e. init containers with restartPolicy Always)
+    CONTAINER_COUNT=$(kubectl get pod multi-container-pod -n multi-container -o json 2>/dev/null | jq '[.spec.containers[], ((.spec.initContainers // [])[] | select(.restartPolicy == "Always"))] | length')
     
     if [[ "$CONTAINER_COUNT" == "2" ]]; then
         # Pod has two containers

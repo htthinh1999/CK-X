@@ -9,7 +9,7 @@ kubectl delete pod -n monitoring logger --ignore-not-found=true
 
 # Pull required images in advance to speed up pod creation
 kubectl run prefetch-busybox --image=busybox --restart=Never -n monitoring --dry-run=client -o yaml | kubectl apply -f -
-kubectl run prefetch-fluentd --image=fluentd:v1.14 --restart=Never -n monitoring --dry-run=client -o yaml | kubectl apply -f -
+kubectl run prefetch-fluentd --image=fluentd --restart=Never -n monitoring --dry-run=client -o yaml | kubectl apply -f -
 
 # Wait for prefetch pods to be created
 sleep 5

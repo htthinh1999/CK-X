@@ -18,28 +18,33 @@ if [ "$POD_STATUS" != "Running" ]; then
     exit 1
 fi
 
+# App containers + native sidecars (init containers with restartPolicy Always)
+CONTAINERS=$(kubectl get pod $POD_NAME -n $NAMESPACE -o json | jq '[.spec.containers[], ((.spec.initContainers // [])[] | select(.restartPolicy == "Always"))]')
+
 # Check if pod has two containers
-CONTAINER_COUNT=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[*].name}' | wc -w)
+CONTAINER_COUNT=$(echo "$CONTAINERS" | jq 'length')
 if [ "$CONTAINER_COUNT" -ne "$EXPECTED_CONTAINERS" ]; then
     echo "❌ Pod '$POD_NAME' has incorrect number of containers: $CONTAINER_COUNT (expected: $EXPECTED_CONTAINERS)"
     exit 1
 fi
 
 # Check if containers are using correct images
-BUSYBOX_CONTAINER=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[?(@.image=="busybox")].name}')
-FLUENTD_CONTAINER=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[?(@.image=="fluentd")].name}')
+BUSYBOX_CONTAINER=$(echo "$CONTAINERS" | jq -r '.[] | select(.image == "busybox") | .name')
+FLUENTD_CONTAINER=$(echo "$CONTAINERS" | jq -r '.[] | select(.image == "fluentd") | .name')
 
 if [ -z "$BUSYBOX_CONTAINER" ] || [ -z "$FLUENTD_CONTAINER" ]; then
     echo "❌ Pod '$POD_NAME' is missing required containers with correct images"
     exit 1
 fi
 
-# Check if volume mount is configured
-LOG_MOUNT=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/var/log")].mountPath}')
-if [ -z "$LOG_MOUNT" ]; then
-    echo "❌ Volume mount '/var/log' not configured in pod '$POD_NAME'"
-    exit 1
-fi
+# Check if volume mount is configured in both containers
+for IMAGE in busybox fluentd; do
+    LOG_MOUNT=$(echo "$CONTAINERS" | jq -r --arg img "$IMAGE" '.[] | select(.image == $img) | .volumeMounts[]? | select(.mountPath == "/var/log") | .mountPath')
+    if [ -z "$LOG_MOUNT" ]; then
+        echo "❌ Volume mount '/var/log' not configured in the $IMAGE container of pod '$POD_NAME'"
+        exit 1
+    fi
+done
 
 # Check if emptyDir volume is used
 VOLUME_TYPE=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.volumes[?(@.name=="log-volume")].emptyDir}')

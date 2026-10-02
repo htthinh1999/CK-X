@@ -89,12 +89,12 @@
             "id": "7",
             "namespace": "phoenix",
             "machineHostname": "ckad9988",
-            "question": "Create a Pod named `data-transform` in namespace `phoenix` with a sidecar pattern:\n\nMain container (`producer`):\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do echo $(date) >> /data/input.log; sleep 5; done\"]`\n- Mounts volume `shared-data` at `/data`\n\nSidecar container (`transformer`):\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"tail -f /data/input.log | while read line; do echo \\\"PROCESSED: $line\\\" >> /data/output.log; done\"]`\n- Mounts the same volume `shared-data` at `/data`\n\nUse an `emptyDir` volume named `shared-data`.",
+            "question": "Create a Pod named `data-transform` in namespace `phoenix` with a sidecar pattern:\n\nMain container (`producer`):\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"while true; do echo $(date) >> /data/input.log; sleep 5; done\"]`\n- Mounts volume `shared-data` at `/data`\n\nSidecar container (`transformer`):\n- Image: `busybox:1.36`\n- Command: `[\"sh\", \"-c\", \"tail -F /data/input.log | while read line; do echo \\\"PROCESSED: $line\\\" >> /data/output.log; done\"]`\n- Mounts the same volume `shared-data` at `/data`\n\nUse an `emptyDir` volume named `shared-data`.",
             "concepts": ["pods", "sidecar", "volumes"],
             "verification": [
                 { "id": "1", "description": "Pod data-transform exists in phoenix", "verificationScriptFile": "q7_s1_validate_pod_exists.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "2", "description": "Pod status is Running", "verificationScriptFile": "q7_s2_validate_pod_running.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "3", "description": "Pod has 2 containers", "verificationScriptFile": "q7_s3_validate_two_containers.sh", "expectedOutput": "0", "weightage": 1 },
+                { "id": "3", "description": "Pod has 2 containers (incl. native sidecars)", "verificationScriptFile": "q7_s3_validate_two_containers.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "4", "description": "Container 'producer' exists", "verificationScriptFile": "q7_s4_validate_producer.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "5", "description": "Container 'transformer' exists", "verificationScriptFile": "q7_s5_validate_transformer.sh", "expectedOutput": "0", "weightage": 1 },
                 { "id": "6", "description": "Uses emptyDir volume", "verificationScriptFile": "q7_s6_validate_emptydir.sh", "expectedOutput": "0", "weightage": 1 }

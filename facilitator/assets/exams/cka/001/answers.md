@@ -102,6 +102,13 @@ metadata:
   name: logger
   namespace: monitoring
 spec:
+  initContainers:
+  - name: fluentd
+    image: fluentd
+    restartPolicy: Always
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/log
   containers:
   - name: busybox
     image: busybox
@@ -114,16 +121,13 @@ spec:
     volumeMounts:
     - name: log-volume
       mountPath: /var/log
-  - name: fluentd
-    image: fluentd
-    volumeMounts:
-    - name: log-volume
-      mountPath: /var/log
   volumes:
   - name: log-volume
     emptyDir: {}
 EOF
 ```
+
+`fluentd` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it. Listing it under `containers` (the older pattern) also works and is graded the same.
 
 ## Question 5: RBAC Setup
 

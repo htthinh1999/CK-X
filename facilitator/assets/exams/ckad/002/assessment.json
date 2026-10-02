@@ -33,7 +33,7 @@
             "concepts": ["multi-container-pods", "volumes", "namespaces"],
             "verification": [
                 { "id": "1", "description": "Namespace is created", "verificationScriptFile": "q3_s1_validate_namespace.sh", "expectedOutput": "0", "weightage": 1 },
-                { "id": "2", "description": "Pod exists with two containers", "verificationScriptFile": "q3_s2_validate_pod_containers.sh", "expectedOutput": "0", "weightage": 2 },
+                { "id": "2", "description": "Pod exists with two containers (incl. native sidecars)", "verificationScriptFile": "q3_s2_validate_pod_containers.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "3", "description": "Container images are correct", "verificationScriptFile": "q3_s3_validate_container_images.sh", "expectedOutput": "0", "weightage": 2 },
                 { "id": "4", "description": "Shared volume is configured correctly", "verificationScriptFile": "q3_s4_validate_shared_volume.sh", "expectedOutput": "0", "weightage": 3 }
             ]

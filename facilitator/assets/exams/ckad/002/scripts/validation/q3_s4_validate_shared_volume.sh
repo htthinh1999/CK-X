@@ -6,8 +6,10 @@ VOLUME_NAME=$(kubectl get pod multi-container-pod -n multi-container -o jsonpath
 
 if [[ "$VOLUME_NAME" == "log-volume" ]]; then
     # Volume exists, now check if it's mounted in both containers
+    # The sidecar may be a regular container or a native sidecar (init container with restartPolicy Always)
+    CONTAINERS=$(kubectl get pod multi-container-pod -n multi-container -o json 2>/dev/null | jq '[.spec.containers[], ((.spec.initContainers // [])[] | select(.restartPolicy == "Always"))]')
     MAIN_CONTAINER_MOUNT=$(kubectl get pod multi-container-pod -n multi-container -o jsonpath='{.spec.containers[?(@.name=="main-container")].volumeMounts[?(@.name=="log-volume")]}' 2>/dev/null)
-    SIDECAR_CONTAINER_MOUNT=$(kubectl get pod multi-container-pod -n multi-container -o jsonpath='{.spec.containers[?(@.name=="sidecar-container")].volumeMounts[?(@.name=="log-volume")].mountPath}' 2>/dev/null)
+    SIDECAR_CONTAINER_MOUNT=$(echo "$CONTAINERS" | jq -r '.[] | select(.name == "sidecar-container") | .volumeMounts[]? | select(.name == "log-volume") | .mountPath')
 
     if [[ "$MAIN_CONTAINER_MOUNT" == *"/var/log"* && "$SIDECAR_CONTAINER_MOUNT" == "/var/log" ]]; then
         # Both containers have the volume mounted at the correct path

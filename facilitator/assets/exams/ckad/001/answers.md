@@ -546,15 +546,17 @@ metadata:
   name: sidecar-pod
   namespace: troubleshooting
 spec:
-  containers:
-  - name: nginx
-    image: nginx
+  initContainers:
+  - name: sidecar
+    image: busybox
+    restartPolicy: Always
+    command: ["sh", "-c", "while true; do date >> /var/my-log/date.log; sleep 10; done"]
     volumeMounts:
     - name: log-volume
       mountPath: /var/my-log
-  - name: sidecar
-    image: busybox
-    command: ["sh", "-c", "while true; do date >> /var/my-log/date.log; sleep 10; done"]
+  containers:
+  - name: nginx
+    image: nginx
     volumeMounts:
     - name: log-volume
       mountPath: /var/my-log
@@ -562,6 +564,8 @@ spec:
   - name: log-volume
     emptyDir: {}
 ```
+
+`sidecar` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it. Listing it under `containers` (the older pattern) also works and is graded the same.
 
 Save this as `sidecar-pod.yaml` and apply:
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 export KUBECONFIG="${KUBECONFIG:-/home/candidate/.kube/kubeconfig}"
-c=$(kubectl get pod data-transform -n phoenix -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
+# count app containers + native sidecars (init containers with restartPolicy Always)
+c=$(kubectl get pod data-transform -n phoenix -o json 2>/dev/null | jq '[.spec.containers[], ((.spec.initContainers // [])[] | select(.restartPolicy == "Always"))] | length')
 if [ "$c" = "2" ]; then
   echo "Success: 2 containers"
   exit 0

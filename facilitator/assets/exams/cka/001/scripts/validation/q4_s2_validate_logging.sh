@@ -18,8 +18,8 @@ if [ "$LOG_ENTRIES" -lt 1 ]; then
     exit 1
 fi
 
-# Check if fluentd container is running
-FLUENTD_STATUS=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.status.containerStatuses[?(@.name=="fluentd")].state.running}')
+# Check if fluentd container is running (regular container or native sidecar)
+FLUENTD_STATUS=$(kubectl get pod $POD_NAME -n $NAMESPACE -o json | jq -c '[(.status.containerStatuses // [])[], (.status.initContainerStatuses // [])[]] | .[] | select(.name == "fluentd") | .state.running // empty')
 if [ -z "$FLUENTD_STATUS" ]; then
     echo "❌ Fluentd container is not running"
     exit 1

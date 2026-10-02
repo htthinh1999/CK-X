@@ -8,40 +8,34 @@ if [ -z "$POD_EXISTS" ]; then
     exit 1
 fi
 
-# Get volume names defined in the pod
-VOLUMES=$(kubectl get pod sidecar-pod -n troubleshooting -o jsonpath='{.spec.volumes[*].name}' 2>/dev/null)
-
-if [ -z "$VOLUMES" ]; then
-    echo "Error: Pod 'sidecar-pod' does not have any volumes defined"
+# The emptyDir volume 'log-volume' must exist ...
+if [ -z "$(kubectl get pod sidecar-pod -n troubleshooting -o jsonpath='{.spec.volumes[?(@.name=="log-volume")].name}' 2>/dev/null)" ]; then
+    echo "Error: Pod 'sidecar-pod' has no volume named 'log-volume'"
     exit 1
 fi
 
-# Check if there's at least one shared volume mounted in both containers
-SHARED_VOLUME_FOUND=false
+# App containers + native sidecars (init containers with restartPolicy Always)
+CONTAINERS=$(kubectl get pod sidecar-pod -n troubleshooting -o json 2>/dev/null | jq '[.spec.containers[], ((.spec.initContainers // [])[] | select(.restartPolicy == "Always"))]')
 
-for VOLUME in $VOLUMES; do
-    # Check if this volume is mounted in the first container
-    MOUNT_IN_CONTAINER1=$(kubectl get pod sidecar-pod -n troubleshooting -o jsonpath="{.spec.containers[0].volumeMounts[?(@.name==\"$VOLUME\")].mountPath}" 2>/dev/null)
-    
-    # Check if this volume is mounted in the second container
-    MOUNT_IN_CONTAINER2=$(kubectl get pod sidecar-pod -n troubleshooting -o jsonpath="{.spec.containers[1].volumeMounts[?(@.name==\"$VOLUME\")].mountPath}" 2>/dev/null)
-    
-    if [ -n "$MOUNT_IN_CONTAINER1" ] && [ -n "$MOUNT_IN_CONTAINER2" ]; then
-        echo "Success: Volume '$VOLUME' is mounted in both containers"
-        echo "Mount path in first container: $MOUNT_IN_CONTAINER1"
-        echo "Mount path in second container: $MOUNT_IN_CONTAINER2"
-        SHARED_VOLUME_FOUND=true
-        break
+# ... and be mounted at /var/my-log in both the nginx and the sidecar container.
+# (Only 'log-volume' counts: the auto-injected service account token volume is mounted in every container.)
+SHARED_VOLUME_FOUND=true
+for C in nginx sidecar; do
+    MOUNT=$(echo "$CONTAINERS" | jq -r --arg c "$C" '.[] | select(.name == $c) | .volumeMounts[]? | select(.name == "log-volume") | .mountPath | rtrimstr("/")')
+    if ! echo "$MOUNT" | grep -qx "/var/my-log"; then
+        echo "Error: 'log-volume' is not mounted at /var/my-log in container '$C'"
+        SHARED_VOLUME_FOUND=false
     fi
 done
+[ "$SHARED_VOLUME_FOUND" = true ] && echo "Success: Volume 'log-volume' is mounted at /var/my-log in both containers"
 
 if [ "$SHARED_VOLUME_FOUND" = true ]; then
     # Check if the sidecar container is writing to the shared volume
-    BUSYBOX_CONTAINER=$(kubectl get pod sidecar-pod -n troubleshooting -o jsonpath='{.spec.containers[?(@.image=="busybox")].name}' 2>/dev/null)
+    BUSYBOX_CONTAINER=$(echo "$CONTAINERS" | jq -r '[.[] | select(.image == "busybox")][0].name // empty')
     
     if [ -n "$BUSYBOX_CONTAINER" ]; then
-        COMMAND=$(kubectl get pod sidecar-pod -n troubleshooting -o jsonpath="{.spec.containers[?(@.name==\"$BUSYBOX_CONTAINER\")].command}" 2>/dev/null)
-        ARGS=$(kubectl get pod sidecar-pod -n troubleshooting -o jsonpath="{.spec.containers[?(@.name==\"$BUSYBOX_CONTAINER\")].args}" 2>/dev/null)
+        COMMAND=$(echo "$CONTAINERS" | jq -c --arg n "$BUSYBOX_CONTAINER" '.[] | select(.name == $n) | .command // empty')
+        ARGS=$(echo "$CONTAINERS" | jq -c --arg n "$BUSYBOX_CONTAINER" '.[] | select(.name == $n) | .args // empty')
         
         if [[ "$COMMAND" == *"date"* ]] || [[ "$ARGS" == *"date"* ]]; then
             echo "Success: Sidecar container appears to be writing date to the shared volume"

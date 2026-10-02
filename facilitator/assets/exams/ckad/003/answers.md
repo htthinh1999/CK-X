@@ -196,16 +196,18 @@ metadata:
   name: data-transform
   namespace: phoenix
 spec:
+  initContainers:
+  - name: transformer
+    image: busybox:1.36
+    restartPolicy: Always
+    command: ["sh", "-c", "tail -F /data/input.log | while read line; do echo \"PROCESSED: \$line\" >> /data/output.log; done"]
+    volumeMounts:
+    - name: shared-data
+      mountPath: /data
   containers:
   - name: producer
     image: busybox:1.36
     command: ["sh", "-c", "while true; do echo \$(date) >> /data/input.log; sleep 5; done"]
-    volumeMounts:
-    - name: shared-data
-      mountPath: /data
-  - name: transformer
-    image: busybox:1.36
-    command: ["sh", "-c", "tail -f /data/input.log | while read line; do echo \"PROCESSED: \$line\" >> /data/output.log; done"]
     volumeMounts:
     - name: shared-data
       mountPath: /data
@@ -216,6 +218,7 @@ EOF
 ```
 
 The sidecar pattern uses two containers sharing an `emptyDir` volume: the producer writes, the transformer processes.
+`transformer` is a native sidecar: an init container with `restartPolicy: Always` starts before the main container and keeps running next to it (`tail -F` waits for `/data/input.log` to appear). Listing it under `containers` (the older pattern) also works and is graded the same.
 
 ---
 
